@@ -190,7 +190,7 @@ function renderRegistration(monitorScreenDiv) {
         password: ""
     };
 
-    monitorScreenDiv.style.gridTemplateColumns = "500px 100px";
+    monitorScreenDiv.style.gridTemplateColumns = "500px 0px";
 
     async function createFormStep(index) {
         monitorScreenDiv.style.opacity = "0";
@@ -340,7 +340,7 @@ function renderRegistration(monitorScreenDiv) {
 
         if (index < requiredData.length - 1 && index !== 2) {
             monitorScreenDiv.appendChild(continueBtn);
-        } else if (index !== 2 && !document.getElementById("registerBtnDiv")) { // Ensure it only exists once
+        } else if (index !== 2 && !document.getElementById("registerBtnDiv")) {
             const registerBtnDiv = document.createElement("div");
             const registerBtn = document.createElement("button");
 
@@ -355,13 +355,12 @@ function renderRegistration(monitorScreenDiv) {
 
             registerBtn.addEventListener("click", async function () {
                 if (validateField(dataInp, index)) {
-                    // Completed registration
                     let success = true;
                     monitorScreenDiv.style.opacity = "0";
                     await delay(200);
                     monitorScreenDiv.innerHTML = ``;
                     registerBtnDiv.style.top = "-10%"
-                    monitorScreenDiv.appendChild(registerBtnDiv); // Reattach the original button div
+                    monitorScreenDiv.appendChild(registerBtnDiv);
                     registerBtn.style.transform = "scale(0)";
                     monitorScreenDiv.style.opacity = "1";
                     await delay(600);
