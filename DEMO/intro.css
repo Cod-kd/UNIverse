@@ -5,8 +5,16 @@ Colors:
 -Dark1 --> #343434
 -Dark2 --> #141414
 -Light1 --> #FFF0EB
--Light2 --> ##FFD2C2
+-Light2 --> #FFD2C2
 */
+:root{
+    --main: #FF5A1F;
+    --link: #5D3FD3;
+    --dark1: #343434;
+    --dark2: #141414;
+    --light1: #FFF0EB;
+    --light2: #FFD2C2;
+}
 
 * {
     margin: 0;
@@ -54,7 +62,7 @@ body::before {
 #container footer {
     display: grid;
     justify-content: center;
-    color: #FFF0EB;
+    color: var(--light1);
     gap: 20px;
     padding: 15px;
     height: 120px;
@@ -88,7 +96,7 @@ body::before {
 }
 
 #container footer hr {
-    border-color: #FF5A1F;
+    border-color: var(--main);
     width: 800px;
     justify-self: center;
 }
@@ -100,7 +108,7 @@ body::before {
 }
 
 #container footer #footer-row-2 span {
-    color: #FF5A1F;
+    color: var(--main);
 }
 
 #container main {
@@ -132,7 +140,7 @@ body::before {
 #monitorScreenDiv {
     height: 330px;
     display: grid;
-    color: #FF5A1F;
+    color: var(--main);
     z-index: 2;
     transition: all 0.3s;
 }
@@ -150,8 +158,8 @@ body::before {
 #container main #monitorDiv button {
     width: 275px;
     height: 60px;
-    background-color: #FF5A1F;
-    color: #141414;
+    background-color: var(--main);
+    color: var(--dark2);
     border-radius: 30px;
     font-weight: bold;
     font-size: 16px;
@@ -238,8 +246,8 @@ body::before {
 .infoCard {
     width: 350px;
     height: 320px;
-    background-color: #FF5A1F;
-    color: #141414;
+    background-color: var(--main);
+    color: var(--dark2);
     border-radius: 24px;
     padding: 30px;
     display: grid;
@@ -261,7 +269,7 @@ body::before {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background-color: #343434;
+    background-color: var(--dark1);
     justify-self: center;
 }
 
