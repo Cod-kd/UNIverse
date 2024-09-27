@@ -3,11 +3,12 @@ JavaScript file:
     -Add comments
     -Separate code into more functions (optional)
     -Make the code more readable
-    -Create a button with a home icon => when pressed, the Registration + Login buttons will be rendered on the screen 
+    -Create a button with a home icon => when pressed, the Registration + Login buttons will be rendered on the screen
+    
     -Debugging:
-        -add a variable named success (boolean)
-        -if the registration is successful => display the successful animation (samples)
-        -else => display the error animation (samples)
+    (DONE)    -add a variable named success (boolean)
+    (DONE)    -if the registration is successful => display the successful animation (samples)
+    (DONE)    -else => display the error animation (samples)
 
 CSS:
     -change the radio button's "circle"'s center so the black circle inside is centered horizontally + vertically

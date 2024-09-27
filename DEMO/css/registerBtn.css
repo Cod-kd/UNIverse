@@ -1,0 +1,38 @@
+#animatedButton {
+    width: 300px;
+    height: 300px;
+    margin-top: -5%;
+    background-color: transparent;
+    transition: all 0.5s;
+    transform: scale(0);
+}
+
+#responseHeading {
+    color: #FF5A1F;
+    transition: all 0.5s;
+    font-size: 36px;
+}
+
+#registerBtnDiv {
+    width: 275px;
+    height: 60px;
+    top: 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    justify-self: center;
+    margin-top: 20%;
+}
+
+#responseHeadingEffect {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+}
+
+#animated404 {
+    width: 300px;
+    height: 300px;
+    transition: all 0.5s;
+}
