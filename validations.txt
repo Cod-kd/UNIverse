@@ -1,1 +1,42 @@
 Validations:
+Email:
+    -needs to include @
+    -needs to include something before @
+    -needs to include a valid domain (e.g., example.com)
+    -domain must have a top-level domain (e.g., .com, .org) 
+
+Birth date:
+    -needs to be 8 characters long
+    -year = first 4 digits
+    -month = 5th + 6th digits
+    -month can't be more than 12 and can't be less than 1
+    -day = 7th + 8th digits
+    -day can't be more than 31 and can't be less than 1
+    -must validate against the month length (e.g., 30 days for April, June, September, November; 28/29 for February)
+    -full birth date = year + month + day
+    -full birth date can't be higher than the current date
+    -current age = current date - full birth date
+    -minimum current age: 18
+    -current age can't be less than zero
+    -current age can't be more than 100
+
+Gender:
+    -no validation needed (3 options available)
+
+Username:
+    -min length = 8
+    -max length = 20
+    -allowed characters:
+        -letters (A-Z, a-z)
+        -digits (0-9)
+        -hyphen (-)
+        -underscore (_)
+
+Password:
+    -min length = 12
+    -max length = 36
+    -allowed characters:
+        -letters (A-Z, a-z)
+        -digits (0-9)
+        -specials (@, !, #, $, %, ^, &, *, -, _, =, +)
+    -needs to include atleast 1 special character + 1 number
