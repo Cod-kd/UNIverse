@@ -1,0 +1,271 @@
+/* 
+Colors:
+-Main --> #FF5A1F
+-Link --> #5D3FD3
+-Dark1 --> #343434
+-Dark2 --> #141414
+-Light1 --> #FFF0EB
+-Light2 --> ##FFD2C2
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+h1,
+h3 {
+    font-family: 'Proza Libre', sans-serif;
+}
+
+p {
+    font-family: 'Nunito', sans-serif;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    background-image: url("./assets/background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: -1;
+}
+
+#container {
+    display: grid;
+}
+
+#container main {
+    height: 833px;
+}
+
+#container footer {
+    display: grid;
+    justify-content: center;
+    color: #FFF0EB;
+    gap: 20px;
+    padding: 15px;
+    height: 120px;
+}
+
+#container footer #footer-row-1 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-items: center;
+    width: 800px;
+}
+
+#container footer #footer-row-1 img:nth-child(1) {
+    width: 150px;
+    height: 40px;
+}
+
+#container footer #footer-row-1 #contacts {
+    display: flex;
+    gap: 30px;
+}
+
+#container footer #footer-row-1 #contacts img:first-child {
+    width: 45px;
+}
+
+#container footer #footer-row-1 #contacts img {
+    width: 30px;
+    height: 30px;
+}
+
+#container footer hr {
+    border-color: #FF5A1F;
+    width: 800px;
+    justify-self: center;
+}
+
+#container footer #footer-row-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+}
+
+#container footer #footer-row-2 span {
+    color: #FF5A1F;
+}
+
+#container main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+}
+
+#container main #monitorDiv h1 {
+    font-size: 36px;
+}
+
+#container main #monitorDiv {
+    width: 760px;
+    height: 630px;
+    background-image: url("./assets/screen.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    text-align: center;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 60px;
+}
+
+#monitorScreenDiv {
+    height: 330px;
+    display: grid;
+    color: #FF5A1F;
+    z-index: 2;
+    transition: all 0.3s;
+}
+
+#container main #monitorDiv img {
+    width: 95px;
+    position: absolute;
+    top: 58.5%;
+}
+
+#container main #monitorDiv p {
+    font-size: 22px;
+}
+
+#container main #monitorDiv button {
+    width: 275px;
+    height: 60px;
+    background-color: #FF5A1F;
+    color: #141414;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: 'Saira', sans-serif;
+    border: none;
+    transition: all 0.5s;
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+#container main #monitorDiv button:hover {
+    transform: scale(1.05);
+}
+
+#container main #monitorDiv button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.4),
+            transparent);
+    transition: none;
+    z-index: -1;
+}
+
+.screenAnimDiv {
+    background-color: red;
+}
+
+#container main #monitorDiv button:hover::before {
+    left: 100%;
+    transition: all 1s linear;
+    animation: lightspeed 1s infinite linear;
+}
+
+@keyframes lightspeed {
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes slideInRight {
+    0% {
+        transform: translateX(200%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInLeft {
+    0% {
+        transform: translateX(-200%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+#registerLoginBtnDiv {
+    justify-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+.infoCard {
+    width: 350px;
+    height: 320px;
+    background-color: #FF5A1F;
+    color: #141414;
+    border-radius: 24px;
+    padding: 30px;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+}
+
+#container main .cardDiv {
+    display: grid;
+    gap: 60px;
+}
+
+#container main .infoCard div:nth-child(1) {
+    width: 77px;
+    height: 77px;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #343434;
+    justify-self: center;
+}
+
+#container main .infoCard div:nth-child(1) img {
+    width: 45px;
+    height: 45px;
+}
