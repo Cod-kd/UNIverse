@@ -135,6 +135,148 @@ body::before {
     color: #FF5A1F;
     z-index: 2;
     transition: all 0.3s;
+    align-items: center;
+    justify-items: center;
+    gap: 50px;
+}
+
+.radio-input {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.radio-input * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.radio-input label {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0px 20px;
+    width: 220px;
+    cursor: pointer;
+    height: 50px;
+    position: relative;
+    color: #FF5A1F;
+    transition: all 0.3s ease;
+}
+
+.radio-input label::before {
+    position: absolute;
+    content: "";
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 220px;
+    height: 50px;
+    z-index: -1;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-color: transparent;
+}
+
+.radio-input label:hover::before {
+    border-color: #FF5A1F;
+}
+
+.radio-input .label:has(input:checked) {
+    color: #141414;
+}
+
+.radio-input .label:has(input:checked)::before {
+    background-color: #FF5A1F;
+    border-color: #FF5A1F;
+}
+
+.radio-input .label input[type="radio"] {
+    appearance: none;
+    width: 17px;
+    height: 17px;
+    border: 2px solid #FF5A1F;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.radio-input .label input[type="radio"]:checked {
+    background-color: #141414;
+    border-color: #141414;
+}
+
+.radio-input .label input[type="radio"]::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transition: all 0.1s cubic-bezier(0.165, 0.84, 0.44, 1);
+    background-color: #FF5A1F;
+    transform: scale(0);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+.radio-input .label input[type="radio"]:checked::before {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.dateInput {
+    margin-left: auto;
+    margin-right: auto;
+    height: 50px;
+    width: 300px;
+    border-radius: 2.5em;
+    border: none;
+    background-color: transparent;
+    border: 2px solid #FF5A1F;
+    color: #FF5A1F;
+    -webkit-filter: drop-shadow(1px 1px 10px #000);
+    filter: drop-shadow(7px 7px 10px #00000059);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    outline: 2px solid rgba(0, 0, 0, 0);
+    transition: outline-offset 0.5s ease, outline-color 0.5s ease,
+        height 0.5s ease, width 0.5s ease, filter 0.5s ease;
+    padding-left: 35px;
+}
+
+.dateInput:focus {
+    transition: 0.3s;
+    height: 40px;
+    width: 250px;
+    -webkit-filter: drop-shadow(1px 1px 10px #000);
+    filter: drop-shadow(-7px 7px 10px #00000059);
+    border-color: transparent;
+    border-bottom-color: #FF5A1F;
+    border-radius: 0px;
+}
+
+.dateInput::placeholder {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transform: translateX(-6px);
+    transition: transform 0.5s ease;
+}
+
+.dateInput:focus::placeholder {
+    transform: translateX(-85px);
+    transition: 0.5s;
+}
+
+
+.dataHeading {
+    position: fixed;
+    top: 17%;
 }
 
 #container main #monitorDiv img {
@@ -162,6 +304,128 @@ body::before {
     z-index: 1;
     cursor: pointer;
     overflow: hidden;
+}
+
+.input[type=email] {
+    width: 360px;
+    height: 20px;
+    background-color: transparent;
+    color: #FF5A1F;
+    padding: .15rem .5rem;
+    min-height: 40px;
+    border-radius: 4px;
+    outline: none;
+    border: none;
+    box-shadow: 0px 10px 20px -18px #FF5A1F;
+    border-bottom: 3px solid #FF5A1F;
+    transition: .10s ease;
+}
+
+.input[type=email]:hover {
+    outline: 2px solid #FF5A1F;
+    width: 400px;
+}
+
+.input[type=email]:focus {
+    border-bottom: 3px solid #FF5A1F;
+    border-radius: 5px 5px 2px 2px;
+    transform: scale(1.1);
+}
+
+.center-con {
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.round {
+    position: relative;
+    border: 2px solid #FF5A1F;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+}
+
+#cta {
+    width: 100%;
+    position: absolute;
+}
+
+#cta .arrow {
+    left: 19%;
+}
+
+.arrow {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    top: 12px;
+}
+
+.segunda {
+    margin-left: 12px;
+}
+
+.next {
+    background-color: #FF5A1F;
+    clip-path: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 25% 50%, 0% 0%);
+}
+
+@keyframes bounceAlpha {
+    0% {
+        opacity: 1;
+        transform: translateX(0px) scale(1);
+    }
+
+    25% {
+        opacity: 0;
+        transform: translateX(10px) scale(0.9);
+    }
+
+    26% {
+        opacity: 0;
+        transform: translateX(-10px) scale(0.9);
+    }
+
+    55% {
+        opacity: 1;
+        transform: translateX(0px) scale(1);
+    }
+}
+
+.bounceAlpha {
+    animation-name: bounceAlpha;
+    animation-duration: 1.4s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+.arrow.primera.bounceAlpha {
+    animation-name: bounceAlpha;
+    animation-duration: 1.4s;
+    animation-delay: 0.2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+.round:hover .arrow {
+    animation-name: bounceAlpha;
+    animation-duration: 1.4s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+.round:hover .arrow.primera {
+    animation-name: bounceAlpha;
+    animation-duration: 1.4s;
+    animation-delay: 0.2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
 }
 
 #container main #monitorDiv button:hover {
