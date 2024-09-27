@@ -1,0 +1,12 @@
+JavaScript file:
+    -Format + Optimize
+    -Add comments
+    -Separate code into more functions (optional)
+    -Make the code more readable
+    -Debugging:
+        -add a variable named success (boolean)
+        -if the registration is successful => display the successful animation (samples)
+        -else => display the error animation (samples)
+
+CSS:
+    -change the radio button's "circle"'s center so the black circle inside is centered horizontally + vertically
