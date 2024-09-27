@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            display: grid;
+            align-items: center;
+            justify-content: center;
+            padding-top: 25%;
+        }
+        .input[type=text] {
+            max-width: 180px;
+            height: 20px;
+            background-color: transparent;
+            color: #FFA51F;
+            padding: .15rem .5rem;
+            min-height: 40px;
+            border-radius: 4px;
+            outline: none;
+            border: none;
+            box-shadow: 0px 10px 20px -18px #FFA51F;
+            border-bottom: 3px solid #FFA51F;
+            transition: .10s ease;
+        }
+
+        .input[type=text]:hover {
+            outline: 2px solid #FFA51F;
+            max-width: 200px;
+        }
+
+        .input[type=text]:focus {
+            border-bottom: 3px solid #FFA51F;
+            border-radius: 5px 5px 2px 2px;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <input type="text" name="search" placeholder="" class="input">
+</body>
+
+</html>
