@@ -185,6 +185,8 @@ function renderRegistration(monitorScreenDiv) {
 
                     const showBtn = document.createElement("button");
                     showBtn.id = "showBtn";
+                    showBtn.classList.add("button");
+                    showBtn.innerHTML = "Show";
                     monitorScreenDiv.appendChild(showBtn);
 
                     // Toggle password visibility

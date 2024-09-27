@@ -314,6 +314,8 @@ main {
     width: 60px;
     height: 25px;
     border-radius: 12px;
+    position: fixed;
+    right: 44%;
 }
 
 .button {
