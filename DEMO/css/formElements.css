@@ -1,0 +1,264 @@
+/* Radio Input */
+.radio-input {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.radio-input * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.radio-input label {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0 20px;
+    width: 220px;
+    height: 50px;
+    cursor: pointer;
+    position: relative;
+    color: var(--main);
+    transition: all 0.3s ease;
+}
+
+.radio-input label::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 220px;
+    height: 50px;
+    z-index: -1;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border-radius: 10px;
+    border: 2px solid transparent;
+}
+
+.radio-input label:hover::before {
+    border-color: var(--main);
+}
+
+.radio-input .label:has(input:checked) {
+    color: var(--dark2);
+}
+
+.radio-input .label:has(input:checked)::before {
+    background-color: var(--main);
+    border-color: var(--main);
+}
+
+.radio-input .label input[type="radio"] {
+    appearance: none;
+    width: 17px;
+    height: 17px;
+    border: 2px solid var(--main);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.radio-input .label input[type="radio"]:checked {
+    background-color: var(--dark2);
+    border-color: var(--dark2);
+}
+
+.radio-input .label input[type="radio"]::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--main);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.1s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.radio-input .label input[type="radio"]:checked::before {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Username + Password Input */
+#usernameInput,
+#passwordInput {
+    display: block;
+    width: 250px;
+    height: 50px;
+    background-color: transparent;
+    border-radius: 30px;
+    border: 2px solid var(--main);
+    padding: 0 12px;
+    outline: none;
+    caret-color: var(--main);
+    color: var(--main);
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+/* Date Input */
+.dateInput {
+    margin: 0 auto;
+    height: 50px;
+    width: 300px;
+    border-radius: 2.5em;
+    border: 2px solid var(--main);
+    background-color: transparent;
+    color: var(--main);
+    filter: drop-shadow(7px 7px 10px #00000059);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    outline: 2px solid transparent;
+    transition: 0.5s ease;
+    padding-left: 35px;
+}
+
+.dateInput:focus {
+    height: 40px;
+    width: 250px;
+    filter: drop-shadow(-7px 7px 10px #00000059);
+    border-color: transparent;
+    border-bottom-color: var(--main);
+    border-radius: 0;
+}
+
+.dateInput::placeholder {
+    font-weight: 500;
+    letter-spacing: 1px;
+    transform: translateX(-6px);
+    transition: transform 0.5s ease;
+}
+
+.dateInput:focus::placeholder {
+    transform: translateX(-85px);
+}
+
+/* Extra Stylings for Form */
+.dataHeading {
+    position: fixed;
+    top: 17%;
+}
+
+#showBtn {
+    width: 60px;
+    height: 25px;
+    border-radius: 12px;
+    position: fixed;
+    right: 44%;
+}
+
+/* Email Input */
+#emailInput {
+    width: 360px;
+    height: 40px;
+    background-color: transparent;
+    color: var(--main);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    outline: none;
+    border: none;
+    box-shadow: 0 10px 20px -18px var(--main);
+    border-bottom: 3px solid var(--main);
+    transition: 0.1s ease;
+}
+
+#emailInput:hover {
+    outline: 2px solid var(--main);
+    width: 400px;
+}
+
+#emailInput:focus {
+    border-radius: 5px 5px 2px 2px;
+    transform: scale(1.1);
+}
+
+/* Back Button + Continue Button Styling */
+.center-con {
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.round {
+    position: relative;
+    border: 2px solid var(--main);
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+}
+
+#cta {
+    width: 100%;
+    position: absolute;
+}
+
+#cta .arrow {
+    left: 19%;
+}
+
+.arrow {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    top: 12px;
+}
+
+.segunda {
+    margin-left: 12px;
+}
+
+.next {
+    background-color: var(--main);
+    clip-path: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 25% 50%, 0% 0%);
+}
+
+@keyframes bounceAlpha {
+    0% {
+        opacity: 1;
+        transform: translateX(0px) scale(1);
+    }
+
+    25% {
+        opacity: 0;
+        transform: translateX(10px) scale(0.9);
+    }
+
+    26% {
+        opacity: 0;
+        transform: translateX(-10px) scale(0.9);
+    }
+
+    55% {
+        opacity: 1;
+        transform: translateX(0px) scale(1);
+    }
+}
+
+.bounceAlpha {
+    animation: bounceAlpha 1.4s linear infinite;
+}
+
+.arrow.primera.bounceAlpha {
+    animation-delay: 0.2s;
+}
+
+.round:hover .arrow,
+.round:hover .arrow.primera {
+    animation: bounceAlpha 1.4s linear infinite;
+}
+
+.round:hover .arrow.primera {
+    animation-delay: 0.2s;
+}
