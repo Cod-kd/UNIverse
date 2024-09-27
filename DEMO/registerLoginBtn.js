@@ -64,149 +64,240 @@ async function splitMainButton() {
 }
 
 function renderRegistration(monitorScreenDiv) {
-    let requiredData = ["Email cím", "Születési Dátum", "Nem", "Felhasználónév", "Jelszó"];
+    const requiredData = ["Email cím", "Születési Dátum", "Nem", "Felhasználónév", "Jelszó"];
     let currentIndex = 0;
 
-    monitorScreenDiv.style.gridTemplateColumns = "repeat(2, 1fr)";
+    // Initialize formData to store user inputs
+    const formData = {
+        email: "",
+        birthDate: "",
+        gender: "",
+        username: "",
+        password: ""
+    };
+
+    // Initial grid layout
+    monitorScreenDiv.style.gridTemplateColumns = "500px 100px";
 
     function createFormStep(index) {
         monitorScreenDiv.innerHTML = "";
 
-        let dataHeading = document.createElement("h1");
+        // Create and append the heading for the current step
+        const dataHeading = document.createElement("h1");
         dataHeading.innerHTML = requiredData[index];
         dataHeading.classList.add("dataHeading");
+        monitorScreenDiv.appendChild(dataHeading);
 
-        let btnInnerHtml = `
-        <div class="round">
-            <div id="cta">
-                <span class="arrow primera next"></span>
-                <span class="arrow segunda next"></span>
-            </div>
-        </div>`;
+        // Define the inner HTML for buttons
+        const btnInnerHtml = `
+            <div class="round">
+                <div id="cta">
+                    <span class="arrow primera next"></span>
+                    <span class="arrow segunda next"></span>
+                </div>
+            </div>`;
 
-        let backBtn = document.createElement("div");
+        // Create Back Button
+        const backBtn = document.createElement("div");
         backBtn.classList.add("center-con");
         backBtn.style.transform = "rotate(180deg)";
         backBtn.innerHTML = btnInnerHtml;
 
-        let continueBtn = document.createElement("div");
+        // Create Continue Button
+        const continueBtn = document.createElement("div");
         continueBtn.classList.add("center-con");
         continueBtn.innerHTML = btnInnerHtml;
 
-        monitorScreenDiv.appendChild(dataHeading);
+        let dataInp; // To store the current input element
 
-        let dataInp;
-        if (index !== 2) {
+        if (index === 3) { // Felhasználónév (Username)
+            dataInp = document.createElement("input");
+            dataInp.type = "text";
+            dataInp.placeholder = "@";
+            dataInp.id = "usernameInput";
+            dataInp.classList.add("input");
+            dataInp.value = formData.username; // Populate with existing data
+            monitorScreenDiv.appendChild(dataInp);
+        }
+        else if (index === 2) { // Nem (Gender)
+            const radioDiv = document.createElement("div");
+            radioDiv.classList.add("radio-input");
+
+            const genders = [
+                { value: "Male", label: "Férfi" },
+                { value: "Female", label: "Nő" },
+                { value: "Other", label: "Egyéb" }
+            ];
+
+            genders.forEach((gender, i) => {
+                const label = document.createElement("label");
+                label.classList.add("label");
+
+                const radio = document.createElement("input");
+                radio.type = "radio";
+                radio.name = "gender-radio";
+                radio.value = gender.value;
+                radio.id = "value-" + (i + 1);
+
+                // Check if this gender was previously selected
+                if (formData.gender === gender.value) {
+                    radio.checked = true;
+                } else if (!formData.gender && i === 0) {
+                    // Default to first option if no selection yet
+                    radio.checked = true;
+                }
+
+                const text = document.createElement("p");
+                text.classList.add("text");
+                text.innerHTML = gender.label;
+
+                label.appendChild(radio);
+                label.appendChild(text);
+                radioDiv.appendChild(label);
+            });
+
+            monitorScreenDiv.appendChild(radioDiv);
+            monitorScreenDiv.appendChild(continueBtn);
+        }
+        else { // Email, Birth Date, Password
             dataInp = document.createElement("input");
             dataInp.classList.add("input");
+
+            // Set input type and placeholder based on index
+            switch (index) {
+                case 0:
+                    dataInp.type = "email";
+                    dataInp.id = "emailInput";
+                    dataInp.placeholder = "Email...";
+                    dataInp.value = formData.email; // Populate with existing data
+                    break;
+                case 1:
+                    dataInp.type = "text";
+                    dataInp.classList.add("dateInput");
+                    dataInp.placeholder = "Dátum: ÉÉÉÉHHNN";
+                    dataInp.value = formData.birthDate; // Populate with existing data
+                    break;
+                case 4:
+                    dataInp.type = "password";
+                    dataInp.placeholder = "******"; // Updated placeholder
+                    dataInp.id = "passwordInput"; // Added id for consistency
+                    dataInp.value = formData.password; // Populate with existing data
+
+                    const showBtn = document.createElement("button");
+                    showBtn.id = "showBtn";
+                    monitorScreenDiv.appendChild(showBtn);
+
+                    // Toggle password visibility
+                    showBtn.addEventListener("click", function () {
+                        if (dataInp.type === "password") {
+                            dataInp.type = "text";
+                            showBtn.innerText = "Hide";
+                        } else {
+                            dataInp.type = "password";
+                            showBtn.innerText = "Show";
+                        }
+                    });
+
+                    break;
+            }
+
             monitorScreenDiv.appendChild(dataInp);
         }
 
+        // Add Back Button if not the first step
         if (index > 0) {
             monitorScreenDiv.insertBefore(backBtn, dataHeading);
             monitorScreenDiv.style.gridTemplateColumns = "repeat(3, 1fr)";
             backBtn.addEventListener("click", function () {
+                // Save the current field value before navigating back
+                switch (index) {
+                    case 0:
+                        formData.email = dataInp.value.trim();
+                        break;
+                    case 1:
+                        formData.birthDate = dataInp.value.trim();
+                        break;
+                    case 3:
+                        formData.username = dataInp.value.trim();
+                        break;
+                    case 4:
+                        formData.password = dataInp.value.trim(); // Save password when navigating back
+                        break;
+                }
+
                 createFormStep(index - 1);
             });
         }
 
+        // Determine whether to show Continue or Register button
         if (index < requiredData.length - 1 && index !== 2) {
             monitorScreenDiv.appendChild(continueBtn);
-        } else {
-            let registerBtn = document.createElement("button");
+        } else if (index !== 2) {
+            const registerBtn = document.createElement("button");
             registerBtn.classList.add("button");
             registerBtn.innerHTML = "Regisztráció";
             registerBtn.style.position = "fixed";
             registerBtn.style.top = "45%";
-            if(index !== 2){
-                monitorScreenDiv.appendChild(registerBtn);
-            }
+            monitorScreenDiv.appendChild(registerBtn);
 
             registerBtn.addEventListener("click", function () {
                 if (validateField(dataInp, index)) {
                     alert("Registration Complete!");
+                    console.log("Form Data:", formData);
+                    // Here you can handle form submission, e.g., send data to a server
                 }
             });
         }
 
-        switch (index) {
-            case 0:
-                dataInp.type = "email";
-                dataInp.placeholder = "Email...";
-                break;
-            case 1:
-                dataInp.type = "text";
-                dataInp.classList.add("dateInput");
-                dataInp.placeholder = "Dátum: ÉÉÉÉHHNN";
-                break;
-            case 2:
-                let radioDiv = document.createElement("div");
-                radioDiv.classList.add("radio-input");
+        // Handle Continue Button Click
+        if (index !== 2) { // For all steps except Gender
+            continueBtn.addEventListener("click", function () {
+                // Save current input value to formData
+                switch (index) {
+                    case 0:
+                        formData.email = dataInp.value.trim();
+                        break;
+                    case 1:
+                        formData.birthDate = dataInp.value.trim();
+                        break;
+                    case 3:
+                        formData.username = dataInp.value.trim();
+                        break;
+                    case 4:
+                        formData.password = dataInp.value.trim(); // Save password before moving to the next step
+                        break;
+                }
 
-                let genders = [
-                    { value: "Male", label: "Férfi" },
-                    { value: "Female", label: "Nő" },
-                    { value: "Other", label: "Egyéb" }
-                ];
-
-                genders.forEach((gender, i) => {
-                    let label = document.createElement("label");
-                    label.classList.add("label");
-
-                    let radio = document.createElement("input");
-                    radio.type = "radio";
-                    radio.name = "gender-radio";
-                    radio.value = gender.value;
-                    radio.id = "value-" + (i + 1);
-                    if (i === 0) radio.checked = true;
-
-                    let text = document.createElement("p");
-                    text.classList.add("text");
-                    text.innerHTML = gender.label;
-
-                    label.appendChild(radio);
-                    label.appendChild(text);
-                    radioDiv.appendChild(label);
-                });
-
-                monitorScreenDiv.appendChild(radioDiv);
-                monitorScreenDiv.appendChild(continueBtn);
-                break;
-            case 3:
-                dataInp.type = "text";
-                break;
-            case 4:
-                dataInp.type = "password";
-                break;
-        }
-
-        continueBtn.addEventListener("click", function () {
-            if (index !== 2 && validateField(dataInp, index)) {
-                createFormStep(index + 1);
-            } else if (index === 2) {
-                let selectedGender = document.querySelector('input[name="gender-radio"]:checked');
+                if (validateField(dataInp, index)) {
+                    createFormStep(index + 1);
+                }
+            });
+        } else { // For Gender step
+            continueBtn.addEventListener("click", function () {
+                const selectedGender = document.querySelector('input[name="gender-radio"]:checked');
                 if (selectedGender) {
+                    formData.gender = selectedGender.value; // Save selected gender
                     createFormStep(index + 1);
                 } else {
                     alert("Please select your gender.");
                 }
-            }
-        });
+            });
+        }
     }
 
     createFormStep(currentIndex);
 
     function validateField(input, index) {
-        let value = input.value.trim();
+        const value = input.value.trim();
 
         switch (index) {
-            case 0:
+            case 0: // Email
                 if (!validateEmail(value)) {
                     alert("Please enter a valid email address.");
                     return false;
                 }
                 break;
-            case 1:
+            case 1: // Birth Date
                 if (!value) {
                     alert("Please enter your birth date.");
                     return false;
@@ -216,37 +307,28 @@ function renderRegistration(monitorScreenDiv) {
                     return false;
                 }
 
-                let year = parseInt(value.slice(0, 4), 10);
-                let month = parseInt(value.slice(4, 6), 10);
-                let day = parseInt(value.slice(6, 8), 10);
+                const year = parseInt(value.slice(0, 4), 10);
+                const month = parseInt(value.slice(4, 6), 10);
+                const day = parseInt(value.slice(6, 8), 10);
 
-                if (month < 1 || month > 12) {
-                    alert("Invalid month. Please enter a valid date.");
-                    return false;
-                }
-                let daysInMonth = new Date(year, month, 0).getDate();
-                if (day < 1 || day > daysInMonth) {
-                    alert("Invalid day. Please enter a valid date.");
-                    return false;
-                }
-
-                let birthdate = new Date(year, month - 1, day);
-                if (isNaN(birthdate.getTime())) {
+                if (month < 1 || month > 12 || day < 1 || day > 31) {
                     alert("Please enter a valid date.");
                     return false;
                 }
                 break;
-            case 3:
-                if (value.length < 3) {
-                    alert("Username must be at least 3 characters long.");
+            case 3: // Username
+                if (!value) {
+                    alert("Please enter a username.");
                     return false;
                 }
                 break;
-            case 4:
-                if (value.length < 6) {
+            case 4: // Password
+                if (!value || value.length < 6) {
                     alert("Password must be at least 6 characters long.");
                     return false;
                 }
+                break;
+            default:
                 break;
         }
 
