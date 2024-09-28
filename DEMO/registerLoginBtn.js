@@ -521,26 +521,27 @@ function renderRegistration(monitorScreenDiv) {
         const value = input.value.trim();
 
         switch (index) {
+            // Email
             case 0:
                 if (!validateEmail(value)) {
-                    alert("Please enter a valid email address.");
                     return false;
                 }
                 break;
+            // Birth date
             case 1:
                 if (!validateBirthDate(value)) {
                     return false;
                 }
                 break;
+            // Username
             case 3:
-                if (!value) {
-                    alert("Please enter a username.");
+                if (!validateUsername(value)) {
                     return false;
                 }
                 break;
+            // Password
             case 4:
-                if (!value || value.length < 6) {
-                    alert("Password must be at least 6 characters long.");
+                if (!validatePassword(value)) {
                     return false;
                 }
                 break;
@@ -549,32 +550,62 @@ function renderRegistration(monitorScreenDiv) {
         return true;
     }
 
-    // Helper function to validate email
+    // Validation functions
     function validateEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(String(email).toLowerCase());
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailPattern.test(email) ? true : false;
     }
 
-    // Helper function to validate birth date
-    function validateBirthDate(value) {
-        if (!value) {
-            alert("Please enter your birth date.");
-            return false;
-        }
-        if (!/^\d{8}$/.test(value)) {
-            alert("Please enter the date in the format ÉÉÉÉHHNN.");
-            return false;
-        }
+    function validateBirthDate(birthDate) {
+        // Ensure birthDate is 8 characters long
+        if (birthDate.length !== 8) return false;
 
-        const year = parseInt(value.slice(0, 4), 10);
-        const month = parseInt(value.slice(4, 6), 10);
-        const day = parseInt(value.slice(6, 8), 10);
+        const year = parseInt(birthDate.slice(0, 4), 10);
+        const month = parseInt(birthDate.slice(4, 6), 10);
+        const day = parseInt(birthDate.slice(6, 8), 10);
 
-        if (month < 1 || month > 12 || day < 1 || day > 31) {
-            alert("Please enter a valid date.");
-            return false;
-        }
-        return true;
+        // Validate year, month, and day
+        if (isNaN(year) || month < 1 || month > 12 || day < 1 || day > 31) return false;
+
+        const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0 || year % 400 === 0) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        if (day > daysInMonth[month - 1]) return false;
+
+        const today = new Date();
+        const birthDateObj = new Date(year, month - 1, day);
+
+        // Check birth date is not in the future and calculate age
+        if (birthDateObj > today) return false;
+
+        const age = today.getFullYear() - year - (today < new Date(today.getFullYear(), month - 1, day) ? 1 : 0);
+
+        // Validate age is between 18 and 100
+        return age >= 18 && age <= 100;
+    }
+
+    function validateUsername(username) {
+        // Check length constraints
+        const lengthValid = username.length >= 8 && username.length <= 20;
+
+        // Check allowed characters (letters, digits, hyphen, underscore)
+        const usernamePattern = /^[A-Za-z0-9_-]+$/;
+
+        // Return true if both conditions are met
+        return lengthValid && usernamePattern.test(username);
+    }
+
+    function validatePassword(password) {
+        // Check length constraints
+        const lengthValid = password.length >= 12 && password.length <= 36;
+
+        // Check allowed characters (letters, digits, specials)
+        const allowedChars = /^[A-Za-z0-9@!#$%^&*()\-_=+]+$/;
+
+        // Check for at least one number and one special character
+        const hasNumber = /[0-9]/.test(password);
+        const hasSpecialChar = /[!@#$%^&*()\-_=+]/.test(password);
+
+        // Return true if all conditions are met
+        return lengthValid && allowedChars.test(password) && hasNumber && hasSpecialChar;
     }
 }
 
