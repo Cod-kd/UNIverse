@@ -280,3 +280,15 @@
 .round:hover .arrow.primera {
     animation-delay: 0.2s;
 }
+
+/* Input details */
+#inputDetailsDiv{
+    max-width: 250px;
+    height: fit-content;
+    /* top: 14%; */
+    /* right: 32%; */
+    top: 40%; /* EMAIL */
+    color: #FF5A1F;
+    background-color: transparent;
+    position: fixed;
+}

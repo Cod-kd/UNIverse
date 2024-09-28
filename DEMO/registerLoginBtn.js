@@ -252,6 +252,10 @@ function renderRegistration(monitorScreenDiv) {
 
         monitorScreenDiv.appendChild(createHomeButton());
 
+        const inputDetailsDiv = document.createElement("inputDetailsDiv");
+        inputDetailsDiv.id = "inputDetailsDiv";
+        monitorScreenDiv.appendChild(inputDetailsDiv);
+
         let dataInp;
 
         if (index === 2) {
@@ -394,24 +398,46 @@ function renderRegistration(monitorScreenDiv) {
                 dataInp.id = "emailInput";
                 dataInp.placeholder = "Email...";
                 dataInp.value = formData.email;
+                dataInp.addEventListener("input", function (e) {
+                    const email = e.target.value;
+                    const conditions = validateEmail(email);
+                    updateValidation(conditions);
+                });
                 break;
             case 1:
                 dataInp.type = "text";
                 dataInp.classList.add("dateInput");
                 dataInp.placeholder = "Dátum: ÉÉÉÉHHNN";
                 dataInp.value = formData.birthDate;
+                dataInp.addEventListener("input", function (e) {
+                    const birthDate = e.target.value;
+                    const conditions = validateBirthDate(birthDate);
+                    updateValidation(conditions);
+                })
                 break;
             case 3:
                 dataInp.type = "text";
                 dataInp.placeholder = "@";
                 dataInp.id = "usernameInput";
                 dataInp.value = formData.username;
+                dataInp.addEventListener("input", function (e) {
+                    const username = e.target.value;
+                    const conditions = validateUsername(username);
+                    updateValidation(conditions);
+                });
                 break;
             case 4:
                 dataInp.type = "password";
                 dataInp.placeholder = "******";
                 dataInp.id = "passwordInput";
                 dataInp.value = formData.password;
+                inputDetailsDiv.style.top = "14%";
+                inputDetailsDiv.style.right = "32%";
+                dataInp.addEventListener("input", function (e) {
+                    const password = e.target.value;
+                    const conditions = validatePassword(password);
+                    updateValidation(conditions);
+                });
                 break;
         }
 
@@ -523,89 +549,180 @@ function renderRegistration(monitorScreenDiv) {
         switch (index) {
             // Email
             case 0:
-                if (!validateEmail(value)) {
+                const emailConditions = validateEmail(value);
+                if (Object.keys(emailConditions).length > 0) {
+                    updateValidation(emailConditions);
                     return false;
                 }
                 break;
             // Birth date
             case 1:
-                if (!validateBirthDate(value)) {
+                const birthDateConditions = validateBirthDate(value);
+                if (Object.keys(birthDateConditions).length > 0) {
+                    updateValidation(birthDateConditions);
                     return false;
                 }
                 break;
             // Username
             case 3:
-                if (!validateUsername(value)) {
+                const usernameConditions = validateUsername(value);
+                if (Object.keys(usernameConditions).length > 0) {
+                    updateValidation(usernameConditions);
                     return false;
                 }
                 break;
             // Password
             case 4:
-                if (!validatePassword(value)) {
+                const passwordConditions = validatePassword(value);
+                if (Object.keys(passwordConditions).length > 0) {
+                    updateValidation(passwordConditions);
                     return false;
                 }
                 break;
         }
 
+        updateValidation({}); // Clear any existing validation messages
         return true;
     }
 
     // Validation functions
     function validateEmail(email) {
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return emailPattern.test(email) ? true : false;
+        let conditions = {};
+
+        if (!email.includes('@')) {
+            conditions.atSymbol = '-Tartalmaz @-ot';
+        }
+
+        if (email.split('@')[0].length === 0) {
+            conditions.prefix = '-Tartalmaz szöveget @ előtt';
+        }
+
+        const domainPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!email.split('@')[1] || !domainPattern.test(email.split('@')[1])) {
+            conditions.domain = '-Tartalmaz domain-t';
+        }
+
+        return conditions;
     }
 
     function validateBirthDate(birthDate) {
+        let conditions = {};
+
         // Ensure birthDate is 8 characters long
-        if (birthDate.length !== 8) return false;
+        if (birthDate.length !== 8) {
+            conditions.length = '-8 karakter hosszú';
+        }
 
         const year = parseInt(birthDate.slice(0, 4), 10);
         const month = parseInt(birthDate.slice(4, 6), 10);
         const day = parseInt(birthDate.slice(6, 8), 10);
 
         // Validate year, month, and day
-        if (isNaN(year) || month < 1 || month > 12 || day < 1 || day > 31) return false;
+        if (isNaN(year) || month < 1 || month > 12 || day < 1 || day > 31) {
+            conditions.validDate = '-Nem megfelelő formátum (ÉÉÉÉHHNN)';
+        }
 
+        // Handle leap year and days in each month
         const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0 || year % 400 === 0) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-        if (day > daysInMonth[month - 1]) return false;
+        if (day > daysInMonth[month - 1]) {
+            conditions.validDay = '-Hibás nap az adott hónapban';
+        }
 
         const today = new Date();
         const birthDateObj = new Date(year, month - 1, day);
 
-        // Check birth date is not in the future and calculate age
-        if (birthDateObj > today) return false;
+        // Check birth date is not in the future
+        if (birthDateObj > today) {
+            conditions.futureDate = '-Nem jövőbeli dátum';
+        }
 
+        // Calculate age
         const age = today.getFullYear() - year - (today < new Date(today.getFullYear(), month - 1, day) ? 1 : 0);
 
         // Validate age is between 18 and 100
-        return age >= 18 && age <= 100;
+        if (age < 18 || age > 100) {
+            conditions.age = '-Életkor 18 és 100 közötti';
+        }
+
+        return conditions;
     }
 
     function validateUsername(username) {
-        // Check length constraints
-        const lengthValid = username.length >= 8 && username.length <= 20;
+        let conditions = {};
+
+        // Check length constraints (must be between 8 and 20 characters)
+        if (username.length < 8) {
+            conditions.length = '-Minimum 8 karakter hosszú';
+        } else if (username.length > 20) {
+            conditions.length = '-Maximum 20 karakter hosszú';
+        }
 
         // Check allowed characters (letters, digits, hyphen, underscore)
         const usernamePattern = /^[A-Za-z0-9_-]+$/;
+        if (!usernamePattern.test(username)) {
+            conditions.invalidChars = '-Tartalmazhat (szám, betű, -, _)';
+        }
 
-        // Return true if both conditions are met
-        return lengthValid && usernamePattern.test(username);
+        return conditions;
     }
 
     function validatePassword(password) {
-        // Check length constraints
-        const lengthValid = password.length >= 12 && password.length <= 36;
+        let conditions = {};
 
-        // Check allowed characters (letters, digits, specials)
-        const allowedChars = /^[A-Za-z0-9@!#$%^&*()\-_=+]+$/;
+        if (password.length < 12) {
+            conditions.length = '-Minimum 12 karakter hosszú';
+        } else if (password.length > 36) {
+            conditions.length = '-Maximum 36 karakter hosszú';
+        }
 
-        // Check for at least one number and one special character
-        const hasNumber = /[0-9]/.test(password);
-        const hasSpecialChar = /[!@#$%^&*()\-_=+]/.test(password);
+        if (!/[0-9]/.test(password)) {
+            conditions.hasNumber = '-Legalább egy számjegy';
+        }
 
-        // Return true if all conditions are met
-        return lengthValid && allowedChars.test(password) && hasNumber && hasSpecialChar;
+        if (!/[!@#$%^&*()\-_=+]/.test(password)) {
+            conditions.hasSpecialChar = '-Legalább egy speciális karakter';
+        }
+
+        return conditions;
+    }
+
+    function createDetailP(text, condition) {
+        const inputDetailsDiv = document.getElementById("inputDetailsDiv");
+        let existingP = Array.from(inputDetailsDiv.querySelectorAll("p")).find(p => p.dataset.condition === condition);
+
+        if (existingP) {
+            if (text) {
+                existingP.innerHTML = text;
+                existingP.style.animation = "appear 0.5s forwards ease";
+                existingP.style.display = "block";
+            } else {
+                existingP.style.animation = "disappear 0.5s forwards ease";
+                setTimeout(() => {
+                    existingP.remove();
+                }, 500);
+            }
+        } else if (text) {
+            let newDetailP = document.createElement("p");
+            newDetailP.innerHTML = text;
+            newDetailP.dataset.condition = condition;
+            inputDetailsDiv.appendChild(newDetailP);
+            newDetailP.style.animation = "appear 0.5s forwards ease";
+        }
+    }
+
+    function updateValidation(conditions) {
+        const inputDetailsDiv = document.getElementById("inputDetailsDiv");
+
+        Array.from(inputDetailsDiv.querySelectorAll("p")).forEach(p => {
+            if (!(p.dataset.condition in conditions)) {
+                createDetailP('', p.dataset.condition);
+            }
+        });
+
+        // Now update or create new conditions
+        for (let condition in conditions) {
+            createDetailP(conditions[condition], condition);
+        }
     }
 }
 

@@ -35,8 +35,4 @@ Username:
 Password:
     -min length = 12
     -max length = 36
-    -allowed characters:
-        -letters (A-Z, a-z)
-        -digits (0-9)
-        -specials (@, !, #, $, %, ^, &, *, -, _, =, +)
     -needs to include atleast 1 special character + 1 number

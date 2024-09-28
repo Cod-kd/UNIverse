@@ -10,12 +10,12 @@ JavaScript file:
     (DONE)    -if the registration is successful => display the successful animation (samples)
     (DONE)    -else => display the error animation (samples)
     (DONE)    -add form validation to all inputs
-    -add an inputInfoDiv which displays informations about the current input (eg. max length, min length, needs to include this/that etc.)
+    (DONE)    -add an inputInfoDiv which displays informations about the current input (eg. max length, min length, needs to include this/that etc.)
     -add id to all inputs for further PHP actions
     -add drag&drop interactivity to the infoCards => user can have "fun" with the cards
-    -if a condition isn't met => the specified information of the condition should be highlighted
-    -if a condition is met => the specified inromation of the condition should have a line-through text decoration with darker text color (marked as done)
-
+    (DONE)    -if a condition isn't met => the condition should stay in place
+    (DONE)    -if a condition is met => the condition should be removed with the disappear
+    (DONE)    -if a previous condition was met before, but now it's not met => that specified condition should appear with the appear animation
 CSS:
     (CAN'T FINISH DUE TO BUG)   -change the radio button's "circle"'s center so the black circle inside is centered horizontally + vertically
     -add floating effect to the infoCards => replicates that they can be dragged
