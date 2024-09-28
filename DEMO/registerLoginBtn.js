@@ -23,7 +23,7 @@ async function splitMainButton() {
     ];
 
     for (const data of buttonData) {
-        const newBtn = createButton(data);
+        const newBtn = createBasicButton(data);
         registerLoginBtnDiv.appendChild(newBtn);
         await delay(50);
         animateButton(newBtn);
@@ -31,22 +31,8 @@ async function splitMainButton() {
     }
 }
 
-function resetScreen() {
-    const monitorScreenDiv = document.getElementById("monitorScreenDiv");
-    monitorScreenDiv.innerHTML = `
-                    <h1>Az egyetem csak a tanulásról szól?</h1>
-                    <p>Ne csak a Neptunt-t és a Krétát használd az egyetemen! Próbáld ki kis csapatunk által fejlesztett
-                        webapplikációt!<br>
-                        Kezdésnek regisztrálj az oldalra, de ha van fiókod jelentkezz be és irány az UNIverse-um!
-                    </p>
-                    <div id="registerLoginBtnDiv">
-                        <button class="button" id="registerLoginBtn">Regisztráció/Bejelentkezés</button>
-                    </div>`;
-    monitorScreenDiv.style.display = "grid";
-}
-
 // Function to create a new button
-function createButton({ id, text, initialTransform }) {
+function createBasicButton({ id, text, initialTransform }) {
     const newBtn = document.createElement("button");
     newBtn.id = id;
     newBtn.innerHTML = text;
@@ -227,6 +213,13 @@ async function responseAnimation(status) {
     }
 }
 
+function createHomeButton(){
+    const homeBtn = document.createElement("button");
+    homeBtn.id = "homeBtn";
+    homeBtn.innerHTML = `<i class="fa fa-home"></i>`;
+    return homeBtn;
+}
+
 // Main function to render registration form
 function renderRegistration(monitorScreenDiv) {
     const requiredData = ["Email cím", "Születési Dátum", "Nem", "Felhasználónév", "Jelszó"];
@@ -253,18 +246,10 @@ function renderRegistration(monitorScreenDiv) {
         const backBtn = createNavigationButton(true);
         const continueBtn = createNavigationButton(false);
 
-        const homeBtn = document.createElement("button");
-        homeBtn.innerHTML = `<i class="fa fa-home"></i>`;
-        homeBtn.id = "homeBtn";
-        monitorScreenDiv.appendChild(homeBtn);
+        
+        monitorScreenDiv.appendChild(createHomeButton());
         homeBtn.addEventListener("click", async function () {
-            for (let data in formData) {
-                data = "";
-            }
-            await fadeOutMonitorScreen();
-            resetScreen();
-            await fadeInMonitorScreen();
-            homeBtn.remove();
+            window.location.reload();
         });
 
         let dataInp;
