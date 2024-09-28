@@ -213,10 +213,14 @@ async function responseAnimation(status) {
     }
 }
 
-function createHomeButton(){
+// Function for creating the home button
+function createHomeButton() {
     const homeBtn = document.createElement("button");
     homeBtn.id = "homeBtn";
     homeBtn.innerHTML = `<i class="fa fa-home"></i>`;
+    homeBtn.addEventListener("click", async function () {
+        window.location.reload();
+    });
     return homeBtn;
 }
 
@@ -246,11 +250,7 @@ function renderRegistration(monitorScreenDiv) {
         const backBtn = createNavigationButton(true);
         const continueBtn = createNavigationButton(false);
 
-        
         monitorScreenDiv.appendChild(createHomeButton());
-        homeBtn.addEventListener("click", async function () {
-            window.location.reload();
-        });
 
         let dataInp;
 
