@@ -186,14 +186,21 @@ function createNew404Effect(registerBtnDiv) {
 }
 
 // Function for loading animation
-async function loadingAnimation(duration) {
-    await createLoadingEffect("scale0");
-    await delay(200);
-    await createLoadingEffect("scale1");
-    await delay(duration);
-    await createLoadingEffect("scale0");
-    await delay(100);
-    await createLoadingEffect("rm");
+async function loadingAnimation(action, duration = 0) {
+    if (action !== "stop") {
+        await createLoadingEffect("scale0");
+        await delay(200);
+        await createLoadingEffect("scale1");
+        await delay(duration); // Use the duration for the loading effect
+        await createLoadingEffect("scale0");
+        await delay(100);
+        await createLoadingEffect("rm");
+    } else {
+        // Stop the loading animation immediately
+        await createLoadingEffect("scale0");
+        await delay(100); // Optional: add a slight delay for visual effect
+        await createLoadingEffect("rm");
+    }
 }
 
 // Function for response animation
@@ -506,18 +513,43 @@ function renderRegistration(monitorScreenDiv) {
 
         registerBtn.addEventListener("click", async function () {
             if (validateField(dataInp, index)) {
-                let success = true; // This should be replaced with actual API call result
-                await fadeOutMonitorScreen();
-                monitorScreenDiv.innerHTML = '';
-                registerBtnDiv.style.top = "-10%";
-                monitorScreenDiv.appendChild(registerBtnDiv);
-                registerBtn.style.transform = "scale(0)";
-                await fadeInMonitorScreen();
-                await delay(600);
-                registerBtn.remove();
-                registerBtnDiv.style.marginTop = "22%";
-                await loadingAnimation(3000);
-                await responseAnimation(success ? "200" : "404");
+                try {
+                    await fadeOutMonitorScreen();
+                    monitorScreenDiv.innerHTML = '';
+                    registerBtnDiv.style.top = "-10%";
+                    monitorScreenDiv.appendChild(registerBtnDiv);
+                    registerBtn.style.transform = "scale(0)";
+                    await fadeInMonitorScreen();
+                    await delay(600);
+                    registerBtn.remove();
+                    registerBtnDiv.style.marginTop = "22%";
+
+                    // Start loading animation
+                    const loadingStart = performance.now();
+                    loadingAnimation();
+
+                    // Make the fetch request
+                    const response = await fetch("createProfile.php");
+
+                    // Stop loading animation
+                    const loadingEnd = performance.now();
+                    const duration = Math.max(loadingEnd - loadingStart, 0); // Calculate duration
+                    loadingAnimation("stop", duration);
+
+                    if (response.ok) {
+                        await responseAnimation("200");
+                    } else {
+                        await responseAnimation("404");
+                    }
+
+                    const data = await response.text();
+                    console.log(data);
+                } catch (err) {
+                    console.error("Error: ", err);
+                    // In case of an error, stop loading animation if it's still running
+                    loadingAnimation("stop");
+                    await responseAnimation("404");
+                }
             }
         });
     }
