@@ -9,6 +9,9 @@ JavaScript file:
     (DONE)    -add a variable named success (boolean)
     (DONE)    -if the registration is successful => display the successful animation (samples)
     (DONE)    -else => display the error animation (samples)
+    -add form validation to all inputs
+    -add id to all inputs for further PHP actions
+    -add more descriptive comments
 
 CSS:
     (CAN'T FINISH DUE TO BUG)   -change the radio button's "circle"'s center so the black circle inside is centered horizontally + vertically
