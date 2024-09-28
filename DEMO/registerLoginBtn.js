@@ -406,7 +406,7 @@ function renderRegistration(monitorScreenDiv) {
                 break;
             case 1:
                 dataInp.type = "text";
-                dataInp.classList.add("dateInput");
+                dataInp.id = "dateInput";
                 dataInp.placeholder = "Dátum: ÉÉÉÉHHNN";
                 dataInp.value = formData.birthDate;
                 dataInp.addEventListener("input", function (e) {

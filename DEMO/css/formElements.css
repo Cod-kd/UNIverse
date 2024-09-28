@@ -132,7 +132,7 @@
 }
 
 /* Date Input */
-.dateInput {
+#dateInput {
     margin: 0 auto;
     height: 50px;
     width: 290px;
@@ -148,14 +148,14 @@
     padding-left: 35px;
 }
 
-.dateInput::placeholder {
+#dateInput::placeholder {
     font-weight: 500;
     letter-spacing: 1px;
     transform: translateX(-6px);
     transition: transform 0.5s ease;
 }
 
-.dateInput:focus::placeholder {
+#dateInput:focus::placeholder {
     transform: translateX(-85px);
 }
 
