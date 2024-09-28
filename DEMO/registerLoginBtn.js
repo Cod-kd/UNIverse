@@ -105,7 +105,7 @@ function createNewLottiePlayer(registerBtnDiv) {
     registerBtnDiv.appendChild(script);
 
     const lottiePlayer = document.createElement("dotlottie-player");
-    lottiePlayer.src = "https://lottie.host/5a23c118-b29a-403d-9196-57df56d6dc91/k24i6KKQbo.json";
+    lottiePlayer.src = "https://lottie.host/2634e709-a42e-414a-a8b3-960be88951c0/1X6R8KP5qy.json";
     lottiePlayer.id = "animatedButton";
     lottiePlayer.setAttribute("speed", "1");
     lottiePlayer.setAttribute("autoplay", "");
