@@ -70,7 +70,6 @@ main {
     transition: all 0.3s;
     align-items: center;
     justify-items: center;
-    gap: 50px;
 }
 
 .button {

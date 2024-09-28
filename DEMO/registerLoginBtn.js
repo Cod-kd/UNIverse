@@ -1,98 +1,122 @@
-let registerLoginBtn = document.getElementById("registerLoginBtn");
-let registerLoginBtnDiv = document.getElementById("registerLoginBtnDiv");
+// DOM Elements
+const registerLoginBtn = document.getElementById("registerLoginBtn");
+const registerLoginBtnDiv = document.getElementById("registerLoginBtnDiv");
+const monitorScreenDiv = document.getElementById("monitorScreenDiv");
 
+// Helper function for creating delays
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-registerLoginBtn.addEventListener("click", function () {
-    splitMainButton();
-});
+// Event listener for main button
+registerLoginBtn.addEventListener("click", splitMainButton);
 
+// Function to split the main button into Register and Login buttons
 async function splitMainButton() {
     registerLoginBtn.style.transform = "scale(0)";
     registerLoginBtn.style.transition = "transform 0.5s";
 
     await delay(500);
-
     registerLoginBtn.remove();
 
-    for (let i = 0; i < 2; i++) {
-        let newBtn = document.createElement("button");
-        newBtn.classList.add("button");
-        newBtn.style.position = "relative";
-        newBtn.style.opacity = "0";
+    const buttonData = [
+        { id: "registerBtn", text: "Regisztráció", initialTransform: "translateX(-200%)" },
+        { id: "loginBtn", text: "Bejelentkezés", initialTransform: "translateX(200%)" }
+    ];
 
-        if (i === 0) {
-            newBtn.id = "registerBtn";
-            newBtn.innerHTML = "Regisztráció";
-            newBtn.style.transform = "translateX(-200%)";
-        } else {
-            newBtn.id = "loginBtn";
-            newBtn.innerHTML = "Bejelentkezés";
-            newBtn.style.transform = "translateX(200%)";
-        }
-
+    for (const data of buttonData) {
+        const newBtn = createButton(data);
         registerLoginBtnDiv.appendChild(newBtn);
         await delay(50);
-
-        newBtn.style.transform = "translateX(0)";
-        newBtn.style.opacity = "1";
-
-        newBtn.addEventListener("mouseenter", function () {
-            newBtn.style.transform = "scale(1.05)";
-        });
-
-        newBtn.addEventListener("mouseleave", function () {
-            newBtn.style.transform = "scale(1)";
-        });
-
-        newBtn.addEventListener("click", async function () {
-            let monitorScreenDiv = document.getElementById("monitorScreenDiv");
-            await delay(200);
-            monitorScreenDiv.style.opacity = "0";
-            await delay(300)
-            if (i === 0) {
-                monitorScreenDiv.innerHTML = ``;
-                renderRegistration(monitorScreenDiv);
-            }
-            else {
-                renderLogin();
-            }
-            await delay(300);
-            monitorScreenDiv.style.opacity = "1";
-        });
+        animateButton(newBtn);
+        addButtonListeners(newBtn, data.id === "registerBtn");
     }
 }
 
-function createLoadingEffect(operation) {
-    let registerBtnDiv = document.getElementById("registerBtnDiv");
-    const lottiePlayerEl = document.getElementById("animatedButton");
-    if (lottiePlayerEl) {
-        if (operation === "scale1") {
-            lottiePlayerEl.style.transform = "scale(1)";
-        } else if (operation === "scale0") {
-            lottiePlayerEl.style.transform = "scale(0)";
-        } else if (operation === "rm") {
-            lottiePlayerEl.remove();
+// Function to create a new button
+function createButton({ id, text, initialTransform }) {
+    const newBtn = document.createElement("button");
+    newBtn.id = id;
+    newBtn.innerHTML = text;
+    newBtn.classList.add("button");
+    newBtn.style.position = "relative";
+    newBtn.style.opacity = "0";
+    newBtn.style.transform = initialTransform;
+    return newBtn;
+}
+
+// Function to animate button appearance
+function animateButton(button) {
+    button.style.transform = "translateX(0)";
+    button.style.opacity = "1";
+}
+
+// Function to add event listeners to buttons
+function addButtonListeners(button, isRegisterBtn) {
+    button.addEventListener("mouseenter", () => button.style.transform = "scale(1.05)");
+    button.addEventListener("mouseleave", () => button.style.transform = "scale(1)");
+    button.addEventListener("click", async () => {
+        await fadeOutMonitorScreen();
+        if (isRegisterBtn) {
+            monitorScreenDiv.innerHTML = '';
+            renderRegistration(monitorScreenDiv);
+        } else {
+            renderLogin();
         }
+        await fadeInMonitorScreen();
+    });
+}
+
+// Functions to fade monitor screen in and out
+async function fadeOutMonitorScreen() {
+    monitorScreenDiv.style.opacity = "0";
+    await delay(300);
+}
+
+async function fadeInMonitorScreen() {
+    monitorScreenDiv.style.opacity = "1";
+    await delay(300);
+}
+
+// Function to create loading animation
+function createLoadingEffect(operation) {
+    const registerBtnDiv = document.getElementById("registerBtnDiv");
+    const lottiePlayerEl = document.getElementById("animatedButton");
+
+    if (lottiePlayerEl) {
+        handleExistingLottiePlayer(lottiePlayerEl, operation);
     } else {
-        const script = document.createElement("script");
-        script.src = "https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs";
-        script.type = "module";
-        registerBtnDiv.appendChild(script);
-
-        const lottiePlayer = document.createElement("dotlottie-player");
-        lottiePlayer.src = "https://lottie.host/5a23c118-b29a-403d-9196-57df56d6dc91/k24i6KKQbo.json";
-        lottiePlayer.id = "animatedButton";
-        lottiePlayer.setAttribute("speed", "1");
-        lottiePlayer.setAttribute("autoplay", "");
-        lottiePlayer.setAttribute("loop", "true")
-
-        registerBtnDiv.appendChild(lottiePlayer);
+        createNewLottiePlayer(registerBtnDiv);
     }
 }
 
+// Helper function to handle existing Lottie player
+function handleExistingLottiePlayer(lottiePlayerEl, operation) {
+    if (operation === "scale1" || operation === "scale0") {
+        lottiePlayerEl.style.transform = `scale(${operation === "scale1" ? 1 : 0})`;
+    } else if (operation === "rm") {
+        lottiePlayerEl.remove();
+    }
+}
+
+// Helper function to create a new Lottie player
+function createNewLottiePlayer(registerBtnDiv) {
+    const script = document.createElement("script");
+    script.src = "https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs";
+    script.type = "module";
+    registerBtnDiv.appendChild(script);
+
+    const lottiePlayer = document.createElement("dotlottie-player");
+    lottiePlayer.src = "https://lottie.host/5a23c118-b29a-403d-9196-57df56d6dc91/k24i6KKQbo.json";
+    lottiePlayer.id = "animatedButton";
+    lottiePlayer.setAttribute("speed", "1");
+    lottiePlayer.setAttribute("autoplay", "");
+    lottiePlayer.setAttribute("loop", "true");
+
+    registerBtnDiv.appendChild(lottiePlayer);
+}
+
+// Function to create successful response effect
 function createSuccessfulResponseEffect() {
-    let registerBtnDiv = document.getElementById("registerBtnDiv");
+    const registerBtnDiv = document.getElementById("registerBtnDiv");
     const script = document.createElement("script");
     script.src = "https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs";
     script.type = "module";
@@ -107,56 +131,61 @@ function createSuccessfulResponseEffect() {
     registerBtnDiv.appendChild(lottiePlayer);
 }
 
+// Function to create response heading
 function createResponseHeading(operation, text) {
-    let registerBtnDiv = document.getElementById("registerBtnDiv");
+    const registerBtnDiv = document.getElementById("registerBtnDiv");
     let responseHeadingEl = document.getElementById("responseHeading");
+
     if (responseHeadingEl) {
         if (operation === "scale1") {
             responseHeadingEl.style.transform = "scale(1)";
         }
     } else {
-        let responseHeading = document.createElement("h2");
-        responseHeading.id = "responseHeading";
-        responseHeading.innerHTML = text;
-        responseHeading.style.transform = "scale(0)";
-        registerBtnDiv.appendChild(responseHeading);
+        responseHeadingEl = document.createElement("h2");
+        responseHeadingEl.id = "responseHeading";
+        responseHeadingEl.innerHTML = text;
+        responseHeadingEl.style.transform = "scale(0)";
+        registerBtnDiv.appendChild(responseHeadingEl);
     }
 }
 
+// Function to create 404 effect
 function create404Effect(operation) {
-    let registerBtnDiv = document.getElementById("registerBtnDiv");
+    const registerBtnDiv = document.getElementById("registerBtnDiv");
     const existing404El = document.getElementById("animated404");
 
     if (existing404El) {
-        if (operation === "scale1") {
-            existing404El.style.transform = "scale(1)";
-        } else if (operation === "scale0") {
-            existing404El.style.transform = "scale(0)";
-        }
+        existing404El.style.transform = `scale(${operation === "scale1" ? 1 : 0})`;
     } else {
-        const script = document.createElement("script");
-        script.src = "https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs";
-        script.type = "module";
-        registerBtnDiv.appendChild(script);
-
-        const lottiePlayer = document.createElement("dotlottie-player");
-        lottiePlayer.src = "https://lottie.host/7ecd4f29-9d72-4ba1-83c7-8516c2b607dc/bwUOV026I3.json";
-        lottiePlayer.id = "animated404";
-        lottiePlayer.setAttribute("speed", "1");
-        lottiePlayer.setAttribute("autoplay", "");
-        lottiePlayer.setAttribute("loop", "true");
-
-        lottiePlayer.style.transform = "scale(0)";
-        lottiePlayer.style.transition = "transform 0.5s";
-
-        registerBtnDiv.appendChild(lottiePlayer);
-
-        setTimeout(() => {
-            lottiePlayer.style.transform = "scale(1)";
-        }, 10);
+        createNew404Effect(registerBtnDiv);
     }
 }
 
+// Helper function to create a new 404 effect
+function createNew404Effect(registerBtnDiv) {
+    const script = document.createElement("script");
+    script.src = "https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs";
+    script.type = "module";
+    registerBtnDiv.appendChild(script);
+
+    const lottiePlayer = document.createElement("dotlottie-player");
+    lottiePlayer.src = "https://lottie.host/7ecd4f29-9d72-4ba1-83c7-8516c2b607dc/bwUOV026I3.json";
+    lottiePlayer.id = "animated404";
+    lottiePlayer.setAttribute("speed", "1");
+    lottiePlayer.setAttribute("autoplay", "");
+    lottiePlayer.setAttribute("loop", "true");
+
+    lottiePlayer.style.transform = "scale(0)";
+    lottiePlayer.style.transition = "transform 0.5s";
+
+    registerBtnDiv.appendChild(lottiePlayer);
+
+    setTimeout(() => {
+        lottiePlayer.style.transform = "scale(1)";
+    }, 10);
+}
+
+// Function for loading animation
 async function loadingAnimation(duration) {
     await createLoadingEffect("scale0");
     await delay(200);
@@ -167,17 +196,24 @@ async function loadingAnimation(duration) {
     await createLoadingEffect("rm");
 }
 
+// Function for response animation
 async function responseAnimation(status) {
     if (status === "200") {
         createResponseHeading("", "Sikeres regisztráció!");
         await delay(1000);
         createResponseHeading("scale1");
         createSuccessfulResponseEffect();
+        registerBtnDiv.style.marginTop = "20%";
     } else if (status === "404") {
-        await create404Effect("scale1");
+        await delay(1000);
+        createResponseHeading("", "Hiba történt");
+        createResponseHeading("scale1");
+        create404Effect("scale1");
+        registerBtnDiv.style.marginTop = "14%";
     }
 }
 
+// Main function to render registration form
 function renderRegistration(monitorScreenDiv) {
     const requiredData = ["Email cím", "Születési Dátum", "Nem", "Felhasználónév", "Jelszó"];
     let currentIndex = 0;
@@ -190,229 +226,285 @@ function renderRegistration(monitorScreenDiv) {
         password: ""
     };
 
-    monitorScreenDiv.style.gridTemplateColumns = "500px 0px";
+    createFormStep(currentIndex);
 
+    // Function to create each step of the form
     async function createFormStep(index) {
-        monitorScreenDiv.style.opacity = "0";
-        await delay(200);
+        await fadeOutMonitorScreen();
         monitorScreenDiv.innerHTML = "";
-        await delay(200);
-        monitorScreenDiv.style.opacity = "1";
 
-        const dataHeading = document.createElement("h1");
-        dataHeading.innerHTML = requiredData[index];
-        dataHeading.classList.add("dataHeading");
+        const dataHeading = createHeading(requiredData[index]);
         monitorScreenDiv.appendChild(dataHeading);
 
-        const btnInnerHtml = `
-            <div class="round">
+        const backBtn = createNavigationButton(true);
+        const continueBtn = createNavigationButton(false);
+
+        let dataInp;
+
+        if (index === 2) {
+            const radioDiv = createGenderRadioButtons();
+            monitorScreenDiv.appendChild(radioDiv);
+        } else {
+            dataInp = createInputField(index, formData);
+            monitorScreenDiv.appendChild(dataInp);
+
+            if (index === 4) {
+                const showBtn = createShowPasswordButton(dataInp);
+                monitorScreenDiv.appendChild(showBtn);
+            }
+        }
+
+        if (index > 0) {
+            monitorScreenDiv.insertBefore(backBtn, dataHeading);
+            addBackButtonListener(backBtn, index, dataInp);
+        }
+
+        // Always add the continueBtn for all steps except the last one
+        if (index < requiredData.length - 1) {
+            monitorScreenDiv.appendChild(continueBtn);
+        }
+
+        // Set grid layout
+        monitorScreenDiv.style.gridTemplateColumns = index > 0 ? "repeat(3, 1fr)" : "500px 0px";
+
+        if (index === requiredData.length - 1 && !document.getElementById("registerBtnDiv")) {
+            createFinalRegisterButton(monitorScreenDiv, dataInp, index);
+        }
+
+        if (index !== 2) {
+            addContinueButtonListener(continueBtn, index, dataInp);
+        } else {
+            addGenderContinueButtonListener(continueBtn, index);
+        }
+
+        // Apply initial styles for fade-in effect
+        const elements = monitorScreenDiv.children;
+        for (let el of elements) {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(20px)";
+            el.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+        }
+
+        // Trigger reflow to ensure the initial styles are applied
+        monitorScreenDiv.offsetHeight;
+
+        // Fade in the monitor screen and its children
+        await fadeInMonitorScreen();
+
+        // Animate the elements
+        for (let el of elements) {
+            el.style.opacity = "1";
+            el.style.transform = "translateY(0)";
+        }
+    }
+
+    // Helper functions for form creation
+    function createHeading(text) {
+        const heading = document.createElement("h1");
+        heading.innerHTML = text;
+        heading.classList.add("dataHeading");
+        return heading;
+    }
+
+    function createNavigationButton(isBackButton) {
+        const btn = document.createElement("div");
+        btn.classList.add("center-con");
+        let rotation = "0deg";
+        if (isBackButton) {
+            rotation = "180deg";
+        };
+        btn.innerHTML = `
+            <div class="round" style="transform: rotate(${rotation})">
                 <div id="cta">
                     <span class="arrow primera next"></span>
                     <span class="arrow segunda next"></span>
                 </div>
             </div>`;
+        return btn;
+    }
 
-        const backBtn = document.createElement("div");
-        backBtn.classList.add("center-con");
-        backBtn.style.transform = "rotate(180deg)";
-        backBtn.innerHTML = btnInnerHtml;
+    function createGenderRadioButtons() {
+        const radioDiv = document.createElement("div");
+        radioDiv.classList.add("radio-input");
 
-        const continueBtn = document.createElement("div");
-        continueBtn.classList.add("center-con");
-        continueBtn.innerHTML = btnInnerHtml;
+        const genders = [
+            { value: "Male", label: "Férfi" },
+            { value: "Female", label: "Nő" },
+            { value: "Other", label: "Egyéb" }
+        ];
 
-        let dataInp;
+        genders.forEach((gender, i) => {
+            const label = document.createElement("label");
+            label.classList.add("label");
 
-        if (index === 3) {
-            dataInp = document.createElement("input");
-            dataInp.type = "text";
-            dataInp.placeholder = "@";
-            dataInp.id = "usernameInput";
-            dataInp.classList.add("input");
-            dataInp.value = formData.username;
-            monitorScreenDiv.appendChild(dataInp);
-        }
-        else if (index === 2) {
-            const radioDiv = document.createElement("div");
-            radioDiv.classList.add("radio-input");
+            const radio = document.createElement("input");
+            radio.type = "radio";
+            radio.name = "gender-radio";
+            radio.value = gender.value;
+            radio.id = "value-" + (i + 1);
 
-            const genders = [
-                { value: "Male", label: "Férfi" },
-                { value: "Female", label: "Nő" },
-                { value: "Other", label: "Egyéb" }
-            ];
-
-            genders.forEach((gender, i) => {
-                const label = document.createElement("label");
-                label.classList.add("label");
-
-                const radio = document.createElement("input");
-                radio.type = "radio";
-                radio.name = "gender-radio";
-                radio.value = gender.value;
-                radio.id = "value-" + (i + 1);
-
-                if (formData.gender === gender.value) {
-                    radio.checked = true;
-                } else if (!formData.gender && i === 0) {
-                    radio.checked = true;
-                }
-
-                const text = document.createElement("p");
-                text.classList.add("text");
-                text.innerHTML = gender.label;
-
-                label.appendChild(radio);
-                label.appendChild(text);
-                radioDiv.appendChild(label);
-            });
-
-            monitorScreenDiv.appendChild(radioDiv);
-            monitorScreenDiv.appendChild(continueBtn);
-        }
-        else {
-            dataInp = document.createElement("input");
-            dataInp.classList.add("input");
-
-            switch (index) {
-                case 0:
-                    dataInp.type = "email";
-                    dataInp.id = "emailInput";
-                    dataInp.placeholder = "Email...";
-                    dataInp.value = formData.email;
-                    break;
-                case 1:
-                    dataInp.type = "text";
-                    dataInp.classList.add("dateInput");
-                    dataInp.placeholder = "Dátum: ÉÉÉÉHHNN";
-                    dataInp.value = formData.birthDate;
-                    break;
-                case 4:
-                    dataInp.type = "password";
-                    dataInp.placeholder = "******";
-                    dataInp.id = "passwordInput";
-                    dataInp.value = formData.password;
-
-                    const showBtn = document.createElement("button");
-                    showBtn.id = "showBtn";
-                    showBtn.classList.add("button");
-                    showBtn.innerHTML = "Show";
-                    monitorScreenDiv.appendChild(showBtn);
-
-                    showBtn.addEventListener("click", function () {
-                        if (dataInp.type === "password") {
-                            dataInp.type = "text";
-                            showBtn.innerText = "Hide";
-                        } else {
-                            dataInp.type = "password";
-                            showBtn.innerText = "Show";
-                        }
-                    });
-
-                    break;
+            if (formData.gender === gender.value) {
+                radio.checked = true;
+            } else if (!formData.gender && i === 0) {
+                radio.checked = true;
             }
 
-            monitorScreenDiv.appendChild(dataInp);
+            const text = document.createElement("p");
+            text.classList.add("text");
+            text.innerHTML = gender.label;
+
+            label.appendChild(radio);
+            label.appendChild(text);
+            radioDiv.appendChild(label);
+        });
+
+        return radioDiv;
+    }
+
+    function createInputField(index, formData) {
+        const dataInp = document.createElement("input");
+        dataInp.classList.add("input");
+
+        dataInp.style.transition = "all 0.3s ease";
+        dataInp.addEventListener("mouseover", () => {
+            dataInp.style.transform = "scale(1.05)";
+            dataInp.style.boxShadow = "0 0 10px rgba(0,0,0,0.1)";
+        });
+        dataInp.addEventListener("mouseout", () => {
+            dataInp.style.transform = "scale(1)";
+            dataInp.style.boxShadow = "none";
+        });
+
+        switch (index) {
+            case 0:
+                dataInp.type = "email";
+                dataInp.id = "emailInput";
+                dataInp.placeholder = "Email...";
+                dataInp.value = formData.email;
+                break;
+            case 1:
+                dataInp.type = "text";
+                dataInp.classList.add("dateInput");
+                dataInp.placeholder = "Dátum: ÉÉÉÉHHNN";
+                dataInp.value = formData.birthDate;
+                break;
+            case 3:
+                dataInp.type = "text";
+                dataInp.placeholder = "@";
+                dataInp.id = "usernameInput";
+                dataInp.value = formData.username;
+                break;
+            case 4:
+                dataInp.type = "password";
+                dataInp.placeholder = "******";
+                dataInp.id = "passwordInput";
+                dataInp.value = formData.password;
+                break;
         }
 
-        if (index > 0) {
-            monitorScreenDiv.insertBefore(backBtn, dataHeading);
-            monitorScreenDiv.style.gridTemplateColumns = "repeat(3, 1fr)";
-            backBtn.addEventListener("click", function () {
-                switch (index) {
-                    case 0:
-                        formData.email = dataInp.value.trim();
-                        break;
-                    case 1:
-                        formData.birthDate = dataInp.value.trim();
-                        break;
-                    case 3:
-                        formData.username = dataInp.value.trim();
-                        break;
-                    case 4:
-                        formData.password = dataInp.value.trim();
-                        break;
-                }
+        return dataInp;
+    }
 
-                createFormStep(index - 1);
-            });
-        }
+    function createShowPasswordButton(passwordInput) {
+        const showBtn = document.createElement("button");
+        showBtn.id = "showBtn";
+        showBtn.classList.add("button");
+        showBtn.innerHTML = "Show";
 
-        if (index < requiredData.length - 1 && index !== 2) {
-            monitorScreenDiv.appendChild(continueBtn);
-        } else if (index !== 2 && !document.getElementById("registerBtnDiv")) {
-            const registerBtnDiv = document.createElement("div");
-            const registerBtn = document.createElement("button");
+        showBtn.addEventListener("click", function () {
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                showBtn.innerText = "Hide";
+            } else {
+                passwordInput.type = "password";
+                showBtn.innerText = "Show";
+            }
+        });
 
-            registerBtnDiv.id = "registerBtnDiv";
-            registerBtn.id = "registerBtn";
-            registerBtn.classList.add("button");
-            registerBtn.innerHTML = "Regisztráció";
-            registerBtnDiv.style.position = "fixed";
-            registerBtnDiv.style.top = "5%";
-            registerBtnDiv.appendChild(registerBtn);
-            monitorScreenDiv.appendChild(registerBtnDiv);
+        return showBtn;
+    }
 
-            registerBtn.addEventListener("click", async function () {
-                if (validateField(dataInp, index)) {
-                    let success = true;
-                    monitorScreenDiv.style.opacity = "0";
-                    await delay(200);
-                    monitorScreenDiv.innerHTML = ``;
-                    registerBtnDiv.style.top = "-10%"
-                    monitorScreenDiv.appendChild(registerBtnDiv);
-                    registerBtn.style.transform = "scale(0)";
-                    monitorScreenDiv.style.opacity = "1";
-                    await delay(600);
-                    registerBtn.remove();
-                    await loadingAnimation(3000);
-                    if (success) {
-                        await responseAnimation("200");
-                    }
-                    else {
-                        await responseAnimation("404");
-                    }
-                }
-            });
-        }
+    function addBackButtonListener(backBtn, index, dataInp) {
+        backBtn.addEventListener("click", function () {
+            updateFormData(index, dataInp);
+            createFormStep(index - 1);
+        });
+    }
 
-        if (index !== 2) {
-            continueBtn.addEventListener("click", function () {
-                switch (index) {
-                    case 0:
-                        formData.email = dataInp.value.trim();
-                        break;
-                    case 1:
-                        formData.birthDate = dataInp.value.trim();
-                        break;
-                    case 3:
-                        formData.username = dataInp.value.trim();
-                        break;
-                    case 4:
-                        formData.password = dataInp.value.trim();
-                        break;
-                }
+    function addContinueButtonListener(continueBtn, index, dataInp) {
+        continueBtn.addEventListener("click", function () {
+            if (validateField(dataInp, index)) {
+                updateFormData(index, dataInp);
+                createFormStep(index + 1);
+            }
+        });
+    }
 
-                if (validateField(dataInp, index)) {
-                    createFormStep(index + 1);
-                }
-            });
-        } else {
-            continueBtn.addEventListener("click", function () {
-                const selectedGender = document.querySelector('input[name="gender-radio"]:checked');
-                if (selectedGender) {
-                    formData.gender = selectedGender.value;
-                    createFormStep(index + 1);
-                } else {
-                    alert("Please select your gender.");
-                }
-            });
+    function addGenderContinueButtonListener(continueBtn, index) {
+        continueBtn.addEventListener("click", function () {
+            const selectedGender = document.querySelector('input[name="gender-radio"]:checked');
+            if (selectedGender) {
+                formData.gender = selectedGender.value;
+                createFormStep(index + 1);
+            } else {
+                alert("Please select your gender.");
+            }
+        });
+    }
+
+    function createFinalRegisterButton(monitorScreenDiv, dataInp, index) {
+        const registerBtnDiv = document.createElement("div");
+        const registerBtn = document.createElement("button");
+
+        registerBtnDiv.id = "registerBtnDiv";
+        registerBtn.id = "registerBtn";
+        registerBtn.classList.add("button");
+        registerBtn.innerHTML = "Regisztráció";
+        registerBtnDiv.style.position = "fixed";
+        registerBtnDiv.style.top = "5%";
+        registerBtnDiv.appendChild(registerBtn);
+        monitorScreenDiv.appendChild(registerBtnDiv);
+
+        registerBtn.addEventListener("click", async function () {
+            if (validateField(dataInp, index)) {
+                let success = true; // This should be replaced with actual API call result
+                await fadeOutMonitorScreen();
+                monitorScreenDiv.innerHTML = '';
+                registerBtnDiv.style.top = "-10%";
+                monitorScreenDiv.appendChild(registerBtnDiv);
+                registerBtn.style.transform = "scale(0)";
+                await fadeInMonitorScreen();
+                await delay(600);
+                registerBtn.remove();
+                registerBtnDiv.style.marginTop = "22%";
+                await loadingAnimation(3000);
+                await responseAnimation(success ? "200" : "404");
+            }
+        });
+    }
+
+    // Helper function to update form data
+    function updateFormData(index, dataInp) {
+        switch (index) {
+            case 0:
+                formData.email = dataInp.value.trim();
+                break;
+            case 1:
+                formData.birthDate = dataInp.value.trim();
+                break;
+            case 3:
+                formData.username = dataInp.value.trim();
+                break;
+            case 4:
+                formData.password = dataInp.value.trim();
+                break;
         }
     }
 
-    createFormStep(currentIndex);
-
+    // Function to validate form fields
     function validateField(input, index) {
+        if (!input) return true; // For gender selection, which doesn't have an input field
+
         const value = input.value.trim();
 
         switch (index) {
@@ -423,21 +515,7 @@ function renderRegistration(monitorScreenDiv) {
                 }
                 break;
             case 1:
-                if (!value) {
-                    alert("Please enter your birth date.");
-                    return false;
-                }
-                if (!/^\d{8}$/.test(value)) {
-                    alert("Please enter the date in the format ÉÉÉÉHHNN.");
-                    return false;
-                }
-
-                const year = parseInt(value.slice(0, 4), 10);
-                const month = parseInt(value.slice(4, 6), 10);
-                const day = parseInt(value.slice(6, 8), 10);
-
-                if (month < 1 || month > 12 || day < 1 || day > 31) {
-                    alert("Please enter a valid date.");
+                if (!validateBirthDate(value)) {
                     return false;
                 }
                 break;
@@ -453,31 +531,61 @@ function renderRegistration(monitorScreenDiv) {
                     return false;
                 }
                 break;
-            default:
-                break;
         }
 
         return true;
     }
 
+    // Helper function to validate email
     function validateEmail(email) {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(String(email).toLowerCase());
     }
+
+    // Helper function to validate birth date
+    function validateBirthDate(value) {
+        if (!value) {
+            alert("Please enter your birth date.");
+            return false;
+        }
+        if (!/^\d{8}$/.test(value)) {
+            alert("Please enter the date in the format ÉÉÉÉHHNN.");
+            return false;
+        }
+
+        const year = parseInt(value.slice(0, 4), 10);
+        const month = parseInt(value.slice(4, 6), 10);
+        const day = parseInt(value.slice(6, 8), 10);
+
+        if (month < 1 || month > 12 || day < 1 || day > 31) {
+            alert("Please enter a valid date.");
+            return false;
+        }
+        return true;
+    }
 }
 
+// Function to configure arrow buttons
 function arrowBtnsConfig() {
     const roundElement = document.querySelector('.round');
     const arrows = document.querySelectorAll('.arrow');
-    roundElement.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        arrows.forEach(arrow => {
-            arrow.classList.toggle('bounceAlpha');
+    if (roundElement) {
+        roundElement.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            arrows.forEach(arrow => {
+                arrow.classList.toggle('bounceAlpha');
+            });
         });
-    });
+    }
 }
 
+// Function to render login (placeholder for now)
 function renderLogin() {
-    let loginBtn = document.getElementById("loginBtn");
+    console.log("Login rendering not implemented yet");
 }
+
+// Initialize the script
+document.addEventListener('DOMContentLoaded', () => {
+    arrowBtnsConfig();
+});

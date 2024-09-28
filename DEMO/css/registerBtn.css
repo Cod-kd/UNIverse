@@ -5,6 +5,7 @@
     background-color: transparent;
     transition: all 0.5s;
     transform: scale(0);
+    position: fixed;
 }
 
 #responseHeading {
@@ -14,14 +15,13 @@
 }
 
 #registerBtnDiv {
-    width: 275px;
-    height: 60px;
+    width: fit-content;
+    height: fit-content;
     top: 0;
     text-align: center;
-    display: flex;
-    justify-content: center;
+    display: grid;
     align-items: center;
-    justify-self: center;
+    justify-items: center;
     margin-top: 20%;
 }
 

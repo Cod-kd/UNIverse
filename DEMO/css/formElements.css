@@ -3,6 +3,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 290px;
 }
 
 .radio-input * {
@@ -16,7 +17,7 @@
     align-items: center;
     gap: 15px;
     padding: 0 20px;
-    width: 220px;
+    width: 290px;
     height: 50px;
     cursor: pointer;
     position: relative;
@@ -30,7 +31,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 220px;
+    width: 290px;
     height: 50px;
     z-index: -1;
     transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -107,7 +108,7 @@
 .dateInput {
     margin: 0 auto;
     height: 50px;
-    width: 300px;
+    width: 290px;
     border-radius: 2.5em;
     border: 2px solid var(--main);
     background-color: transparent;
@@ -118,15 +119,6 @@
     outline: 2px solid transparent;
     transition: 0.5s ease;
     padding-left: 35px;
-}
-
-.dateInput:focus {
-    height: 40px;
-    width: 250px;
-    filter: drop-shadow(-7px 7px 10px #00000059);
-    border-color: transparent;
-    border-bottom-color: var(--main);
-    border-radius: 0;
 }
 
 .dateInput::placeholder {
@@ -156,7 +148,7 @@
 
 /* Email Input */
 #emailInput {
-    width: 360px;
+    width: 340px;
     height: 40px;
     background-color: transparent;
     color: var(--main);
@@ -170,8 +162,7 @@
 }
 
 #emailInput:hover {
-    outline: 2px solid var(--main);
-    width: 400px;
+    width: 360px;
 }
 
 #emailInput:focus {
