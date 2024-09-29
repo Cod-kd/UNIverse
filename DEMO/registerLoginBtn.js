@@ -530,7 +530,13 @@ function renderRegistration(monitorScreenDiv) {
                     loadingAnimation();
 
                     // Make the fetch request
-                    const response = await fetch("createProfile.php");
+                    const response = await fetch("createProfile.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(formData)
+                    });
 
                     // Stop loading animation
                     const loadingEnd = performance.now();
