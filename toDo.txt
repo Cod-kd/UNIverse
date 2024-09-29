@@ -17,9 +17,11 @@ JavaScript file:
     (DONE)    -if a condition is met => the condition should be removed with the disappear
     (DONE)    -if a previous condition was met before, but now it's not met => that specified condition should appear with the appear animation
     (DONE)    -add a fetch method with the createProfile.php, assign the correct animations
+    -split the main javascript file into small javascript files (separation like css)
 CSS:
     (CAN'T FINISH DUE TO BUG)   -change the radio button's "circle"'s center so the black circle inside is centered horizontally + vertically
-    -add floating effect to the infoCards => replicates that they can be dragged
+    (DONE)    -add floating effect to the infoCards => replicates that they can be dragged
+    -make the page responsive (bootstrap?)
 
 PHP:
     (DONE)    -create createProfile.php for testing the connection with javascript fetch
