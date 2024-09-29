@@ -210,7 +210,7 @@ async function responseAnimation(status) {
         await delay(1000);
         createResponseHeading("scale1");
         createSuccessfulResponseEffect();
-        registerBtnDiv.style.marginTop = "20%";
+        registerBtnDiv.style.marginTop = "0%";
     } else if (status === "404") {
         await delay(1000);
         createResponseHeading("", "Hiba történt");
@@ -374,7 +374,7 @@ function renderRegistration(monitorScreenDiv) {
     }
 
     // Function to save the UNIcard as image named 'UNIcard.jpg'
-    function saveUNIcard() {
+    async function saveUNIcard() {
         const userDataDiv = document.getElementById("userDataDiv");
 
         // Ensure html2canvas is loaded
@@ -384,8 +384,11 @@ function renderRegistration(monitorScreenDiv) {
         }
 
         html2canvas(userDataDiv, { backgroundColor: null })
-            .then(canvas => {
-                canvas.toBlob(function (blob) {
+            .then(async canvas => {
+                canvas.toBlob(async function (blob) {
+                    // Hash the image to HEX using the provided logic
+                    const hashHexImg = await hashImage(blob);
+                    formData.imgPasswd = hashHexImg;
                     const link = document.createElement("a");
                     link.download = "UNIcard.jpg"; // File name
                     link.href = URL.createObjectURL(blob);
@@ -880,6 +883,16 @@ function arrowBtnsConfig() {
             });
         });
     }
+}
+
+// Hashing function for the image
+async function hashImage(file) {
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = new Uint8Array(arrayBuffer);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+    return hashHex;
 }
 
 // Function to render login (placeholder for now)
