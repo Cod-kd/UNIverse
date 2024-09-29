@@ -241,7 +241,8 @@ function renderRegistration(monitorScreenDiv) {
         birthDate: "",
         gender: "",
         username: "",
-        password: ""
+        passwd: "",
+        imgPasswd: ""
     };
 
     createFormStep(currentIndex);
@@ -437,7 +438,7 @@ function renderRegistration(monitorScreenDiv) {
                 dataInp.type = "password";
                 dataInp.placeholder = "******";
                 dataInp.id = "passwordInput";
-                dataInp.value = formData.password;
+                dataInp.value = formData.passwd;
                 inputDetailsDiv.style.top = "14%";
                 inputDetailsDiv.style.right = "32%";
                 dataInp.addEventListener("input", function (e) {
@@ -567,7 +568,7 @@ function renderRegistration(monitorScreenDiv) {
                 formData.username = dataInp.value.trim();
                 break;
             case 4:
-                formData.password = dataInp.value.trim();
+                formData.passwd = dataInp.value.trim();
                 break;
         }
     }
