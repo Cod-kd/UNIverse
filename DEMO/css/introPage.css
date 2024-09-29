@@ -127,6 +127,7 @@ main {
     height: 320px;
     background-color: var(--main);
     color: var(--dark2);
+    font-weight: bold;
     border-radius: 24px;
     padding: 30px;
     display: grid;
