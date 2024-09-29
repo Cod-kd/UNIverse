@@ -48,20 +48,21 @@
                         const extractedEmail = extractEmail(text);
                         if (extractedEmail) {
                             console.log("Extracted email: ", extractedEmail);
+                            let foundUser = false;
                             for (let user of data) {
                                 if (user.email === extractedEmail) {
+                                    foundUser = true;
                                     if (user.imagePass === encodedImage) {
                                         console.log("Logging in")
-                                        break;
                                     }
                                     else {
                                         console.log("Wrong password!");
-                                        break;
                                     }
+                                    break;
                                 }
-                                else {
-                                    console.log("NOT FOUND!")
-                                }
+                            }
+                            if (!foundUser) {
+                                console.log("User not found!");
                             }
                         }
                         else {

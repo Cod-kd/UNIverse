@@ -24,6 +24,18 @@ CSS:
     -make the page responsive (bootstrap?)
     -upon registration completion, the user can save their 'UNIverse Card' (an imagine which replicates a small login card with the user's data on it) =>
         users can login via their cards (upload their card image)
+        -Saving steps: 1. The user enters his/her data through the registration.
+                2. The registration was complete => a button appears saying "Get my UNIverse Card" + the card appears with the user's informations + informations are saved to database
+                3. Upon "Get card" button press => user's "UNIverse Card" will be saved on the user's device, simultaneously the card is hashed to HEX value and saved into
+                    the user's record
+        -Login steps via UNIverse Card:
+            1. The user uploads his/her saved UNIverse Card
+            2. The email address is read from the card
+            3. The program checks that the email is present in the database
+            4. If present => the uploaded UNIverse Card is hashed to hex => if the uploaded image's hex is similar to the user's image hex in the database => Successful login
+            5. If the email is present + user uploaded wrong image => Unsuccessful login
+            6. If the email isnt present => user isn't registrated
+            7. If an email isn't present on the card => wrong card
 
 PHP:
     (DONE)    -create createProfile.php for testing the connection with javascript fetch
