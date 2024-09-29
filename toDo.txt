@@ -24,6 +24,7 @@ JavaScript file:
         (DONE)        2. The registration was complete => a button appears saying "Get my UNIverse Card" + the card appears with the user's informations + informations are saved to database
         (DONE)        3. Upon "Get card" button press => user's "UNIverse Card" will be saved on the user's device, simultaneously the card is hashed to HEX value and saved into
                     the user's record
+    -add a customized 'symbol' to every card so other user's can't replicate each others' cards
         -Login steps via UNIverse Card:
             1. The user uploads his/her saved UNIverse Card
             2. The email address is read from the card
