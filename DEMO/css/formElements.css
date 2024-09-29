@@ -242,28 +242,6 @@
     clip-path: polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 25% 50%, 0% 0%);
 }
 
-@keyframes bounceAlpha {
-    0% {
-        opacity: 1;
-        transform: translateX(0px) scale(1);
-    }
-
-    25% {
-        opacity: 0;
-        transform: translateX(10px) scale(0.9);
-    }
-
-    26% {
-        opacity: 0;
-        transform: translateX(-10px) scale(0.9);
-    }
-
-    55% {
-        opacity: 1;
-        transform: translateX(0px) scale(1);
-    }
-}
-
 .bounceAlpha {
     animation: bounceAlpha 1.4s linear infinite;
 }
@@ -285,9 +263,7 @@
 #inputDetailsDiv{
     max-width: 250px;
     height: fit-content;
-    /* top: 14%; */
-    /* right: 32%; */
-    top: 40%; /* EMAIL */
+    top: 40%;
     color: #FF5A1F;
     background-color: transparent;
     position: fixed;
