@@ -252,54 +252,49 @@ function renderRegistration(monitorScreenDiv) {
         await fadeOutMonitorScreen();
         monitorScreenDiv.innerHTML = "";
 
-        const dataHeading = createHeading(requiredData[index]);
-        monitorScreenDiv.appendChild(dataHeading);
+        if (index < requiredData.length) {
+            const dataHeading = createHeading(requiredData[index]);
+            monitorScreenDiv.appendChild(dataHeading);
 
-        const backBtn = createNavigationButton(true);
-        const continueBtn = createNavigationButton(false);
+            const backBtn = createNavigationButton(true);
+            const continueBtn = createNavigationButton(false);
 
-        monitorScreenDiv.appendChild(createHomeButton());
+            monitorScreenDiv.appendChild(createHomeButton());
 
-        const inputDetailsDiv = document.createElement("inputDetailsDiv");
-        inputDetailsDiv.id = "inputDetailsDiv";
-        monitorScreenDiv.appendChild(inputDetailsDiv);
+            const inputDetailsDiv = document.createElement("div");
+            inputDetailsDiv.id = "inputDetailsDiv";
+            monitorScreenDiv.appendChild(inputDetailsDiv);
 
-        let dataInp;
+            let dataInp;
 
-        if (index === 2) {
-            const radioDiv = createGenderRadioButtons();
-            monitorScreenDiv.appendChild(radioDiv);
-        } else {
-            dataInp = createInputField(index, formData);
-            monitorScreenDiv.appendChild(dataInp);
+            if (index === 2) {
+                const radioDiv = createGenderRadioButtons();
+                monitorScreenDiv.appendChild(radioDiv);
+            } else {
+                dataInp = createInputField(index, formData);
+                monitorScreenDiv.appendChild(dataInp);
 
-            if (index === 4) {
-                const showBtn = createShowPasswordButton(dataInp);
-                monitorScreenDiv.appendChild(showBtn);
+                if (index === 4) {
+                    const showBtn = createShowPasswordButton(dataInp);
+                    monitorScreenDiv.appendChild(showBtn);
+                }
             }
-        }
 
-        if (index > 0) {
-            monitorScreenDiv.insertBefore(backBtn, dataHeading);
-            addBackButtonListener(backBtn, index, dataInp);
-        }
+            if (index > 0) {
+                monitorScreenDiv.insertBefore(backBtn, dataHeading);
+                addBackButtonListener(backBtn, index, dataInp);
+            }
 
-        // Always add the continueBtn for all steps except the last one
-        if (index < requiredData.length - 1) {
+            // Always add the continueBtn for all steps
             monitorScreenDiv.appendChild(continueBtn);
-        }
-
-        // Set grid layout
-        monitorScreenDiv.style.gridTemplateColumns = index > 0 ? "repeat(3, 1fr)" : "500px 0px";
-
-        if (index === requiredData.length - 1 && !document.getElementById("registerBtnDiv")) {
-            createFinalRegisterButton(monitorScreenDiv, dataInp, index);
-        }
-
-        if (index !== 2) {
             addContinueButtonListener(continueBtn, index, dataInp);
+
+            // Set grid layout
+            monitorScreenDiv.style.gridTemplateColumns = index > 0 ? "repeat(3, 1fr)" : "500px 0px";
+        } else if (index === requiredData.length) {
+            createUNIverseCardStep(monitorScreenDiv);
         } else {
-            addGenderContinueButtonListener(continueBtn, index);
+            createFinalRegistrationStep(monitorScreenDiv);
         }
 
         // Apply initial styles for fade-in effect
@@ -321,6 +316,66 @@ function renderRegistration(monitorScreenDiv) {
             el.style.opacity = "1";
             el.style.transform = "translateY(0)";
         }
+    }
+
+    async function createUNIverseCardStep(monitorScreenDiv) {
+        monitorScreenDiv.innerHTML = "";
+        monitorScreenDiv.style.gridTemplateColumns = "repeat(3, 1fr)";
+
+        const userDataDiv = document.createElement("div");
+        userDataDiv.id = "userDataDiv";
+        userDataDiv.innerHTML = `
+            <p>Email: ${formData.email}</p>
+            <p>Username: ${formData.username}</p>
+            <p>Gender: ${formData.gender}</p>
+            <p>Birth Date: ${formData.birthDate.slice(0, 4)}/${formData.birthDate.slice(4, 6)}/${formData.birthDate.slice(6, 8)}</p>
+            <p>Password: ************</p>
+            <h1>UNIcard</h1>
+        `;
+        monitorScreenDiv.appendChild(userDataDiv);
+
+        const saveButton = document.createElement("button");
+        saveButton.textContent = "Save my UNIcard";
+        saveButton.classList.add("button");
+        saveButton.id = "saveCardBtn";
+        saveButton.addEventListener("click", saveUNIcard);
+        monitorScreenDiv.appendChild(saveButton);
+
+        const backBtn = createNavigationButton(true);
+        const continueBtn = createNavigationButton(false);
+
+        monitorScreenDiv.appendChild(createHomeButton());
+        monitorScreenDiv.insertBefore(backBtn, saveButton);
+        monitorScreenDiv.appendChild(continueBtn);
+
+        addBackButtonListener(backBtn, requiredData.length - 1, null);
+        addContinueButtonListener(continueBtn, requiredData.length, null);
+    }
+
+    // Function to save the UNIcard as image named 'UNIcard.jpg'
+    function saveUNIcard() {
+        const userDataDiv = document.getElementById("userDataDiv");
+
+        // Ensure html2canvas is loaded
+        if (typeof html2canvas === 'undefined') {
+            console.error("html2canvas library is not loaded.");
+            return;
+        }
+
+        html2canvas(userDataDiv, { backgroundColor: null })
+            .then(canvas => {
+                canvas.toBlob(function (blob) {
+                    const link = document.createElement("a");
+                    link.download = "UNIcard.jpg"; // File name
+                    link.href = URL.createObjectURL(blob);
+                    document.body.appendChild(link); // Append the link element
+                    link.click(); // Trigger the download
+                    document.body.removeChild(link); // Remove the link element
+                }, 'image/jpeg', 0.95);
+            })
+            .catch(err => {
+                console.error("Error saving the UNIcard: ", err);
+            });
     }
 
     // Helper functions for form creation
@@ -473,92 +528,106 @@ function renderRegistration(monitorScreenDiv) {
 
     function addBackButtonListener(backBtn, index, dataInp) {
         backBtn.addEventListener("click", function () {
-            updateFormData(index, dataInp);
-            createFormStep(index - 1);
+            if (index === requiredData.length) {
+                createUNIverseCardStep(monitorScreenDiv);
+            } else {
+                updateFormData(index, dataInp);
+                createFormStep(index - 1);
+            }
         });
     }
 
     function addContinueButtonListener(continueBtn, index, dataInp) {
         continueBtn.addEventListener("click", function () {
-            if (validateField(dataInp, index)) {
-                updateFormData(index, dataInp);
+            if (index >= requiredData.length) {
+                // For steps after all required data is collected (UNIverse Card step)
                 createFormStep(index + 1);
-            }
-        });
-    }
-
-    function addGenderContinueButtonListener(continueBtn, index) {
-        continueBtn.addEventListener("click", function () {
-            const selectedGender = document.querySelector('input[name="gender-radio"]:checked');
-            if (selectedGender) {
-                formData.gender = selectedGender.value;
-                createFormStep(index + 1);
+            } else if (index === 2) {
+                // For the gender selection step
+                const selectedGender = document.querySelector('input[name="gender-radio"]:checked');
+                if (selectedGender) {
+                    formData.gender = selectedGender.value;
+                    createFormStep(index + 1);
+                } else {
+                    alert("Please select your gender.");
+                }
             } else {
-                alert("Please select your gender.");
-            }
-        });
-    }
-
-    function createFinalRegisterButton(monitorScreenDiv, dataInp, index) {
-        const registerBtnDiv = document.createElement("div");
-        const registerBtn = document.createElement("button");
-
-        registerBtnDiv.id = "registerBtnDiv";
-        registerBtn.id = "registerBtn";
-        registerBtn.classList.add("button");
-        registerBtn.innerHTML = "Regisztráció";
-        registerBtnDiv.style.position = "fixed";
-        registerBtnDiv.style.top = "5%";
-        registerBtnDiv.appendChild(registerBtn);
-        monitorScreenDiv.appendChild(registerBtnDiv);
-
-        registerBtn.addEventListener("click", async function () {
-            if (validateField(dataInp, index)) {
-                try {
-                    await fadeOutMonitorScreen();
-                    monitorScreenDiv.innerHTML = '';
-                    registerBtnDiv.style.top = "-10%";
-                    monitorScreenDiv.appendChild(registerBtnDiv);
-                    registerBtn.style.transform = "scale(0)";
-                    await fadeInMonitorScreen();
-                    await delay(600);
-                    registerBtn.remove();
-                    registerBtnDiv.style.marginTop = "22%";
-
-                    // Start loading animation
-                    const loadingStart = performance.now();
-                    loadingAnimation();
-
-                    // Make the fetch request
-                    const response = await fetch("createProfile.php", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(formData)
-                    });
-
-                    // Stop loading animation
-                    const loadingEnd = performance.now();
-                    const duration = Math.max(loadingEnd - loadingStart, 0); // Calculate duration
-                    loadingAnimation("stop", duration);
-
-                    if (response.ok) {
-                        await responseAnimation("200");
-                    } else {
-                        await responseAnimation("404");
-                    }
-
-                    const data = await response.text();
-                    console.log(data);
-                } catch (err) {
-                    console.error("Error: ", err);
-                    // In case of an error, stop loading animation if it's still running
-                    loadingAnimation("stop");
-                    await responseAnimation("404");
+                // For all other steps
+                if (validateField(dataInp, index)) {
+                    updateFormData(index, dataInp);
+                    createFormStep(index + 1);
                 }
             }
         });
+    }
+
+    function addFinalRegisterButtonListener(registerBtn) {
+        registerBtn.addEventListener("click", async function () {
+            try {
+                await fadeOutMonitorScreen();
+                monitorScreenDiv.innerHTML = '';
+                const registerBtnDiv = document.getElementById("registerBtnDiv");
+                registerBtnDiv.style.top = "-10%";
+                monitorScreenDiv.appendChild(registerBtnDiv);
+                registerBtn.style.transform = "scale(0)";
+                await fadeInMonitorScreen();
+                await delay(600);
+                registerBtn.remove();
+                registerBtnDiv.style.marginTop = "22%";
+
+                // Start loading animation
+                const loadingStart = performance.now();
+                loadingAnimation();
+
+                // Make the fetch request
+                const response = await fetch("createProfile.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                // Stop loading animation
+                const loadingEnd = performance.now();
+                const duration = Math.max(loadingEnd - loadingStart, 0);
+                loadingAnimation("stop", duration);
+
+                if (response.ok) {
+                    await responseAnimation("200");
+                } else {
+                    await responseAnimation("404");
+                }
+
+                const data = await response.text();
+                console.log(data);
+            } catch (err) {
+                console.error("Error: ", err);
+                loadingAnimation("stop");
+                await responseAnimation("404");
+            }
+        });
+    }
+
+    function createFinalRegistrationStep(monitorScreenDiv) {
+        monitorScreenDiv.innerHTML = ``;
+        monitorScreenDiv.style.gridTemplateColumns = "";
+        monitorScreenDiv.style.gap = "0px";
+
+        const registerBtnDiv = document.createElement("div");
+        registerBtnDiv.id = "registerBtnDiv";
+        const registerBtn = document.createElement("button");
+        registerBtn.id = "registerBtn";
+        registerBtn.classList.add("button");
+        registerBtn.innerHTML = "Regisztráció";
+        registerBtnDiv.appendChild(registerBtn);
+        monitorScreenDiv.appendChild(registerBtnDiv);
+
+        const backBtn = createNavigationButton(true);
+        monitorScreenDiv.appendChild(backBtn);
+
+        addBackButtonListener(backBtn, requiredData.length, null);
+        addFinalRegisterButtonListener(registerBtn);
     }
 
     // Helper function to update form data

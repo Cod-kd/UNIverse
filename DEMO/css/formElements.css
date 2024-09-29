@@ -292,3 +292,16 @@
     background-color: transparent;
     position: fixed;
 }
+
+#userDataDiv{
+    position: fixed;
+    width: 350px;
+    background-color: var(--dark1);
+    padding: 10px;
+    border-radius: 12px;
+    top: 20%;
+}
+
+#saveCardBtn{
+    margin-top: 105%;
+}

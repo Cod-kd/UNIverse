@@ -18,10 +18,6 @@ JavaScript file:
     (DONE)    -if a previous condition was met before, but now it's not met => that specified condition should appear with the appear animation
     (DONE)    -add a fetch method with the createProfile.php, assign the correct animations
     -split the main javascript file into small javascript files (separation like css)
-CSS:
-    (CAN'T FINISH DUE TO BUG)   -change the radio button's "circle"'s center so the black circle inside is centered horizontally + vertically
-    (DONE)    -add floating effect to the infoCards => replicates that they can be dragged
-    -make the page responsive (bootstrap?)
     -upon registration completion, the user can save their 'UNIverse Card' (an imagine which replicates a small login card with the user's data on it) =>
         users can login via their cards (upload their card image)
         -Saving steps: 1. The user enters his/her data through the registration.
@@ -36,7 +32,16 @@ CSS:
             5. If the email is present + user uploaded wrong image => Unsuccessful login
             6. If the email isnt present => user isn't registrated
             7. If an email isn't present on the card => wrong card
+CSS:
+    (CAN'T FINISH DUE TO BUG)   -change the radio button's "circle"'s center so the black circle inside is centered horizontally + vertically
+    (DONE)    -add floating effect to the infoCards => replicates that they can be dragged
+    -make the page responsive (bootstrap?)
 
 PHP:
     (DONE)    -create createProfile.php for testing the connection with javascript fetch
     -add the javascript registration informations to the database upon fetching
+
+Quick fixes:
+    -backBtn isnt working while UNIcard is present
+    -when backBtn is pressed on the last page of registration => UNIcard instantly appears (animation is missing)
+    -nothing happens when the user clicks registerBtn
