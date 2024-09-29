@@ -22,6 +22,8 @@ CSS:
     (CAN'T FINISH DUE TO BUG)   -change the radio button's "circle"'s center so the black circle inside is centered horizontally + vertically
     (DONE)    -add floating effect to the infoCards => replicates that they can be dragged
     -make the page responsive (bootstrap?)
+    -upon registration completion, the user can save their 'UNIverse Card' (an imagine which replicates a small login card with the user's data on it) =>
+        users can login via their cards (upload their card image)
 
 PHP:
     (DONE)    -create createProfile.php for testing the connection with javascript fetch
