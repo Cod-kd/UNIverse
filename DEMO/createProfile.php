@@ -1,5 +1,5 @@
 <?php
-/*
+
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -10,7 +10,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die("Connection failed: $conn->connect_error");
 }
 
 // Get JSON input from the request body
@@ -31,12 +31,13 @@ $stmt->bind_param("ssssss", $email, $birthDate, $gender, $username, $passwd, $im
 if ($stmt->execute()) {
     echo "Successful registration";
 } else {
-    echo "Error: " . $stmt->error;
+    echo "Error: $stmt->error";
 }
 
 $stmt->close();
 $conn->close();
-*/
+
+/* DEBUGGING CODE
 // Get JSON input from the request body
 $userdata = json_decode(file_get_contents("php://input"), true);
 
@@ -61,3 +62,4 @@ header('Content-Type: application/json');
 
 // Echo the response as JSON
 echo json_encode($response);
+*/
