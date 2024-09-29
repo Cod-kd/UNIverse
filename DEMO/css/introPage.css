@@ -88,12 +88,10 @@ main {
     cursor: pointer;
     overflow: hidden;
 }
-
-#monitorDiv .button:hover {
+.button:hover {
     transform: scale(1.05);
 }
-
-#monitorDiv .button::before {
+.button::before {
     content: "";
     position: absolute;
     top: 0;
@@ -108,7 +106,7 @@ main {
     z-index: -1;
 }
 
-#monitorDiv .button:hover::before {
+.button:hover::before {
     left: 100%;
     transition: all 1s linear;
     animation: lightspeed 1s infinite linear;
