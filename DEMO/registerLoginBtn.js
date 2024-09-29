@@ -319,6 +319,7 @@ function renderRegistration(monitorScreenDiv) {
     }
 
     async function createUNIverseCardStep(monitorScreenDiv) {
+        await fadeOutMonitorScreen();
         monitorScreenDiv.innerHTML = "";
         monitorScreenDiv.style.gridTemplateColumns = "repeat(3, 1fr)";
 
@@ -348,8 +349,28 @@ function renderRegistration(monitorScreenDiv) {
         monitorScreenDiv.insertBefore(backBtn, saveButton);
         monitorScreenDiv.appendChild(continueBtn);
 
-        addBackButtonListener(backBtn, requiredData.length - 1, null);
+        addBackButtonListener(backBtn, requiredData.length, null);
         addContinueButtonListener(continueBtn, requiredData.length, null);
+
+        // Apply initial styles for fade-in effect
+        const elements = monitorScreenDiv.children;
+        for (let el of elements) {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(20px)";
+            el.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+        }
+
+        // Trigger reflow to ensure the initial styles are applied
+        monitorScreenDiv.offsetHeight;
+
+        // Fade in the monitor screen
+        await fadeInMonitorScreen();
+
+        // Animate the elements
+        for (let el of elements) {
+            el.style.opacity = "1";
+            el.style.transform = "translateY(0)";
+        }
     }
 
     // Function to save the UNIcard as image named 'UNIcard.jpg'
@@ -527,10 +548,17 @@ function renderRegistration(monitorScreenDiv) {
     }
 
     function addBackButtonListener(backBtn, index, dataInp) {
-        backBtn.addEventListener("click", function () {
-            if (index === requiredData.length) {
+        backBtn.addEventListener("click", async function () {
+            if (index === requiredData.length + 1) {
+                // We're on the final registration step, go back to UNIcard
+                await fadeOutMonitorScreen();
                 createUNIverseCardStep(monitorScreenDiv);
+            } else if (index === requiredData.length) {
+                // We're on the UNIcard step, go back to password step
+                await fadeOutMonitorScreen();
+                createFormStep(index - 1);
             } else {
+                // For all other steps
                 updateFormData(index, dataInp);
                 createFormStep(index - 1);
             }
@@ -538,10 +566,11 @@ function renderRegistration(monitorScreenDiv) {
     }
 
     function addContinueButtonListener(continueBtn, index, dataInp) {
-        continueBtn.addEventListener("click", function () {
-            if (index >= requiredData.length) {
-                // For steps after all required data is collected (UNIverse Card step)
-                createFormStep(index + 1);
+        continueBtn.addEventListener("click", async function () {
+            if (index === requiredData.length) {
+                // We're on the UNIcard step, move to final registration step
+                await fadeOutMonitorScreen();
+                createFinalRegistrationStep(monitorScreenDiv);
             } else if (index === 2) {
                 // For the gender selection step
                 const selectedGender = document.querySelector('input[name="gender-radio"]:checked');
@@ -566,7 +595,8 @@ function renderRegistration(monitorScreenDiv) {
             try {
                 await fadeOutMonitorScreen();
                 monitorScreenDiv.innerHTML = '';
-                const registerBtnDiv = document.getElementById("registerBtnDiv");
+                const registerBtnDiv = document.createElement("div");
+                registerBtnDiv.id = "registerBtnDiv";
                 registerBtnDiv.style.top = "-10%";
                 monitorScreenDiv.appendChild(registerBtnDiv);
                 registerBtn.style.transform = "scale(0)";
@@ -577,7 +607,7 @@ function renderRegistration(monitorScreenDiv) {
 
                 // Start loading animation
                 const loadingStart = performance.now();
-                loadingAnimation();
+                await loadingAnimation();
 
                 // Make the fetch request
                 const response = await fetch("createProfile.php", {
@@ -591,7 +621,7 @@ function renderRegistration(monitorScreenDiv) {
                 // Stop loading animation
                 const loadingEnd = performance.now();
                 const duration = Math.max(loadingEnd - loadingStart, 0);
-                loadingAnimation("stop", duration);
+                await loadingAnimation("stop", duration);
 
                 if (response.ok) {
                     await responseAnimation("200");
@@ -603,13 +633,14 @@ function renderRegistration(monitorScreenDiv) {
                 console.log(data);
             } catch (err) {
                 console.error("Error: ", err);
-                loadingAnimation("stop");
+                await loadingAnimation("stop");
                 await responseAnimation("404");
             }
         });
     }
 
-    function createFinalRegistrationStep(monitorScreenDiv) {
+    async function createFinalRegistrationStep(monitorScreenDiv) {
+        await fadeOutMonitorScreen();
         monitorScreenDiv.innerHTML = ``;
         monitorScreenDiv.style.gridTemplateColumns = "";
         monitorScreenDiv.style.gap = "0px";
@@ -626,8 +657,10 @@ function renderRegistration(monitorScreenDiv) {
         const backBtn = createNavigationButton(true);
         monitorScreenDiv.appendChild(backBtn);
 
-        addBackButtonListener(backBtn, requiredData.length, null);
+        addBackButtonListener(backBtn, requiredData.length + 1, null);
         addFinalRegisterButtonListener(registerBtn);
+
+        await fadeInMonitorScreen();
     }
 
     // Helper function to update form data

@@ -20,9 +20,9 @@ JavaScript file:
     -split the main javascript file into small javascript files (separation like css)
     -upon registration completion, the user can save their 'UNIverse Card' (an imagine which replicates a small login card with the user's data on it) =>
         users can login via their cards (upload their card image)
-        -Saving steps: 1. The user enters his/her data through the registration.
-                2. The registration was complete => a button appears saying "Get my UNIverse Card" + the card appears with the user's informations + informations are saved to database
-                3. Upon "Get card" button press => user's "UNIverse Card" will be saved on the user's device, simultaneously the card is hashed to HEX value and saved into
+        (DONE) -Saving steps: 1. The user enters his/her data through the registration.
+        (DONE)        2. The registration was complete => a button appears saying "Get my UNIverse Card" + the card appears with the user's informations + informations are saved to database
+        (DONE)        3. Upon "Get card" button press => user's "UNIverse Card" will be saved on the user's device, simultaneously the card is hashed to HEX value and saved into
                     the user's record
         -Login steps via UNIverse Card:
             1. The user uploads his/her saved UNIverse Card
@@ -42,6 +42,6 @@ PHP:
     -add the javascript registration informations to the database upon fetching
 
 Quick fixes:
-    -backBtn isnt working while UNIcard is present
-    -when backBtn is pressed on the last page of registration => UNIcard instantly appears (animation is missing)
-    -nothing happens when the user clicks registerBtn
+    (DONE)    -backBtn isnt working while UNIcard is present
+    (DONE)    -when backBtn is pressed on the last page of registration => UNIcard instantly appears (animation is missing)
+    (DONE)    -nothing happens when the user clicks registerBtn
