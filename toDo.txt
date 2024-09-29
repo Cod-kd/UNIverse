@@ -46,3 +46,4 @@ Quick fixes:
     (DONE)    -backBtn isnt working while UNIcard is present
     (DONE)    -when backBtn is pressed on the last page of registration => UNIcard instantly appears (animation is missing)
     (DONE)    -nothing happens when the user clicks registerBtn
+    -the imagePasswd isnt saved into the database
