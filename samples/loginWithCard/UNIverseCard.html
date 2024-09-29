@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNIverse Card</title>
+</head>
+
+<body>
+    <h1>Upload image to extract email address</h1>
+    <input type="file" accept="image/*" id="imageInput">
+    <br>
+    <button id="extractBtn">Extract email</button>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
+    <script>
+        const data = [
+            {
+                email: "koszegipatrik@gmail.com",
+                password: "************",
+                imagePass: "bda09acd5453c9bc81a16c6a68b3238623099815525e8db0e6854b063f05c6d5"
+            },
+
+            {
+                email: "koszegiparik@gmail.com",
+                password: "************",
+                imagePass: "cda09acd5453c9bc81a16c6a68b3238623099815525e8db0e6854b063f05c6d5"
+            }
+        ]
+
+        document.getElementById("extractBtn").addEventListener("click", async function () {
+            const imageInput = document.getElementById("imageInput");
+            const image = imageInput.files[0];
+
+            const encodedImage = await hashImage(image);
+
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                const dataURL = event.target.result;
+                console.log("Processing image");
+
+                Tesseract.recognize(
+                    dataURL,
+                    'eng'
+                )
+                    .then(({ data: { text } }) => {
+                        const extractedEmail = extractEmail(text);
+                        if (extractedEmail) {
+                            console.log("Extracted email: ", extractedEmail);
+                            for (let user of data) {
+                                if (user.email === extractedEmail) {
+                                    if (user.imagePass === encodedImage) {
+                                        console.log("Logging in")
+                                        break;
+                                    }
+                                    else {
+                                        console.log("Wrong password!");
+                                        break;
+                                    }
+                                }
+                                else {
+                                    console.log("NOT FOUND!")
+                                }
+                            }
+                        }
+                        else {
+                            console.log("No email found")
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err)
+                    })
+            }
+            reader.readAsDataURL(image);
+        })
+
+        function extractEmail(text) {
+            const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
+            const matches = text.match(emailRegex);
+            return matches ? matches[0] : null;
+        }
+
+        async function hashImage(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const buffer = new Uint8Array(arrayBuffer);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+
+    </script>
+</body>
+
+</html>
