@@ -336,7 +336,7 @@ function renderRegistration(monitorScreenDiv) {
         monitorScreenDiv.appendChild(userDataDiv);
 
         const saveButton = document.createElement("button");
-        saveButton.textContent = "Save my UNIcard";
+        saveButton.textContent = "Get my UNIcard";
         saveButton.classList.add("button");
         saveButton.id = "saveCardBtn";
         saveButton.addEventListener("click", saveUNIcard);
@@ -351,6 +351,10 @@ function renderRegistration(monitorScreenDiv) {
 
         addBackButtonListener(backBtn, requiredData.length, null);
         addContinueButtonListener(continueBtn, requiredData.length, null);
+
+        // Initially disable the continue button
+        continueBtn.style.opacity = "0.5";
+        continueBtn.style.pointerEvents = "none";
 
         // Apply initial styles for fade-in effect
         const elements = monitorScreenDiv.children;
@@ -395,6 +399,13 @@ function renderRegistration(monitorScreenDiv) {
                     document.body.appendChild(link); // Append the link element
                     link.click(); // Trigger the download
                     document.body.removeChild(link); // Remove the link element
+
+                    // Enable the continue button after the card is saved
+                    const continueBtn = document.querySelector('.round:not([style*="rotate(180deg)"])');
+                    if (continueBtn) {
+                        continueBtn.style.opacity = "1";
+                        continueBtn.style.pointerEvents = "auto";
+                    }
                 }, 'image/jpeg', 0.95);
             })
             .catch(err => {
@@ -571,17 +582,18 @@ function renderRegistration(monitorScreenDiv) {
     function addContinueButtonListener(continueBtn, index, dataInp) {
         continueBtn.addEventListener("click", async function () {
             if (index === requiredData.length) {
-                // We're on the UNIcard step, move to final registration step
-                await fadeOutMonitorScreen();
-                createFinalRegistrationStep(monitorScreenDiv);
+                // We're on the UNIcard step
+                if (formData.imgPasswd) {
+                    // The card has been saved, so we can move to the final registration step
+                    await fadeOutMonitorScreen();
+                    createFinalRegistrationStep(monitorScreenDiv);
+                }
             } else if (index === 2) {
                 // For the gender selection step
                 const selectedGender = document.querySelector('input[name="gender-radio"]:checked');
                 if (selectedGender) {
                     formData.gender = selectedGender.value;
                     createFormStep(index + 1);
-                } else {
-                    alert("Please select your gender.");
                 }
             } else {
                 // For all other steps
@@ -613,7 +625,7 @@ function renderRegistration(monitorScreenDiv) {
                 await loadingAnimation();
 
                 // Make the fetch request
-                const response = await fetch("createProfile.php", {
+                const response = await fetch("http://localhost/UNIverseTEST/createProfile.php", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
