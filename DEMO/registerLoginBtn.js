@@ -694,7 +694,7 @@ function renderRegistration(monitorScreenDiv) {
         const registerBtn = document.createElement("button");
         registerBtn.id = "registerBtn";
         registerBtn.classList.add("button");
-        registerBtn.innerHTML = "Regisztráció";
+        registerBtn.innerHTML = "Regisztráció befejezése";
         registerBtnDiv.appendChild(registerBtn);
         monitorScreenDiv.appendChild(registerBtnDiv);
 
