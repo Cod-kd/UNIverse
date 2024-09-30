@@ -20,11 +20,11 @@ JavaScript file:
     -split the main javascript file into small javascript files (separation like css)
     -upon registration completion, the user can save their 'UNIverse Card' (an imagine which replicates a small login card with the user's data on it) =>
         users can login via their cards (upload their card image)
-        (DONE) -Saving steps: 1. The user enters his/her data through the registration.
+        (DONE)-Saving steps: 1. The user enters his/her data through the registration.
         (DONE)        2. The registration was complete => a button appears saying "Get my UNIverse Card" + the card appears with the user's informations + informations are saved to database
         (DONE)        3. Upon "Get card" button press => user's "UNIverse Card" will be saved on the user's device, simultaneously the card is hashed to HEX value and saved into
                     the user's record
-    -add a customized 'symbol' to every card so other user's can't replicate each others' cards (pin code, QR code, custom image)
+    (DONE)    -add a customized 'symbol' to every card so other user's can't replicate each others' cards (pin code, QR code, custom image)
         -Login steps via UNIverse Card:
             1. The user uploads his/her saved UNIverse Card
             2. The email address is read from the card
@@ -48,3 +48,7 @@ Quick fixes:
     (DONE)    -when backBtn is pressed on the last page of registration => UNIcard instantly appears (animation is missing)
     (DONE)    -nothing happens when the user clicks registerBtn
     -the imagePasswd isnt saved into the database
+    -add the .button class to the reset signature button
+    -when the reset button is pressed at the signature part it says "continueBtn is not defined at registerloginbtn.js 1005th row"
+    -continueBtn shouldn't be available until a signature was drawn on the signatureCanvas
+    -console log the final formData's values upon registerBtn press + ?add missing formData attribute called "imgPass" => this stores the UNIcard's hashed hex code?
