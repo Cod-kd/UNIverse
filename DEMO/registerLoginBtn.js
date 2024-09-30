@@ -551,8 +551,6 @@ function renderRegistration(monitorScreenDiv) {
                 dataInp.placeholder = "******";
                 dataInp.id = "passwordInput";
                 dataInp.value = formData.passwd;
-                inputDetailsDiv.style.top = "14%";
-                inputDetailsDiv.style.right = "32%";
                 dataInp.addEventListener("input", function (e) {
                     const password = e.target.value;
                     const conditions = validatePassword(password);
