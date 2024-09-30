@@ -2,6 +2,7 @@
 const registerLoginBtn = document.getElementById("registerLoginBtn");
 const registerLoginBtnDiv = document.getElementById("registerLoginBtnDiv");
 const monitorScreenDiv = document.getElementById("monitorScreenDiv");
+let canvasScreenshot;
 
 // Helper function for creating delays
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -233,7 +234,7 @@ function createHomeButton() {
 
 // Main function to render registration form
 function renderRegistration(monitorScreenDiv) {
-    const requiredData = ["Email cím", "Születési Dátum", "Nem", "Felhasználónév", "Jelszó"];
+    const requiredData = ["Email cím", "Születési Dátum", "Nem", "Felhasználónév", "Jelszó", "Aláírás"];
     let currentIndex = 0;
 
     const formData = {
@@ -277,6 +278,19 @@ function renderRegistration(monitorScreenDiv) {
                 if (index === 4) {
                     const showBtn = createShowPasswordButton(dataInp);
                     monitorScreenDiv.appendChild(showBtn);
+                }
+
+                if (index === 5) {
+                    // Insert canvas for signature
+                    const signatureDiv = document.createElement("div");
+                    signatureDiv.id = "signatureDiv";
+                    signatureDiv.innerHTML = `
+                    <canvas id="signatureCanvas"></canvas>
+                    <button id="resetCanvasBtn">Reset</button>
+                    `;
+                    monitorScreenDiv.querySelector("input").remove();
+                    monitorScreenDiv.appendChild(signatureDiv);
+                    setupSignatureCanvas();
                 }
             }
 
@@ -324,6 +338,7 @@ function renderRegistration(monitorScreenDiv) {
         monitorScreenDiv.style.gridTemplateColumns = "repeat(3, 1fr)";
 
         const userDataDiv = document.createElement("div");
+        const signatureDataUrl = await showSignature();
         userDataDiv.id = "userDataDiv";
         userDataDiv.innerHTML = `
             <p>Email: ${formData.email}</p>
@@ -332,6 +347,7 @@ function renderRegistration(monitorScreenDiv) {
             <p>Birth Date: ${formData.birthDate.slice(0, 4)}/${formData.birthDate.slice(4, 6)}/${formData.birthDate.slice(6, 8)}</p>
             <p>Password: ************</p>
             <h1>UNIcard</h1>
+            <img src="${signatureDataUrl}" alt="signature">
         `;
         monitorScreenDiv.appendChild(userDataDiv);
 
@@ -594,6 +610,9 @@ function renderRegistration(monitorScreenDiv) {
                 if (selectedGender) {
                     formData.gender = selectedGender.value;
                     createFormStep(index + 1);
+                }
+                else if (index === 5) {
+                    await captureSignature();
                 }
             } else {
                 // For all other steps
@@ -894,6 +913,134 @@ function arrowBtnsConfig() {
                 arrow.classList.toggle('bounceAlpha');
             });
         });
+    }
+}
+
+function setupSignatureCanvas() {
+    const canvas = document.getElementById("signatureCanvas");
+    const resetCanvasBtn = document.getElementById("resetCanvasBtn");
+    let drawColor = "#FF5A1F";
+    let drawWidth = 2;
+    let isDrawing = false;
+
+    canvas.width = 200;
+    canvas.height = 200;
+    const context = canvas.getContext("2d");
+    context.fillStyle = "#141414";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Event listeners for canvas drawing
+    canvas.addEventListener("touchstart", startDrawing, { passive: false });
+    canvas.addEventListener("touchmove", drawSignature, { passive: false });
+    canvas.addEventListener("mousedown", startDrawing);
+    canvas.addEventListener("mousemove", drawSignature);
+    canvas.addEventListener("mouseup", stopDrawing);
+    canvas.addEventListener("mouseout", stopDrawing);
+    canvas.addEventListener("touchend", stopDrawing);
+    canvas.addEventListener("touchcancel", stopDrawing);
+
+    // Button event listeners
+    resetCanvasBtn.addEventListener("click", clearCanvas);
+
+    function getEventPosition(event) {
+        const rect = canvas.getBoundingClientRect();
+        if (event.touches && event.touches.length > 0) {
+            return {
+                x: event.touches[0].clientX - rect.left,
+                y: event.touches[0].clientY - rect.top
+            };
+        } else {
+            return {
+                x: event.clientX - rect.left,
+                y: event.clientY - rect.top
+            };
+        }
+    }
+
+    function startDrawing(event) {
+        isDrawing = true;
+        const pos = getEventPosition(event);
+        context.beginPath();
+        context.moveTo(pos.x, pos.y);
+        event.preventDefault();
+    }
+
+    function drawSignature(event) {
+        if (!isDrawing) return;
+        const pos = getEventPosition(event);
+        context.lineTo(pos.x, pos.y);
+        context.strokeStyle = drawColor;
+        context.lineWidth = drawWidth;
+        context.lineCap = "round";
+        context.lineJoin = "round";
+        context.stroke();
+        event.preventDefault();
+    }
+
+    function stopDrawing(event) {
+        if (isDrawing) {
+            isDrawing = false;
+            event.preventDefault();
+        }
+    }
+
+    function clearCanvas() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = "#141414";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+    }
+}
+
+async function captureSignature() {
+    canvasScreenshot = await html2canvas(document.getElementById("signatureCanvas"), { backgroundColor: null });
+    return canvasScreenshot;
+}
+
+async function showSignature() {
+    let canvasScreenshot = await captureSignature();
+    // Step 2: Create a new canvas for resizing
+    const resizedCanvas = document.createElement('canvas');
+    resizedCanvas.width = 50;
+    resizedCanvas.height = 50;
+    const resizedContext = resizedCanvas.getContext('2d');
+
+    // Step 3: Draw the captured canvas onto the resized canvas
+    resizedContext.drawImage(canvasScreenshot, 0, 0, resizedCanvas.width, resizedCanvas.height);
+
+    // Step 4: Get the data URL of the resized canvas
+    const canvasDataUrl = resizedCanvas.toDataURL('image/jpeg', 0.5);
+    return canvasDataUrl;
+}
+
+async function saveCanvas() {
+    try {
+        // Step 5: Put the captured main canvas to the userDataDiv
+        userDataDiv.innerHTML = `
+            <p>Email: </p>
+            <p>Username: testuser</p>
+            <p>Gender: Male</p>
+            <p>Birth Date: 2005/10/11</p>
+            <p>Password: ************</p>
+            <h1>UNIcard</h1>
+            <img src="${canvasDataUrl}" alt="signature">
+        `;
+
+        // Step 6: Screenshot the outputDiv
+        const UNIcardScreenshot = await html2canvas(userDataDiv);
+
+        // Step 7: Convert the screenshot of outputDiv to hashHex
+        UNIcardScreenshot.toBlob(async (blob) => {
+            if (!blob) {
+                console.error("Blob is null, cannot proceed.");
+                throw new Error("Failed to create blob from UNIcard screenshot.");
+            }
+            const hashHex = await hashImage(blob);
+            console.log(`Image Hash: ${hashHex}`);
+        }, 'image/png');
+
+    } catch (error) {
+        console.error("Error in saveCanvas:", error);
+        userDataDiv.textContent = "An error occurred while processing the image.";
     }
 }
 

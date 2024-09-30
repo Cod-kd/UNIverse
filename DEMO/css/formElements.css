@@ -260,7 +260,7 @@
 }
 
 /* Input details */
-#inputDetailsDiv{
+#inputDetailsDiv {
     max-width: 250px;
     height: fit-content;
     top: 40%;
@@ -269,7 +269,7 @@
     position: fixed;
 }
 
-#userDataDiv{
+#userDataDiv {
     position: fixed;
     width: 350px;
     background-color: var(--dark1);
@@ -278,6 +278,12 @@
     top: 20%;
 }
 
-#saveCardBtn{
+#saveCardBtn {
     margin-top: 105%;
+}
+
+#signatureCanvas {
+    touch-action: none;
+    cursor: cell;
+    border: 1px solid var(--dark1);
 }
