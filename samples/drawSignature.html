@@ -15,6 +15,7 @@
         canvas {
             touch-action: none;
             cursor: cell;
+            border: 1px solid #ccc;
         }
 
         body {
@@ -29,6 +30,18 @@
             padding: 10px 20px;
             font-size: 16px;
         }
+
+        #outputDiv {
+            margin-top: 20px;
+            /* Space between buttons and output div */
+            position: relative;
+        }
+
+        #qrCodeImage {
+            margin-top: 20px;
+            max-width: 128px;
+            display: none;
+        }
     </style>
 </head>
 
@@ -36,21 +49,21 @@
     <canvas id="canvas"></canvas>
     <button id="resetCanvasBtn">Reset</button>
     <button id="saveCanvasBtn">Save</button>
+    <div id="outputDiv"></div>
+    <canvas id="qrCode"></canvas>
+    <img id="qrCodeImage" style="display: none;" alt="QR Code" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <script>
-        /*
-        1. Draw signature
-        2. Save signature
-        3. Canvas is screenshotted with html2canvas
-        4. The image is processed as a QR code
-        5. QR code is pressed on the UNIcard's right bottom corner
-        6. UNIcard image is screenshotted with html2canvas
-        7. The screenshot is processed and hashed into a HEX code
-        */
         const canvas = document.getElementById("canvas");
         const resetCanvasBtn = document.getElementById("resetCanvasBtn");
         const saveCanvasBtn = document.getElementById("saveCanvasBtn");
+        const outputDiv = document.getElementById("outputDiv");
+        const qrCodeCanvas = document.getElementById("qrCode");
+        const qrCodeImage = document.getElementById("qrCodeImage");
 
-        // Helper variables for canvas drawing attributes
         let drawColor = "#FF5A1F";
         let drawWidth = 2;
         let isDrawing = false;
@@ -59,10 +72,10 @@
         canvas.width = 300;
         canvas.height = 300;
         const context = canvas.getContext("2d");
-        context.fillStyle = "#141414"
+        context.fillStyle = "#141414";
         context.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Canvas event listeners
+        // Event listeners for canvas drawing
         canvas.addEventListener("touchstart", startDrawing, { passive: false });
         canvas.addEventListener("touchmove", drawSignature, { passive: false });
         canvas.addEventListener("mousedown", startDrawing);
@@ -122,19 +135,48 @@
 
         function clearCanvas() {
             context.clearRect(0, 0, canvas.width, canvas.height);
-            context.fillStyle = "#141414"
+            context.fillStyle = "#141414";
             context.fillRect(0, 0, canvas.width, canvas.height);
         }
 
-        function saveCanvas() {
-            const image = canvas.toDataURL("image/png");
-            const link = document.createElement('a');
-            link.href = image;
-            link.download = 'canvas.png';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        async function hashImage(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const buffer = new Uint8Array(arrayBuffer);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+            return hashHex;
         }
+
+        async function saveCanvas() {
+            try {
+                // Step 1: Capture the main canvas
+                const canvasScreenshot = await html2canvas(canvas, { backgroundColor: null });
+
+                // Step 2: Put the captured main canvas to the outputDiv
+                outputDiv.innerHTML = ''; // Clear previous content
+                outputDiv.appendChild(canvasScreenshot);
+
+                // Step 3: Screenshot the outputDiv
+                const outputDivScreenshot = await html2canvas(outputDiv);
+
+                // Step 4: Convert the screenshot of outputDiv to hashHex
+                outputDivScreenshot.toBlob(async (blob) => {
+                    if (!blob) {
+                        console.error("Blob is null, cannot proceed.");
+                        throw new Error("Failed to create blob from outputDiv screenshot.");
+                    }
+                    const hashHex = await hashImage(blob);
+                    console.log(`Image Hash: ${hashHex}`);
+                    outputDiv.textContent += `Image Hash: ${hashHex}`; // Display the hash
+                }, 'image/png');
+
+            } catch (error) {
+                console.error("Error in saveCanvas:", error);
+                outputDiv.textContent = "An error occurred while processing the image.";
+            }
+        }
+
     </script>
 </body>
 
