@@ -243,7 +243,8 @@ function renderRegistration(monitorScreenDiv) {
         gender: "",
         username: "",
         passwd: "",
-        imgPasswd: ""
+        imgPasswd: "",
+        signature: null
     };
 
     createFormStep(currentIndex);
@@ -338,7 +339,6 @@ function renderRegistration(monitorScreenDiv) {
         monitorScreenDiv.style.gridTemplateColumns = "repeat(3, 1fr)";
 
         const userDataDiv = document.createElement("div");
-        const signatureDataUrl = await showSignature();
         userDataDiv.id = "userDataDiv";
         userDataDiv.innerHTML = `
             <p>Email: ${formData.email}</p>
@@ -346,9 +346,12 @@ function renderRegistration(monitorScreenDiv) {
             <p>Gender: ${formData.gender}</p>
             <p>Birth Date: ${formData.birthDate.slice(0, 4)}/${formData.birthDate.slice(4, 6)}/${formData.birthDate.slice(6, 8)}</p>
             <p>Password: ************</p>
-            <h1>UNIcard</h1>
-            <img src="${signatureDataUrl}" alt="signature">
-        `;
+            <hr>
+            <div>
+                <h1>UNIcard</h1>
+                <img id="signatureImg" src="${formData.signature}" alt="signature" style="max-width: 150px; max-height: 45px;">
+            </div>
+            `;
         monitorScreenDiv.appendChild(userDataDiv);
 
         const saveButton = document.createElement("button");
@@ -599,11 +602,8 @@ function renderRegistration(monitorScreenDiv) {
         continueBtn.addEventListener("click", async function () {
             if (index === requiredData.length) {
                 // We're on the UNIcard step
-                if (formData.imgPasswd) {
-                    // The card has been saved, so we can move to the final registration step
-                    await fadeOutMonitorScreen();
-                    createFinalRegistrationStep(monitorScreenDiv);
-                }
+                await fadeOutMonitorScreen();
+                createFinalRegistrationStep(monitorScreenDiv);
             } else if (index === 2) {
                 // For the gender selection step
                 const selectedGender = document.querySelector('input[name="gender-radio"]:checked');
@@ -611,8 +611,12 @@ function renderRegistration(monitorScreenDiv) {
                     formData.gender = selectedGender.value;
                     createFormStep(index + 1);
                 }
-                else if (index === 5) {
-                    await captureSignature();
+            } else if (index === 5) {
+                // For the signature step
+                const signatureDataUrl = await captureSignature();
+                if (signatureDataUrl) {
+                    formData.signature = signatureDataUrl;
+                    createFormStep(index + 1);
                 }
             } else {
                 // For all other steps
@@ -922,6 +926,7 @@ function setupSignatureCanvas() {
     let drawColor = "#FF5A1F";
     let drawWidth = 2;
     let isDrawing = false;
+    let hasDrawn = false;
 
     canvas.width = 200;
     canvas.height = 200;
@@ -988,12 +993,24 @@ function setupSignatureCanvas() {
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.fillStyle = "#141414";
         context.fillRect(0, 0, canvas.width, canvas.height);
+        hasDrawn = false;
+        updateContinueButton();
+    }
+
+    function updateContinueButton() {
+        if (hasDrawn) {
+            continueBtn.disabled = false;
+            continueBtn.style.opacity = "1";
+        } else {
+            continueBtn.disabled = true;
+            continueBtn.style.opacity = "0.5";
+        }
     }
 }
 
 async function captureSignature() {
-    canvasScreenshot = await html2canvas(document.getElementById("signatureCanvas"), { backgroundColor: null });
-    return canvasScreenshot;
+    const canvas = document.getElementById("signatureCanvas");
+    return canvas.toDataURL('image/png');
 }
 
 async function showSignature() {

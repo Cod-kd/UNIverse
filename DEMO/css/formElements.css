@@ -278,6 +278,20 @@
     top: 20%;
 }
 
+#userDataDiv div{
+    display: grid;
+}
+
+#userDataDiv hr{
+    border-color: var(--main);
+    margin: 10px;
+}
+
+#userDataDiv div h1{
+    position: relative;
+    justify-self: start;
+}
+
 #saveCardBtn {
     margin-top: 105%;
 }
@@ -286,4 +300,10 @@
     touch-action: none;
     cursor: cell;
     border: 1px solid var(--dark1);
+}
+
+#signatureImg{
+    justify-self: end;
+    margin-top: 13%;
+    border-radius: 12px;
 }
