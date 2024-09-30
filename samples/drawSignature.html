@@ -31,16 +31,14 @@
             font-size: 16px;
         }
 
-        #outputDiv {
-            margin-top: 20px;
-            /* Space between buttons and output div */
-            position: relative;
-        }
-
-        #qrCodeImage {
-            margin-top: 20px;
-            max-width: 128px;
-            display: none;
+        #userDataDiv {
+            position: fixed;
+            width: 350px;
+            background-color: var(--dark1);
+            padding: 10px;
+            border-radius: 12px;
+            top: 50%;
+            border: 1px solid red;
         }
     </style>
 </head>
@@ -49,25 +47,30 @@
     <canvas id="canvas"></canvas>
     <button id="resetCanvasBtn">Reset</button>
     <button id="saveCanvasBtn">Save</button>
-    <div id="outputDiv"></div>
-    <canvas id="qrCode"></canvas>
-    <img id="qrCodeImage" style="display: none;" alt="QR Code" />
+    <div id="userDataDiv"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <script>
         const canvas = document.getElementById("canvas");
         const resetCanvasBtn = document.getElementById("resetCanvasBtn");
         const saveCanvasBtn = document.getElementById("saveCanvasBtn");
-        const outputDiv = document.getElementById("outputDiv");
-        const qrCodeCanvas = document.getElementById("qrCode");
-        const qrCodeImage = document.getElementById("qrCodeImage");
+        const userDataDiv = document.getElementById("userDataDiv");
 
         let drawColor = "#FF5A1F";
         let drawWidth = 2;
         let isDrawing = false;
 
+        /*
+        `
+            <p>Email: ${formData.email}</p>
+            <p>Username: ${formData.username}</p>
+            <p>Gender: ${formData.gender}</p>
+            <p>Birth Date: ${formData.birthDate.slice(0, 4)}/${formData.birthDate.slice(4, 6)}/${formData.birthDate.slice(6, 8)}</p>
+            <p>Password: ************</p>
+            <h1>UNIcard</h1>
+        `
+        */
         // Canvas setup
         canvas.width = 300;
         canvas.height = 300;
@@ -153,29 +156,48 @@
                 // Step 1: Capture the main canvas
                 const canvasScreenshot = await html2canvas(canvas, { backgroundColor: null });
 
-                // Step 2: Put the captured main canvas to the outputDiv
-                outputDiv.innerHTML = ''; // Clear previous content
-                outputDiv.appendChild(canvasScreenshot);
+                // Step 2: Create a new canvas for resizing
+                const resizedCanvas = document.createElement('canvas');
+                resizedCanvas.width = 50;
+                resizedCanvas.height = 50;
+                const resizedContext = resizedCanvas.getContext('2d');
 
-                // Step 3: Screenshot the outputDiv
-                const outputDivScreenshot = await html2canvas(outputDiv);
+                // Step 3: Draw the captured canvas onto the resized canvas
+                resizedContext.drawImage(canvasScreenshot, 0, 0, resizedCanvas.width, resizedCanvas.height);
 
-                // Step 4: Convert the screenshot of outputDiv to hashHex
-                outputDivScreenshot.toBlob(async (blob) => {
+                // Step 4: Get the data URL of the resized canvas
+                const canvasDataUrl = resizedCanvas.toDataURL('image/jpeg', 0.5);
+
+                // Step 5: Put the captured main canvas to the userDataDiv
+                userDataDiv.innerHTML = `
+            <p>Email: test@gmail.com</p>
+            <p>Username: testuser</p>
+            <p>Gender: Male</p>
+            <p>Birth Date: 2005/10/11</p>
+            <p>Password: ************</p>
+            <h1>UNIcard</h1>
+            <img src="${canvasDataUrl}" alt="signature">
+        `;
+
+                // Step 6: Screenshot the outputDiv
+                const UNIcardScreenshot = await html2canvas(userDataDiv);
+
+                // Step 7: Convert the screenshot of outputDiv to hashHex
+                UNIcardScreenshot.toBlob(async (blob) => {
                     if (!blob) {
                         console.error("Blob is null, cannot proceed.");
-                        throw new Error("Failed to create blob from outputDiv screenshot.");
+                        throw new Error("Failed to create blob from UNIcard screenshot.");
                     }
                     const hashHex = await hashImage(blob);
                     console.log(`Image Hash: ${hashHex}`);
-                    outputDiv.textContent += `Image Hash: ${hashHex}`; // Display the hash
                 }, 'image/png');
 
             } catch (error) {
                 console.error("Error in saveCanvas:", error);
-                outputDiv.textContent = "An error occurred while processing the image.";
+                userDataDiv.textContent = "An error occurred while processing the image.";
             }
         }
+
 
     </script>
 </body>
