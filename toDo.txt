@@ -12,7 +12,7 @@ JavaScript file:
     (DONE)    -add form validation to all inputs
     (DONE)    -add an inputInfoDiv which displays informations about the current input (eg. max length, min length, needs to include this/that etc.)
     (DONE)    -add id to all inputs for further PHP actions
-    -add drag&drop interactivity to the infoCards => user can have "fun" with the cards
+    (DISMISSED)    -add drag&drop interactivity to the infoCards => user can have "fun" with the cards
     (DONE)    -if a condition isn't met => the condition should stay in place
     (DONE)    -if a condition is met => the condition should be removed with the disappear
     (DONE)    -if a previous condition was met before, but now it's not met => that specified condition should appear with the appear animation
@@ -42,7 +42,7 @@ CSS:
 
 PHP:
     (DONE)    -create createProfile.php for testing the connection with javascript fetch
-    -add the javascript registration informations to the database upon fetching
+    (DONE)    -add the javascript registration informations to the database upon fetching
 
 Quick fixes:
     (DONE)    -backBtn isnt working while UNIcard is present
