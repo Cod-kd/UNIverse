@@ -47,8 +47,8 @@ Quick fixes:
     (DONE)    -backBtn isnt working while UNIcard is present
     (DONE)    -when backBtn is pressed on the last page of registration => UNIcard instantly appears (animation is missing)
     (DONE)    -nothing happens when the user clicks registerBtn
-    -the imagePasswd isnt saved into the database
-    -add the .button class to the reset signature button
-    -when the reset button is pressed at the signature part it says "continueBtn is not defined at registerloginbtn.js 1005th row"
-    -continueBtn shouldn't be available until a signature was drawn on the signatureCanvas
-    -console log the final formData's values upon registerBtn press + ?add missing formData attribute called "imgPass" => this stores the UNIcard's hashed hex code?
+    (DONE)    -the imagePasswd isnt saved into the database
+    (DONE)    -add the .button class to the reset signature button
+    (DONE)    -when the reset button is pressed at the signature part it says "continueBtn is not defined at registerloginbtn.js 1005th row"
+    (DONE)    -continueBtn shouldn't be available until a signature was drawn on the signatureCanvas
+    (DONE)    -console log the final formData's values upon registerBtn press + ?add missing formData attribute called "imgPass" => this stores the UNIcard's hashed hex code?

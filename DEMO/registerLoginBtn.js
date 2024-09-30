@@ -397,39 +397,40 @@ function renderRegistration(monitorScreenDiv) {
     }
 
     // Function to save the UNIcard as image named 'UNIcard.jpg'
+
     async function saveUNIcard() {
         const userDataDiv = document.getElementById("userDataDiv");
 
-        // Ensure html2canvas is loaded
         if (typeof html2canvas === 'undefined') {
             console.error("html2canvas library is not loaded.");
             return;
         }
 
-        html2canvas(userDataDiv, { backgroundColor: null })
-            .then(async canvas => {
-                canvas.toBlob(async function (blob) {
-                    // Hash the image to HEX using the provided logic
-                    const hashHexImg = await hashImage(blob);
-                    formData.imgPasswd = hashHexImg;
-                    const link = document.createElement("a");
-                    link.download = "UNIcard.jpg"; // File name
-                    link.href = URL.createObjectURL(blob);
-                    document.body.appendChild(link); // Append the link element
-                    link.click(); // Trigger the download
-                    document.body.removeChild(link); // Remove the link element
+        try {
+            const canvas = await html2canvas(userDataDiv, { backgroundColor: null });
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
 
-                    // Enable the continue button after the card is saved
-                    const continueBtn = document.querySelector('.round:not([style*="rotate(180deg)"])');
-                    if (continueBtn) {
-                        continueBtn.style.opacity = "1";
-                        continueBtn.style.pointerEvents = "auto";
-                    }
-                }, 'image/jpeg', 0.95);
-            })
-            .catch(err => {
-                console.error("Error saving the UNIcard: ", err);
-            });
+            // Hash the image to HEX using the provided logic
+            const hashHexImg = await hashImage(blob);
+            formData.imgPasswd = hashHexImg;
+
+            const link = document.createElement("a");
+            link.download = "UNIcard.jpg";
+            link.href = URL.createObjectURL(blob);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            console.log("UNIcard saved and hashed:", formData.imgPasswd);
+
+            const continueBtn = document.querySelector("#continueBtn");
+            if (continueBtn) {
+                continueBtn.style.opacity = "1";
+                continueBtn.style.pointerEvents = "auto";
+            }
+        } catch (err) {
+            console.error("Error saving the UNIcard: ", err);
+        }
     }
 
     // Helper functions for form creation
@@ -444,11 +445,13 @@ function renderRegistration(monitorScreenDiv) {
         const btn = document.createElement("div");
         btn.classList.add("center-con");
         let rotation = "0deg";
+        let id = "continueBtn";
         if (isBackButton) {
             rotation = "180deg";
+            id = "backBtn"
         };
         btn.innerHTML = `
-            <div class="round" style="transform: rotate(${rotation})">
+            <div id="${id}" class="round" style="transform: rotate(${rotation})">
                 <div id="cta">
                     <span class="arrow primera next"></span>
                     <span class="arrow segunda next"></span>
@@ -642,6 +645,9 @@ function renderRegistration(monitorScreenDiv) {
                 await delay(600);
                 registerBtn.remove();
                 registerBtnDiv.style.marginTop = "22%";
+
+                // Log the final formData values
+                console.log("Final formData:", JSON.stringify(formData, null, 2));
 
                 // Start loading animation
                 const loadingStart = performance.now();
@@ -923,6 +929,7 @@ function arrowBtnsConfig() {
 function setupSignatureCanvas() {
     const canvas = document.getElementById("signatureCanvas");
     const resetCanvasBtn = document.getElementById("resetCanvasBtn");
+    resetCanvasBtn.classList.add("button");
     let drawColor = "#FF5A1F";
     let drawWidth = 2;
     let isDrawing = false;
@@ -964,6 +971,8 @@ function setupSignatureCanvas() {
 
     function startDrawing(event) {
         isDrawing = true;
+        hasDrawn = true;
+        updateContinueButton();
         const pos = getEventPosition(event);
         context.beginPath();
         context.moveTo(pos.x, pos.y);
@@ -998,14 +1007,18 @@ function setupSignatureCanvas() {
     }
 
     function updateContinueButton() {
-        if (hasDrawn) {
-            continueBtn.disabled = false;
-            continueBtn.style.opacity = "1";
-        } else {
-            continueBtn.disabled = true;
-            continueBtn.style.opacity = "0.5";
+        const continueBtn = document.querySelector('.round:not([style*="rotate(180deg)"])');
+        if (continueBtn) {
+            if (hasDrawn) {
+                continueBtn.style.opacity = "1";
+                continueBtn.style.pointerEvents = "auto";
+            } else {
+                continueBtn.style.opacity = "0.5";
+                continueBtn.style.pointerEvents = "none";
+            }
         }
     }
+    updateContinueButton();
 }
 
 async function captureSignature() {

@@ -302,6 +302,14 @@
     border: 1px solid var(--dark1);
 }
 
+#signatureDiv{
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    gap: 30px;
+    margin-top: 20%;
+}
+
 #signatureImg{
     justify-self: end;
     margin-top: 13%;
