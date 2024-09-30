@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Drawing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        canvas {
+            touch-action: none;
+            cursor: cell;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <button id="resetCanvasBtn">Reset</button>
+    <button id="saveCanvasBtn">Save</button>
+    <script>
+        /*
+        1. Draw signature
+        2. Save signature
+        3. Canvas is screenshotted with html2canvas
+        4. The image is processed as a QR code
+        5. QR code is pressed on the UNIcard's right bottom corner
+        6. UNIcard image is screenshotted with html2canvas
+        7. The screenshot is processed and hashed into a HEX code
+        */
+        const canvas = document.getElementById("canvas");
+        const resetCanvasBtn = document.getElementById("resetCanvasBtn");
+        const saveCanvasBtn = document.getElementById("saveCanvasBtn");
+
+        // Helper variables for canvas drawing attributes
+        let drawColor = "#FF5A1F";
+        let drawWidth = 2;
+        let isDrawing = false;
+
+        // Canvas setup
+        canvas.width = 300;
+        canvas.height = 300;
+        const context = canvas.getContext("2d");
+        context.fillStyle = "#141414"
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Canvas event listeners
+        canvas.addEventListener("touchstart", startDrawing, { passive: false });
+        canvas.addEventListener("touchmove", drawSignature, { passive: false });
+        canvas.addEventListener("mousedown", startDrawing);
+        canvas.addEventListener("mousemove", drawSignature);
+        canvas.addEventListener("mouseup", stopDrawing);
+        canvas.addEventListener("mouseout", stopDrawing);
+        canvas.addEventListener("touchend", stopDrawing);
+        canvas.addEventListener("touchcancel", stopDrawing);
+
+        // Button event listeners
+        resetCanvasBtn.addEventListener("click", clearCanvas);
+        saveCanvasBtn.addEventListener("click", saveCanvas);
+
+        // Helper function to get event position
+        function getEventPosition(event) {
+            const rect = canvas.getBoundingClientRect();
+            if (event.touches && event.touches.length > 0) {
+                return {
+                    x: event.touches[0].clientX - rect.left,
+                    y: event.touches[0].clientY - rect.top
+                };
+            } else {
+                return {
+                    x: event.clientX - rect.left,
+                    y: event.clientY - rect.top
+                };
+            }
+        }
+
+        // Canvas functions
+        function startDrawing(event) {
+            isDrawing = true;
+            const pos = getEventPosition(event);
+            context.beginPath();
+            context.moveTo(pos.x, pos.y);
+            event.preventDefault();
+        }
+
+        function drawSignature(event) {
+            if (!isDrawing) return;
+            const pos = getEventPosition(event);
+            context.lineTo(pos.x, pos.y);
+            context.strokeStyle = drawColor;
+            context.lineWidth = drawWidth;
+            context.lineCap = "round";
+            context.lineJoin = "round";
+            context.stroke();
+            event.preventDefault();
+        }
+
+        function stopDrawing(event) {
+            if (isDrawing) {
+                isDrawing = false;
+                event.preventDefault();
+            }
+        }
+
+        function clearCanvas() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.fillStyle = "#141414"
+            context.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function saveCanvas() {
+            const image = canvas.toDataURL("image/png");
+            const link = document.createElement('a');
+            link.href = image;
+            link.download = 'canvas.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+
+</html>
