@@ -630,7 +630,7 @@ function renderRegistration(monitorScreenDiv) {
                 console.log("Final formData:", JSON.stringify(formData, null, 2));
 
                 // Change cursor type to loading
-                document.body.style.cursor = "loading";
+                document.body.style.cursor = "progress";
                 try {
                     // Make the fetch request
                     const response = await fetch("http://localhost/UNIverseTEST/createProfile.php", {
@@ -656,6 +656,7 @@ function renderRegistration(monitorScreenDiv) {
                 console.error("Error: ", err);
                 await responseAnimation("404");
             }
+            document.body.style.cursor = "default";
         });
     }
 
