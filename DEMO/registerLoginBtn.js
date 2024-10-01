@@ -1,16 +1,11 @@
-// DOM Elements
 const registerLoginBtn = document.getElementById("registerLoginBtn");
 const registerLoginBtnDiv = document.getElementById("registerLoginBtnDiv");
 const monitorScreenDiv = document.getElementById("monitorScreenDiv");
-let canvasScreenshot;
 
-// Helper function for creating delays
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-// Event listener for main button
 registerLoginBtn.addEventListener("click", splitMainButton);
 
-// Function to split the main button into Register and Login buttons
 async function splitMainButton() {
     registerLoginBtn.style.transform = "scale(0)";
     registerLoginBtn.style.transition = "transform 0.5s";
@@ -32,7 +27,6 @@ async function splitMainButton() {
     }
 }
 
-// Function to create a new button
 function createBasicButton({ id, text, initialTransform }) {
     const newBtn = document.createElement("button");
     newBtn.id = id;
@@ -44,13 +38,11 @@ function createBasicButton({ id, text, initialTransform }) {
     return newBtn;
 }
 
-// Function to animate button appearance
 function animateButton(button) {
     button.style.transform = "translateX(0)";
     button.style.opacity = "1";
 }
 
-// Function to add event listeners to buttons
 function addButtonListeners(button, isRegisterBtn) {
     button.addEventListener("mouseenter", () => button.style.transform = "scale(1.05)");
     button.addEventListener("mouseleave", () => button.style.transform = "scale(1)");
@@ -66,7 +58,6 @@ function addButtonListeners(button, isRegisterBtn) {
     });
 }
 
-// Functions to fade monitor screen in and out
 async function fadeOutMonitorScreen() {
     monitorScreenDiv.style.opacity = "0";
     await delay(300);
@@ -77,45 +68,6 @@ async function fadeInMonitorScreen() {
     await delay(300);
 }
 
-// Function to create loading animation
-function createLoadingEffect(operation) {
-    const registerBtnDiv = document.getElementById("registerBtnDiv");
-    const lottiePlayerEl = document.getElementById("animatedButton");
-
-    if (lottiePlayerEl) {
-        handleExistingLottiePlayer(lottiePlayerEl, operation);
-    } else {
-        createNewLottiePlayer(registerBtnDiv);
-    }
-}
-
-// Helper function to handle existing Lottie player
-function handleExistingLottiePlayer(lottiePlayerEl, operation) {
-    if (operation === "scale1" || operation === "scale0") {
-        lottiePlayerEl.style.transform = `scale(${operation === "scale1" ? 1 : 0})`;
-    } else if (operation === "rm") {
-        lottiePlayerEl.remove();
-    }
-}
-
-// Helper function to create a new Lottie player
-function createNewLottiePlayer(registerBtnDiv) {
-    const script = document.createElement("script");
-    script.src = "https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs";
-    script.type = "module";
-    registerBtnDiv.appendChild(script);
-
-    const lottiePlayer = document.createElement("dotlottie-player");
-    lottiePlayer.src = "https://lottie.host/2634e709-a42e-414a-a8b3-960be88951c0/1X6R8KP5qy.json";
-    lottiePlayer.id = "animatedButton";
-    lottiePlayer.setAttribute("speed", "1");
-    lottiePlayer.setAttribute("autoplay", "");
-    lottiePlayer.setAttribute("loop", "true");
-
-    registerBtnDiv.appendChild(lottiePlayer);
-}
-
-// Function to create successful response effect
 function createSuccessfulResponseEffect() {
     const registerBtnDiv = document.getElementById("registerBtnDiv");
     const script = document.createElement("script");
@@ -132,7 +84,6 @@ function createSuccessfulResponseEffect() {
     registerBtnDiv.appendChild(lottiePlayer);
 }
 
-// Function to create response heading
 function createResponseHeading(operation, text) {
     const registerBtnDiv = document.getElementById("registerBtnDiv");
     let responseHeadingEl = document.getElementById("responseHeading");
@@ -150,7 +101,6 @@ function createResponseHeading(operation, text) {
     }
 }
 
-// Function to create 404 effect
 function create404Effect(operation) {
     const registerBtnDiv = document.getElementById("registerBtnDiv");
     const existing404El = document.getElementById("animated404");
@@ -162,8 +112,7 @@ function create404Effect(operation) {
     }
 }
 
-// Helper function to create a new 404 effect
-function createNew404Effect(registerBtnDiv) {
+async function createNew404Effect(registerBtnDiv) {
     const script = document.createElement("script");
     script.src = "https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs";
     script.type = "module";
@@ -181,12 +130,10 @@ function createNew404Effect(registerBtnDiv) {
 
     registerBtnDiv.appendChild(lottiePlayer);
 
-    setTimeout(() => {
-        lottiePlayer.style.transform = "scale(1)";
-    }, 10);
+    await delay(10);
+    lottiePlayer.style.transform = "scale(1)";
 }
 
-// Function for response animation
 async function responseAnimation(status) {
     if (status === "200") {
         createResponseHeading("", "Sikeres regisztráció!");
@@ -203,7 +150,6 @@ async function responseAnimation(status) {
     }
 }
 
-// Function for creating the home button
 function createHomeButton() {
     const homeBtn = document.createElement("button");
     homeBtn.id = "homeBtn";
@@ -214,7 +160,6 @@ function createHomeButton() {
     return homeBtn;
 }
 
-// Main function to render registration form
 function renderRegistration(monitorScreenDiv) {
     const requiredData = ["Email cím", "Születési Dátum", "Nem", "Felhasználónév", "Jelszó", "Aláírás"];
     let currentIndex = 0;
@@ -231,7 +176,6 @@ function renderRegistration(monitorScreenDiv) {
 
     createFormStep(currentIndex);
 
-    // Function to create each step of the form
     async function createFormStep(index) {
         await fadeOutMonitorScreen();
         monitorScreenDiv.innerHTML = "";
@@ -264,7 +208,6 @@ function renderRegistration(monitorScreenDiv) {
                 }
 
                 if (index === 5) {
-                    // Insert canvas for signature
                     const signatureDiv = document.createElement("div");
                     signatureDiv.id = "signatureDiv";
                     signatureDiv.innerHTML = `
@@ -282,11 +225,9 @@ function renderRegistration(monitorScreenDiv) {
                 addBackButtonListener(backBtn, index, dataInp);
             }
 
-            // Always add the continueBtn for all steps
             monitorScreenDiv.appendChild(continueBtn);
             addContinueButtonListener(continueBtn, index, dataInp);
 
-            // Set grid layout
             monitorScreenDiv.style.gridTemplateColumns = index > 0 ? "repeat(3, 1fr)" : "500px 0px";
         } else if (index === requiredData.length) {
             createUNIverseCardStep(monitorScreenDiv);
@@ -294,7 +235,6 @@ function renderRegistration(monitorScreenDiv) {
             createFinalRegistrationStep(monitorScreenDiv);
         }
 
-        // Apply initial styles for fade-in effect
         const elements = monitorScreenDiv.children;
         for (let el of elements) {
             el.style.opacity = "0";
@@ -302,13 +242,10 @@ function renderRegistration(monitorScreenDiv) {
             el.style.transition = "opacity 0.5s ease, transform 0.5s ease";
         }
 
-        // Trigger reflow to ensure the initial styles are applied
         monitorScreenDiv.offsetHeight;
 
-        // Fade in the monitor screen and its children
         await fadeInMonitorScreen();
 
-        // Animate the elements
         for (let el of elements) {
             el.style.opacity = "1";
             el.style.transform = "translateY(0)";
@@ -353,11 +290,9 @@ function renderRegistration(monitorScreenDiv) {
         addBackButtonListener(backBtn, requiredData.length, null);
         addContinueButtonListener(continueBtn, requiredData.length, null);
 
-        // Initially disable the continue button
         continueBtn.style.opacity = "0.5";
         continueBtn.style.pointerEvents = "none";
 
-        // Apply initial styles for fade-in effect
         const elements = monitorScreenDiv.children;
         for (let el of elements) {
             el.style.opacity = "0";
@@ -365,20 +300,15 @@ function renderRegistration(monitorScreenDiv) {
             el.style.transition = "opacity 0.5s ease, transform 0.5s ease";
         }
 
-        // Trigger reflow to ensure the initial styles are applied
         monitorScreenDiv.offsetHeight;
 
-        // Fade in the monitor screen
         await fadeInMonitorScreen();
 
-        // Animate the elements
         for (let el of elements) {
             el.style.opacity = "1";
             el.style.transform = "translateY(0)";
         }
     }
-
-    // Function to save the UNIcard as image named 'UNIcard.jpg'
 
     async function saveUNIcard() {
         const userDataDiv = document.getElementById("userDataDiv");
@@ -392,7 +322,6 @@ function renderRegistration(monitorScreenDiv) {
             const canvas = await html2canvas(userDataDiv, { backgroundColor: null });
             const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.95));
 
-            // Hash the image to HEX using the provided logic
             const hashHexImg = await hashImage(blob);
             formData.imgPasswd = hashHexImg;
 
@@ -402,8 +331,6 @@ function renderRegistration(monitorScreenDiv) {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-
-            console.log("UNIcard saved and hashed:", formData.imgPasswd);
 
             const continueBtn = document.querySelector("#continueBtn");
             if (continueBtn) {
@@ -415,7 +342,6 @@ function renderRegistration(monitorScreenDiv) {
         }
     }
 
-    // Helper functions for form creation
     function createHeading(text) {
         const heading = document.createElement("h1");
         heading.innerHTML = text;
@@ -426,12 +352,8 @@ function renderRegistration(monitorScreenDiv) {
     function createNavigationButton(isBackButton) {
         const btn = document.createElement("div");
         btn.classList.add("center-con");
-        let rotation = "0deg";
-        let id = "continueBtn";
-        if (isBackButton) {
-            rotation = "180deg";
-            id = "backBtn"
-        };
+        let rotation = isBackButton ? "180deg" : "0deg";
+        let id = isBackButton ? "backBtn" : "continueBtn";
         btn.innerHTML = `
             <div id="${id}" class="round" style="transform: rotate(${rotation})">
                 <div id="cta">
@@ -487,7 +409,7 @@ function renderRegistration(monitorScreenDiv) {
         dataInp.style.transition = "all 0.3s ease";
         dataInp.addEventListener("mouseover", () => {
             dataInp.style.transform = "scale(1.05)";
-            dataInp.style.boxShadow = "0 0 10px rgba(0,0,0,0.1)";
+            dataInp.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.1)";
         });
         dataInp.addEventListener("mouseout", () => {
             dataInp.style.transform = "scale(1)";
@@ -530,7 +452,7 @@ function renderRegistration(monitorScreenDiv) {
                 break;
             case 4:
                 dataInp.type = "password";
-                dataInp.placeholder = "******";
+                dataInp.placeholder = "########";
                 dataInp.id = "passwordInput";
                 dataInp.value = formData.passwd;
                 dataInp.addEventListener("input", function (e) {
@@ -566,15 +488,12 @@ function renderRegistration(monitorScreenDiv) {
     function addBackButtonListener(backBtn, index, dataInp) {
         backBtn.addEventListener("click", async function () {
             if (index === requiredData.length + 1) {
-                // We're on the final registration step, go back to UNIcard
                 await fadeOutMonitorScreen();
                 createUNIverseCardStep(monitorScreenDiv);
             } else if (index === requiredData.length) {
-                // We're on the UNIcard step, go back to password step
                 await fadeOutMonitorScreen();
                 createFormStep(index - 1);
             } else {
-                // For all other steps
                 updateFormData(index, dataInp);
                 createFormStep(index - 1);
             }
@@ -584,25 +503,21 @@ function renderRegistration(monitorScreenDiv) {
     function addContinueButtonListener(continueBtn, index, dataInp) {
         continueBtn.addEventListener("click", async function () {
             if (index === requiredData.length) {
-                // We're on the UNIcard step
                 await fadeOutMonitorScreen();
                 createFinalRegistrationStep(monitorScreenDiv);
             } else if (index === 2) {
-                // For the gender selection step
                 const selectedGender = document.querySelector('input[name="gender-radio"]:checked');
                 if (selectedGender) {
                     formData.gender = selectedGender.value;
                     createFormStep(index + 1);
                 }
             } else if (index === 5) {
-                // For the signature step
                 const signatureDataUrl = await captureSignature();
                 if (signatureDataUrl) {
                     formData.signature = signatureDataUrl;
                     createFormStep(index + 1);
                 }
             } else {
-                // For all other steps
                 if (validateField(dataInp, index)) {
                     updateFormData(index, dataInp);
                     createFormStep(index + 1);
@@ -626,13 +541,8 @@ function renderRegistration(monitorScreenDiv) {
                 registerBtn.remove();
                 registerBtnDiv.style.marginTop = "22%";
 
-                // Log the final formData values
-                console.log("Final formData:", JSON.stringify(formData, null, 2));
-
-                // Change cursor type to loading
                 document.body.style.cursor = "progress";
                 try {
-                    // Make the fetch request
                     const response = await fetch("http://localhost/UNIverseTEST/createProfile.php", {
                         method: "POST",
                         headers: {
@@ -646,8 +556,6 @@ function renderRegistration(monitorScreenDiv) {
                     } else {
                         await responseAnimation("404");
                     }
-                    const data = await response.text();
-                    console.log(data);
                 } catch (fetchError) {
                     console.error("Fetch error: ", fetchError);
                     await responseAnimation("404");
@@ -684,7 +592,6 @@ function renderRegistration(monitorScreenDiv) {
         await fadeInMonitorScreen();
     }
 
-    // Helper function to update form data
     function updateFormData(index, dataInp) {
         switch (index) {
             case 0:
@@ -702,14 +609,12 @@ function renderRegistration(monitorScreenDiv) {
         }
     }
 
-    // Function to validate form fields
     function validateField(input, index) {
-        if (!input) return true; // For gender selection, which doesn't have an input field
+        if (!input) return true;
 
         const value = input.value.trim();
 
         switch (index) {
-            // Email
             case 0:
                 const emailConditions = validateEmail(value);
                 if (Object.keys(emailConditions).length > 0) {
@@ -717,7 +622,6 @@ function renderRegistration(monitorScreenDiv) {
                     return false;
                 }
                 break;
-            // Birth date
             case 1:
                 const birthDateConditions = validateBirthDate(value);
                 if (Object.keys(birthDateConditions).length > 0) {
@@ -725,7 +629,6 @@ function renderRegistration(monitorScreenDiv) {
                     return false;
                 }
                 break;
-            // Username
             case 3:
                 const usernameConditions = validateUsername(value);
                 if (Object.keys(usernameConditions).length > 0) {
@@ -733,7 +636,6 @@ function renderRegistration(monitorScreenDiv) {
                     return false;
                 }
                 break;
-            // Password
             case 4:
                 const passwordConditions = validatePassword(value);
                 if (Object.keys(passwordConditions).length > 0) {
@@ -743,11 +645,10 @@ function renderRegistration(monitorScreenDiv) {
                 break;
         }
 
-        updateValidation({}); // Clear any existing validation messages
+        updateValidation({});
         return true;
     }
 
-    // Validation functions
     function validateEmail(email) {
         let conditions = {};
 
@@ -770,7 +671,6 @@ function renderRegistration(monitorScreenDiv) {
     function validateBirthDate(birthDate) {
         let conditions = {};
 
-        // Ensure birthDate is 8 characters long
         if (birthDate.length !== 8) {
             conditions.length = '-8 karakter hosszú';
         }
@@ -779,12 +679,10 @@ function renderRegistration(monitorScreenDiv) {
         const month = parseInt(birthDate.slice(4, 6), 10);
         const day = parseInt(birthDate.slice(6, 8), 10);
 
-        // Validate year, month, and day
         if (isNaN(year) || month < 1 || month > 12 || day < 1 || day > 31) {
             conditions.validDate = '-Nem megfelelő formátum (ÉÉÉÉHHNN)';
         }
 
-        // Handle leap year and days in each month
         const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0 || year % 400 === 0) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         if (day > daysInMonth[month - 1]) {
             conditions.validDay = '-Hibás nap az adott hónapban';
@@ -793,15 +691,12 @@ function renderRegistration(monitorScreenDiv) {
         const today = new Date();
         const birthDateObj = new Date(year, month - 1, day);
 
-        // Check birth date is not in the future
         if (birthDateObj > today) {
             conditions.futureDate = '-Nem jövőbeli dátum';
         }
 
-        // Calculate age
         const age = today.getFullYear() - year - (today < new Date(today.getFullYear(), month - 1, day) ? 1 : 0);
 
-        // Validate age is between 18 and 100
         if (age < 18 || age > 100) {
             conditions.age = '-Életkor 18 és 100 közötti';
         }
@@ -812,14 +707,12 @@ function renderRegistration(monitorScreenDiv) {
     function validateUsername(username) {
         let conditions = {};
 
-        // Check length constraints (must be between 8 and 20 characters)
         if (username.length < 8) {
             conditions.length = '-Minimum 8 karakter hosszú';
         } else if (username.length > 20) {
             conditions.length = '-Maximum 20 karakter hosszú';
         }
 
-        // Check allowed characters (letters, digits, hyphen, underscore)
         const usernamePattern = /^[A-Za-z0-9_-]+$/;
         if (!usernamePattern.test(username)) {
             conditions.invalidChars = '-Tartalmazhat (szám, betű, -, _)';
@@ -831,7 +724,7 @@ function renderRegistration(monitorScreenDiv) {
     function validatePassword(password) {
         let conditions = {};
 
-        if (password.length < 12) {
+        if (password.length < 8) {
             conditions.length = '-Minimum 12 karakter hosszú';
         } else if (password.length > 36) {
             conditions.length = '-Maximum 36 karakter hosszú';
@@ -848,7 +741,7 @@ function renderRegistration(monitorScreenDiv) {
         return conditions;
     }
 
-    function createDetailP(text, condition) {
+    async function createDetailP(text, condition) {
         const inputDetailsDiv = document.getElementById("inputDetailsDiv");
         let existingP = Array.from(inputDetailsDiv.querySelectorAll("p")).find(p => p.dataset.condition === condition);
 
@@ -859,9 +752,8 @@ function renderRegistration(monitorScreenDiv) {
                 existingP.style.display = "block";
             } else {
                 existingP.style.animation = "disappear 0.5s forwards ease";
-                setTimeout(() => {
-                    existingP.remove();
-                }, 500);
+                await delay(500);
+                existingP.remove();
             }
         } else if (text) {
             let newDetailP = document.createElement("p");
@@ -881,14 +773,12 @@ function renderRegistration(monitorScreenDiv) {
             }
         });
 
-        // Now update or create new conditions
         for (let condition in conditions) {
             createDetailP(conditions[condition], condition);
         }
     }
 }
 
-// Function to configure arrow buttons
 function arrowBtnsConfig() {
     const roundElement = document.querySelector('.round');
     const arrows = document.querySelectorAll('.arrow');
@@ -918,7 +808,6 @@ function setupSignatureCanvas() {
     context.fillStyle = "#141414";
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Event listeners for canvas drawing
     canvas.addEventListener("touchstart", startDrawing, { passive: false });
     canvas.addEventListener("touchmove", drawSignature, { passive: false });
     canvas.addEventListener("mousedown", startDrawing);
@@ -928,7 +817,6 @@ function setupSignatureCanvas() {
     canvas.addEventListener("touchend", stopDrawing);
     canvas.addEventListener("touchcancel", stopDrawing);
 
-    // Button event listeners
     resetCanvasBtn.addEventListener("click", clearCanvas);
 
     function getEventPosition(event) {
@@ -1003,55 +891,6 @@ async function captureSignature() {
     return canvas.toDataURL('image/png');
 }
 
-async function showSignature() {
-    let canvasScreenshot = await captureSignature();
-    // Step 2: Create a new canvas for resizing
-    const resizedCanvas = document.createElement('canvas');
-    resizedCanvas.width = 50;
-    resizedCanvas.height = 50;
-    const resizedContext = resizedCanvas.getContext('2d');
-
-    // Step 3: Draw the captured canvas onto the resized canvas
-    resizedContext.drawImage(canvasScreenshot, 0, 0, resizedCanvas.width, resizedCanvas.height);
-
-    // Step 4: Get the data URL of the resized canvas
-    const canvasDataUrl = resizedCanvas.toDataURL('image/jpeg', 0.5);
-    return canvasDataUrl;
-}
-
-async function saveCanvas() {
-    try {
-        // Step 5: Put the captured main canvas to the userDataDiv
-        userDataDiv.innerHTML = `
-            <p>Email: </p>
-            <p>Username: testuser</p>
-            <p>Gender: Male</p>
-            <p>Birth Date: 2005/10/11</p>
-            <p>Password: ************</p>
-            <h1>UNIcard</h1>
-            <img src="${canvasDataUrl}" alt="signature">
-        `;
-
-        // Step 6: Screenshot the outputDiv
-        const UNIcardScreenshot = await html2canvas(userDataDiv);
-
-        // Step 7: Convert the screenshot of outputDiv to hashHex
-        UNIcardScreenshot.toBlob(async (blob) => {
-            if (!blob) {
-                console.error("Blob is null, cannot proceed.");
-                throw new Error("Failed to create blob from UNIcard screenshot.");
-            }
-            const hashHex = await hashImage(blob);
-            console.log(`Image Hash: ${hashHex}`);
-        }, 'image/png');
-
-    } catch (error) {
-        console.error("Error in saveCanvas:", error);
-        userDataDiv.textContent = "An error occurred while processing the image.";
-    }
-}
-
-// Hashing function for the image
 async function hashImage(file) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = new Uint8Array(arrayBuffer);
@@ -1061,12 +900,10 @@ async function hashImage(file) {
     return hashHex;
 }
 
-// Function to render login (placeholder for now)
 function renderLogin() {
     console.log("Login rendering not implemented yet");
 }
 
-// Initialize the script
 document.addEventListener('DOMContentLoaded', () => {
     arrowBtnsConfig();
 });
