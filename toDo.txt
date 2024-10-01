@@ -44,6 +44,13 @@ CSS:
 PHP:
     (DONE)    -create createProfile.php for testing the connection with javascript fetch
     (DONE)    -add the javascript registration informations to the database upon fetching
+    -create a checkExistingUser.php file which checks for:
+        -the inputted email adress's value (is it already present in users table? => if yes => response to use another email)
+        -the inputted username's value (only accept if it isnt present in the users table)
+        -LOGIC: 1 php file named checkExistingUser => the email / username is sent via the fetch and an SQL query is ran to check the availability of the value:
+            -return true if it isnt present in users table
+            -else return false
+            -if true was returned => user can click the continueBtn
 
 Quick fixes:
     (DONE)    -backBtn isnt working while UNIcard is present
