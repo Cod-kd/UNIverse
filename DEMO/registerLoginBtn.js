@@ -186,24 +186,6 @@ function createNew404Effect(registerBtnDiv) {
     }, 10);
 }
 
-// Function for loading animation
-async function loadingAnimation(action, duration = 0) {
-    if (action !== "stop") {
-        await createLoadingEffect("scale0");
-        await delay(200);
-        await createLoadingEffect("scale1");
-        await delay(duration); // Use the duration for the loading effect
-        await createLoadingEffect("scale0");
-        await delay(100);
-        await createLoadingEffect("rm");
-    } else {
-        // Stop the loading animation immediately
-        await createLoadingEffect("scale0");
-        await delay(100); // Optional: add a slight delay for visual effect
-        await createLoadingEffect("rm");
-    }
-}
-
 // Function for response animation
 async function responseAnimation(status) {
     if (status === "200") {
@@ -647,35 +629,31 @@ function renderRegistration(monitorScreenDiv) {
                 // Log the final formData values
                 console.log("Final formData:", JSON.stringify(formData, null, 2));
 
-                // Start loading animation
-                const loadingStart = performance.now();
-                await loadingAnimation();
+                // Change cursor type to loading
+                document.body.style.cursor = "loading";
+                try {
+                    // Make the fetch request
+                    const response = await fetch("http://localhost/UNIverseTEST/createProfile.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(formData)
+                    });
 
-                // Make the fetch request
-                const response = await fetch("http://localhost/UNIverseTEST/createProfile.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                // Stop loading animation
-                const loadingEnd = performance.now();
-                const duration = Math.max(loadingEnd - loadingStart, 0);
-                await loadingAnimation("stop", duration);
-
-                if (response.ok) {
-                    await responseAnimation("200");
-                } else {
+                    if (response.ok) {
+                        await responseAnimation("200");
+                    } else {
+                        await responseAnimation("404");
+                    }
+                    const data = await response.text();
+                    console.log(data);
+                } catch (fetchError) {
+                    console.error("Fetch error: ", fetchError);
                     await responseAnimation("404");
                 }
-
-                const data = await response.text();
-                console.log(data);
             } catch (err) {
                 console.error("Error: ", err);
-                await loadingAnimation("stop");
                 await responseAnimation("404");
             }
         });

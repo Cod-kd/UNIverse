@@ -34,7 +34,8 @@ JavaScript file:
             6. If the email isnt present => user isn't registrated
             7. If an email isn't present on the card => wrong card
     (DONE)    -change the inputDetails div's width and position at the passwordInput part
-    -add the loading animation while communicating with the server
+    (DISMISSED)    -add the loading animation while communicating with the server
+    -add the cursor loading effect while fetching the createProfile.php
 CSS:
     (CAN'T FINISH DUE TO BUG)   -change the radio button's "circle"'s center so the black circle inside is centered horizontally + vertically
     (DONE)    -add floating effect to the infoCards => replicates that they can be dragged
