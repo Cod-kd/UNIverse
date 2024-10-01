@@ -212,8 +212,7 @@ function renderRegistration(monitorScreenDiv) {
                     signatureDiv.id = "signatureDiv";
                     signatureDiv.innerHTML = `
                     <canvas id="signatureCanvas"></canvas>
-                    <button id="resetCanvasBtn">Reset</button>
-                    `;
+                    <button id="resetCanvasBtn">Reset</button>`;
                     monitorScreenDiv.querySelector("input").remove();
                     monitorScreenDiv.appendChild(signatureDiv);
                     setupSignatureCanvas();
@@ -269,8 +268,7 @@ function renderRegistration(monitorScreenDiv) {
             <div>
                 <h1>UNIcard</h1>
                 <img id="signatureImg" src="${formData.signature}" alt="signature" style="max-width: 150px; max-height: 45px;">
-            </div>
-            `;
+            </div>`;
         monitorScreenDiv.appendChild(userDataDiv);
 
         const saveButton = document.createElement("button");
@@ -475,10 +473,10 @@ function renderRegistration(monitorScreenDiv) {
         showBtn.addEventListener("click", function () {
             if (passwordInput.type === "password") {
                 passwordInput.type = "text";
-                showBtn.innerText = "Hide";
+                showBtn.innerHTML = "Hide";
             } else {
                 passwordInput.type = "password";
-                showBtn.innerText = "Show";
+                showBtn.innerHTML = "Show";
             }
         });
 
@@ -872,7 +870,7 @@ function setupSignatureCanvas() {
     }
 
     function updateContinueButton() {
-        const continueBtn = document.querySelector('.round:not([style*="rotate(180deg)"])');
+        const continueBtn = document.querySelector('#continueBtn');
         if (continueBtn) {
             if (hasDrawn) {
                 continueBtn.style.opacity = "1";
