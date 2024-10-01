@@ -44,6 +44,7 @@ CSS:
     (CAN'T FINISH DUE TO BUG)   -change the radio button's "circle"'s center so the black circle inside is centered horizontally + vertically
     (DONE)    -add floating effect to the infoCards => replicates that they can be dragged
     -make the page responsive (bootstrap?)
+    -check for unused css selectors and remove / change them
 
 PHP:
     (DONE)    -create createProfile.php for testing the connection with javascript fetch
