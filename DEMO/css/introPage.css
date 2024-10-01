@@ -19,7 +19,8 @@ body::before {
     z-index: -1;
 }
 
-h1, h3 {
+h1,
+h3 {
     font-family: 'Proza Libre', sans-serif;
 }
 
@@ -88,9 +89,11 @@ main {
     cursor: pointer;
     overflow: hidden;
 }
+
 .button:hover {
     transform: scale(1.05);
 }
+
 .button::before {
     content: "";
     position: absolute;
@@ -136,24 +139,24 @@ main {
     animation: floating 3s infinite ease-in-out;
 }
 
-.infoCard:nth-child(2){
+.infoCard:nth-child(2) {
     animation-delay: 0.3s;
 }
 
-.infoCard:nth-child(3){
+.infoCard:nth-child(3) {
     animation-delay: 0.6s;
 }
 
-.infoCard:nth-child(4){
+.infoCard:nth-child(4) {
     animation-delay: 0.9s;
 }
 
-main .cardDiv {
+.cardDiv {
     display: grid;
     gap: 60px;
 }
 
-main .infoCard div:first-child {
+.infoCard div:first-child {
     width: 77px;
     height: 77px;
     display: grid;
@@ -163,7 +166,7 @@ main .infoCard div:first-child {
     justify-self: center;
 }
 
-main .infoCard div:first-child img {
+.infoCard div:first-child img {
     width: 45px;
     height: 45px;
 }
