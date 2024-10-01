@@ -171,7 +171,8 @@ function renderRegistration(monitorScreenDiv) {
         username: "",
         passwd: "",
         imgPasswd: "",
-        signature: null
+        signature: null,
+        hasDrawnSignature: false
     };
 
     createFormStep(currentIndex);
@@ -212,11 +213,11 @@ function renderRegistration(monitorScreenDiv) {
                     signatureDiv.id = "signatureDiv";
                     signatureDiv.innerHTML = `
                     <canvas id="signatureCanvas"></canvas>
-                    <button id="resetCanvasBtn">Reset</button>
-                    `;
+                    <button id="resetCanvasBtn">Reset</button>`;
                     monitorScreenDiv.querySelector("input").remove();
                     monitorScreenDiv.appendChild(signatureDiv);
-                    setupSignatureCanvas();
+                    const signatureControls = setupSignatureCanvas();
+                    signatureControls.setHasDrawn(formData.hasDrawnSignature);
                 }
             }
 
@@ -494,6 +495,10 @@ function renderRegistration(monitorScreenDiv) {
                 await fadeOutMonitorScreen();
                 createFormStep(index - 1);
             } else {
+                if (index === 5) {
+                    const signatureControls = setupSignatureCanvas();
+                    formData.hasDrawnSignature = signatureControls.getHasDrawn();
+                }
                 updateFormData(index, dataInp);
                 createFormStep(index - 1);
             }
@@ -512,10 +517,13 @@ function renderRegistration(monitorScreenDiv) {
                     createFormStep(index + 1);
                 }
             } else if (index === 5) {
-                const signatureDataUrl = await captureSignature();
-                if (signatureDataUrl) {
-                    formData.signature = signatureDataUrl;
-                    createFormStep(index + 1);
+                const signatureControls = setupSignatureCanvas();
+                if (signatureControls.getHasDrawn()) {
+                    const signatureDataUrl = await captureSignature();
+                    if (signatureDataUrl) {
+                        formData.signature = signatureDataUrl;
+                        createFormStep(index + 1);
+                    }
                 }
             } else {
                 if (validateField(dataInp, index)) {
@@ -884,6 +892,14 @@ function setupSignatureCanvas() {
         }
     }
     updateContinueButton();
+
+    return {
+        getHasDrawn: () => hasDrawn,
+        setHasDrawn: (value) => {
+            hasDrawn = value;
+            updateContinueButton();
+        }
+    };
 }
 
 async function captureSignature() {

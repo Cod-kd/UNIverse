@@ -5,6 +5,7 @@ JavaScript file:
     (DONE)  -Make the code more readable
     (DONE)  -Create a button with a home icon => when pressed, the Registration + Login buttons will be rendered on the screen
     -add descriptive comments to the FINAL code
+    -check on the hasDrawn variable inside setupSignature function (necessary?)
     
     -Debugging:
     (DONE)    -add a variable named success (boolean)
@@ -63,3 +64,4 @@ Quick fixes:
     (DONE)    -when the reset button is pressed at the signature part it says "continueBtn is not defined at registerloginbtn.js 1005th row"
     (DONE)    -continueBtn shouldn't be available until a signature was drawn on the signatureCanvas
     (DONE)    -console log the final formData's values upon registerBtn press + ?add missing formData attribute called "imgPass" => this stores the UNIcard's hashed hex code?
+    -when the user hovers the continueBtn at the signature part of the registration => animation plays, but it shouldn't (continueBtn is only disabled when user clicks it)
