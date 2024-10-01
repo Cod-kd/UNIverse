@@ -702,11 +702,13 @@ function renderRegistration() {
 
     function validatePassword(password) {
         let conditions = {};
+        let minLength = 8;
+        let maxLength = 36;
 
-        if (password.length < 8) {
-            conditions.length = '-Minimum 12 karakter hosszú';
-        } else if (password.length > 36) {
-            conditions.length = '-Maximum 36 karakter hosszú';
+        if (password.length < minLength) {
+            conditions.length = `-Minimum ${minLength} karakter hosszú`;
+        } else if (password.length > maxLength) {
+            conditions.length = `-Maximum ${maxLength} karakter hosszú`;
         }
 
         if (!/[0-9]/.test(password)) {

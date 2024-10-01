@@ -68,4 +68,4 @@ Quick fixes:
     -when the user hovers the continueBtn at the signature part of the registration => animation plays, but it shouldn't (continueBtn is only disabled when user clicks it)
     -remove the unnecessary "center-con" div (#continueBtn / #backBtn is enough, no extra div needed)
     -rename the css selectors in the #continueBtn + #backBtn
-    -check on the validation functions
+    (DONE)    -check on the validation functions
