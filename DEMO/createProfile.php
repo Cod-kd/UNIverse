@@ -36,8 +36,8 @@ if ($stmt->execute()) {
 
 $stmt->close();
 $conn->close();
-
-/* DEBUGGING CODE
+/*
+//DEBUGGING CODE
 // Get JSON input from the request body
 $userdata = json_decode(file_get_contents("php://input"), true);
 
@@ -62,4 +62,3 @@ header('Content-Type: application/json');
 
 // Echo the response as JSON
 echo json_encode($response);
-*/

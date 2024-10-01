@@ -22,8 +22,20 @@ async function splitMainButton() {
         const newBtn = createBasicButton(data);
         registerLoginBtnDiv.appendChild(newBtn);
         await delay(50);
-        animateButton(newBtn);
-        addButtonListeners(newBtn, data.id === "registerBtn");
+        newBtn.style.transform = "translateX(0)";
+        newBtn.style.opacity = "1";
+        newBtn.addEventListener("mouseenter", () => newBtn.style.transform = "scale(1.05)");
+        newBtn.addEventListener("mouseleave", () => newBtn.style.transform = "scale(1)");
+        newBtn.addEventListener("click", async () => {
+            await fadeOutMonitorScreen();
+            if (data.id === "registerBtn") {
+                monitorScreenDiv.innerHTML = '';
+                renderRegistration();
+            } else {
+                renderLogin();
+            }
+            await fadeInMonitorScreen();
+        });
     }
 }
 
@@ -36,26 +48,6 @@ function createBasicButton({ id, text, initialTransform }) {
     newBtn.style.opacity = "0";
     newBtn.style.transform = initialTransform;
     return newBtn;
-}
-
-function animateButton(button) {
-    button.style.transform = "translateX(0)";
-    button.style.opacity = "1";
-}
-
-function addButtonListeners(button, isRegisterBtn) {
-    button.addEventListener("mouseenter", () => button.style.transform = "scale(1.05)");
-    button.addEventListener("mouseleave", () => button.style.transform = "scale(1)");
-    button.addEventListener("click", async () => {
-        await fadeOutMonitorScreen();
-        if (isRegisterBtn) {
-            monitorScreenDiv.innerHTML = '';
-            renderRegistration(monitorScreenDiv);
-        } else {
-            renderLogin();
-        }
-        await fadeInMonitorScreen();
-    });
 }
 
 async function fadeOutMonitorScreen() {
@@ -84,35 +76,24 @@ function createSuccessfulResponseEffect() {
     registerBtnDiv.appendChild(lottiePlayer);
 }
 
-function createResponseHeading(operation, text) {
+function createResponseHeading(scaleUp, text) {
     const registerBtnDiv = document.getElementById("registerBtnDiv");
     let responseHeadingEl = document.getElementById("responseHeading");
 
-    if (responseHeadingEl) {
-        if (operation === "scale1") {
-            responseHeadingEl.style.transform = "scale(1)";
-        }
-    } else {
+    if (!responseHeadingEl) {
         responseHeadingEl = document.createElement("h2");
         responseHeadingEl.id = "responseHeading";
         responseHeadingEl.innerHTML = text;
         responseHeadingEl.style.transform = "scale(0)";
         registerBtnDiv.appendChild(responseHeadingEl);
     }
-}
 
-function create404Effect(operation) {
-    const registerBtnDiv = document.getElementById("registerBtnDiv");
-    const existing404El = document.getElementById("animated404");
-
-    if (existing404El) {
-        existing404El.style.transform = `scale(${operation === "scale1" ? 1 : 0})`;
-    } else {
-        createNew404Effect(registerBtnDiv);
+    if (scaleUp) {
+        responseHeadingEl.style.transform = "scale(1)";
     }
 }
 
-async function createNew404Effect(registerBtnDiv) {
+async function createNew404Effect() {
     const script = document.createElement("script");
     script.src = "https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs";
     script.type = "module";
@@ -135,17 +116,22 @@ async function createNew404Effect(registerBtnDiv) {
 }
 
 async function responseAnimation(status) {
+    const existing404El = document.getElementById("animated404");
     if (status === "200") {
-        createResponseHeading("", "Sikeres regisztráció!");
+        createResponseHeading(false, "Sikeres regisztráció!");
         await delay(1000);
-        createResponseHeading("scale1");
+        createResponseHeading(true);
         createSuccessfulResponseEffect();
         registerBtnDiv.style.marginTop = "0%";
     } else if (status === "404") {
         await delay(1000);
-        createResponseHeading("", "Hiba történt");
-        createResponseHeading("scale1");
-        create404Effect("scale1");
+        createResponseHeading(false, "Hiba történt");
+        createResponseHeading(true);
+        if (existing404El) {
+            existing404El.style.transform = `scale(${operation === "scale1" ? 1 : 0})`;
+        } else {
+            createNew404Effect();
+        }
         registerBtnDiv.style.marginTop = "14%";
     }
 }
@@ -160,7 +146,7 @@ function createHomeButton() {
     return homeBtn;
 }
 
-function renderRegistration(monitorScreenDiv) {
+function renderRegistration() {
     const requiredData = ["Email cím", "Születési Dátum", "Nem", "Felhasználónév", "Jelszó", "Aláírás"];
     let currentIndex = 0;
 
@@ -199,11 +185,24 @@ function renderRegistration(monitorScreenDiv) {
                 const radioDiv = createGenderRadioButtons();
                 monitorScreenDiv.appendChild(radioDiv);
             } else {
-                dataInp = createInputField(index, formData);
+                dataInp = createInputField(index);
                 monitorScreenDiv.appendChild(dataInp);
 
                 if (index === 4) {
-                    const showBtn = createShowPasswordButton(dataInp);
+                    const showBtn = document.createElement("button");
+                    showBtn.id = "showBtn";
+                    showBtn.classList.add("button");
+                    showBtn.innerHTML = "Show";
+
+                    showBtn.addEventListener("click", function () {
+                        if (passwordInput.type === "password") {
+                            passwordInput.type = "text";
+                            showBtn.innerHTML = "Hide";
+                        } else {
+                            passwordInput.type = "password";
+                            showBtn.innerHTML = "Show";
+                        }
+                    });
                     monitorScreenDiv.appendChild(showBtn);
                 }
 
@@ -221,17 +220,17 @@ function renderRegistration(monitorScreenDiv) {
 
             if (index > 0) {
                 monitorScreenDiv.insertBefore(backBtn, dataHeading);
-                addBackButtonListener(backBtn, index, dataInp);
+                addBackButtonListener(index, dataInp);
             }
 
             monitorScreenDiv.appendChild(continueBtn);
-            addContinueButtonListener(continueBtn, index, dataInp);
+            addContinueButtonListener(index, dataInp);
 
             monitorScreenDiv.style.gridTemplateColumns = index > 0 ? "repeat(3, 1fr)" : "500px 0px";
         } else if (index === requiredData.length) {
             createUNIverseCardStep(monitorScreenDiv);
         } else {
-            createFinalRegistrationStep(monitorScreenDiv);
+            createFinalRegistrationStep();
         }
 
         const elements = monitorScreenDiv.children;
@@ -285,8 +284,8 @@ function renderRegistration(monitorScreenDiv) {
         monitorScreenDiv.insertBefore(backBtn, saveButton);
         monitorScreenDiv.appendChild(continueBtn);
 
-        addBackButtonListener(backBtn, requiredData.length, null);
-        addContinueButtonListener(continueBtn, requiredData.length, null);
+        addBackButtonListener(requiredData.length, null);
+        addContinueButtonListener(requiredData.length, null);
 
         continueBtn.style.opacity = "0.5";
         continueBtn.style.pointerEvents = "none";
@@ -400,7 +399,7 @@ function renderRegistration(monitorScreenDiv) {
         return radioDiv;
     }
 
-    function createInputField(index, formData) {
+    function createInputField(index) {
         const dataInp = document.createElement("input");
         dataInp.classList.add("input");
 
@@ -464,26 +463,7 @@ function renderRegistration(monitorScreenDiv) {
         return dataInp;
     }
 
-    function createShowPasswordButton(passwordInput) {
-        const showBtn = document.createElement("button");
-        showBtn.id = "showBtn";
-        showBtn.classList.add("button");
-        showBtn.innerHTML = "Show";
-
-        showBtn.addEventListener("click", function () {
-            if (passwordInput.type === "password") {
-                passwordInput.type = "text";
-                showBtn.innerHTML = "Hide";
-            } else {
-                passwordInput.type = "password";
-                showBtn.innerHTML = "Show";
-            }
-        });
-
-        return showBtn;
-    }
-
-    function addBackButtonListener(backBtn, index, dataInp) {
+    function addBackButtonListener(index, dataInp) {
         backBtn.addEventListener("click", async function () {
             if (index === requiredData.length + 1) {
                 await fadeOutMonitorScreen();
@@ -498,11 +478,11 @@ function renderRegistration(monitorScreenDiv) {
         });
     }
 
-    function addContinueButtonListener(continueBtn, index, dataInp) {
+    function addContinueButtonListener(index, dataInp) {
         continueBtn.addEventListener("click", async function () {
             if (index === requiredData.length) {
                 await fadeOutMonitorScreen();
-                createFinalRegistrationStep(monitorScreenDiv);
+                createFinalRegistrationStep();
             } else if (index === 2) {
                 const selectedGender = document.querySelector('input[name="gender-radio"]:checked');
                 if (selectedGender) {
@@ -524,7 +504,8 @@ function renderRegistration(monitorScreenDiv) {
         });
     }
 
-    function addFinalRegisterButtonListener(registerBtn) {
+    function addFinalRegisterButtonListener() {
+        const registerBtn = document.getElementById("registerBtn");
         registerBtn.addEventListener("click", async function () {
             try {
                 await fadeOutMonitorScreen();
@@ -541,7 +522,7 @@ function renderRegistration(monitorScreenDiv) {
 
                 document.body.style.cursor = "progress";
                 try {
-                    const response = await fetch("http://localhost/UNIverseTEST/createProfile.php", {
+                    const response = await fetch("http://localhost/UNIverseTEST/DEMO/createProfile.php", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -566,7 +547,7 @@ function renderRegistration(monitorScreenDiv) {
         });
     }
 
-    async function createFinalRegistrationStep(monitorScreenDiv) {
+    async function createFinalRegistrationStep() {
         await fadeOutMonitorScreen();
         monitorScreenDiv.innerHTML = ``;
         monitorScreenDiv.style.gridTemplateColumns = "";
@@ -584,8 +565,8 @@ function renderRegistration(monitorScreenDiv) {
         const backBtn = createNavigationButton(true);
         monitorScreenDiv.appendChild(backBtn);
 
-        addBackButtonListener(backBtn, requiredData.length + 1, null);
-        addFinalRegisterButtonListener(registerBtn);
+        addBackButtonListener(requiredData.length + 1, null);
+        addFinalRegisterButtonListener();
 
         await fadeInMonitorScreen();
     }
