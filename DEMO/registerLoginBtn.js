@@ -3,6 +3,8 @@ const registerLoginBtnDiv = document.getElementById("registerLoginBtnDiv");
 const monitorScreenDiv = document.getElementById("monitorScreenDiv");
 let isEmailChecked = false;
 let lastCheckedEmail = '';
+let isUsernameChecked = false;
+let lastCheckedUsername = '';
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -252,6 +254,140 @@ function renderRegistration() {
         }
     }
 
+    function validateEmail(email) {
+        let conditions = {};
+
+        if (!email.includes('@')) {
+            conditions.atSymbol = '-Tartalmaz @-ot';
+        }
+
+        if (email.split('@')[0].length === 0) {
+            conditions.prefix = '-Tartalmaz szöveget @ előtt';
+        }
+
+        const domainPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!email.split('@')[1] || !domainPattern.test(email.split('@')[1])) {
+            conditions.domain = '-Tartalmaz domain-t';
+        }
+
+        return conditions;
+    }
+
+    function validateUsername(username) {
+        let conditions = {};
+
+        if (username.length < 8) {
+            conditions.length = '-Minimum 8 karakter hosszú';
+        } else if (username.length > 20) {
+            conditions.length = '-Maximum 20 karakter hosszú';
+        }
+
+        const usernamePattern = /^[A-Za-z0-9_-]+$/;
+        if (!usernamePattern.test(username)) {
+            conditions.invalidChars = '-Tartalmazhat (szám, betű, -, _)';
+        }
+
+        return conditions;
+    }
+
+    function updateValidation(conditions) {
+        const inputDetailsDiv = document.getElementById("inputDetailsDiv");
+
+        Array.from(inputDetailsDiv.querySelectorAll("p")).forEach(p => {
+            if (!(p.dataset.condition in conditions)) {
+                createDetailP('', p.dataset.condition);
+            }
+        });
+
+        for (let condition in conditions) {
+            createDetailP(conditions[condition], condition);
+        }
+    }
+
+    async function handleEmailValidation(email, dataInp) {
+        const emailConditions = validateEmail(email);
+
+        if (Object.keys(emailConditions).length > 0) {
+            updateValidation(emailConditions);
+            return false;
+        }
+
+        if (isEmailChecked && email === lastCheckedEmail) {
+            updateValidation({ email: "Email already exists" });
+            return false;
+        }
+
+        try {
+            const response = await fetch("http://localhost/PHPTEST/checkExistingEmail.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email })
+            });
+
+            if (!response.ok) throw new Error(`Server error: ${response.status}`);
+
+            const data = await response.json();
+            console.log("Email check response:", data);
+
+            isEmailChecked = data.exists;
+            lastCheckedEmail = email;
+
+            if (data.exists) {
+                updateValidation({ email: "Email already exists" });
+                return false;
+            } else {
+                updateFormData(0, dataInp);
+                return true;
+            }
+        } catch (error) {
+            console.error("Email check error:", error);
+            await responseAnimation("error");
+            return false;
+        }
+    }
+
+    async function handleUsernameValidation(username, dataInp) {
+        const usernameConditions = validateUsername(username);
+
+        if (Object.keys(usernameConditions).length > 0) {
+            updateValidation(usernameConditions);
+            return false;
+        }
+
+        if (isUsernameChecked && username === lastCheckedUsername) {
+            updateValidation({ username: "Username already exists" });
+            return false;
+        }
+
+        try {
+            const response = await fetch("http://localhost/PHPTEST/checkExistingUsername.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username })
+            });
+
+            if (!response.ok) throw new Error(`Server error: ${response.status}`);
+
+            const data = await response.json();
+            console.log("Username check response:", data);
+
+            isUsernameChecked = data.exists;
+            lastCheckedUsername = username;
+
+            if (data.exists) {
+                updateValidation({ username: "Username already exists" });
+                return false;
+            } else {
+                updateFormData(3, dataInp);
+                return true;
+            }
+        } catch (error) {
+            console.error("Username check error:", error);
+            await responseAnimation("error");
+            return false;
+        }
+    }
+
     async function createUNIverseCardStep(monitorScreenDiv) {
         await fadeOutMonitorScreen();
         monitorScreenDiv.innerHTML = "";
@@ -419,9 +555,14 @@ function renderRegistration() {
                 dataInp.placeholder = "Email...";
                 dataInp.value = formData.email;
                 dataInp.addEventListener("input", function (e) {
-                    const email = e.target.value;
+                    const email = e.target.value.trim();
                     const conditions = validateEmail(email);
                     updateValidation(conditions);
+
+                    if (email !== lastCheckedEmail) {
+                        isEmailChecked = false;
+                        lastCheckedEmail = '';
+                    }
                 });
                 break;
             case 1:
@@ -441,9 +582,14 @@ function renderRegistration() {
                 dataInp.id = "usernameInput";
                 dataInp.value = formData.username;
                 dataInp.addEventListener("input", function (e) {
-                    const username = e.target.value;
+                    const username = e.target.value.trim();
                     const conditions = validateUsername(username);
                     updateValidation(conditions);
+
+                    if (username !== lastCheckedUsername) {
+                        isUsernameChecked = false;
+                        lastCheckedUsername = '';
+                    }
                 });
                 break;
             case 4:
@@ -481,62 +627,12 @@ function renderRegistration() {
         continueBtn.addEventListener("click", async function () {
             if (index === 0) {
                 const email = dataInp.value.trim();
-                const emailConditions = validateEmail(email);
-
-                if (Object.keys(emailConditions).length > 0) {
-                    updateValidation(emailConditions);
-                    return;
-                }
-
-                if (isEmailChecked && email === lastCheckedEmail) {
-                    updateValidation({ email: "Email already exists" });
-                    return;
-                }
-
-                try {
-                    const response = await fetch("http://localhost/PHPTEST/checkExistingEmail.php", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({ email })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`Server error: ${response.status}`);
-                    }
-
-                    const data = await response.json();
-
-                    isEmailChecked = data.exists;
-                    lastCheckedEmail = email;
-
-                    if (data.exists) {
-                        updateValidation({ email: "Email already exists" });
-                        return;
-                    } else {
-                        updateFormData(index, dataInp);
-                        createFormStep(index + 1);
-                    }
-                } catch (fetchError) {
-                    console.error("Fetch error: ", fetchError);
-                    await responseAnimation("error");
-                    return;
-                }
-            }
-            else if (index === requiredData.length) {
-                await fadeOutMonitorScreen();
-                createFinalRegistrationStep();
-            } else if (index === 2) {
-                const selectedGender = document.querySelector('input[name="gender-radio"]:checked');
-                if (selectedGender) {
-                    formData.gender = selectedGender.value;
+                if (await handleEmailValidation(email, dataInp)) {
                     createFormStep(index + 1);
                 }
-            } else if (index === 5) {
-                const signatureDataUrl = await captureSignature();
-                if (signatureDataUrl) {
-                    formData.signature = signatureDataUrl;
+            } else if (index === 3) {
+                const username = dataInp.value.trim();
+                if (await handleUsernameValidation(username, dataInp)) {
                     createFormStep(index + 1);
                 }
             } else {
@@ -672,25 +768,6 @@ function renderRegistration() {
         return true;
     }
 
-    function validateEmail(email) {
-        let conditions = {};
-
-        if (!email.includes('@')) {
-            conditions.atSymbol = '-Tartalmaz @-ot';
-        }
-
-        if (email.split('@')[0].length === 0) {
-            conditions.prefix = '-Tartalmaz szöveget @ előtt';
-        }
-
-        const domainPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!email.split('@')[1] || !domainPattern.test(email.split('@')[1])) {
-            conditions.domain = '-Tartalmaz domain-t';
-        }
-
-        return conditions;
-    }
-
     function validateBirthDate(birthDate) {
         let conditions = {};
 
@@ -722,23 +799,6 @@ function renderRegistration() {
 
         if (age < 18 || age > 100) {
             conditions.age = '-Életkor 18 és 100 közötti';
-        }
-
-        return conditions;
-    }
-
-    function validateUsername(username) {
-        let conditions = {};
-
-        if (username.length < 8) {
-            conditions.length = '-Minimum 8 karakter hosszú';
-        } else if (username.length > 20) {
-            conditions.length = '-Maximum 20 karakter hosszú';
-        }
-
-        const usernamePattern = /^[A-Za-z0-9_-]+$/;
-        if (!usernamePattern.test(username)) {
-            conditions.invalidChars = '-Tartalmazhat (szám, betű, -, _)';
         }
 
         return conditions;
@@ -786,20 +846,6 @@ function renderRegistration() {
             newDetailP.dataset.condition = condition;
             inputDetailsDiv.appendChild(newDetailP);
             newDetailP.style.animation = "appear 0.5s forwards ease";
-        }
-    }
-
-    function updateValidation(conditions) {
-        const inputDetailsDiv = document.getElementById("inputDetailsDiv");
-
-        Array.from(inputDetailsDiv.querySelectorAll("p")).forEach(p => {
-            if (!(p.dataset.condition in conditions)) {
-                createDetailP('', p.dataset.condition);
-            }
-        });
-
-        for (let condition in conditions) {
-            createDetailP(conditions[condition], condition);
         }
     }
 }

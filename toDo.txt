@@ -8,6 +8,7 @@ JavaScript file:
     -check on the hasDrawn variable inside setupSignature function (necessary?)
     (DONE)    -modify the existing functions and remove their unnecessary parameters
     -change the console.errors into a better feature
+    -make the code smaller, especially the fetches and functions that use the same logic (check for existing email/username function)
     
     -Debugging:
     (DONE)    -add a variable named success (boolean)
@@ -45,17 +46,18 @@ CSS:
     (DONE)    -add floating effect to the infoCards => replicates that they can be dragged
     -make the page responsive (bootstrap?)
     (DONE)    -check for unused css selectors and remove / change them
+    -fix the backBtn's rotation to 180 degrees
 
 PHP:
     (DONE)    -create createProfile.php for testing the connection with javascript fetch
     (DONE)    -add the javascript registration informations to the database upon fetching
     -create a checkExistingUser.php file which checks for:
         (DONE)    -the inputted email adress's value (is it already present in users table? => if yes => response to use another email)
-        -the inputted username's value (only accept if it isnt present in the users table)
-        -LOGIC: 1 php file named checkExistingUser => the email / username is sent via the fetch and an SQL query is ran to check the availability of the value:
-            -return true if it isnt present in users table
-            -else return false
-            -if true was returned => user can click the continueBtn
+        (DONE)    -the inputted username's value (only accept if it isnt present in the users table)
+        (DONE)    -LOGIC: 1 php file named checkExistingUser => the email / username is sent via the fetch and an SQL query is ran to check the availability of the value:
+        (DONE)    -return true if it isnt present in users table
+        (DONE)    -else return false
+        (DONE)    -if true was returned => user can click the continueBtn
     -merge the checkExistingUsername.php with the checkExistingEmail.php
 
 Quick fixes:
