@@ -73,3 +73,4 @@ Quick fixes:
     (DONE)    -rename the css selectors in the #continueBtn + #backBtn
     (DONE)    -check on the validation functions
     (DONE)    -signature doesn't appear on live server
+    -registration data isnt getting posted into the database
