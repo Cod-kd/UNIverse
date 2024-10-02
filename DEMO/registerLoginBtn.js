@@ -304,85 +304,61 @@ function renderRegistration() {
         }
     }
 
-    async function handleEmailValidation(email, dataInp) {
-        const emailConditions = validateEmail(email);
+    async function handleGenericValidation(value, type, dataInp) {
+        const validationFunctions = {
+            email: validateEmail,
+            username: validateUsername
+        };
 
-        if (Object.keys(emailConditions).length > 0) {
-            updateValidation(emailConditions);
+        const checkExistingUrls = {
+            email: "http://localhost/PHPTEST/checkExistingEmail.php",
+            username: "http://localhost/PHPTEST/checkExistingUsername.php"
+        };
+
+        const conditions = validationFunctions[type](value);
+
+        if (Object.keys(conditions).length > 0) {
+            updateValidation(conditions);
             return false;
         }
 
-        if (isEmailChecked && email === lastCheckedEmail) {
-            updateValidation({ email: "Email already exists" });
+        const isChecked = type === 'email' ? isEmailChecked : isUsernameChecked;
+        const lastChecked = type === 'email' ? lastCheckedEmail : lastCheckedUsername;
+
+        if (isChecked && value === lastChecked) {
+            updateValidation({ [type]: `${type.charAt(0).toUpperCase() + type.slice(1)} already exists` });
             return false;
         }
 
         try {
-            const response = await fetch("http://localhost/PHPTEST/checkExistingEmail.php", {
+            const response = await fetch(checkExistingUrls[type], {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email })
+                body: JSON.stringify({ [type]: value })
             });
 
             if (!response.ok) throw new Error(`Server error: ${response.status}`);
 
             const data = await response.json();
-            console.log("Email check response:", data);
+            console.log(`${type} check response:`, data);
 
-            isEmailChecked = data.exists;
-            lastCheckedEmail = email;
+            if (type === 'email') {
+                isEmailChecked = data.exists;
+                lastCheckedEmail = value;
+            } else {
+                isUsernameChecked = data.exists;
+                lastCheckedUsername = value;
+            }
 
             if (data.exists) {
-                updateValidation({ email: "Email already exists" });
+                updateValidation({ [type]: `${type.charAt(0).toUpperCase() + type.slice(1)} already exists` });
                 return false;
             } else {
-                updateFormData(0, dataInp);
+                updateFormData(type === 'email' ? 0 : 3, dataInp);
                 return true;
             }
         } catch (error) {
-            console.error("Email check error:", error);
-            await responseAnimation("error");
-            return false;
-        }
-    }
-
-    async function handleUsernameValidation(username, dataInp) {
-        const usernameConditions = validateUsername(username);
-
-        if (Object.keys(usernameConditions).length > 0) {
-            updateValidation(usernameConditions);
-            return false;
-        }
-
-        if (isUsernameChecked && username === lastCheckedUsername) {
-            updateValidation({ username: "Username already exists" });
-            return false;
-        }
-
-        try {
-            const response = await fetch("http://localhost/PHPTEST/checkExistingUsername.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username })
-            });
-
-            if (!response.ok) throw new Error(`Server error: ${response.status}`);
-
-            const data = await response.json();
-            console.log("Username check response:", data);
-
-            isUsernameChecked = data.exists;
-            lastCheckedUsername = username;
-
-            if (data.exists) {
-                updateValidation({ username: "Username already exists" });
-                return false;
-            } else {
-                updateFormData(3, dataInp);
-                return true;
-            }
-        } catch (error) {
-            console.error("Username check error:", error);
+            console.error(`${type} check error:`, error);
             await responseAnimation("error");
             return false;
         }
@@ -630,12 +606,12 @@ function renderRegistration() {
         continueBtn.addEventListener("click", async function () {
             if (index === 0) {
                 const email = dataInp.value.trim();
-                if (await handleEmailValidation(email, dataInp)) {
+                if (await handleGenericValidation(email, "email", dataInp)) {
                     createFormStep(index + 1);
                 }
             } else if (index === 3) {
                 const username = dataInp.value.trim();
-                if (await handleUsernameValidation(username, dataInp)) {
+                if (await handleGenericValidation(username, "username", dataInp)) {
                     createFormStep(index + 1);
                 }
             } else {

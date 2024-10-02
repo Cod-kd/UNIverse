@@ -8,7 +8,7 @@ JavaScript file:
     -check on the hasDrawn variable inside setupSignature function (necessary?)
     (DONE)    -modify the existing functions and remove their unnecessary parameters
     -change the console.errors into a better feature
-    -make the code smaller, especially the fetches and functions that use the same logic (check for existing email/username function)
+    (DONE)    -make the code smaller, especially the fetches and functions that use the same logic (check for existing email/username function)
     
     -Debugging:
     (DONE)    -add a variable named success (boolean)
@@ -72,3 +72,4 @@ Quick fixes:
     (DONE)    -remove the unnecessary "center-con" div (#continueBtn / #backBtn is enough, no extra div needed)
     (DONE)    -rename the css selectors in the #continueBtn + #backBtn
     (DONE)    -check on the validation functions
+    -signature doesn't appear on live server

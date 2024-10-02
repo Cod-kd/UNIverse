@@ -1,54 +1,28 @@
 <?php
-
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "universeDB";
 
-// Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
 }
 
-// Get JSON input from the request body
 $userdata = json_decode(file_get_contents("php://input"), true);
 
-// Initialize response array
-$response = [];
+$type = array_keys($userdata)[0];
+$value = $userdata[$type];
 
-// Check if email and username are provided
-$email = $userdata["email"];
-$username = $userdata["username"];
+$stmt = $conn->prepare("SELECT $type FROM users WHERE $type = ? LIMIT 1");
+$stmt->bind_param("s", $value);
+$stmt->execute();
+$result = $stmt->get_result();
 
-// Prepare the SQL query to check for email
-$stmtEmail = $conn->prepare("SELECT email FROM users WHERE email = ? LIMIT 1");
-$stmtEmail->bind_param("s", $email);
-$stmtEmail->execute();
-$resultEmail = $stmtEmail->get_result();
+$response = ["exists" => $result->num_rows > 0];
 
-// Set the email existence flag
-$response["email_exists"] = $resultEmail->num_rows > 0;
-
-// Close the email statement
-$stmtEmail->close();
-
-// Prepare the SQL query to check for username
-$stmtUsername = $conn->prepare("SELECT username FROM users WHERE username = ? LIMIT 1");
-$stmtUsername->bind_param("s", $username);
-$stmtUsername->execute();
-$resultUsername = $stmtUsername->get_result();
-
-// Set the username existence flag
-$response["username_exists"] = $resultUsername->num_rows > 0;
-
-// Close the username statement
-$stmtUsername->close();
-
-// Return the response as JSON
-echo json_encode($response);
-
-// Close the connection
+$stmt->close();
 $conn->close();
+
+echo json_encode($response);
