@@ -337,7 +337,6 @@ function renderRegistration() {
             if (!response.ok) throw new Error(`Server error: ${response.status}`);
 
             const data = await response.json();
-            console.log(`${type} check response:`, data);
 
             if (type === 'email') {
                 isEmailChecked = data.exists;
