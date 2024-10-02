@@ -66,6 +66,6 @@ Quick fixes:
     (DONE)    -continueBtn shouldn't be available until a signature was drawn on the signatureCanvas
     (DONE)    -console log the final formData's values upon registerBtn press + ?add missing formData attribute called "imgPass" => this stores the UNIcard's hashed hex code?
     -when the user hovers the continueBtn at the signature part of the registration => animation plays, but it shouldn't (continueBtn is only disabled when user clicks it)
-    -remove the unnecessary "center-con" div (#continueBtn / #backBtn is enough, no extra div needed)
-    -rename the css selectors in the #continueBtn + #backBtn
+    (DONE)    -remove the unnecessary "center-con" div (#continueBtn / #backBtn is enough, no extra div needed)
+    (DONE)    -rename the css selectors in the #continueBtn + #backBtn
     (DONE)    -check on the validation functions

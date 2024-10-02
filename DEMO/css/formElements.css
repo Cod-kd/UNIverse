@@ -198,23 +198,14 @@
 }
 
 /* Back Button + Continue Button Styling */
-.center-con {
-    position: relative;
-    width: fit-content;
-    height: fit-content;
-    border-radius: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.round {
+#backBtn,
+#continueBtn {
     position: relative;
     border: 2px solid var(--main);
     width: 40px;
     height: 40px;
     border-radius: 100%;
+    cursor: pointer;
 }
 
 #cta {
@@ -233,7 +224,7 @@
     top: 12px;
 }
 
-.segunda {
+.secondary {
     margin-left: 12px;
 }
 
@@ -246,16 +237,19 @@
     animation: bounceAlpha 1.4s linear infinite;
 }
 
-.arrow.primera.bounceAlpha {
+.arrow.primary.bounceAlpha {
     animation-delay: 0.2s;
 }
 
-.round:hover .arrow,
-.round:hover .arrow.primera {
+#backBtn:hover .arrow,
+#continueBtn:hover .arrow,
+#backBtn:hover .arrow.primary,
+#continueBtn:hover .arrow.primary {
     animation: bounceAlpha 1.4s linear infinite;
 }
 
-.round:hover .arrow.primera {
+#continueBtn:hover .arrow.primary,
+#backBtn:hover .arrow.primary {
     animation-delay: 0.2s;
 }
 
@@ -278,16 +272,16 @@
     top: 20%;
 }
 
-#userDataDiv div{
+#userDataDiv div {
     display: grid;
 }
 
-#userDataDiv hr{
+#userDataDiv hr {
     border-color: var(--main);
     margin: 10px;
 }
 
-#userDataDiv div h1{
+#userDataDiv div h1 {
     position: relative;
     justify-self: start;
 }
@@ -302,7 +296,7 @@
     border: 1px solid var(--dark1);
 }
 
-#signatureDiv{
+#signatureDiv {
     display: grid;
     align-items: center;
     justify-items: center;
@@ -310,7 +304,7 @@
     margin-top: 20%;
 }
 
-#signatureImg{
+#signatureImg {
     justify-self: end;
     margin-top: 13%;
     border-radius: 12px;

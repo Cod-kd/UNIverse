@@ -348,15 +348,12 @@ function renderRegistration() {
 
     function createNavigationButton(isBackButton) {
         const btn = document.createElement("div");
-        btn.classList.add("center-con");
-        let rotation = isBackButton ? "180deg" : "0deg";
-        let id = isBackButton ? "backBtn" : "continueBtn";
+        btn.id = isBackButton ? "backBtn" : "continueBtn";
+        btn.style.transform = `rotate(${isBackButton ? "180deg" : "0deg"})`;
         btn.innerHTML = `
-            <div id="${id}" class="round" style="transform: rotate(${rotation})">
-                <div id="cta">
-                    <span class="arrow primera next"></span>
-                    <span class="arrow segunda next"></span>
-                </div>
+            <div id="cta">
+                <span class="arrow primary next"></span>
+                <span class="arrow secondary next"></span>
             </div>`;
         return btn;
     }
