@@ -41,6 +41,7 @@ JavaScript file:
     (DISMISSED)    -add the loading animation while communicating with the server
     (DONE)    -add the cursor loading effect while fetching the createProfile.php
     -fix the signature part of the registration => users shouldn't be able to click continueBtn if they havent drawn aynthing
+    -add new feature => every continueBtn should be disabled by default => if the current's input's validation is correct => enable, at signature and UNIcard, only enable if signature was drawn / unicard was saved
 CSS:
     (CAN'T FINISH DUE TO BUG)   -change the radio button's "circle"'s center so the black circle inside is centered horizontally + vertically
     (DONE)    -add floating effect to the infoCards => replicates that they can be dragged
