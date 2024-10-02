@@ -46,7 +46,7 @@ CSS:
     (DONE)    -add floating effect to the infoCards => replicates that they can be dragged
     -make the page responsive (bootstrap?)
     (DONE)    -check for unused css selectors and remove / change them
-    -fix the backBtn's rotation to 180 degrees
+    (DONE)    -fix the backBtn's rotation to 180 degrees
 
 PHP:
     (DONE)    -create createProfile.php for testing the connection with javascript fetch
@@ -57,7 +57,7 @@ PHP:
         (DONE)    -return true if it isnt present in users table
         (DONE)    -else return false
         (DONE)    -if true was returned => user can click the continueBtn
-    -merge the checkExistingUsername.php with the checkExistingEmail.php
+    (DONE)    -merge the checkExistingUsername.php with the checkExistingEmail.php
 
 Quick fixes:
     (DONE)    -backBtn isnt working while UNIcard is present
