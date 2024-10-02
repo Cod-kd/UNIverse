@@ -310,10 +310,7 @@ function renderRegistration() {
             username: validateUsername
         };
 
-        const checkExistingUrls = {
-            email: "http://localhost/PHPTEST/checkExistingEmail.php",
-            username: "http://localhost/PHPTEST/checkExistingUsername.php"
-        };
+        const checkExistingUrl = "http://localhost/PHPTEST/checkExistence.php";
 
         const conditions = validationFunctions[type](value);
 
@@ -331,10 +328,10 @@ function renderRegistration() {
         }
 
         try {
-            const response = await fetch(checkExistingUrls[type], {
+            const response = await fetch(checkExistingUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ [type]: value })
+                body: JSON.stringify({ type, value })
             });
 
             if (!response.ok) throw new Error(`Server error: ${response.status}`);

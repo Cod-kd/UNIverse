@@ -1,4 +1,5 @@
 <?php
+
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -12,8 +13,8 @@ if ($conn->connect_error) {
 
 $userdata = json_decode(file_get_contents("php://input"), true);
 
-$type = array_keys($userdata)[0];
-$value = $userdata[$type];
+$type = $userdata['type'];
+$value = $userdata['value'];
 
 $stmt = $conn->prepare("SELECT $type FROM users WHERE $type = ? LIMIT 1");
 $stmt->bind_param("s", $value);
