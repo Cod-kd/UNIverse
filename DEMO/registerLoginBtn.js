@@ -614,7 +614,14 @@ function renderRegistration() {
                 if (await handleGenericValidation(username, "username", dataInp)) {
                     createFormStep(index + 1);
                 }
-            } else {
+            } else if (index === 5) {
+                const signatureData = await captureSignature();
+                if (signatureData) {
+                    formData.signature = signatureData;
+                    createFormStep(index + 1);
+                }
+            }
+            else {
                 if (validateField(dataInp, index)) {
                     updateFormData(index, dataInp);
                     createFormStep(index + 1);

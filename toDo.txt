@@ -72,4 +72,4 @@ Quick fixes:
     (DONE)    -remove the unnecessary "center-con" div (#continueBtn / #backBtn is enough, no extra div needed)
     (DONE)    -rename the css selectors in the #continueBtn + #backBtn
     (DONE)    -check on the validation functions
-    -signature doesn't appear on live server
+    (DONE)    -signature doesn't appear on live server
