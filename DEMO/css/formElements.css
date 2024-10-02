@@ -198,6 +198,17 @@
 }
 
 /* Back Button + Continue Button Styling */
+.btnHelperDiv {
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
 #backBtn,
 #continueBtn {
     position: relative;
@@ -205,7 +216,6 @@
     width: 40px;
     height: 40px;
     border-radius: 100%;
-    cursor: pointer;
 }
 
 #cta {
@@ -242,14 +252,14 @@
 }
 
 #backBtn:hover .arrow,
-#continueBtn:hover .arrow,
 #backBtn:hover .arrow.primary,
+#continueBtn:hover .arrow,
 #continueBtn:hover .arrow.primary {
     animation: bounceAlpha 1.4s linear infinite;
 }
 
-#continueBtn:hover .arrow.primary,
-#backBtn:hover .arrow.primary {
+#backBtn:hover .arrow.primary,
+#continueBtn:hover .arrow.primary {
     animation-delay: 0.2s;
 }
 

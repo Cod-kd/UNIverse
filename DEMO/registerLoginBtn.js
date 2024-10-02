@@ -485,15 +485,18 @@ function renderRegistration() {
     }
 
     function createNavigationButton(isBackButton) {
-        const btn = document.createElement("div");
-        btn.id = isBackButton ? "backBtn" : "continueBtn";
-        btn.style.transform = `rotate(${isBackButton ? "180deg" : "0deg"})`;
-        btn.innerHTML = `
-            <div id="cta">
-                <span class="arrow primary next"></span>
-                <span class="arrow secondary next"></span>
+        const btnHelperDiv = document.createElement("div");
+        btnHelperDiv.classList.add("btnHelperDiv");
+        let rotation = isBackButton ? "180deg" : "0deg";
+        let id = isBackButton ? "backBtn" : "continueBtn";
+        btnHelperDiv.innerHTML = `
+            <div id="${id}" style="transform: rotate(${rotation})">
+                <div id="cta">
+                    <span class="arrow primary next"></span>
+                    <span class="arrow secondary next"></span>
+                </div>
             </div>`;
-        return btn;
+        return btnHelperDiv;
     }
 
     function createGenderRadioButtons() {
