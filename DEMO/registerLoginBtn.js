@@ -1,6 +1,8 @@
 const registerLoginBtn = document.getElementById("registerLoginBtn");
 const registerLoginBtnDiv = document.getElementById("registerLoginBtnDiv");
 const monitorScreenDiv = document.getElementById("monitorScreenDiv");
+let isEmailChecked = false;
+let lastCheckedEmail = '';
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -477,7 +479,52 @@ function renderRegistration() {
 
     function addContinueButtonListener(index, dataInp) {
         continueBtn.addEventListener("click", async function () {
-            if (index === requiredData.length) {
+            if (index === 0) {
+                const email = dataInp.value.trim();
+                const emailConditions = validateEmail(email);
+
+                if (Object.keys(emailConditions).length > 0) {
+                    updateValidation(emailConditions);
+                    return;
+                }
+
+                if (isEmailChecked && email === lastCheckedEmail) {
+                    updateValidation({ email: "Email already exists" });
+                    return;
+                }
+
+                try {
+                    const response = await fetch("http://localhost/PHPTEST/checkExistingEmail.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ email })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+
+                    isEmailChecked = data.exists;
+                    lastCheckedEmail = email;
+
+                    if (data.exists) {
+                        updateValidation({ email: "Email already exists" });
+                        return;
+                    } else {
+                        updateFormData(index, dataInp);
+                        createFormStep(index + 1);
+                    }
+                } catch (fetchError) {
+                    console.error("Fetch error: ", fetchError);
+                    await responseAnimation("error");
+                    return;
+                }
+            }
+            else if (index === requiredData.length) {
                 await fadeOutMonitorScreen();
                 createFinalRegistrationStep();
             } else if (index === 2) {
@@ -519,7 +566,7 @@ function renderRegistration() {
 
                 document.body.style.cursor = "progress";
                 try {
-                    const response = await fetch("http://localhost/UNIverseTEST/DEMO/createProfile.php", {
+                    const response = await fetch("http://localhost/PHPTEST/createProfile.php", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -585,7 +632,7 @@ function renderRegistration() {
         }
     }
 
-    function validateField(input, index) {
+    async function validateField(input, index) {
         if (!input) return true;
 
         const value = input.value.trim();
