@@ -14,10 +14,10 @@ if ($conn->connect_error) {
 }
 
 // Get JSON input from the request body
-//$userdata = json_decode(file_get_contents("php://input"), true);
+$userdata = json_decode(file_get_contents("php://input"), true);
 
 // Extract values from the userdata array
-$email = json_decode(file_get_contents("php://input"), true);
+$email = $userdata["email"];
 
 // Prepare and bind
 $stmt = $conn->prepare("SELECT 1 FROM users WHERE email = ? LIMIT 1");
