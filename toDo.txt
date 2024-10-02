@@ -74,4 +74,4 @@ Quick fixes:
     (DONE)    -check on the validation functions
     (DONE)    -signature doesn't appear on live server
     (DONE)    -registration data isnt getting posted into the database
-    -gender data isnt saved, not on UNIcard, nor at registration
+    (DONE)    -gender data isnt saved, not on UNIcard, nor at registration

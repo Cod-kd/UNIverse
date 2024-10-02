@@ -605,6 +605,13 @@ function renderRegistration() {
                 if (await handleGenericValidation(email, "email", dataInp)) {
                     createFormStep(index + 1);
                 }
+            }
+            else if (index === 2) {
+                const selectedGender = document.querySelector('input[name="gender-radio"]:checked');
+                if (selectedGender) {
+                    formData.gender = selectedGender.value;
+                    createFormStep(index + 1);
+                }
             } else if (index === 3) {
                 const username = dataInp.value.trim();
                 if (await handleGenericValidation(username, "username", dataInp)) {
