@@ -76,3 +76,9 @@ Quick fixes:
     (DONE)    -signature doesn't appear on live server
     (DONE)    -registration data isnt getting posted into the database
     (DONE)    -gender data isnt saved, not on UNIcard, nor at registration
+
+Live server debugging errors:
+    -can't download UNIcard's image from live server
+        -solutions:
+            -allow 443 port for https in firewall
+            -change hosted website from http to https => avoid conflicts while getting resources from HTTPS website while the main site is http
