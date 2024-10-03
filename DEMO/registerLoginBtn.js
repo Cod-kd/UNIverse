@@ -218,6 +218,8 @@ function renderRegistration() {
                     <button id="resetCanvasBtn">Reset</button>`;
                     monitorScreenDiv.querySelector("input").remove();
                     monitorScreenDiv.appendChild(signatureDiv);
+                    continueBtn.querySelector('#continueBtn').style.opacity = "0.5";
+                    continueBtn.querySelector('#continueBtn').style.pointerEvents = "none";
                     setupSignatureCanvas();
                 }
             }
@@ -602,9 +604,9 @@ function renderRegistration() {
         continueBtn.addEventListener("click", async function () {
             if (index === 0) {
                 const email = dataInp.value.trim();
-                if (await handleGenericValidation(email, "email", dataInp)) {
-                    createFormStep(index + 1);
-                }
+                //if (await handleGenericValidation(email, "email", dataInp)) {
+                createFormStep(index + 1);
+                // }
             }
             else if (index === 2) {
                 const selectedGender = document.querySelector('input[name="gender-radio"]:checked');
@@ -614,9 +616,9 @@ function renderRegistration() {
                 }
             } else if (index === 3) {
                 const username = dataInp.value.trim();
-                if (await handleGenericValidation(username, "username", dataInp)) {
-                    createFormStep(index + 1);
-                }
+                //if (await handleGenericValidation(username, "username", dataInp)) {
+                createFormStep(index + 1);
+                //}
             } else if (index === 5) {
                 const signatureData = await captureSignature();
                 if (signatureData) {
@@ -861,6 +863,8 @@ function setupSignatureCanvas() {
     let drawWidth = 2;
     let isDrawing = false;
     let hasDrawn = false;
+    let lastX = 0;
+    let lastY = 0;
 
     canvas.width = 200;
     canvas.height = 200;
@@ -896,23 +900,32 @@ function setupSignatureCanvas() {
 
     function startDrawing(event) {
         isDrawing = true;
-        hasDrawn = true;
-        updateContinueButton();
         const pos = getEventPosition(event);
+        lastX = pos.x;
+        lastY = pos.y;
         context.beginPath();
-        context.moveTo(pos.x, pos.y);
+        context.moveTo(lastX, lastY);
         event.preventDefault();
     }
 
     function drawSignature(event) {
         if (!isDrawing) return;
         const pos = getEventPosition(event);
+
+        if (Math.abs(pos.x - lastX) > 0 || Math.abs(pos.y - lastY) > 0) {
+            hasDrawn = true;
+            updateContinueButton();
+        }
+
         context.lineTo(pos.x, pos.y);
         context.strokeStyle = drawColor;
         context.lineWidth = drawWidth;
         context.lineCap = "round";
         context.lineJoin = "round";
         context.stroke();
+
+        lastX = pos.x;
+        lastY = pos.y;
         event.preventDefault();
     }
 
@@ -943,11 +956,26 @@ function setupSignatureCanvas() {
             }
         }
     }
-    updateContinueButton();
 }
 
 async function captureSignature() {
     const canvas = document.getElementById("signatureCanvas");
+    if (!canvas) return null;
+
+    const context = canvas.getContext("2d");
+    const imageData = context.getImageData(0, 0, canvas.width, canvas.height).data;
+
+    const hasSignature = Array.from(imageData).some((pixel, index) => {
+        if (index % 4 === 0) {
+            return pixel !== 20;
+        }
+        return false;
+    });
+
+    if (!hasSignature) {
+        return null;
+    }
+
     return canvas.toDataURL('image/png');
 }
 

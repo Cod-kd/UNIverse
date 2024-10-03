@@ -5,7 +5,7 @@ JavaScript file:
     (DONE)  -Make the code more readable
     (DONE)  -Create a button with a home icon => when pressed, the Registration + Login buttons will be rendered on the screen
     -add descriptive comments to the FINAL code
-    -check on the hasDrawn variable inside setupSignature function (necessary?)
+    (DONE)    -check on the hasDrawn variable inside setupSignature function (necessary?)
     (DONE)    -modify the existing functions and remove their unnecessary parameters
     -change the console.errors into a better feature
     (DONE)    -make the code smaller, especially the fetches and functions that use the same logic (check for existing email/username function)
@@ -40,8 +40,8 @@ JavaScript file:
     (DONE)    -change the inputDetails div's width and position at the passwordInput part
     (DISMISSED)    -add the loading animation while communicating with the server
     (DONE)    -add the cursor loading effect while fetching the createProfile.php
-    -fix the signature part of the registration => users shouldn't be able to click continueBtn if they havent drawn aynthing
-    -add new feature => every continueBtn should be disabled by default => if the current's input's validation is correct => enable, at signature and UNIcard, only enable if signature was drawn / unicard was saved
+    (DONE)    -fix the signature part of the registration => users shouldn't be able to click continueBtn if they havent drawn aynthing
+    (EXTRA)    -add new feature => every continueBtn should be disabled by default => if the current's input's validation is correct => enable, at signature and UNIcard, only enable if signature was drawn / unicard was saved
 CSS:
     (CAN'T FINISH DUE TO BUG)   -change the radio button's "circle"'s center so the black circle inside is centered horizontally + vertically
     (DONE)    -add floating effect to the infoCards => replicates that they can be dragged
@@ -69,7 +69,7 @@ Quick fixes:
     (DONE)    -when the reset button is pressed at the signature part it says "continueBtn is not defined at registerloginbtn.js 1005th row"
     (DONE)    -continueBtn shouldn't be available until a signature was drawn on the signatureCanvas
     (DONE)    -console log the final formData's values upon registerBtn press + ?add missing formData attribute called "imgPass" => this stores the UNIcard's hashed hex code?
-    -when the user hovers the continueBtn at the signature part of the registration => animation plays, but it shouldn't (continueBtn is only disabled when user clicks it)
+    (DONE)    -when the user hovers the continueBtn at the signature part of the registration => animation plays, but it shouldn't (continueBtn is only disabled when user clicks it)
     (DONE)    -remove the unnecessary "center-con" div (#continueBtn / #backBtn is enough, no extra div needed)
     (DONE)    -rename the css selectors in the #continueBtn + #backBtn
     (DONE)    -check on the validation functions
