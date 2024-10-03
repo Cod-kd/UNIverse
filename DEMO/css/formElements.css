@@ -319,3 +319,36 @@
     margin-top: 13%;
     border-radius: 12px;
 }
+
+/* Error window */
+#errorWindow {
+    top: 2%;
+    max-width: 300px;
+    max-height: 60px;
+    right: 45%;
+    background-color: var(--dark2);
+    color: red;
+    border-radius: 12px;
+    padding: 10px;
+    position: absolute;
+}
+
+@keyframes showWindow {
+    0% {
+        transform: translateY(-200%);
+    }
+
+    100% {
+        transform: translateY(0%);
+    }
+}
+
+@keyframes hideWindow {
+    0% {
+        transform: translateY(0%);
+    }
+
+    100% {
+        transform: translateY(-200%);
+    }
+}

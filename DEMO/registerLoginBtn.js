@@ -356,7 +356,7 @@ function renderRegistration() {
                 return true;
             }
         } catch (error) {
-            console.error(`${type} check error:`, error);
+            createErrorWindow(`${type} check error:`, error);
             await responseAnimation("error");
             return false;
         }
@@ -423,7 +423,7 @@ function renderRegistration() {
         const userDataDiv = document.getElementById("userDataDiv");
 
         if (typeof html2canvas === 'undefined') {
-            console.error("html2canvas library is not loaded.");
+            createErrorWindow("html2canvas library is not loaded.");
             return;
         }
 
@@ -447,7 +447,7 @@ function renderRegistration() {
                 continueBtn.style.pointerEvents = "auto";
             }
         } catch (err) {
-            console.error("Error saving the UNIcard: ", err);
+            createErrorWindow("Error saving the UNIcard: ", err);
         }
     }
 
@@ -667,11 +667,11 @@ function renderRegistration() {
                         await responseAnimation("404");
                     }
                 } catch (fetchError) {
-                    console.error("Fetch error: ", fetchError);
+                    createErrorWindow("Fetch error: ", fetchError);
                     await responseAnimation("404");
                 }
             } catch (err) {
-                console.error("Error: ", err);
+                createErrorWindow("Error: ", err);
                 await responseAnimation("404");
             }
             document.body.style.cursor = "default";
@@ -986,6 +986,19 @@ async function hashImage(file) {
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
     return hashHex;
+}
+
+async function createErrorWindow(text) {
+    let existingErrorWindow = document.querySelector("#errorWindow");
+    if (!existingErrorWindow) {
+        let errorWindow = document.createElement("div");
+        errorWindow.id = "errorWindow";
+        errorWindow.innerHTML = `<p>${text}</p>`;
+        document.body.appendChild(errorWindow);
+        errorWindow.style.animation = "showWindow 0.5s 1 forwards ease";
+        await delay(3000);
+        errorWindow.style.animation = "hideWindow 0.5s 1 forwards ease"
+    }
 }
 
 function renderLogin() {

@@ -7,7 +7,7 @@ JavaScript file:
     -add descriptive comments to the FINAL code
     (DONE)    -check on the hasDrawn variable inside setupSignature function (necessary?)
     (DONE)    -modify the existing functions and remove their unnecessary parameters
-    -change the console.errors into a better feature
+    (DONE)    -change the console.errors into a better feature
     (DONE)    -make the code smaller, especially the fetches and functions that use the same logic (check for existing email/username function)
     
     -Debugging:
