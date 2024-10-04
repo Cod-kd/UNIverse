@@ -30,7 +30,7 @@ $username = $userdata['username'];
 $passwd = hashPassword($userdata['passwd']);
 $imgPasswd = $userdata['imgPasswd'];
 
-$stmt = $conn->prepare("INSERT INTO users (email, birthDate, gender, username, passwd, imgPasswd) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt = $conn->prepare("INSERT INTO users (email, birthDate, gender, username, passwd, imgPasswd, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
 $stmt->bind_param("ssssss", $email, $birthDate, $gender, $username, $passwd, $imgPasswd);
 
 if ($stmt->execute()) {
