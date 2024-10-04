@@ -27,7 +27,7 @@ $email = $userdata['email'];
 $birthDate = $userdata['birthDate'];
 $gender = $userdata['gender'];
 $username = $userdata['username'];
-$passwd = $userdata['passwd'];
+$passwd = hashPassword($userdata['passwd']);
 $imgPasswd = $userdata['imgPasswd'];
 
 $stmt = $conn->prepare("INSERT INTO users (email, birthDate, gender, username, passwd, imgPasswd) VALUES (?, ?, ?, ?, ?, ?)");
@@ -41,3 +41,9 @@ if ($stmt->execute()) {
 
 $stmt->close();
 $conn->close();
+
+function hashPassword($password)
+{
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+    return $hashedPassword;
+}

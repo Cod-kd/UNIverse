@@ -59,6 +59,7 @@ PHP:
         (DONE)    -else return false
         (DONE)    -if true was returned => user can click the continueBtn
     (DONE)    -merge the checkExistingUsername.php with the checkExistingEmail.php
+    -store the password in a more secure way (hash) inside database
 
 Quick fixes:
     (DONE)    -backBtn isnt working while UNIcard is present
