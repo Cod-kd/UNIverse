@@ -59,7 +59,9 @@ PHP:
         (DONE)    -else return false
         (DONE)    -if true was returned => user can click the continueBtn
     (DONE)    -merge the checkExistingUsername.php with the checkExistingEmail.php
-    -store the password in a more secure way (hash) inside database
+    (DONE)    -store the password in a more secure way (hash) inside database
+    -when a user is created => created_at column should have the NOW() value
+    -when the checkExistence.php runs => it should only check the records where deleted_at is null
 
 Quick fixes:
     (DONE)    -backBtn isnt working while UNIcard is present
