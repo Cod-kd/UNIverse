@@ -1003,12 +1003,38 @@ async function createErrorWindow(text) {
 
 async function renderLogin() {
     monitorScreenDiv.innerHTML = `
-    <form>
+    <form id="loginForm" action="login.php" method="post">
         <input type="email" placeholder="Email..." class="input" name="email">
         <input type="password" placeholder="Jelszó..." class="input" name="passwd">
         <button class="button">Bejelentkezés</button>
     </form>
-    <button class="button">UNIcard használata</button>`
+    <button class="button" id="cardLoginBtn">UNIcard használata</button>`;
+
+    const cardLoginBtn = document.getElementById("cardLoginBtn");
+    cardLoginBtn.addEventListener("click", async function () {
+        await fadeOutMonitorScreen();
+        monitorScreenDiv.innerHTML = `
+        <form id="cardForm" onsubmit="return false">
+            <div id="cardContainer">
+                <div class="folder">
+                    <div class="front-side">
+                        <div class="tip"></div>
+                        <div class="cover"></div>
+                    </div>
+                    <div class="back-side cover"></div>
+                </div>
+                <label class="custom-file-upload">
+                <input id="cardInput" type="file">Saját UNIcard-od</label>
+            </div>
+            <button class="button" id="loginBtn">Bejelentkezés kártyával</button>
+        </form>`;
+        await fadeInMonitorScreen();
+        const loginBtn = document.getElementById("loginBtn");
+        loginBtn.addEventListener("click", function () {
+            const cardInput = document.getElementById("cardInput");
+            console.log(cardInput.value);
+        });
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
