@@ -627,7 +627,8 @@ function renderRegistration() {
                 }
             }
             else {
-                if (validateField(dataInp, index)) {
+                const isValid = await validateField(dataInp, index);
+                if (isValid) {
                     updateFormData(index, dataInp);
                     createFormStep(index + 1);
                 }
@@ -723,47 +724,39 @@ function renderRegistration() {
         if (!input) return true;
 
         const value = input.value.trim();
+        let conditions = {};
 
         switch (index) {
             case 0:
-                const emailConditions = validateEmail(value);
-                if (Object.keys(emailConditions).length > 0) {
-                    updateValidation(emailConditions);
-                    return false;
-                }
+                conditions = validateEmail(value);
                 break;
             case 1:
-                const birthDateConditions = validateBirthDate(value);
-                if (Object.keys(birthDateConditions).length > 0) {
-                    updateValidation(birthDateConditions);
-                    return false;
-                }
+                conditions = validateBirthDate(value);
                 break;
             case 3:
-                const usernameConditions = validateUsername(value);
-                if (Object.keys(usernameConditions).length > 0) {
-                    updateValidation(usernameConditions);
-                    return false;
-                }
+                conditions = validateUsername(value);
                 break;
             case 4:
-                const passwordConditions = validatePassword(value);
-                if (Object.keys(passwordConditions).length > 0) {
-                    updateValidation(passwordConditions);
-                    return false;
-                }
+                conditions = validatePassword(value);
                 break;
         }
 
-        updateValidation({});
-        return true;
+        updateValidation(conditions);
+
+        return Object.keys(conditions).length === 0;
     }
 
     function validateBirthDate(birthDate) {
         let conditions = {};
 
+        if (!birthDate || birthDate.trim() === '') {
+            conditions.empty = '-Kötelező mező';
+            return conditions;
+        }
+
         if (birthDate.length !== 8) {
             conditions.length = '-8 karakter hosszú';
+            return conditions;
         }
 
         const year = parseInt(birthDate.slice(0, 4), 10);
@@ -772,11 +765,13 @@ function renderRegistration() {
 
         if (isNaN(year) || month < 1 || month > 12 || day < 1 || day > 31) {
             conditions.validDate = '-Nem megfelelő formátum (ÉÉÉÉHHNN)';
+            return conditions;
         }
 
         const daysInMonth = [31, (year % 4 === 0 && year % 100 !== 0 || year % 400 === 0) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         if (day > daysInMonth[month - 1]) {
             conditions.validDay = '-Hibás nap az adott hónapban';
+            return conditions;
         }
 
         const today = new Date();
@@ -784,12 +779,14 @@ function renderRegistration() {
 
         if (birthDateObj > today) {
             conditions.futureDate = '-Nem jövőbeli dátum';
+            return conditions;
         }
 
         const age = today.getFullYear() - year - (today < new Date(today.getFullYear(), month - 1, day) ? 1 : 0);
 
         if (age < 18 || age > 100) {
             conditions.age = '-Életkor 18 és 100 közötti';
+            return conditions;
         }
 
         return conditions;
@@ -798,7 +795,7 @@ function renderRegistration() {
     function validatePassword(password) {
         let conditions = {};
         let minLength = 8;
-        let maxLength = 36;
+        let maxLength = 26;
 
         if (password.length < minLength) {
             conditions.length = `-Minimum ${minLength} karakter hosszú`;
@@ -997,7 +994,9 @@ async function createErrorWindow(text) {
         document.body.appendChild(errorWindow);
         errorWindow.style.animation = "showWindow 0.5s 1 forwards ease";
         await delay(3000);
-        errorWindow.style.animation = "hideWindow 0.5s 1 forwards ease"
+        errorWindow.style.animation = "hideWindow 0.5s 1 forwards ease";
+        await delay(600);
+        errorWindow.remove();
     }
 }
 
