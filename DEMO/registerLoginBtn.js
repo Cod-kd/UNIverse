@@ -1004,8 +1004,8 @@ async function createErrorWindow(text) {
 async function renderLogin() {
     monitorScreenDiv.innerHTML = `
     <form>
-        <input type="email" placeholder="Email..." class="input">
-        <input type="password" placeholder="Jelszó..." class="input">
+        <input type="email" placeholder="Email..." class="input" name="email">
+        <input type="password" placeholder="Jelszó..." class="input" name="passwd">
         <button class="button">Bejelentkezés</button>
     </form>
     <button class="button">UNIcard használata</button>`

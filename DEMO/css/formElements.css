@@ -115,9 +115,10 @@
 }
 
 /* Username input */
-#usernameInput{
+#usernameInput {
     width: 200px;
 }
+
 /* Date Input */
 #dateInput {
     margin: 0 auto;
@@ -320,9 +321,13 @@
     position: absolute;
 }
 
-form{
+form {
     display: grid;
     grid-template-rows: repeat(3, 1fr);
     justify-items: center;
     gap: 20px;
+}
+
+form .input{
+    width: 250px;
 }
