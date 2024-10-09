@@ -1030,11 +1030,53 @@ async function renderLogin() {
         </form>`;
         await fadeInMonitorScreen();
         const loginBtn = document.getElementById("loginBtn");
-        loginBtn.addEventListener("click", function () {
+        loginBtn.addEventListener("click", async function () {
             const cardInput = document.getElementById("cardInput");
-            console.log(cardInput.value);
+            const image = cardInput.files[0];
+
+            const encodedImage = await hashImage(image);
+            const reader = new FileReader();
+
+            reader.onload = async function (event) {
+                const dataURL = event.target.result;
+                Tesseract.recognize(
+                    dataURL,
+                    'eng'
+                )
+                    .then(async ({ data: { text } }) => {
+                        const extractedEmail = extractEmail(text);
+                        if (extractedEmail) {
+                            console.log("Extracted email: ", extractedEmail);
+
+                            const response = await fetch(`fetchCardUser.php?email=${encodeURIComponent(extractedEmail)}`);
+                            const userData = await response.json();
+
+                            if (userData && userData.imgPasswd) {
+                                if (encodedImage === userData.imgPasswd) {
+                                    console.log("Login successful!");
+                                } else {
+                                    createErrorWindow("Invalid login credentials!");
+                                }
+                            } else {
+                                createErrorWindow("User not found!");
+                            }
+                        } else {
+                            createErrorWindow("No email found!");
+                        }
+                    })
+                    .catch(err => {
+                        createErrorWindow(err);
+                    });
+            }
+            reader.readAsDataURL(image);
         });
     });
+}
+
+function extractEmail(text) {
+    const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
+    const matches = text.match(emailRegex);
+    return matches ? matches[0] : null;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
