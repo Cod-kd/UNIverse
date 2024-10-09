@@ -97,7 +97,7 @@ Login:
         -1. Email is read from the uploaded card
         -2. Uploaded image gets hashed into HEX
         -3. Login.php checks for the email in the database + hashed image's hex matches the email's imgPasswd
-    -Features:
+    (EXTRA/LATER)-Features:
         -forgotten password - email is sent out to user which contains a link => link is opened => user is redirected to an email restoring site
             -opened website = form (2 inputs, password, newPassword) => updatePassword.php runs => updates the current user's password
             -extras - token validation --> only the user can open that link and that link is only accessible for X minutes
