@@ -1001,8 +1001,14 @@ async function createErrorWindow(text) {
     }
 }
 
-function renderLogin() {
-    console.log("Login rendering not implemented yet");
+async function renderLogin() {
+    monitorScreenDiv.innerHTML = `
+    <form>
+        <input type="email" placeholder="Email..." class="input">
+        <input type="password" placeholder="Jelszó..." class="input">
+        <button class="button">Bejelentkezés</button>
+    </form>
+    <button class="button">UNIcard használata</button>`
 }
 
 document.addEventListener('DOMContentLoaded', () => {

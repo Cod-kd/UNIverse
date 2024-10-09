@@ -114,23 +114,10 @@
     transform: translate(-50%, -50%) scale(1);
 }
 
-/* Username + Password Input */
-#usernameInput,
-#passwordInput {
-    display: block;
-    width: 250px;
-    height: 50px;
-    background-color: transparent;
-    border-radius: 30px;
-    border: 2px solid var(--main);
-    padding: 0 12px;
-    outline: none;
-    caret-color: var(--main);
-    color: var(--main);
-    font-size: 16px;
-    transition: 0.2s;
+/* Username input */
+#usernameInput{
+    width: 200px;
 }
-
 /* Date Input */
 #dateInput {
     margin: 0 auto;
@@ -173,8 +160,8 @@
     right: 44%;
 }
 
-/* Email Input */
-#emailInput {
+/* General Input */
+.input {
     width: 340px;
     height: 40px;
     background-color: transparent;
@@ -188,11 +175,11 @@
     transition: 0.1s ease;
 }
 
-#emailInput:hover {
+.input:hover {
     width: 360px;
 }
 
-#emailInput:focus {
+.input:focus {
     border-radius: 5px 5px 2px 2px;
     transform: scale(1.1);
 }
@@ -331,6 +318,13 @@
     border-radius: 12px;
     padding: 10px;
     position: absolute;
+}
+
+form{
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    justify-items: center;
+    gap: 20px;
 }
 
 @keyframes showWindow {
