@@ -25,7 +25,7 @@ if ($result->num_rows === 1) {
     if (password_verify($passwd, $row["passwd"])) {
         echo "Successful login!";
     } else {
-        echo "Can't log in!";
+        echo "Incorrect email or password!";
     }
 } else {
     echo "No user found!";

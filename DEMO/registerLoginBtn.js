@@ -1003,15 +1003,39 @@ async function createErrorWindow(text) {
 
 async function renderLogin() {
     monitorScreenDiv.innerHTML = `
-    <form id="loginForm" action="login.php" method="post">
+    <form id="loginForm" onsubmit="return false;">
         <input type="email" placeholder="Email..." class="input" name="email">
         <input type="password" placeholder="Jelszó..." class="input" name="passwd">
-        <button class="button">Bejelentkezés</button>
+        <button class="button" id="loginBtn">Bejelentkezés</button>
     </form>
     <button class="button" id="cardLoginBtn">UNIcard használata</button>`;
 
-    const cardLoginBtn = document.getElementById("cardLoginBtn");
-    cardLoginBtn.addEventListener("click", async function () {
+    // Simple login
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+        const formData = new FormData(document.getElementById('loginForm'));
+        try {
+            const response = await fetch('login.php', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const responseText = await response.text();
+            if (responseText !== "Successful login!") {
+                throw new Error(responseText);
+            }
+            console.log(responseText);
+
+        } catch (error) {
+            createErrorWindow(error.message);
+        }
+    });
+
+    // Card login
+    document.getElementById("cardLoginBtn").addEventListener("click", async function () {
         await fadeOutMonitorScreen();
         monitorScreenDiv.innerHTML = `
         <form id="cardForm" onsubmit="return false">

@@ -82,6 +82,7 @@ Quick fixes:
     -age shold be between 18 and 100 is an ignored condition
     -passwordInput too long
     -emailInput + usernameInput isnt inserted to the database
+    -createErrorWindow function isnt' removed after disappearing
 
 Live server debugging errors:
     (DONE)    -can't download UNIcard's image from live server
@@ -96,9 +97,9 @@ Login:
         -email/username isn't present in database
         -entered password doesn't match correct password
     -when Login via UNIcard is pressed =>:
-        -1. Email is read from the uploaded card
-        -2. Uploaded image gets hashed into HEX
-        -3. Login.php checks for the email in the database + hashed image's hex matches the email's imgPasswd
+        (DONE)    -1. Email is read from the uploaded card
+        (DONE)    -2. Uploaded image gets hashed into HEX
+        (DONE)    -3. Login.php checks for the email in the database + hashed image's hex matches the email's imgPasswd
     (EXTRA/LATER)-Features:
         -forgotten password - email is sent out to user which contains a link => link is opened => user is redirected to an email restoring site
             -opened website = form (2 inputs, password, newPassword) => updatePassword.php runs => updates the current user's password
