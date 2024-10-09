@@ -1,0 +1,119 @@
+Setup of the serverPC (popOS - Linux):
+
+1. Installation of xampp
+2. First steps of server's setup (phpmyadmin configuration)
+	Errors:
+		-"access denied for root@localhost"
+		-while testing on main PC(master) and server PC(slave) to see how can I create connected database =>
+			somehow the master and slave roles were swapped during the error fixing
+		-"The mariaDB server is running with the --skip-grant-ables option so it cannot execute"
+		-"mysql.user doesn't exist"
+		-"Couldn't connect to remote database: invalid settings"
+		-"Access denied for user 'pma': The specified connection inside the configuration didn't work for the control user"
+		-"Access denied for phpmyadmin database"
+		-"Phpmyadmin settings aren't configured correctly, some external functions got turned off"
+		-"Allow remote access to the database user: Can't connect to local mysql server through socket"
+		-"Can't create/write to /opt/lampp/var/pop-os.err errcode: 13 permission denied"
+	Error summary:
+		-I was trying to setup only a MYSQL database, not the server
+3. Testing remote access of phpmyadmin through a different network / pc
+	Errors:
+		-"www.example.com:443:0 server certificate does not include an ID which matxches the server name: no slotmen from mod_heartmonitor"
+		-"The website isn't accessible"
+	-Error summary:
+		-phpmyadmin wasn't configured correctly
+		-port forwarding wasn't enabled
+4. Firewall configuration
+5. Port forwarding
+	Errors: 
+		-not knowing which ports to use
+6. SSH setup
+7. Key based authentication setup for SSH - failed
+	Errors: 
+		-"no such file or directory"
+		-passphrase wasn't asked when connecting to server PC via SSH
+		-empty SSH config
+8. Fai2ban setup
+	Errors:
+		-failing password authentication 3 times => nothing happened
+		-"active: failed (result: exit-code)"
+		-"ERROR failed during config: while reading from /etc/fail2ban/jail.local"
+		-no error logs for failed attempts inside fail2ban logs
+	Error summary:
+		-wrong configuration settings
+9. Database setup inside xampp's phpmyadmin
+10. Testing demo website for registration
+	Errors:
+		-gender wasn't added to the new records
+11. Custom DNS name for phpmyadmin without buying a domain name - failed
+12. Configuration of virtual hosts
+	Errors:
+		-server running locally, but not accessible externally
+		-usage of unnecessary ports
+13. Installation of webmin - failed
+	Errors:
+		-"Unsupported file given on command line"
+		-"dpkg-deb: error: webmin.deb is not a debian format archive"
+		-"dpkg: eror processing archive webmin (--install)"
+		-"dpkg-deb --control subprocess returned error exit status 2"
+		-"errors were encountered while processing webmin.deb"
+14. Setup of BIND9 to webmin (DNS server) - failed
+	Errors:
+		-" failed to enable unit: refusing to operate on alias name or linked unit file: bind9.service"
+15. Disabling sleep / hibernate mode on server PC
+16. Namecheap domain setup
+17. Visual Studio Code installation
+18. Creation of test index.html to see hosted website
+	Errors: index.html isn't shown on load
+19. Configuring virtual hosts for safety
+	Errors:
+		-users have access to all directories / files outside of htdocs folder
+		-forbidden website result
+		-phpmyadmin isn't accessible
+		-"AH00526: Syntax error on line 42 of /opt/lampp/etc/extra/httpd-vhosts.conf: Unknown Authz provider"
+		-"AH00526: Syntax error on line 21 of /opt/lampp/etc/extra/httpd-vhosts.conf: Redirect URL not valid for this status"
+20. API subdomain setup
+	Errors:
+		-"XAMPP: Stopping ProFTPD.../opt/lampp/lampp: line 308: kill: (8336) - No such process fail. kill returned 1."
+		-non authorized users get error page instead of redirection to main page
+		-javascript fetch has pending status
+		-fetching with localhost returns error
+		-page doesn't load
+		-CORS policy error
+21. Testing UNIcard's download
+	Errors:
+		-couldn't download image
+	Error summary:
+		-website was using HTTP while accessing other libraries / scripts through HTTPS - mixed content
+22. Test launch for website
+	Errors: 
+		-page didn't load
+	Error summary:
+		-Server's local IP changed
+23. Changing website from HTTP to HTTPS for a more secure connection - first attempt - failed
+	Errors:
+		-usage of self signed certificate
+		-configuring wrong files
+		-port 80 was still forwarded instead of 443
+24. Getting SSL certificate using CertBot from Let's Encrypt
+	Errors:
+		-"Could not bind TCP port 80 because it is already in use by another process on this system (such as a web server). Please stop the program in question and then try again."
+		-couldn't access website through https
+		-firewall problem
+		-timeout during connection
+	Error summary:
+		-tried to obtain certificate to the HTTPS website with self signed certiciate
+25. DDNS setup
+	Errors:
+		-"Invalid value for keyword 'ip'=''"
+	Error summary:
+		-Inside the config file: login attribute had the namecheap username instead of domain name
+
+26. SMTP setup
+	Errors:
+		-"OpenDKIM: no signature data"
+		-email landing in spam
+		-connection timeouts on port 25
+		-"Could not connect to SMTP host. Failed to connect to server. Email could not be sent. Code 111
+		 Additional SMTP info: Connection refused"
+		-"Peer Certificate did not match expected"
