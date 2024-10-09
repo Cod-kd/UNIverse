@@ -63,3 +63,23 @@
         transform: rotate(360deg) translate3d(3px, 0, 0) rotate(-360deg);
     }
 }
+
+@keyframes showWindow {
+    0% {
+        transform: translateY(-200%);
+    }
+
+    100% {
+        transform: translateY(0%);
+    }
+}
+
+@keyframes hideWindow {
+    0% {
+        transform: translateY(0%);
+    }
+
+    100% {
+        transform: translateY(-200%);
+    }
+}
