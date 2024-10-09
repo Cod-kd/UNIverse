@@ -23,8 +23,7 @@ JavaScript file:
     (DONE)    -if a previous condition was met before, but now it's not met => that specified condition should appear with the appear animation
     (DONE)    -add a fetch method with the createProfile.php, assign the correct animations
     -split the main javascript file into small javascript files (separation like css)
-    -upon registration completion, the user can save their 'UNIverse Card' (an imagine which replicates a small login card with the user's data on it) =>
-        users can login via their cards (upload their card image)
+    (DONE)    -upon registration completion, the user can save their 'UNIverse Card' (an imagine which replicates a small login card with the user's data on it) => users can login via their cards (upload their card image)
         (DONE)-Saving steps: 1. The user enters his/her data through the registration.
         (DONE)        2. The registration was complete => a button appears saying "Get my UNIverse Card" + the card appears with the user's informations + informations are saved to database
         (DONE)        3. Upon "Get card" button press => user's "UNIverse Card" will be saved on the user's device, simultaneously the card is hashed to HEX value and saved into the user's record
@@ -95,10 +94,10 @@ Live server debugging errors:
 Login:
     (DONE)    -2 inputs should appear (username/email + password)
     (DONE)    -2 buttons should appear (Login via UNIcard + Login)
-    -when simple Login is pressed => login.php checks for available username/email + entered password compared to correct password
-        -email/username isn't present in database
-        -entered password doesn't match correct password
-    -when Login via UNIcard is pressed =>:
+    (DONE)    -when simple Login is pressed => login.php checks for available email + entered password compared to correct password
+        (DONE)    -email isn't present in database
+        (DONE)    -entered password doesn't match correct password
+    (DONE)    -when Login via UNIcard is pressed =>:
         (DONE)    -1. Email is read from the uploaded card
         (DONE)    -2. Uploaded image gets hashed into HEX
         (DONE)    -3. Login.php checks for the email in the database + hashed image's hex matches the email's imgPasswd
