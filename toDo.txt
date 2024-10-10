@@ -88,12 +88,36 @@ Quick fixes:
     (DONE)    -createErrorWindow function isnt' removed after disappearing
     (DONE)    -passwordInput's length should be changed from 36 to 26
     (DONE)    -showBtn should be positioned to the right by 1% due to new size of passwordInput
+    -extra feature => users will save their UNIcard with this name syntax --> username-UNIcard.jpg
+    -after pressing the button to get the UNIcard => registration comes in without proper fade in
 
 Live server debugging errors:
     (DONE)    -can't download UNIcard's image from live server
         -solutions:
         (DONE)    -allow 443 port for https in firewall
         (DONE)    -change hosted website from http to https => avoid conflicts while getting resources from HTTPS website while the main site is http
+    -createProfile.php isn't working with it's new logic --> revert back to the version before
+    -Errors at login:
+        -If email + password wasn't provided => "Network response was not ok"
+        -if email wasn't provided => "Network response was not ok"
+        -if password wasn't provided => "Network response was not ok"
+        -if email isn't present in database "Network response was not ok"
+        -if password isn't correct => "Network response was not ok"
+        -every login button press => console error 401 Unauthorized
+        -reverted back the previous login.php logic:
+            -email + password not provided => "No user found"
+            -email provided + password not provided => "Incorrect email or password"
+            -email not provided + password provided => "No user found"
+            -non existing email provided => "No user found"
+            -email provided + incorrect password provided => "Incorrect email or password"
+            -email + password provided => "Successful login!"
+        -fetchCardUser.php:
+            -extracted email logged out to console
+            -no login due to error: "No user found"
+        -reverted back the fetchCardUser.php to the version before:
+            -real UNIcard provided => successful login
+            -wrong or changed UNIcard provided => "Invalid login credentials"
+            -Correct UNIcard provided but with changed file name => "Invalid login credentials"
 
 Login:
     (DONE)    -2 inputs should appear (username/email + password)
