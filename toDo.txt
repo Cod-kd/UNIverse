@@ -88,7 +88,7 @@ Quick fixes:
     (DONE)    -createErrorWindow function isnt' removed after disappearing
     (DONE)    -passwordInput's length should be changed from 36 to 26
     (DONE)    -showBtn should be positioned to the right by 1% due to new size of passwordInput
-    -extra feature => users will save their UNIcard with this name syntax --> username-UNIcard.jpg
+    (DONE)    -extra feature => users will save their UNIcard with this name syntax --> username-UNIcard.jpg
     -after pressing the button to get the UNIcard => registration comes in without proper fade in
 
 Live server debugging errors:

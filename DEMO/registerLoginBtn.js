@@ -435,7 +435,7 @@ function renderRegistration() {
             formData.imgPasswd = hashHexImg;
 
             const link = document.createElement("a");
-            link.download = "UNIcard.jpg";
+            link.download = `${formData.username}-UNIcard.jpg`;
             link.href = URL.createObjectURL(blob);
             document.body.appendChild(link);
             link.click();
