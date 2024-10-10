@@ -61,9 +61,9 @@ PHP:
     (DONE)    -store the password in a more secure way (hash) inside database
     (DONE)    -when a user is created => created_at column should have the NOW() value
     (DONE)    -when the checkExistence.php runs => it should only check the records where deleted_at is null
-    -change the code to use DRY
-    -add validation to every data which is inputted
-    -add error catching to every possible reason
+    (DONE)    -change the code to use DRY
+    (DONE)    -add validation to every data which is inputted
+    (DONE)    -add error catching to every possible reason
     -change the database credentials file (connection.php) to .env
 
 Quick fixes:
