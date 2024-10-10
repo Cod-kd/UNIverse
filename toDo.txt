@@ -101,14 +101,18 @@ Live server debugging errors:
         -If email + password wasn't provided => "Network response was not ok"
         -if email wasn't provided => "Network response was not ok"
         -if password wasn't provided => "Network response was not ok"
+            -correct error => "No email or password provided"
         -if email isn't present in database "Network response was not ok"
+            -correct error => "No user found with this email"
         -if password isn't correct => "Network response was not ok"
+            -correct error => "Incorrect email or password!"
         -every login button press => console error 401 Unauthorized
         -reverted back the previous login.php logic:
             -email + password not provided => "No user found"
             -email provided + password not provided => "Incorrect email or password"
             -email not provided + password provided => "No user found"
-            -non existing email provided => "No user found"
+                -correct error => "No email or password provided"
+            -non existing email provided => "No user found with this email"
             -email provided + incorrect password provided => "Incorrect email or password"
             -email + password provided => "Successful login!"
         -fetchCardUser.php:
