@@ -64,6 +64,7 @@ PHP:
     -change the code to use DRY
     -add validation to every data which is inputted
     -add error catching to every possible reason
+    -change the database credentials file (connection.php) to .env
 
 Quick fixes:
     (DONE)    -backBtn isnt working while UNIcard is present
