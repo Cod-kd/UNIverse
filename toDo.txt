@@ -90,6 +90,12 @@ Quick fixes:
     (DONE)    -showBtn should be positioned to the right by 1% due to new size of passwordInput
     (DONE)    -extra feature => users will save their UNIcard with this name syntax --> username-UNIcard.jpg
     -after pressing the button to get the UNIcard => registration comes in without proper fade in
+    -add button which shows the entered password at the login part
+    -when someone uploads their UNIcard at login and presses login button => screen should fade out and return the response:
+        -if UNIcard is correct --> Successful login message + main page shown
+        -if UNIcard is incorrect --> Displays the corresponding error with the createErrorWindow function + throws the user back to the login part
+    -in general login: add home button (same as at registration)
+    -change the createErrorWindow function's name to "createResponseWindow" --> can display future messages not only errors (eg.: )
 
 Live server debugging errors:
     (DONE)    -can't download UNIcard's image from live server
