@@ -36,6 +36,7 @@ async function splitMainButton() {
                 monitorScreenDiv.innerHTML = '';
                 renderRegistration();
             } else {
+                monitorScreenDiv.innerHTML = ``;
                 renderLogin();
             }
             await fadeInMonitorScreen();
@@ -56,12 +57,12 @@ function createBasicButton({ id, text, initialTransform }) {
 
 async function fadeOutMonitorScreen() {
     monitorScreenDiv.style.opacity = "0";
-    await delay(300);
+    await delay(200);
 }
 
 async function fadeInMonitorScreen() {
     monitorScreenDiv.style.opacity = "1";
-    await delay(300);
+    await delay(100);
 }
 
 function createSuccessfulResponseEffect() {
@@ -168,7 +169,6 @@ function renderRegistration() {
 
     async function createFormStep(index) {
         await fadeOutMonitorScreen();
-        monitorScreenDiv.innerHTML = "";
 
         if (index < requiredData.length) {
             const dataHeading = createHeading(requiredData[index]);
@@ -243,7 +243,7 @@ function renderRegistration() {
         for (let el of elements) {
             el.style.opacity = "0";
             el.style.transform = "translateY(20px)";
-            el.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+            el.style.transition = "opacity 0.3s ease, transform 0.3s ease";
         }
 
         monitorScreenDiv.offsetHeight;
