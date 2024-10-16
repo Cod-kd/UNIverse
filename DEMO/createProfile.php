@@ -28,15 +28,13 @@ $username = $userdata['username'];
 $passwd = $userdata['passwd'];
 $imgPasswd = $userdata['imgPasswd'];
 
-$emailErrors = validateEmail($email);
-$birthDateErrors = validateBirthDate($birthDate);
-$usernameErrors = validateUsername($username);
-$passwordErrors = validatePassword($passwd);
+$isEmailValid = validateEmail($email);
+$isBirthDateValid = validateBirthDate($birthDate);
+$isUsernameValid = validateUsername($username);
+$isPasswordValid = validatePassword($passwd);
 
-$allErrors = array_merge($emailErrors, $birthDateErrors, $usernameErrors, $passwordErrors);
-
-if (!empty($allErrors)) {
-    echo json_encode(["error" => implode(" ", $allErrors)]);
+if (!$isEmailValid || !$isBirthDateValid || !$isUsernameValid || !$isPasswordValid) {
+    echo json_encode(["error" => "Validation failed"]);
     exit();
 }
 
