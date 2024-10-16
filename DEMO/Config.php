@@ -29,6 +29,9 @@ class Config
 
     public static function getConnection()
     {
+        if (!self::$dbCon) {
+            self::init();
+        }
         return self::$dbCon;
     }
 
