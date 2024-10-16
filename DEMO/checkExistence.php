@@ -1,14 +1,10 @@
 <?php
 header('Content-Type: application/json');
 
-require_once "connection.php";
+require_once "Config.php";
 
 try {
-    $conn = new mysqli($servername, $username, $password, $dbname);
-
-    if ($conn->connect_error) {
-        throw new Exception("Connection failed: $conn->connect_error");
-    }
+    $conn = Config::getConnection();
 
     $userdata = json_decode(file_get_contents("php://input"), true);
 
@@ -30,29 +26,25 @@ try {
 
     $stmt = $conn->prepare("SELECT `$type` FROM users WHERE `$type` = ? AND deleted_at IS NULL LIMIT 1");
     if (!$stmt) {
-        throw new Exception("Prepare failed: $conn->error");
+        throw new Exception("Prepare failed: " . $conn->error);
     }
 
     $stmt->bind_param("s", $value);
-
     $stmt->execute();
 
     $result = $stmt->get_result();
-
     $response = ["exists" => $result->num_rows > 0];
 
     $stmt->close();
-    $conn->close();
+    Config::close();
 
     echo json_encode($response);
-
 } catch (Exception $e) {
     http_response_code(400);
     echo json_encode(["error" => $e->getMessage()]);
+
     if (isset($stmt) && $stmt instanceof mysqli_stmt) {
         $stmt->close();
     }
-    if (isset($conn) && $conn instanceof mysqli) {
-        $conn->close();
-    }
+    Config::close();
 }

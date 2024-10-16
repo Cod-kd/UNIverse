@@ -1,8 +1,8 @@
 <?php
 
-require_once "connection.php";
+require_once "Config.php";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = Config::getConnection();
 
 if ($conn->connect_error) {
     die("Connection failed: $conn->connect_error");
@@ -37,7 +37,7 @@ if ($stmt->execute()) {
 }
 
 $stmt->close();
-$conn->close();
+Config::close();
 
 function hashPassword($password)
 {

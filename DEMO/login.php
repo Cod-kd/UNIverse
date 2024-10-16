@@ -1,12 +1,8 @@
 <?php
 
-require_once "connection.php";
+require_once "Config.php";
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: $conn->connect_error");
-}
+$conn = Config::getConnection();
 
 $email = htmlspecialchars($_POST["email"]);
 $passwd = htmlspecialchars($_POST["passwd"]);
@@ -29,4 +25,4 @@ if ($result->num_rows === 1) {
 }
 
 $stmt->close();
-$conn->close();
+Config::close();
