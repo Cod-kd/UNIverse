@@ -1,103 +1,101 @@
 <?php
 
 function validateEmail($email) {
-    $conditions = [];
+    if (empty($email)) {
+        return false;
+    }
 
     if (strpos($email, '@') === false) {
-        $conditions['atSymbol'] = '-Tartalmaz @-ot';
+        return false;
     }
 
     if (strlen(explode('@', $email)[0]) === 0) {
-        $conditions['prefix'] = '-Tartalmaz szöveget @ előtt';
+        return false;
     }
 
     $domainPattern = '/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
     $domain = explode('@', $email)[1] ?? '';
     if (empty($domain) || !preg_match($domainPattern, $domain)) {
-        $conditions['domain'] = '-Tartalmaz domain-t';
+        return false;
     }
 
-    return $conditions;
+    return true;
 }
 
 function validateUsername($username) {
-    $conditions = [];
+    if (empty($username)) {
+        return false;
+    }
 
-    if (strlen($username) < 8) {
-        $conditions['length'] = '-Minimum 8 karakter hosszú';
-    } elseif (strlen($username) > 20) {
-        $conditions['length'] = '-Maximum 20 karakter hosszú';
+    if (strlen($username) < 8 || strlen($username) > 20) {
+        return false;
     }
 
     $usernamePattern = '/^[A-Za-z0-9_-]+$/';
     if (!preg_match($usernamePattern, $username)) {
-        $conditions['invalidChars'] = '-Tartalmazhat (szám, betű, -, _)';
+        return false;
     }
 
-    return $conditions;
+    return true;
 }
 
 function validateBirthDate($birthDate) {
-    $conditions = [];
-
     if (empty($birthDate)) {
-        $conditions['empty'] = '-Kötelező mező';
-        return $conditions;
+        return false;
     }
 
     if (strlen($birthDate) !== 8) {
-        $conditions['length'] = '-8 karakter hosszú';
-        return $conditions;
+        return false;
     }
 
     $year = (int)substr($birthDate, 0, 4);
     $month = (int)substr($birthDate, 4, 2);
     $day = (int)substr($birthDate, 6, 2);
 
-    if (is_nan($year) || $month < 1 || $month > 12 || $day < 1 || $day > 31) {
-        $conditions['validDate'] = '-Nem megfelelő formátum (ÉÉÉÉHHNN)';
-        return $conditions;
+    if ($year < 1000 || $month < 1 || $month > 12 || $day < 1 || $day > 31) {
+        return false;
     }
 
     $daysInMonth = [31, ($year % 4 === 0 && $year % 100 !== 0 || $year % 400 === 0) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     if ($day > $daysInMonth[$month - 1]) {
-        $conditions['validDay'] = '-Hibás nap az adott hónapban';
+        return false;
     }
 
     $today = new DateTime();
     $birthDateObj = DateTime::createFromFormat('Ymd', $birthDate);
 
     if ($birthDateObj > $today) {
-        $conditions['futureDate'] = '-Nem jövőbeli dátum';
+        return false;
     }
 
     $age = $today->diff($birthDateObj)->y;
 
     if ($age < 18 || $age > 100) {
-        $conditions['age'] = '-Életkor 18 és 100 közötti';
+        return false;
     }
 
-    return $conditions;
+    return true;
 }
 
 function validatePassword($password) {
-    $conditions = [];
+    if (empty($password)) {
+        return false;
+    }
+
     $minLength = 8;
     $maxLength = 26;
 
-    if (strlen($password) < $minLength) {
-        $conditions['length'] = "-Minimum $minLength karakter hosszú";
-    } elseif (strlen($password) > $maxLength) {
-        $conditions['length'] = "-Maximum $maxLength karakter hosszú";
+    if (strlen($password) < $minLength || strlen($password) > $maxLength) {
+        return false;
     }
 
     if (!preg_match('/[0-9]/', $password)) {
-        $conditions['hasNumber'] = '-Legalább egy számjegy';
+        return false;
     }
 
     if (!preg_match('/[!@#$%^&*()\-_=+]/', $password)) {
-        $conditions['hasSpecialChar'] = '-Legalább egy speciális karakter';
+        return false;
     }
 
-    return $conditions;
+    return true;
 }
