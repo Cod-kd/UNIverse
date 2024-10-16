@@ -41,11 +41,11 @@ JavaScript file:
     (DONE)    -add the cursor loading effect while fetching the createProfile.php
     (DONE)    -fix the signature part of the registration => users shouldn't be able to click continueBtn if they havent drawn aynthing
     (EXTRA)    -add new feature => every continueBtn should be disabled by default => if the current's input's validation is correct => enable, at signature and UNIcard, only enable if signature was drawn / unicard was saved
-    -when the user uploads their UNIcard and clicks login button => Screen should go blank / loading animation should be displayed
-    -correct UNIcard => call the correct animation function with the text "Successful login!"
-    -incorrect UNIcard => Response should be shown => "Wrong unicard"
+    (DONE)    -when the user uploads their UNIcard and clicks login button => Screen should go blank / loading animation should be displayed
+    (DONE)    -correct UNIcard => call the correct animation function with the text "Successful login!"
+    (DONE)    -incorrect UNIcard => Response should be shown => "Wrong unicard"
         |
-        --> after showing response, wait 3 seconds and navigate the user to the main page / back to UNIcard login
+        (DONE)    --> after showing response, wait 3 seconds and navigate the user to the main page / back to UNIcard login
     -correct login with email + password => Successful login text + successful animation + 3 sec delay + redirection to main page
 CSS:
     (CAN'T FINISH DUE TO BUG)   -change the radio button's "circle"'s center so the black circle inside is centered horizontally + vertically

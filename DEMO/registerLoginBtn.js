@@ -1087,8 +1087,14 @@ async function renderLogin() {
     <button class="button" id="cardLoginBtn">UNIcard használata</button>`;
   monitorScreenDiv.appendChild(createHomeButton());
 
+  const handleError = async (errorMessage) => {
+    createResponseWindow(errorMessage);
+    await fadeInMonitorScreen();
+  };
+
   // Simple login
   document.getElementById("loginBtn").addEventListener("click", async () => {
+    document.body.style.cursor = "progress";
     const formData = new FormData(document.getElementById("loginForm"));
     try {
       const response = await fetch("login.php", {
@@ -1097,13 +1103,14 @@ async function renderLogin() {
       });
 
       if (!response.ok) {
-        createResponseWindow("Network response was not ok");
+        await handleError("Network response was not ok");
+        return;
       }
 
       const responseData = await response.json();
 
       if (responseData.error) {
-        createResponseWindow(responseData.error);
+        await handleError(responseData.error);
         return;
       }
 
@@ -1111,7 +1118,7 @@ async function renderLogin() {
         createResponseWindow(responseData.success);
       }
     } catch (error) {
-      createResponseWindow(error.message);
+      await handleError(error.message);
     }
   });
 
@@ -1138,16 +1145,13 @@ async function renderLogin() {
 
     const loginBtn = document.getElementById("loginBtn");
     loginBtn.addEventListener("click", async function () {
+      await fadeOutMonitorScreen();
+      document.body.style.cursor = "progress";
       const cardInput = document.getElementById("cardInput");
       const image = cardInput.files[0];
 
-      if (!image) {
-        createResponseWindow("Please upload an image file.");
-        return;
-      }
-
       if (!(image.type === "image/jpeg" || image.type === "image/jpg")) {
-        createResponseWindow("Only UNIcard accepted!");
+        await handleError("Only UNIcard accepted!");
         return;
       }
 
@@ -1170,18 +1174,20 @@ async function renderLogin() {
 
             if (userData && userData.imgPasswd) {
               if (encodedImage === userData.imgPasswd) {
-                createResponseWindow("Successful login!");
+                createResponseWindow("Successful login! Redirecting...");
+                await delay(3000);
+                window.location.href = "mainPage.html";
               } else {
-                createResponseWindow("Invalid login credentials!");
+                await handleError("Invalid login credentials!");
               }
             } else {
-              createResponseWindow("User not found!");
+              await handleError("User not found!");
             }
           } else {
-            createResponseWindow("No email found!");
+            await handleError("No email found!");
           }
         } catch (err) {
-          createResponseWindow(`Error during recognition: ${err.message}`);
+          await handleError(`Error during recognition: ${err.message}`);
         }
       };
       reader.readAsDataURL(image);
