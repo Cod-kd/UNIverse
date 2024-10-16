@@ -7,21 +7,21 @@ header('Content-Type: application/json');
 
 $conn = Config::getConnection();
 
-if (empty($_POST["email"]) && empty($_POST["passwd"])) {
+$email = htmlspecialchars($_POST["email"] ?? '');
+$passwd = htmlspecialchars($_POST["passwd"] ?? '');
+
+if (empty($email) && empty($passwd)) {
     echo json_encode(["error" => "No email and password provided!"]);
     exit();
 }
 
-$email = htmlspecialchars($_POST["email"]);
-$passwd = htmlspecialchars($_POST["passwd"]);
+if (!validateEmail($email)) {
+    echo json_encode(["error" => "Invalid email format!"]);
+    exit();
+}
 
-$emailErrors = validateEmail($email);
-$passwordErrors = validatePassword($passwd);
-
-$allErrors = array_merge($emailErrors, $passwordErrors);
-
-if (!empty($allErrors)) {
-    echo json_encode(["error" => implode(" ", $allErrors)]);
+if (!validatePassword($passwd)) {
+    echo json_encode(["error" => "Invalid password!"]);
     exit();
 }
 
