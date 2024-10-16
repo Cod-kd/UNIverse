@@ -325,7 +325,7 @@ function renderRegistration() {
         const lastChecked = type === 'email' ? lastCheckedEmail : lastCheckedUsername;
 
         if (isChecked && value === lastChecked) {
-            updateValidation({ [type]: `${type.charAt(0).toUpperCase() + type.slice(1)} already exists` });
+            createErrorWindow(`${type.charAt(0).toUpperCase() + type.slice(1)} already exists`);
             return false;
         }
 
@@ -336,7 +336,10 @@ function renderRegistration() {
                 body: JSON.stringify({ type, value })
             });
 
-            if (!response.ok) throw new Error(`Server error: ${response.status}`);
+            if (!response.ok) {
+                createErrorWindow(`Server error: ${response.status}`);
+                return false;
+            }
 
             const data = await response.json();
 
@@ -349,14 +352,14 @@ function renderRegistration() {
             }
 
             if (data.exists) {
-                updateValidation({ [type]: `${type.charAt(0).toUpperCase() + type.slice(1)} already exists` });
+                createErrorWindow(`${type.charAt(0).toUpperCase() + type.slice(1)} already exists`);
                 return false;
             } else {
                 updateFormData(type === 'email' ? 0 : 3, dataInp);
                 return true;
             }
         } catch (error) {
-            createErrorWindow(`${type} check error:`, error);
+            createErrorWindow(`${type} check error: ${error.message}`);
             await responseAnimation("error");
             return false;
         }
@@ -665,14 +668,16 @@ function renderRegistration() {
                     if (response.ok) {
                         await responseAnimation("200");
                     } else {
+                        const errorMessage = await response.text();
+                        createErrorWindow(`Registration failed: ${errorMessage}`);
                         await responseAnimation("404");
                     }
                 } catch (fetchError) {
-                    createErrorWindow("Fetch error: ", fetchError);
+                    createErrorWindow(`Fetch error: ${fetchError.message}`);
                     await responseAnimation("404");
                 }
             } catch (err) {
-                createErrorWindow("Error: ", err);
+                createErrorWindow(`Error: ${err.message}`);
                 await responseAnimation("404");
             }
             document.body.style.cursor = "default";
@@ -1057,43 +1062,46 @@ async function renderLogin() {
             <button class="button" id="loginBtn">Bejelentkezés kártyával</button>
         </form>`;
         await fadeInMonitorScreen();
+
         const loginBtn = document.getElementById("loginBtn");
         loginBtn.addEventListener("click", async function () {
             const cardInput = document.getElementById("cardInput");
             const image = cardInput.files[0];
+
+            if (!image) {
+                createErrorWindow("Please upload an image file.");
+                return;
+            }
 
             const encodedImage = await hashImage(image);
             const reader = new FileReader();
 
             reader.onload = async function (event) {
                 const dataURL = event.target.result;
-                Tesseract.recognize(
-                    dataURL,
-                    'eng'
-                )
-                    .then(async ({ data: { text } }) => {
-                        const extractedEmail = extractEmail(text);
-                        if (extractedEmail) {
-                            const response = await fetch(`fetchCardUser.php?email=${encodeURIComponent(extractedEmail)}`);
-                            const userData = await response.json();
+                try {
+                    const { data: { text } } = await Tesseract.recognize(dataURL, 'eng');
+                    const extractedEmail = extractEmail(text);
 
-                            if (userData && userData.imgPasswd) {
-                                if (encodedImage === userData.imgPasswd) {
-                                    createErrorWindow("Successful login!");
-                                } else {
-                                    createErrorWindow("Invalid login credentials!");
-                                }
+                    if (extractedEmail) {
+                        const response = await fetch(`fetchCardUser.php?email=${encodeURIComponent(extractedEmail)}`);
+                        const userData = await response.json();
+
+                        if (userData && userData.imgPasswd) {
+                            if (encodedImage === userData.imgPasswd) {
+                                createErrorWindow("Successful login!");
                             } else {
-                                createErrorWindow("User not found!");
+                                createErrorWindow("Invalid login credentials!");
                             }
                         } else {
-                            createErrorWindow("No email found!");
+                            createErrorWindow("User not found!");
                         }
-                    })
-                    .catch(err => {
-                        createErrorWindow(err);
-                    });
-            }
+                    } else {
+                        createErrorWindow("No email found!");
+                    }
+                } catch (err) {
+                    createErrorWindow(`Error during recognition: ${err.message}`);
+                }
+            };
             reader.readAsDataURL(image);
         });
     });
