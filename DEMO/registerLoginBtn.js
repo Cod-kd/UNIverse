@@ -151,9 +151,8 @@ async function responseAnimation(status) {
     createResponseHeading(false, "Hiba történt");
     createResponseHeading(true);
     if (existing404El) {
-      existing404El.style.transform = `scale(${
-        operation === "scale1" ? 1 : 0
-      })`;
+      existing404El.style.transform = `scale(${operation === "scale1" ? 1 : 0
+        })`;
     } else {
       createNew404Effect();
     }
@@ -412,9 +411,9 @@ function renderRegistration() {
             <p>Username: ${formData.username}</p>
             <p>Gender: ${formData.gender}</p>
             <p>Birth Date: ${formData.birthDate.slice(
-              0,
-              4
-            )}/${formData.birthDate.slice(4, 6)}/${formData.birthDate.slice(
+      0,
+      4
+    )}/${formData.birthDate.slice(4, 6)}/${formData.birthDate.slice(
       6,
       8
     )}</p>
@@ -422,9 +421,8 @@ function renderRegistration() {
             <hr>
             <div>
                 <h1>UNIcard</h1>
-                <img id="signatureImg" src="${
-                  formData.signature
-                }" alt="signature" style="max-width: 150px; max-height: 45px;">
+                <img id="signatureImg" src="${formData.signature
+      }" alt="signature" style="max-width: 150px; max-height: 45px;">
             </div>`;
     monitorScreenDiv.appendChild(userDataDiv);
 
@@ -1114,11 +1112,9 @@ async function renderLogin() {
   });
 
   // Card login
-  document
-    .getElementById("cardLoginBtn")
-    .addEventListener("click", async function () {
-      await fadeOutMonitorScreen();
-      monitorScreenDiv.innerHTML = `
+  document.getElementById("cardLoginBtn").addEventListener("click", async function () {
+    await fadeOutMonitorScreen();
+    monitorScreenDiv.innerHTML = `
         <form id="cardForm" onsubmit="return false">
             <div id="cardContainer">
                 <div class="folder">
@@ -1129,59 +1125,64 @@ async function renderLogin() {
                     <div class="back-side cover"></div>
                 </div>
                 <label class="custom-file-upload">
-                <input id="cardInput" type="file">Saját UNIcard-od</label>
+                <input id="cardInput" type="file" accept=".jpg, .jpeg">Saját UNIcard-od</label>
             </div>
             <button class="button" id="loginBtn">Bejelentkezés kártyával</button>
         </form>`;
-      monitorScreenDiv.appendChild(createHomeButton());
-      await fadeInMonitorScreen();
+    monitorScreenDiv.appendChild(createHomeButton());
+    await fadeInMonitorScreen();
 
-      const loginBtn = document.getElementById("loginBtn");
-      loginBtn.addEventListener("click", async function () {
-        const cardInput = document.getElementById("cardInput");
-        const image = cardInput.files[0];
+    const loginBtn = document.getElementById("loginBtn");
+    loginBtn.addEventListener("click", async function () {
+      const cardInput = document.getElementById("cardInput");
+      const image = cardInput.files[0];
 
-        if (!image) {
-          createResponseWindow("Please upload an image file.");
-          return;
-        }
+      if (!image) {
+        createResponseWindow("Please upload an image file.");
+        return;
+      }
 
-        const encodedImage = await hashImage(image);
-        const reader = new FileReader();
+      if (!(image.type === "image/jpeg" || image.type === "image/jpg")) {
+        createResponseWindow("Only UNIcard accepted!");
+        return;
+      }
 
-        reader.onload = async function (event) {
-          const dataURL = event.target.result;
-          try {
-            const {
-              data: { text }
-            } = await Tesseract.recognize(dataURL, "eng");
-            const extractedEmail = extractEmail(text);
+      const encodedImage = await hashImage(image);
+      const reader = new FileReader();
 
-            if (extractedEmail) {
-              const response = await fetch(
-                `fetchCardUser.php?email=${encodeURIComponent(extractedEmail)}`
-              );
-              const userData = await response.json();
+      reader.onload = async function (event) {
+        const dataURL = event.target.result;
+        try {
+          const {
+            data: { text }
+          } = await Tesseract.recognize(dataURL, "eng");
+          const extractedEmail = extractEmail(text);
 
-              if (userData && userData.imgPasswd) {
-                if (encodedImage === userData.imgPasswd) {
-                  createResponseWindow("Successful login!");
-                } else {
-                  createResponseWindow("Invalid login credentials!");
-                }
+          if (extractedEmail) {
+            const response = await fetch(
+              `fetchCardUser.php?email=${encodeURIComponent(extractedEmail)}`
+            );
+            const userData = await response.json();
+
+            if (userData && userData.imgPasswd) {
+              if (encodedImage === userData.imgPasswd) {
+                createResponseWindow("Successful login!");
               } else {
-                createResponseWindow("User not found!");
+                createResponseWindow("Invalid login credentials!");
               }
             } else {
-              createResponseWindow("No email found!");
+              createResponseWindow("User not found!");
             }
-          } catch (err) {
-            createResponseWindow(`Error during recognition: ${err.message}`);
+          } else {
+            createResponseWindow("No email found!");
           }
-        };
-        reader.readAsDataURL(image);
-      });
+        } catch (err) {
+          createResponseWindow(`Error during recognition: ${err.message}`);
+        }
+      };
+      reader.readAsDataURL(image);
     });
+  });
 }
 
 function extractEmail(text) {

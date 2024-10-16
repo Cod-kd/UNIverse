@@ -139,7 +139,7 @@ Live server debugging errors:
             -real UNIcard provided => successful login
             -wrong or changed UNIcard provided => "Invalid login credentials"
             -Correct UNIcard provided but with changed file name => "Invalid login credentials"
-        '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        
         -Errors at registration:
             -Server error 500
                 -fix: added composer.lock and composer.json
@@ -157,6 +157,8 @@ Live server debugging errors:
                 -fix: changed fetchCardUser.php's validateEmail to new logic
             -provided correct UNIcard --> "Successful login!" (correct)
             -error when uploading non image file => "Error during recognition: undefined"
+                -correct error => "Only UNIcard accepted!"
+            '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 Login:
     (DONE)    -2 inputs should appear (username/email + password)
     (DONE)    -2 buttons should appear (Login via UNIcard + Login)
