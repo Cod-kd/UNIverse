@@ -97,6 +97,7 @@ Quick fixes:
     (DONE)    -in general login: add home button (same as at registration)
     (DONE)    -change the createErrorWindow function's name to "createResponseWindow" --> can display future messages not only errors (eg.: )
     (DONE)    -change the fade in effect at the registration part => should be as fast as at login part
+    (DONE)    -add typing effect to the h1
 
 Live server debugging errors:
     (DONE)    -can't download UNIcard's image from live server
