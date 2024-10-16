@@ -1,10 +1,18 @@
 <?php
 
 require_once "Config.php";
+require_once "Validations.php";
 
 $conn = Config::getConnection();
 
 $email = $_GET['email'];
+
+$emailErrors = validateEmail($email);
+
+if (!empty($emailErrors)) {
+    echo json_encode(["error" => implode(" ", $emailErrors)]);
+    exit();
+}
 
 $sql = "SELECT imgPasswd FROM users WHERE email = ? AND deleted_at IS NULL";
 $stmt = $conn->prepare($sql);

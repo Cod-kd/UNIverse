@@ -1,6 +1,7 @@
 <?php
 
 require_once "Config.php";
+require_once "Validations.php";
 
 header('Content-Type: application/json');
 
@@ -13,6 +14,16 @@ if (empty($_POST["email"]) && empty($_POST["passwd"])) {
 
 $email = htmlspecialchars($_POST["email"]);
 $passwd = htmlspecialchars($_POST["passwd"]);
+
+$emailErrors = validateEmail($email);
+$passwordErrors = validatePassword($passwd);
+
+$allErrors = array_merge($emailErrors, $passwordErrors);
+
+if (!empty($allErrors)) {
+    echo json_encode(["error" => implode(" ", $allErrors)]);
+    exit();
+}
 
 $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
 $stmt->bind_param("s", $email);

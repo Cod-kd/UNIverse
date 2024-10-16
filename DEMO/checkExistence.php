@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 
 require_once "Config.php";
+require_once "Validations.php";
 
 try {
     $conn = Config::getConnection();
@@ -22,6 +23,17 @@ try {
     $allowedTypes = ['email', 'username'];
     if (!in_array($type, $allowedTypes)) {
         throw new Exception("Invalid type parameter");
+    }
+
+    $validationErrors = [];
+    if ($type === 'email') {
+        $validationErrors = validateEmail($value);
+    } elseif ($type === 'username') {
+        $validationErrors = validateUsername($value);
+    }
+
+    if (!empty($validationErrors)) {
+        throw new Exception(implode(" ", $validationErrors));
     }
 
     $stmt = $conn->prepare("SELECT `$type` FROM users WHERE `$type` = ? AND deleted_at IS NULL LIMIT 1");
