@@ -575,7 +575,7 @@ function renderRegistration() {
       case 0:
         dataInp.type = "email";
         dataInp.id = "emailInput";
-        dataInp.placeholder = "Email...";
+        dataInp.placeholder = "example@gmail.com";
         dataInp.value = formData.email;
         dataInp.addEventListener("input", function (e) {
           const email = e.target.value.trim();
