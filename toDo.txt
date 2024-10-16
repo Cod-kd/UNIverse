@@ -96,14 +96,15 @@ Quick fixes:
     (DONE)    -extra feature => users will save their UNIcard with this name syntax --> username-UNIcard.jpg
     -after pressing the button to get the UNIcard => registration comes in without proper fade in
     -add button which shows the entered password at the login part
-    -when someone uploads their UNIcard at login and presses login button => screen should fade out and return the response:
-        -if UNIcard is correct --> Successful login message + main page shown
-        -if UNIcard is incorrect --> Displays the corresponding error with the createErrorWindow function + throws the user back to the login part
+    (DONE)    -when someone uploads their UNIcard at login and presses login button => screen should fade out and return the response:
+    (DONE)    -if UNIcard is correct --> Successful login message + main page shown
+    (DONE)    -if UNIcard is incorrect --> Displays the corresponding error with the createErrorWindow function + throws the user back to the login part
     (DONE)    -in general login: add home button (same as at registration)
     (DONE)    -change the createErrorWindow function's name to "createResponseWindow" --> can display future messages not only errors (eg.: )
     (DONE)    -change the fade in effect at the registration part => should be as fast as at login part
     (DONE)    -add typing effect to the h1
     -when a user presses enter while focused on an input, the createFormStep function should be called
+    -when the login via UNIcard is correct => the user should see the text similarly like in simple login success instead of createResponseWindow function
     (DONE)    -after successful registration => renderLogin function should run
 
 Live server debugging errors:
