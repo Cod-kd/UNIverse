@@ -94,7 +94,7 @@ Quick fixes:
     -when someone uploads their UNIcard at login and presses login button => screen should fade out and return the response:
         -if UNIcard is correct --> Successful login message + main page shown
         -if UNIcard is incorrect --> Displays the corresponding error with the createErrorWindow function + throws the user back to the login part
-    -in general login: add home button (same as at registration)
+    (DONE)    -in general login: add home button (same as at registration)
     (DONE)    -change the createErrorWindow function's name to "createResponseWindow" --> can display future messages not only errors (eg.: )
 
 Live server debugging errors:

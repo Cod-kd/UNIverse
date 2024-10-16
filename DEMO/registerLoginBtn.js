@@ -1013,6 +1013,7 @@ async function renderLogin() {
         <button class="button" id="loginBtn">Bejelentkezés</button>
     </form>
     <button class="button" id="cardLoginBtn">UNIcard használata</button>`;
+    monitorScreenDiv.appendChild(createHomeButton());
 
     // Simple login
     document.getElementById('loginBtn').addEventListener('click', async () => {
@@ -1061,6 +1062,7 @@ async function renderLogin() {
             </div>
             <button class="button" id="loginBtn">Bejelentkezés kártyával</button>
         </form>`;
+        monitorScreenDiv.appendChild(createHomeButton());
         await fadeInMonitorScreen();
 
         const loginBtn = document.getElementById("loginBtn");
