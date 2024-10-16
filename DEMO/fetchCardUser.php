@@ -5,12 +5,10 @@ require_once "Validations.php";
 
 $conn = Config::getConnection();
 
-$email = $_GET['email'];
+$email = $_GET['email'] ?? '';
 
-$emailErrors = validateEmail($email);
-
-if (!empty($emailErrors)) {
-    echo json_encode(["error" => implode(" ", $emailErrors)]);
+if (!validateEmail($email)) {
+    echo json_encode(["error" => "Invalid email format!"]);
     exit();
 }
 
