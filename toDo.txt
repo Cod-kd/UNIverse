@@ -44,9 +44,8 @@ JavaScript file:
     (DONE)    -when the user uploads their UNIcard and clicks login button => Screen should go blank / loading animation should be displayed
     (DONE)    -correct UNIcard => call the correct animation function with the text "Successful login!"
     (DONE)    -incorrect UNIcard => Response should be shown => "Wrong unicard"
-        |
-        (DONE)    --> after showing response, wait 3 seconds and navigate the user to the main page / back to UNIcard login
-    -correct login with email + password => Successful login text + successful animation + 3 sec delay + redirection to main page
+    (DONE)    --> after showing response, wait 3 seconds and navigate the user to the main page / back to UNIcard login
+    (DONE)    -correct login with email + password => Successful login text + successful animation + 3 sec delay + redirection to main page
 CSS:
     (CAN'T FINISH DUE TO BUG)   -change the radio button's "circle"'s center so the black circle inside is centered horizontally + vertically
     (DONE)    -add floating effect to the infoCards => replicates that they can be dragged

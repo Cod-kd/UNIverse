@@ -1103,22 +1103,28 @@ async function renderLogin() {
       });
 
       if (!response.ok) {
-        await handleError("Network response was not ok");
+        await createResponseWindow("Network response was not ok");
         return;
       }
 
       const responseData = await response.json();
 
       if (responseData.error) {
-        await handleError(responseData.error);
+        await createResponseWindow(responseData.error);
         return;
       }
 
       if (responseData.success) {
-        createResponseWindow(responseData.success);
+        monitorScreenDiv.innerHTML = `Successful login!<br>Redirecting...`;
+        await fadeInMonitorScreen();
+        await delay(3000);
+        window.location.href = "mainPage.html";
       }
     } catch (error) {
-      await handleError(error.message);
+      await createResponseWindow(error.message);
+    }
+    finally {
+      document.body.style.cursor = "default";
     }
   });
 
