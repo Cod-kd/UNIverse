@@ -41,6 +41,12 @@ JavaScript file:
     (DONE)    -add the cursor loading effect while fetching the createProfile.php
     (DONE)    -fix the signature part of the registration => users shouldn't be able to click continueBtn if they havent drawn aynthing
     (EXTRA)    -add new feature => every continueBtn should be disabled by default => if the current's input's validation is correct => enable, at signature and UNIcard, only enable if signature was drawn / unicard was saved
+    -when the user uploads their UNIcard and clicks login button => Screen should go blank / loading animation should be displayed
+    -correct UNIcard => call the correct animation function with the text "Successful login!"
+    -incorrect UNIcard => Response should be shown => "Wrong unicard"
+        |
+        --> after showing response, wait 3 seconds and navigate the user to the main page / back to UNIcard login
+    -correct login with email + password => Successful login text + successful animation + 3 sec delay + redirection to main page
 CSS:
     (CAN'T FINISH DUE TO BUG)   -change the radio button's "circle"'s center so the black circle inside is centered horizontally + vertically
     (DONE)    -add floating effect to the infoCards => replicates that they can be dragged
@@ -98,6 +104,8 @@ Quick fixes:
     (DONE)    -change the createErrorWindow function's name to "createResponseWindow" --> can display future messages not only errors (eg.: )
     (DONE)    -change the fade in effect at the registration part => should be as fast as at login part
     (DONE)    -add typing effect to the h1
+    -when a user presses enter while focused on an input, the createFormStep function should be called
+    -after successful registration => renderLogin function should run
 
 Live server debugging errors:
     (DONE)    -can't download UNIcard's image from live server
@@ -132,7 +140,23 @@ Live server debugging errors:
             -wrong or changed UNIcard provided => "Invalid login credentials"
             -Correct UNIcard provided but with changed file name => "Invalid login credentials"
         '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
+        -Errors at registration:
+            -Server error 500
+                -fix: added composer.lock and composer.json
+            -after clicking the first continueBtn => continueBtn not found
+                -fix: uncommented the checkExistence.php's fetch function
+        -Errors at login:
+            -provided email but no password => same conditions are outputted like at registration
+                -correct error => "No email or password provided"
+            -provided password but no email => same conditions are outputted like at registration
+                -correct error => "No email or password provided"
+            -no email + no password => "No email and password provided" (correct)
+            -existing email but wrong password => "Incorrect password" (correct)
+            -correct email + password provided => "Successful login!" (correct)
+            -provided correct UNIcard --> "Error during recognition: Unexpected end of JSON input"
+                -fix: changed fetchCardUser.php's validateEmail to new logic
+            -provided correct UNIcard --> "Successful login!" (correct)
+            -error when uploading non image file => "Error during recognition: undefined"
 Login:
     (DONE)    -2 inputs should appear (username/email + password)
     (DONE)    -2 buttons should appear (Login via UNIcard + Login)
