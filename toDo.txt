@@ -104,6 +104,7 @@ Live server debugging errors:
         (DONE)    -change hosted website from http to https => avoid conflicts while getting resources from HTTPS website while the main site is http
     -createProfile.php isn't working with it's new logic --> revert back to the version before
     -Errors at login:
+        '''''''''''''''''''''''''''''''' FIXED ''''''''''''''''''''''''''''''''''''''''''''''''''
         -If email + password wasn't provided => "Network response was not ok"
         -if email wasn't provided => "Network response was not ok"
         -if password wasn't provided => "Network response was not ok"
@@ -128,6 +129,7 @@ Live server debugging errors:
             -real UNIcard provided => successful login
             -wrong or changed UNIcard provided => "Invalid login credentials"
             -Correct UNIcard provided but with changed file name => "Invalid login credentials"
+        '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 Login:
     (DONE)    -2 inputs should appear (username/email + password)

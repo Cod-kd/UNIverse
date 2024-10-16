@@ -1019,14 +1019,19 @@ async function renderLogin() {
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                createErrorWindow('Network response was not ok');
             }
 
-            const responseText = await response.text();
-            if (responseText !== "Successful login!") {
-                throw new Error(responseText);
+            const responseData = await response.json();
+
+            if (responseData.error) {
+                createErrorWindow(responseData.error);
+                return;
             }
-            console.log(responseText);
+
+            if (responseData.success) {
+                createErrorWindow(responseData.success);
+            }
 
         } catch (error) {
             createErrorWindow(error.message);
@@ -1069,14 +1074,12 @@ async function renderLogin() {
                     .then(async ({ data: { text } }) => {
                         const extractedEmail = extractEmail(text);
                         if (extractedEmail) {
-                            console.log("Extracted email: ", extractedEmail);
-
                             const response = await fetch(`fetchCardUser.php?email=${encodeURIComponent(extractedEmail)}`);
                             const userData = await response.json();
 
                             if (userData && userData.imgPasswd) {
                                 if (encodedImage === userData.imgPasswd) {
-                                    console.log("Login successful!");
+                                    createErrorWindow("Successful login!");
                                 } else {
                                     createErrorWindow("Invalid login credentials!");
                                 }
