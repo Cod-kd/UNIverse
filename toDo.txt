@@ -95,7 +95,7 @@ Quick fixes:
         -if UNIcard is correct --> Successful login message + main page shown
         -if UNIcard is incorrect --> Displays the corresponding error with the createErrorWindow function + throws the user back to the login part
     -in general login: add home button (same as at registration)
-    -change the createErrorWindow function's name to "createResponseWindow" --> can display future messages not only errors (eg.: )
+    (DONE)    -change the createErrorWindow function's name to "createResponseWindow" --> can display future messages not only errors (eg.: )
 
 Live server debugging errors:
     (DONE)    -can't download UNIcard's image from live server

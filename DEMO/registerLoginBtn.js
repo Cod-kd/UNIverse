@@ -325,7 +325,7 @@ function renderRegistration() {
         const lastChecked = type === 'email' ? lastCheckedEmail : lastCheckedUsername;
 
         if (isChecked && value === lastChecked) {
-            createErrorWindow(`${type.charAt(0).toUpperCase() + type.slice(1)} already exists`);
+            createResponseWindow(`${type.charAt(0).toUpperCase() + type.slice(1)} already exists`);
             return false;
         }
 
@@ -337,7 +337,7 @@ function renderRegistration() {
             });
 
             if (!response.ok) {
-                createErrorWindow(`Server error: ${response.status}`);
+                createResponseWindow(`Server error: ${response.status}`);
                 return false;
             }
 
@@ -352,14 +352,14 @@ function renderRegistration() {
             }
 
             if (data.exists) {
-                createErrorWindow(`${type.charAt(0).toUpperCase() + type.slice(1)} already exists`);
+                createResponseWindow(`${type.charAt(0).toUpperCase() + type.slice(1)} already exists`);
                 return false;
             } else {
                 updateFormData(type === 'email' ? 0 : 3, dataInp);
                 return true;
             }
         } catch (error) {
-            createErrorWindow(`${type} check error: ${error.message}`);
+            createResponseWindow(`${type} check error: ${error.message}`);
             await responseAnimation("error");
             return false;
         }
@@ -426,7 +426,7 @@ function renderRegistration() {
         const userDataDiv = document.getElementById("userDataDiv");
 
         if (typeof html2canvas === 'undefined') {
-            createErrorWindow("html2canvas library is not loaded.");
+            createResponseWindow("html2canvas library is not loaded.");
             return;
         }
 
@@ -450,7 +450,7 @@ function renderRegistration() {
                 continueBtn.style.pointerEvents = "auto";
             }
         } catch (err) {
-            createErrorWindow("Error saving the UNIcard: ", err);
+            createResponseWindow("Error saving the UNIcard: ", err);
         }
     }
 
@@ -669,15 +669,15 @@ function renderRegistration() {
                         await responseAnimation("200");
                     } else {
                         const errorMessage = await response.text();
-                        createErrorWindow(`Registration failed: ${errorMessage}`);
+                        createResponseWindow(`Registration failed: ${errorMessage}`);
                         await responseAnimation("404");
                     }
                 } catch (fetchError) {
-                    createErrorWindow(`Fetch error: ${fetchError.message}`);
+                    createResponseWindow(`Fetch error: ${fetchError.message}`);
                     await responseAnimation("404");
                 }
             } catch (err) {
-                createErrorWindow(`Error: ${err.message}`);
+                createResponseWindow(`Error: ${err.message}`);
                 await responseAnimation("404");
             }
             document.body.style.cursor = "default";
@@ -990,7 +990,7 @@ async function hashImage(file) {
     return hashHex;
 }
 
-async function createErrorWindow(text) {
+async function createResponseWindow(text) {
     let existingErrorWindow = document.querySelector("#errorWindow");
     if (!existingErrorWindow) {
         let errorWindow = document.createElement("div");
@@ -1024,22 +1024,22 @@ async function renderLogin() {
             });
 
             if (!response.ok) {
-                createErrorWindow('Network response was not ok');
+                createResponseWindow('Network response was not ok');
             }
 
             const responseData = await response.json();
 
             if (responseData.error) {
-                createErrorWindow(responseData.error);
+                createResponseWindow(responseData.error);
                 return;
             }
 
             if (responseData.success) {
-                createErrorWindow(responseData.success);
+                createResponseWindow(responseData.success);
             }
 
         } catch (error) {
-            createErrorWindow(error.message);
+            createResponseWindow(error.message);
         }
     });
 
@@ -1069,7 +1069,7 @@ async function renderLogin() {
             const image = cardInput.files[0];
 
             if (!image) {
-                createErrorWindow("Please upload an image file.");
+                createResponseWindow("Please upload an image file.");
                 return;
             }
 
@@ -1088,18 +1088,18 @@ async function renderLogin() {
 
                         if (userData && userData.imgPasswd) {
                             if (encodedImage === userData.imgPasswd) {
-                                createErrorWindow("Successful login!");
+                                createResponseWindow("Successful login!");
                             } else {
-                                createErrorWindow("Invalid login credentials!");
+                                createResponseWindow("Invalid login credentials!");
                             }
                         } else {
-                            createErrorWindow("User not found!");
+                            createResponseWindow("User not found!");
                         }
                     } else {
-                        createErrorWindow("No email found!");
+                        createResponseWindow("No email found!");
                     }
                 } catch (err) {
-                    createErrorWindow(`Error during recognition: ${err.message}`);
+                    createResponseWindow(`Error during recognition: ${err.message}`);
                 }
             };
             reader.readAsDataURL(image);
