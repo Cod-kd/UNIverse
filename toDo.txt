@@ -105,7 +105,7 @@ Quick fixes:
     (DONE)    -change the fade in effect at the registration part => should be as fast as at login part
     (DONE)    -add typing effect to the h1
     -when a user presses enter while focused on an input, the createFormStep function should be called
-    -after successful registration => renderLogin function should run
+    (DONE)    -after successful registration => renderLogin function should run
 
 Live server debugging errors:
     (DONE)    -can't download UNIcard's image from live server

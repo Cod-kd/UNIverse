@@ -141,11 +141,15 @@ async function createNew404Effect() {
 async function responseAnimation(status) {
   const existing404El = document.getElementById("animated404");
   if (status === "200") {
-    createResponseHeading(false, "Sikeres regisztráció!");
+    createResponseHeading(false, "Sikeres regisztráció!<br>Jelentkezz be!");
     await delay(1000);
     createResponseHeading(true);
     createSuccessfulResponseEffect();
     registerBtnDiv.style.marginTop = "0%";
+    await delay(4000);
+    await fadeOutMonitorScreen();
+    renderLogin();
+    await fadeInMonitorScreen();
   } else if (status === "404") {
     await delay(1000);
     createResponseHeading(false, "Hiba történt");
