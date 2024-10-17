@@ -153,12 +153,17 @@
     top: 17%;
 }
 
-#showBtn {
+#showBtn, #showBtnLogin {
     width: 60px;
     height: 25px;
     border-radius: 12px;
     position: fixed;
     right: 43%;
+}
+
+#showBtnLogin{
+    top: 27%;
+    right: 43.5%;
 }
 
 /* General Input */

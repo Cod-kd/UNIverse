@@ -174,6 +174,23 @@ function createHomeButton() {
   return homeBtn;
 }
 
+function createShowBtn(elementToShow) {
+  const showBtn = document.createElement("button");
+  showBtn.id = "showBtn";
+  showBtn.classList.add("button");
+  showBtn.innerHTML = "Show";
+  showBtn.addEventListener("click", function () {
+    if (elementToShow.type === "password") {
+      passwordInput.type = "text";
+      showBtn.innerHTML = "Hide";
+    } else {
+      elementToShow.type = "password";
+      showBtn.innerHTML = "Show";
+    }
+  });
+  return showBtn;
+}
+
 function renderRegistration() {
   const requiredData = [
     "Email cím",
@@ -224,21 +241,7 @@ function renderRegistration() {
         monitorScreenDiv.appendChild(dataInp);
 
         if (index === 4) {
-          const showBtn = document.createElement("button");
-          showBtn.id = "showBtn";
-          showBtn.classList.add("button");
-          showBtn.innerHTML = "Show";
-
-          showBtn.addEventListener("click", function () {
-            if (passwordInput.type === "password") {
-              passwordInput.type = "text";
-              showBtn.innerHTML = "Hide";
-            } else {
-              passwordInput.type = "password";
-              showBtn.innerHTML = "Show";
-            }
-          });
-          monitorScreenDiv.appendChild(showBtn);
+          monitorScreenDiv.appendChild(createShowBtn(passwordInput));
         }
 
         if (index === 5) {
@@ -1081,11 +1084,14 @@ async function renderLogin() {
   monitorScreenDiv.innerHTML = `
     <form id="loginForm" onsubmit="return false;">
         <input type="email" placeholder="Email..." class="input" name="email">
-        <input type="password" placeholder="Jelszó..." class="input" name="passwd">
+        <input id="passwordInput" type="password" placeholder="Jelszó..." class="input" name="passwd">
         <button class="button" id="loginBtn">Bejelentkezés</button>
     </form>
     <button class="button" id="cardLoginBtn">UNIcard használata</button>`;
   monitorScreenDiv.appendChild(createHomeButton());
+  monitorScreenDiv.appendChild(createShowBtn(document.getElementById("passwordInput")));
+  const showBtn = document.getElementById("showBtn");
+  showBtn.id = "showBtnLogin";
 
   const handleError = async (errorMessage) => {
     createResponseWindow(errorMessage);
