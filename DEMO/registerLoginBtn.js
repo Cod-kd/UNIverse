@@ -735,26 +735,18 @@ function renderRegistration() {
   }
 
   async function createFinalRegistrationStep() {
-    await fadeOutMonitorScreen();
-    monitorScreenDiv.innerHTML = ``;
     monitorScreenDiv.style.gridTemplateColumns = "";
     monitorScreenDiv.style.gap = "0px";
-
-    const registerBtnDiv = document.createElement("div");
-    registerBtnDiv.id = "registerBtnDiv";
-    const registerBtn = document.createElement("button");
-    registerBtn.id = "registerBtn";
-    registerBtn.classList.add("button");
-    registerBtn.innerHTML = "Regisztráció befejezése";
-    registerBtnDiv.appendChild(registerBtn);
-    monitorScreenDiv.appendChild(registerBtnDiv);
+    monitorScreenDiv.innerHTML = `
+      <div id="registerBtnDiv">
+        <button class="button" id="registerBtn">Regisztráció befejezése</button>
+      </div>`;
 
     const backBtn = createNavigationButton(true);
     monitorScreenDiv.appendChild(backBtn);
 
     addBackButtonListener(requiredData.length + 1, null);
     addFinalRegisterButtonListener();
-
     await fadeInMonitorScreen();
   }
 
