@@ -1121,7 +1121,8 @@ async function renderLogin() {
       }
 
       if (responseData.success) {
-        monitorScreenDiv.innerHTML = `Successful login!<br>Redirecting...`;
+        await fadeOutMonitorScreen();
+        monitorScreenDiv.innerHTML = `<h1>Successful login!<br>Redirecting...</h1>`;
         await fadeInMonitorScreen();
         await delay(3000);
         window.location.href = "mainPage.html";
@@ -1186,7 +1187,8 @@ async function renderLogin() {
 
             if (userData && userData.imgPasswd) {
               if (encodedImage === userData.imgPasswd) {
-                createResponseWindow("Successful login! Redirecting...");
+                monitorScreenDiv.innerHTML = `<h1>Successful login!<br>Redirecting...</h1>`;
+                await fadeInMonitorScreen();
                 await delay(3000);
                 window.location.href = "mainPage.html";
               } else {
