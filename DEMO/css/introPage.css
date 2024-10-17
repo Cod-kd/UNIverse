@@ -5,10 +5,8 @@
 }
 
 body {
-    font-family: sans-serif;
-    width: 100%;
-    height: 100vh;
     background: url("../assets/background.jpg") no-repeat center center / cover;
+    padding: 3em;
 }
 
 body::before {
@@ -19,68 +17,59 @@ body::before {
     z-index: -1;
 }
 
-h1,
+/* h1,
 h3 {
-    font-family: 'Proza Libre', sans-serif;
-}
+    font-family: 'Proza Libre';
+} */
 
-p {
-    font-family: 'Nunito', sans-serif;
-}
-
-#container {
-    display: grid;
-}
+/* p {
+    font-family: 'Nunito';
+} */
 
 main {
-    height: 833px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 100px;
+    gap: 7em;
 }
 
 #monitorDiv {
-    width: 760px;
-    height: 630px;
+    width: 50em;
+    height: 45em;
     background: url("../assets/screen.png") no-repeat center center / contain;
     text-align: center;
-    padding: 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-    gap: 60px;
+    padding: 6em;
 }
 
 #monitorDiv img {
-    width: 95px;
+    width: 6em;
     position: absolute;
-    top: 58.5%;
+    top: 59.5%;
+    left: 47.5%;
 }
 
 #monitorDiv p {
-    font-size: 22px;
+    font-size: 1.5rem;
 }
 
 #monitorScreenDiv {
-    height: 330px;
     display: grid;
     color: var(--main);
     z-index: 2;
     transition: all 0.3s;
     align-items: center;
     justify-items: center;
+    gap: 2em;
 }
 
 .button {
-    width: 275px;
-    height: 60px;
+    width: 18em;
+    height: 4em;
     background-color: var(--main);
     color: var(--dark2);
-    border-radius: 30px;
+    border-radius: 2em;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 1.1em;
     font-family: 'Saira', sans-serif;
     border: none;
     transition: all 0.5s;
@@ -115,27 +104,25 @@ main {
     animation: lightspeed 1s infinite linear;
 }
 
+/* FIX */
 #registerLoginBtnDiv {
-    justify-self: center;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 50px;
+    gap: 3em;
 }
 
 .infoCard {
-    width: 350px;
-    height: 320px;
+    width: 23em;
+    height: 21em;
+    padding: 1em;
     background-color: var(--main);
     color: var(--dark2);
     font-weight: bold;
-    border-radius: 24px;
-    padding: 30px;
+    border-radius: 1em;
     display: grid;
     justify-content: center;
     align-items: center;
     text-align: center;
-    gap: 20px;
+    gap: 1em;
     animation: floating 3s infinite ease-in-out;
 }
 
@@ -153,63 +140,60 @@ main {
 
 .cardDiv {
     display: grid;
-    gap: 60px;
+    gap: 4em;
 }
 
 .infoCard div:first-child {
-    width: 77px;
-    height: 77px;
+    width: 5em;
+    height: 5em;
     display: grid;
     place-items: center;
+    justify-self: center;
     border-radius: 50%;
     background-color: var(--dark1);
-    justify-self: center;
 }
 
 .infoCard div:first-child img {
-    width: 45px;
-    height: 45px;
+    width: 3em;
 }
 
 footer {
     display: grid;
     justify-content: center;
     color: var(--light1);
-    gap: 20px;
-    padding: 15px;
-    height: 120px;
+    padding: 2em;
+    height: 7em;
 }
 
 #footer-row-1 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     place-items: center;
-    width: 800px;
+    width: 100%;
 }
 
 #footer-row-1 img:first-child {
-    width: 150px;
-    height: 40px;
+    width: 9em;
+    height: 2.5em;
 }
 
 #footer-row-1 #contacts {
     display: flex;
-    gap: 30px;
+    gap: 2em;
 }
 
 #footer-row-1 #contacts img:first-child {
-    width: 45px;
+    width: 2.7em;
 }
 
 #footer-row-1 #contacts img {
-    width: 30px;
-    height: 30px;
+    width: 1.8em;
+    height: 1.8em;
 }
 
 footer hr {
     border-color: var(--main);
-    width: 800px;
-    justify-self: center;
+    width: 40em;
 }
 
 #footer-row-2 {
