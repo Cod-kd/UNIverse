@@ -106,6 +106,8 @@ Quick fixes:
     -when a user presses enter while focused on an input, the createFormStep function should be called
     (DONE)    -when the login via UNIcard is correct => the user should see the text similarly like in simple login success instead of createResponseWindow function
     (DONE)    -after successful registration => renderLogin function should run
+    -when the back button is pressed at last step (Registration end) => user gets thrown back to UNIcard, but can't proceed and has to download image again to proceed to last step
+        --> fix: create global variable named downloadedCard = false => if user already downloaded card set it to true, but by defaultly at renderRegistration it should be false
 Live server debugging errors:
     (DONE)    -can't download UNIcard's image from live server
         -solutions:
