@@ -108,6 +108,7 @@ Quick fixes:
     (DONE)    -after successful registration => renderLogin function should run
     (EXTRA)-when the back button is pressed at last step (Registration end) => user gets thrown back to UNIcard, but can't proceed and has to download image again to proceed to last step
         --> fix: create global variable named downloadedCard = false => if user already downloaded card set it to true, but by defaultly at renderRegistration it should be false
+    (DONE)    -when the email input is focused at the login part and user presses enter --> password input should be focused
 Live server debugging errors:
     (DONE)    -can't download UNIcard's image from live server
         -solutions:

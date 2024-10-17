@@ -1075,7 +1075,7 @@ async function createResponseWindow(text) {
 async function renderLogin() {
   monitorScreenDiv.innerHTML = `
     <form id="loginForm" onsubmit="return false;">
-        <input type="email" placeholder="Email..." class="input" name="email">
+        <input id="emailInput" type="email" placeholder="Email..." class="input" name="email">
         <input id="passwordInput" type="password" placeholder="Jelszó..." class="input" name="passwd">
         <button class="button" id="loginBtn">Bejelentkezés</button>
     </form>
@@ -1089,6 +1089,13 @@ async function renderLogin() {
     createResponseWindow(errorMessage);
     await fadeInMonitorScreen();
   };
+
+  document.getElementById("emailInput").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      document.getElementById("passwordInput").focus();
+    }
+  });
 
   // Simple login
   document.getElementById("loginBtn").addEventListener("click", async () => {
