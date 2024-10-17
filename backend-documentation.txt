@@ -108,3 +108,12 @@ Setup of the serverPC (popOS - Linux):
 		-"Invalid value for keyword 'ip'=''"
 	Error summary:
 		-Inside the config file: login attribute had the namecheap username instead of domain name
+
+26. SMTP setup
+	Errors:
+		-"OpenDKIM: no signature data"
+		-email landing in spam
+		-connection timeouts on port 25
+		-"Could not connect to SMTP host. Failed to connect to server. Email could not be sent. Code 111
+		 Additional SMTP info: Connection refused"
+		-"Peer Certificate did not match expected"
