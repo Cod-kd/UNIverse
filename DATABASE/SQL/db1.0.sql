@@ -4,7 +4,7 @@ CREATE TABLE `UserProfiles` (
   `username` VARCHAR(12) UNIQUE NOT NULL,
   `password` VARCHAR(60) NOT NULL,
   `createdAt` TIMESTAMP NOT NULL,
-  `deletedAt` TIMESTAMP DEFAULT null
+  `deletedAt` TIMESTAMP /*DEFAULT null*/
 );
 
 CREATE TABLE `UsersBio` (
@@ -152,7 +152,7 @@ CREATE TABLE `Posts` (
   `creatorId` MEDIUMINT NOT NULL,
   `likesCount` MEDIUMINT DEFAULT 0,
   `description` TEXT NOT NULL DEFAULT '',
-  `attachmentsRelPath` JSON NOT NULL DEFAULT '{}'
+  `attachmentsRelPath` JSON NOT NULL /*DEFAULT '{}'*/
 );
 
 CREATE TABLE `Comments` (
