@@ -1,4 +1,4 @@
---Generate 5 User entities
+-- Generate 5 User entities
 
 CALL registerUser('user1@example.com', 'user1', 'password1', 'John Doe', TRUE, '1990-01-01', 'Computer Science', 'University A', 'jpg');
 CALL registerUser('user2@example.com', 'user2', 'password2', 'Jane Smith', FALSE, '1992-02-02', 'Mathematics', 'University B', 'png');
