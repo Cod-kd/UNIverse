@@ -39,7 +39,7 @@ CREATE TABLE `UserRoles` (
 CREATE TABLE `UsersData` (
   `userId` MEDIUMINT PRIMARY KEY NOT NULL,
   `name` VARCHAR(80) NOT NULL,
-  `gender` BOOLEAN DEFAULT null,
+  `gender` BOOLEAN DEFAULT -1,
   `birthDate` DATE NOT NULL,
   `universityName` VARCHAR(80) NOT NULL,
   `profilePictureExtension` VARCHAR(4) NOT NULL,
