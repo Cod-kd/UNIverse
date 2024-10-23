@@ -38,7 +38,7 @@ BEGIN
     CALL createUserProfile(emailIn, usernameIn, passwordIn);
     SET @userId = 0;  
     CALL idByUsername(usernameIn, @userId);
-    CALL addUserbio(@userId, facultyIn);
     CALL addUserData(@userId, nameIn, genderIn, birthDateIn, universityNameIn, profilePictureExtensionIn);
+    CALL addUserbio(@userId, facultyIn);
 END$$
 DELIMITER ;
