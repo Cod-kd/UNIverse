@@ -98,7 +98,7 @@ CREATE TABLE `EventCalendars` (
 
 CREATE TABLE `Categories` (
   `id` SMALLINT PRIMARY KEY AUTO_INCREMENT,
-  `name` VARCHAR(40) NOT NULL
+  `name` VARCHAR(40) UNIQUE NOT NULL
 );
 
 CREATE TABLE `Groups` (
