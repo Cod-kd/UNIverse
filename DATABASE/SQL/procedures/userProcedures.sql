@@ -1,6 +1,6 @@
 -- Add new userprofile
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addUserProfile`(IN `emailIn` VARCHAR(50), IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createUserProfile`(IN `emailIn` VARCHAR(50), IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60))
 BEGIN
     INSERT INTO `userprofiles`(`email`, `username`, `password`, `createdAt`) VALUES (emailIn, usernameIn, passwordIn, NOW());
 END$$
@@ -23,13 +23,22 @@ BEGIN
 END$$
 DELIMITER ;
 
+-- Add bio to User
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addUserbio`(IN `userIdIn` MEDIUMINT, IN `facultyIn` VARCHAR(30))
+BEGIN
+INSERT INTO `usersbio`(`userId`, `faculty`) VALUES (userIdIn, facultyIn);
+END$$
+DELIMITER ;
+
 -- Registration
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `registerUser`(IN `emailIn` VARCHAR(50), IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60), IN `nameIn` VARCHAR(80), IN `genderIn` BOOLEAN, IN `birthDateIn` DATE, IN `facultyIn` VARCHAR(30), IN `universityNameIn` VARCHAR(80), IN `profilePictureExtensionIn` VARCHAR(4))
 BEGIN
-    CALL addUserProfile(emailIn, usernameIn, passwordIn);
+    CALL createUserProfile(emailIn, usernameIn, passwordIn);
     SET @userId = 0;  
-    CALL idByUsername(usernameIn, @userId);  
+    CALL idByUsername(usernameIn, @userId);
+    CALL addUserbio(@userId, facultyIn);
     CALL addUserData(@userId, nameIn, genderIn, birthDateIn, universityNameIn, profilePictureExtensionIn);
 END$$
 DELIMITER ;
