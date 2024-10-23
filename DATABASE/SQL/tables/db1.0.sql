@@ -3,8 +3,8 @@ CREATE TABLE `UserProfiles` (
   `email` VARCHAR(50) UNIQUE NOT NULL,
   `username` VARCHAR(12) UNIQUE NOT NULL,
   `password` VARCHAR(60) NOT NULL,
-  `createdAt` TIMESTAMP NOT NULL,
-  `deletedAt` TIMESTAMP /*DEFAULT null*/
+  `createdAt` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `deletedAt` TIMESTAMP NULL DEFAULT NULL
 );
 
 CREATE TABLE `UsersBio` (

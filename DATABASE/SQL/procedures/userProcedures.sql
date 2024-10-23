@@ -1,8 +1,8 @@
--- Add new userprofile
+-- Create new userprofile
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `createUserProfile`(IN `emailIn` VARCHAR(50), IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60))
 BEGIN
-    INSERT INTO `userprofiles`(`email`, `username`, `password`, `createdAt`) VALUES (emailIn, usernameIn, passwordIn, NOW());
+    INSERT INTO `userprofiles`(`email`, `username`, `password`) VALUES (emailIn, usernameIn, passwordIn);
 END$$
 DELIMITER ;
 
