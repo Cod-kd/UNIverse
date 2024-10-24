@@ -1,4 +1,4 @@
-# UNIverse Database Schema
+# UNIverse Database Tables
 
 This document describes the tables in the UNIverse social media platform's database. The tables are categorized into **main (entity) tables** and **junction (relationship) tables**. Each table serves a specific role in managing user data, interactions, and content.
 
