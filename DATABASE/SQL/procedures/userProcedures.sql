@@ -42,3 +42,12 @@ BEGIN
     CALL addUserbio(@userId, facultyIn);
 END$$
 DELIMITER ;
+
+-- Softdelete Userprofile
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUserprofile`(IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60))
+BEGIN
+	UPDATE `userprofiles` SET `deletedAt`= NOW() WHERE userprofiles.username = usernameIn AND userprofiles.password = passwordIn;
+END$$
+DELIMITER ;
+
