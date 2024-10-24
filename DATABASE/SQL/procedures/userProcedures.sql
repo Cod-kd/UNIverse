@@ -59,3 +59,29 @@ BEGIN
 	SELECT `id`, isDeleted(deletedAt) AS isDeleted FROM `userprofiles` WHERE userprofiles.username = usernameIn AND userprofiles.password = passwordIn LIMIT 1; /* @todo: use hashed password && update if necessarily */
 END$$
 DELIMITER ;
+
+-- Add follower count
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addFollowerCount`(IN `userIdIn` MEDIUMINT)
+BEGIN
+	UPDATE `usersdata` SET `followerCount` = usersdata.followerCount + 1 WHERE usersdata.userId = userIdIn;
+END$$
+DELIMITER ;
+
+-- Add follow count
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addfollowedCount`(IN `userIdIn` MEDIUMINT)
+BEGIN
+	UPDATE `usersdata` SET `followedCount` = usersdata.followedCount + 1 WHERE usersdata.userId = userIdIn;
+END$$
+DELIMITER ;
+
+-- Add follower
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addFollower`(IN `followerIdIn` MEDIUMINT, IN `followedIdIn` INT)
+BEGIN
+	INSERT INTO `followedusers`(`followerId`, `followedId`) VALUES (followerIdIn, followedIdIn);
+    CALL addFollowerCount(followedIdIn);
+    CALL addfollowedCount(followerIdIn);
+END$$
+DELIMITER ;
