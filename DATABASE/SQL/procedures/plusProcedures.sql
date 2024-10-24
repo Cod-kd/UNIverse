@@ -29,3 +29,19 @@ BEGIN
 	SELECT `name`, `domain`, `protocol` FROM `contacttypes` WHERE contacttypes.id = idIn;
 END$$
 DELIMITER ;
+
+-- Create new rank
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createRank`(IN `nameIn` VARCHAR(30), IN `isAdminIn` BOOLEAN, IN `canViewIn` BOOLEAN, IN `canCommentIn` BOOLEAN, IN `canPostIn` BOOLEAN, IN `canModifyIn` BOOLEAN)
+BEGIN
+	INSERT INTO `ranks`(`name`, `isAdmin`, `canView`, `canComment`, `canPost`, `canModify`) VALUES (nameIn, isAdminIn, canViewIn, canCommentIn, canPostIn, canModifyIn);
+END$$
+DELIMITER ;
+
+-- Get rank by id
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getRank`(IN `idIn` TINYINT)
+BEGIN
+	SELECT `name`, `isAdmin`, `canView`, `canComment`, `canPost`, `canModify` FROM `ranks` WHERE ranks.id = idIn;
+END$$
+DELIMITER ;
