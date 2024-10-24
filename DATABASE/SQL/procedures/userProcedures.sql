@@ -51,3 +51,11 @@ BEGIN
 END$$
 DELIMITER ;
 
+-- Login by id
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `login`(IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60))
+BEGIN
+    /* @import functions!!! */
+	SELECT `id`, isDeleted(deletedAt) AS isDeleted FROM `userprofiles` WHERE userprofiles.username = usernameIn AND userprofiles.password = passwordIn LIMIT 1; /* @todo: use hashed password && update if necessarily */
+END$$
+DELIMITER ;
