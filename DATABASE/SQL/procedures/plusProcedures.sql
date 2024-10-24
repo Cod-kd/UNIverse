@@ -45,3 +45,19 @@ BEGIN
 	SELECT `name`, `isAdmin`, `canView`, `canComment`, `canPost`, `canModify` FROM `ranks` WHERE ranks.id = idIn;
 END$$
 DELIMITER ;
+
+-- Create new role
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createRole`(IN `nameIn` VARCHAR(20))
+BEGIN
+	INSERT INTO `roles`(`name`) VALUES (nameIn);
+END$$
+DELIMITER ;
+
+-- Get role by id
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getRole`(IN `idIn` TINYINT)
+BEGIN
+	SELECT `name` FROM `roles` WHERE roles.id = idIn;
+END$$
+DELIMITER ;
