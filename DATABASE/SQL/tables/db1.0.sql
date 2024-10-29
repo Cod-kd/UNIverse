@@ -109,6 +109,7 @@ CREATE TABLE `Groups` (
   `postCount` INT DEFAULT 0,
   `actualEventCount` INT DEFAULT 0,
   `allEventCount` INT DEFAULT 0
+  -- @todo: description
 );
 
 CREATE TABLE `MembersOfGroups` (
