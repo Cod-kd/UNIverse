@@ -161,7 +161,7 @@ CREATE TABLE `Comments` (
   `postId` INT NOT NULL,
   `userId` MEDIUMINT NOT NULL,
   `comment` TINYTEXT NOT NULL,
-  `createdAt` TIMESTAMP NOT NULL
+  `createdAt` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `PostsCategories` (
