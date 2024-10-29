@@ -14,8 +14,6 @@ BEGIN
 END$$
 DELIMITER ;
 
-
--- @todo: test this:
 -- Handle members
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupMember`(IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)
@@ -75,6 +73,34 @@ BEGIN
 UPDATE `groups` SET `allEventCount` = allEventCount - 1 WHERE groups.id = groupIdIn;
 END$$
 DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createEvent`(IN `nameIn` VARCHAR(30), IN `creatorIdIn` MEDIUMINT, IN `startDateIn` TIMESTAMP, IN `endDateIn` TIMESTAMP, IN `placeIn` VARCHAR(255), IN `attachmentRelPathIn` VARCHAR(50), IN `descriptionIn` VARCHAR(180), IN `groupIdIn` MEDIUMINT)
+BEGIN
+INSERT INTO `events`(`name`, `creatorId`, `startDate`, `endDate`, `place`, `attachmentRelPath`, `description`) VALUES (`nameIn`, `creatorIdIn`, `startDateIn`, `endDateIn`, `placeIn`, `attachmentRelPathIn`, `descriptionIn`);
+SET @eventId = 0;  
+CALL idByEventName(nameIn, @eventId);
+CALL linkEventToGroup(groupIdIn, @eventId);
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `idByEventName`(IN `nameIn` VARCHAR(30), OUT `eventIdOut` MEDIUMINT)
+BEGIN
+SELECT events.id INTO eventIdOut FROM events WHERE events.name = nameIn ORDER BY events.id DESC LIMIT 1;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `linkEventToGroup`(IN `groupIdIn` MEDIUMINT, IN `eventIdIn` MEDIUMINT)
+BEGIN
+INSERT INTO `eventsofgroups`(`groupId`, `eventId`) VALUES (groupIdIn, eventIdIn);
+CALL addGroupActualEventCount(groupIdIn);
+CALL addGroupAllEventCount(groupIdIn);
+END$$
+DELIMITER ;
+
+-- @todo: DELETE event
 
 -- Handle posts
 DELIMITER $$
