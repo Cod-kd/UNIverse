@@ -16,6 +16,38 @@ DELIMITER ;
 
 
 -- @todo: test this:
+-- Handle members
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupMember`(IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)
+BEGIN
+INSERT INTO `membersofgroups`(`groupId`, `userId`) VALUES (groupIdIn, userIdIn);
+CALL addGroupMemberCount(groupIdIn);
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceGroupMemberCount`(IN `groupIdIn` MEDIUMINT)
+BEGIN
+UPDATE `groups` SET `membersCount` = membersCount - 1 WHERE groups.id = groupIdIn;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceGroupMembers`(IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)
+BEGIN
+DELETE FROM `membersofgroups` WHERE membersofgroups.groupId = groupIdIn AND membersofgroups.userId = userIdIn;
+CALL reduceGroupMemberCount(groupIdIn);
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupMemberCount`(IN `groupIdIn` MEDIUMINT)
+BEGIN
+UPDATE `groups` SET `membersCount` = membersCount + 1 WHERE groups.id = groupIdIn;
+END$$
+DELIMITER ;
+
+-- Handle events
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupActualEventCount`(IN `groupIdIn` MEDIUMINT)
 BEGIN
@@ -27,20 +59,6 @@ DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupAllEventCount`(IN `groupIdIn` MEDIUMINT)
 BEGIN
 UPDATE `groups` SET `allEventCount` = allEventCount + 1 WHERE groups.id = groupIdIn;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupPostCount`(IN `groupIdIn` MEDIUMINT)
-BEGIN
-UPDATE `groups` SET `postCount` = postCount + 1 WHERE groups.id = groupIdIn;
-END$$
-DELIMITER ;
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupMemberCount`(IN `groupIdIn` MEDIUMINT)
-BEGIN
-UPDATE `groups` SET `membersCount` = membersCount + 1 WHERE groups.id = groupIdIn;
 END$$
 DELIMITER ;
 
@@ -58,10 +76,11 @@ UPDATE `groups` SET `allEventCount` = allEventCount - 1 WHERE groups.id = groupI
 END$$
 DELIMITER ;
 
+-- Handle posts
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceGroupMemberCount`(IN `groupIdIn` MEDIUMINT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupPostCount`(IN `groupIdIn` MEDIUMINT)
 BEGIN
-UPDATE `groups` SET `membersCount` = membersCount - 1 WHERE groups.id = groupIdIn;
+UPDATE `groups` SET `postCount` = postCount + 1 WHERE groups.id = groupIdIn;
 END$$
 DELIMITER ;
 
