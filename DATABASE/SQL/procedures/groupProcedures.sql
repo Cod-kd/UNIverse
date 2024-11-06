@@ -100,6 +100,14 @@ CALL addGroupAllEventCount(groupIdIn);
 END$$
 DELIMITER ;
 
+/*@todo:
+addParticipant
+addInterested
+removeParticipant
+removeInterested
+setEventToNonActual
+*/
+
 -- @todo: DELETE event
 
 -- Handle posts
