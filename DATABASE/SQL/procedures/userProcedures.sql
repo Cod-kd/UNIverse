@@ -85,3 +85,11 @@ BEGIN
     CALL addfollowedCount(followerIdIn);
 END$$
 DELIMITER ;
+
+/*
+@todo:
+addUserRole
+addUserContact
+appendUserCalendar
+addUserInterest
+*/

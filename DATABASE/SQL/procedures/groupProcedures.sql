@@ -14,6 +14,13 @@ BEGIN
 END$$
 DELIMITER ;
 
+/*
+@todo:
+updateGroupDescription - create row description
+addGroupCategory
+followGroup
+*/
+
 -- Handle members
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupMember`(IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)
@@ -44,6 +51,11 @@ BEGIN
 UPDATE `groups` SET `membersCount` = membersCount + 1 WHERE groups.id = groupIdIn;
 END$$
 DELIMITER ;
+
+/*
+@todo:
+addGroupRank
+*/
 
 -- Handle events
 DELIMITER $$
@@ -106,6 +118,7 @@ addInterested
 removeParticipant
 removeInterested
 setEventToNonActual
+addEventCategory
 */
 
 -- @todo: DELETE event
@@ -124,3 +137,12 @@ BEGIN
 UPDATE `groups` SET `postCount` = postCount - 1 WHERE groups.id = groupIdIn;
 END$$
 DELIMITER ;
+
+/*
+@todo:
+createPost
+linkPostToGroup
+likePost - create junction likedPost & user
+addPostCategory
+commentToPost
+*/
