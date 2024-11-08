@@ -14,12 +14,21 @@ BEGIN
 END$$
 DELIMITER ;
 
-/*
-@todo:
-updateGroupDescription - create row description
-addGroupCategory
-followGroup
-*/
+-- Update group description
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateGroupDescription`(IN `idIn` MEDIUMINT, IN `descriptionIn` VARCHAR(120))
+BEGIN
+UPDATE `groups` SET `description` = descriptionIn WHERE groups.id = idIn;
+END$$
+DELIMITER ;
+
+-- Add category to group
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupCategory`(IN `groupIdIn` MEDIUMINT, IN `categoryIdIn` SMALLINT)
+BEGIN
+INSERT INTO `groupcategories`(`groupId`, `categoryId`) VALUES (groupIdIn, categoryIdIn);
+END$$
+DELIMITER ;
 
 -- Handle members
 DELIMITER $$
@@ -52,10 +61,12 @@ UPDATE `groups` SET `membersCount` = membersCount + 1 WHERE groups.id = groupIdI
 END$$
 DELIMITER ;
 
-/*
-@todo:
-addGroupRank
-*/
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupRank`(IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT, IN `rankIdIn` TINYINT)
+BEGIN
+INSERT INTO `groupranks`(`groupId`, `userId`, `rankId`) VALUES (groupIdIn, userIdIn, rankIdIn);
+END$$
+DELIMITER ;
 
 -- Handle events
 DELIMITER $$
@@ -112,12 +123,76 @@ CALL addGroupAllEventCount(groupIdIn);
 END$$
 DELIMITER ;
 
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addInterestedUsersCount`(IN `eventIdIn` INT)
+BEGIN
+UPDATE `events` SET `interestedUsersCount`= events.interestedUsersCount + 1 WHERE events.id = eventIdIn;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addParticipantsCount`(IN `eventIdIn` INT)
+BEGIN
+UPDATE `events` SET `participantsCount`= events.participantsCount + 1 WHERE events.id = eventIdIn;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceInterestedUsersCount`(IN `eventIdIn` INT)
+BEGIN
+UPDATE `events` SET `interestedUsersCount`= events.interestedUsersCount - 1 WHERE events.id = eventIdIn;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceParticipantsCount`(IN `eventIdIn` INT)
+BEGIN
+UPDATE `events` SET `participantsCount`= events.participantsCount - 1 WHERE events.id = eventIdIn;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addParticipant`(IN `eventIdIn` INT, IN `userIdIn` MEDIUMINT)
+BEGIN
+INSERT INTO `participants`(`eventId`, `userId`) VALUES (eventIdIn, userIdIn);
+CALL addParticipantsCount(eventIdIn);
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `removeParticipant`(IN `eventIdIn` INT)
+BEGIN
+DELETE FROM `participants` WHERE participants.eventId = eventIdIn;
+CALL reduceParticipantsCount(eventIdIn);
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `removeInterestedUser`(IN `eventIdIn` INT)
+BEGIN
+DELETE FROM `interestedusers` WHERE interestedusers.eventId = eventIdIn;
+CALL reduceInterestedUsersCount(eventIdIn);
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addInterestedUser`(IN `eventIdIn` INT, IN `userIdIn` MEDIUMINT)
+BEGIN
+INSERT INTO `interestedusers`(`eventId`, `userId`) VALUES (eventIdIn, userIdIn);
+CALL addInterestedUsersCount(eventIdIn);
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `setEventToNonActual`(IN `eventIdIn` INT)
+BEGIN
+UPDATE `events` SET `isActual`=0 WHERE events.id = eventIdIn;
+END$$
+DELIMITER ;
+
 /*@todo:
-addParticipant
-addInterested
-removeParticipant
-removeInterested
-setEventToNonActual
+removeParticipant -> DELETE BY ID!
+removeInterested -> DELETE BY ID! 
 addEventCategory
 */
 
