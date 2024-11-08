@@ -108,8 +108,8 @@ CREATE TABLE `Groups` (
   `membersCount` MEDIUMINT DEFAULT 0,
   `postCount` INT DEFAULT 0,
   `actualEventCount` INT DEFAULT 0,
-  `allEventCount` INT DEFAULT 0
-  -- @todo: description
+  `allEventCount` INT DEFAULT 0,
+  `description` VARCHAR(120) DEFAULT "" NOT NULL
 );
 
 CREATE TABLE `MembersOfGroups` (
