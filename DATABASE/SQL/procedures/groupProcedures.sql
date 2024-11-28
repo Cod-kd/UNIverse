@@ -47,7 +47,7 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceGroupMembers`(IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceGroupMember`(IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)
 BEGIN
 DELETE FROM `membersofgroups` WHERE membersofgroups.groupId = groupIdIn AND membersofgroups.userId = userIdIn;
 CALL reduceGroupMemberCount(groupIdIn);
@@ -160,17 +160,17 @@ END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `removeParticipant`(IN `eventIdIn` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `removeParticipant`(IN `eventIdIn` INT, IN `userIdIn` INT)
 BEGIN
-DELETE FROM `participants` WHERE participants.eventId = eventIdIn;
+DELETE FROM `participants` WHERE participants.eventId = eventIdIn AND participants.userId = userIdIn LIMIT 1;
 CALL reduceParticipantsCount(eventIdIn);
 END$$
 DELIMITER ;
 
 DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `removeInterestedUser`(IN `eventIdIn` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `removeInterestedUser`(IN `eventIdIn` INT, IN `userIdIn` INT)
 BEGIN
-DELETE FROM `interestedusers` WHERE interestedusers.eventId = eventIdIn;
+DELETE FROM `interestedusers` WHERE interestedusers.eventId = eventIdIn AND interestedusers.userId = userIdIn LIMIT 1;
 CALL reduceInterestedUsersCount(eventIdIn);
 END$$
 DELIMITER ;
@@ -186,17 +186,14 @@ DELIMITER ;
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `setEventToNonActual`(IN `eventIdIn` INT)
 BEGIN
-UPDATE `events` SET `isActual`=0 WHERE events.id = eventIdIn;
+UPDATE `events` SET `isActual`= 0 WHERE events.id = eventIdIn;
 END$$
 DELIMITER ;
 
-/*@todo:
-removeParticipant -> DELETE BY ID!
-removeInterested -> DELETE BY ID! 
+/*@todoptional:
 addEventCategory
+DELETE event
 */
-
--- @todo: DELETE event
 
 -- Handle posts
 DELIMITER $$
