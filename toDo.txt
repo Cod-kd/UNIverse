@@ -1,0 +1,1 @@
+When registerBtn is clicked the inputs arent layed out correctly
