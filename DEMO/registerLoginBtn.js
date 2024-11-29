@@ -47,11 +47,11 @@ async function splitMainButton() {
     );
     newBtn.addEventListener("click", async () => {
       await fadeOutMonitorScreen();
+      monitorScreenDiv.innerHTML = ``;
+      monitorScreenDiv.style.gap = "1.5em";
       if (data.id === "registerBtn") {
-        monitorScreenDiv.innerHTML = "";
         renderRegistration();
       } else {
-        monitorScreenDiv.innerHTML = ``;
         renderLogin();
       }
       await fadeInMonitorScreen();
@@ -859,7 +859,7 @@ function renderRegistration() {
   function validatePassword(password) {
     let conditions = {};
     let minLength = 8;
-    let maxLength = 26;
+    let maxLength = 18;
 
     if (password.length < minLength) {
       conditions.length = `-Minimum ${minLength} karakter hosszú`;
@@ -1077,7 +1077,7 @@ async function renderLogin() {
   monitorScreenDiv.innerHTML = `
     <form id="loginForm" onsubmit="return false;">
         <input id="emailInput" type="email" placeholder="Email..." class="input" name="email">
-        <input id="passwordInput" type="password" placeholder="Jelszó..." class="input" name="passwd">
+        <input id="passwordInput" max="18" type="password" placeholder="Jelszó..." class="input" name="passwd">
         <button class="button" id="loginBtn">Bejelentkezés</button>
     </form>
     <button class="button" id="cardLoginBtn">UNIcard használata</button>`;
