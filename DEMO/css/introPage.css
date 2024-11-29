@@ -58,7 +58,7 @@ main {
     z-index: 2;
     transition: all 0.3s;
     justify-items: center;
-    gap: 0.3em;
+    gap: 2em;
 }
 
 .button {

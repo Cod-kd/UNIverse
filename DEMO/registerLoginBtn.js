@@ -13,6 +13,7 @@ registerLoginBtn.addEventListener("click", splitMainButton);
 async function splitMainButton() {
   registerLoginBtn.style.transform = "scale(0)";
   registerLoginBtn.style.transition = "transform 0.5s";
+  monitorScreenDiv.style.gap = "0.3em";
 
   await delay(500);
   registerLoginBtn.remove();
