@@ -57,9 +57,8 @@ main {
     color: var(--main);
     z-index: 2;
     transition: all 0.3s;
-    align-items: center;
     justify-items: center;
-    gap: 2em;
+    gap: 0.3em;
 }
 
 .button {
@@ -106,8 +105,8 @@ main {
 
 /* FIX */
 #registerLoginBtnDiv {
-    display: flex;
-    gap: 3em;
+    display: grid;
+    gap: 1em;
 }
 
 .infoCard {

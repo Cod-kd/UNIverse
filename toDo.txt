@@ -1,2 +1,0 @@
-Registration/Login button style error:
-    -when clicked => main paragraph and header slides due to newly inserted button
