@@ -1,1 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+    --main: #FF5A1F;
+    --link: #5D3FD3;
+    --dark1: #343434;
+    --dark2: #141414;
+    --light1: #FFF0EB;
+    --light2: #FFD2C2;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: url("../public/images/background.jpg") no-repeat center center / cover;
+    padding: 3em;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: -1;
+}

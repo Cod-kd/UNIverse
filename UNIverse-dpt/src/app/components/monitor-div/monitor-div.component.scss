@@ -1,0 +1,28 @@
+#monitorDiv {
+    width: 50em;
+    height: 45em;
+    // Fix path here
+    background: url("../../../../public/images/screen.png") no-repeat center center / contain;
+    text-align: center;
+    padding: 6em;
+}
+
+#monitorDiv img {
+    width: 6em;
+    position: absolute;
+    top: 59.5%;
+    left: 47.5%;
+}
+
+#monitorDiv p {
+    font-size: 1.5rem;
+}
+
+#monitorScreenDiv {
+    display: grid;
+    color: var(--main);
+    z-index: 2;
+    transition: all 0.3s;
+    justify-items: center;
+    gap: 2em;
+}
