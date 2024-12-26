@@ -1,0 +1,25 @@
+Java - programming language
+Java Spring - framework
+Maven - Package manager
+MySQL - database
+
+Request - Response Cycle
+
+REST API
+
+Microservice - order, email
+
+IaaS
+PaaS
+
+SaaS - Microservice that already written
+
+Handle images Blob Storage + CDN
+
+search in texts - elasticsearch
+
+Cache (redis) - primary database handle if high traffic
+
+data sience - analitycal database (Snowflake)
+
+email scheduled - Queue (RabbitMQ)
