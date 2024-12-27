@@ -21,6 +21,7 @@ async function splitMainButton() {
 
     for (const data of buttonData) {
         const newBtn = createBasicButton(data);
+        newBtn.style.marginBottom = "1%"
         registerLoginBtnDiv.appendChild(newBtn);
         await delay(50);
         newBtn.style.transform = "translateX(0)";

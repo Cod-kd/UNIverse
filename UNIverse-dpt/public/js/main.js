@@ -464,9 +464,10 @@ function renderRegistration() {
         continueBtn.addEventListener("click", async function () {
             if (index === 0) {
                 const email = dataInp.value.trim();
-                if (await handleGenericValidation(email, "email", dataInp)) {
+                // Uncomment for check with php
+                //if (await handleGenericValidation(email, "email", dataInp)) {
                     createFormStep(index + 1);
-                }
+                //}
             } else if (index === 2) {
                 const selectedGender = document.querySelector(
                     'input[name="gender-radio"]:checked'
@@ -477,9 +478,10 @@ function renderRegistration() {
                 }
             } else if (index === 3) {
                 const username = dataInp.value.trim();
-                if (await handleGenericValidation(username, "username", dataInp)) {
+                // Uncomment for check with php
+                //if (await handleGenericValidation(username, "username", dataInp)) {
                     createFormStep(index + 1);
-                }
+                //}
             } else if (index === 5) {
                 const signatureData = await captureSignature();
                 if (signatureData) {
