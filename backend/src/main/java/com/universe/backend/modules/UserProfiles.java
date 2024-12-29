@@ -10,13 +10,45 @@ public class UserProfiles {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String email;    
+    @Column(nullable = false, unique = true, length = 50)
+    private String email;
+
+    @Column(nullable = false, unique = true, length = 12)
     private String username;
+
+    @Column(nullable = false, length = 60)
     private String password;
+
+    @Column(nullable = true, updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(nullable = true)
     private LocalDateTime deletedAt;
 
-    public int getId() {
+    @OneToOne(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private UsersData usersData;
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
+    }
+
+    public void setUsersData(UsersData usersData) {
+        this.usersData = usersData;
+    }
+
+    public Integer getId() {
         return id;
     }
 
@@ -40,20 +72,7 @@ public class UserProfiles {
         return deletedAt;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public UsersData getUsersData() {
+        return usersData;
     }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setDeletedAt(LocalDateTime deletedAt) {
-        this.deletedAt = deletedAt;
-    }
-    
 }
