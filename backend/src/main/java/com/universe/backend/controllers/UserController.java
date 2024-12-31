@@ -1,17 +1,16 @@
 package com.universe.backend.controllers;
 
+import com.universe.backend.dto.UserLoginDTO;
 import com.universe.backend.dto.UserRegistrationDTO;
-import com.universe.backend.exceptions.UserAlreadyExistsException;
-import com.universe.backend.services.RegistrationService;
+import com.universe.backend.services.user.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.universe.backend.services.UserService;
+import com.universe.backend.services.user.UserService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/user")
@@ -21,22 +20,22 @@ public class UserController {
     
     @GetMapping("/id")
     public ResponseEntity<Integer> getId(@RequestParam String username) {
-        Integer id = us.fetchUserId(username);
+        Integer id = us.userIdByName(username);
         return ResponseEntity.ok(id);
+    }
+    
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody @Valid UserLoginDTO ulDTO) {
+        us.login(ulDTO);
+        return ResponseEntity.ok("Üdv, " + ulDTO.getUsernameIn() + "!");
     }
     
     @Autowired
     private RegistrationService rs;
             
     @PostMapping("/registration")
-    public ResponseEntity<String> userRegistration(@RequestBody @Valid UserRegistrationDTO urDTO) {
-        try {
-            rs.registerUser(urDTO);
-            return ResponseEntity.ok("Sikeres regisztráció!");
-        } catch (UserAlreadyExistsException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("A felhasználó már létezik: " + ex.getMessage());
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Váratlan Error regisztráció közben...");
-        }
+    public ResponseEntity<String> registration(@RequestBody @Valid UserRegistrationDTO urDTO) {
+        rs.registerUser(urDTO);
+        return ResponseEntity.ok("Sikeres regisztráció!");
     }
 }

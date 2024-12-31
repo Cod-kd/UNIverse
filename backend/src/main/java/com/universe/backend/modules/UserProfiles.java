@@ -19,7 +19,7 @@ public class UserProfiles {
     @Column(nullable = false, length = 60)
     private String password;
 
-    @Column(nullable = true, updatable = false)
+    @Column(name = "createdAt", nullable = true, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = true)

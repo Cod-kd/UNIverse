@@ -10,4 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface UserProfilesRepository extends JpaRepository<UserProfiles, Integer>{
     @Procedure(procedureName = "idByUsername")
     Integer idByUsername(@Param("usernameIn") String username);
+    
+    @Procedure(procedureName = "login")
+    UserProfiles login(@Param("usernameIn") String usernameIn);
 }
