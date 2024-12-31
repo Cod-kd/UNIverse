@@ -1,4 +1,4 @@
-package com.universe.backend.services;
+package com.universe.backend.services.user;
 
 import com.universe.backend.dto.UserRegistrationDTO;
 import com.universe.backend.exceptions.UserAlreadyExistsException;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ConnectionCallback;
 import java.sql.CallableStatement;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 @Service
@@ -17,9 +18,13 @@ public class RegistrationService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+    
     public void registerUser(UserRegistrationDTO urDTO) {
-
+        
         try {
+            urDTO.setPasswordIn(encoder.encode(urDTO.getPasswordIn()));
+            //encoder.matches(rawPassword, encodedPassword)
             // Call the stored procedure to create the user
             jdbcTemplate.execute((ConnectionCallback<Object>) connection -> {
                 CallableStatement callableStatement = connection.prepareCall("{CALL registerUser(?, ?, ?, ?, ?, ?, ?, ?, ?)}");

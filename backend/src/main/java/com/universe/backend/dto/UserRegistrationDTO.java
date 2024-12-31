@@ -8,15 +8,15 @@ import java.util.Date;
 
 public class UserRegistrationDTO {
     @NotNull
-    @Email(message = "Invalid email format")
+    @Email(message = "Helytelen emailformátum")
     private String emailIn;
 
     @NotNull
-    @Size(min = 6, max = 12, message = "Username must be between 6 and 12 characters")
+    @Size(min = 6, max = 12, message = "A felhasználónév 6-12 karakter hosszú")
     private String usernameIn;
 
     @NotNull
-    @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]$", message="Helytelen jelszó (minimum 1 nagy-kisbetű és 1 szám)")
+    @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]+$", message="Helytelen jelszó (minimum 1 nagy-kisbetű és 1 szám)")
     @Size(min = 8, message = "A jelszavad legyen legalább 8 karakter")
     private String passwordIn;
 
