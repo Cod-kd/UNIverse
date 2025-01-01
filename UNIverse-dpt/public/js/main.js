@@ -156,70 +156,6 @@ function renderRegistration() {
         }
     }
 
-    async function handleGenericValidation(value, type, dataInp) {
-        const validationFunctions = {
-            email: validateEmail,
-            username: validateUsername
-        };
-
-        const checkExistingUrl = "checkExistence.php";
-
-        const conditions = validationFunctions[type](value);
-
-        if (Object.keys(conditions).length > 0) {
-            updateValidation(conditions);
-            return false;
-        }
-
-        const isChecked = type === "email" ? isEmailChecked : isUsernameChecked;
-        const lastChecked =
-            type === "email" ? lastCheckedEmail : lastCheckedUsername;
-
-        if (isChecked && value === lastChecked) {
-            createResponseWindow(
-                `${type.charAt(0).toUpperCase() + type.slice(1)} already exists`
-            );
-            return false;
-        }
-
-        try {
-            const response = await fetch(checkExistingUrl, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ type, value })
-            });
-
-            if (!response.ok) {
-                createResponseWindow(`Server error: ${response.status}`);
-                return false;
-            }
-
-            const data = await response.json();
-
-            if (type === "email") {
-                isEmailChecked = data.exists;
-                lastCheckedEmail = value;
-            } else {
-                isUsernameChecked = data.exists;
-                lastCheckedUsername = value;
-            }
-
-            if (data.exists) {
-                createResponseWindow(
-                    `${type.charAt(0).toUpperCase() + type.slice(1)} already exists`
-                );
-                return false;
-            } else {
-                updateFormData(type === "email" ? 0 : 3, dataInp);
-                return true;
-            }
-        } catch (error) {
-            createResponseWindow(`${type} check error: ${error.message}`);
-            await responseAnimation("error");
-            return false;
-        }
-    }
-
     async function createUNIverseCardStep(monitorScreenDiv) {
         await fadeOutMonitorScreen();
         monitorScreenDiv.innerHTML = "";
@@ -547,10 +483,15 @@ function renderRegistration() {
         continueBtn.addEventListener("click", async function () {
             if (index === 0) {
                 const email = dataInp.value.trim();
-                // Uncomment for check with php
-                //if (await handleGenericValidation(email, "email", dataInp)) {
+                const conditions = validateEmail(email);
+
+                if (Object.keys(conditions).length > 0) {
+                    updateValidation(conditions);
+                    return;
+                }
+                updateFormData(index, dataInp);
                 createFormStep(index + 1);
-                //}
+
             } else if (index === 2) {
                 const selectedGender = document.querySelector(
                     'input[name="gender-radio"]:checked'
@@ -561,10 +502,15 @@ function renderRegistration() {
                 }
             } else if (index === 3) {
                 const username = dataInp.value.trim();
-                // Uncomment for check with php
-                //if (await handleGenericValidation(username, "username", dataInp)) {
+                const conditions = validateUsername(username);
+
+                if (Object.keys(conditions).length > 0) {
+                    updateValidation(conditions);
+                    return;
+                }
+                updateFormData(index, dataInp);
                 createFormStep(index + 1);
-                //}
+
             } else if (index === 5) {
                 const signatureData = await captureSignature();
                 if (signatureData) {
@@ -572,14 +518,12 @@ function renderRegistration() {
                     createFormStep(index + 1);
                 }
             } else if (index === 6) {
-                // Handle university selection
                 const uniSelect = document.getElementById('uniNameSelect');
                 if (uniSelect && uniSelect.value) {
                     formData.universityName = uniSelect.value;
                     createFormStep(index + 1);
                 }
             } else if (index === 7) {
-                // Handle faculty selection
                 const facultySelect = document.getElementById('facultySelect');
                 if (facultySelect && facultySelect.value) {
                     formData.facultyName = facultySelect.value;
@@ -595,48 +539,63 @@ function renderRegistration() {
         });
     }
 
-    function addFinalRegisterButtonListener() {
-        const registerBtn = document.getElementById("registerBtn");
-        registerBtn.addEventListener("click", async function () {
-            try {
-                await fadeOutMonitorScreen();
-                monitorScreenDiv.innerHTML = "";
-                const registerBtnDiv = document.createElement("div");
-                registerBtnDiv.id = "registerBtnDiv";
-                registerBtnDiv.style.top = "-10%";
-                monitorScreenDiv.appendChild(registerBtnDiv);
-                registerBtn.style.transform = "scale(0)";
-                await fadeInMonitorScreen();
-                await delay(600);
-                registerBtn.remove();
-                registerBtnDiv.style.marginTop = "22%";
+    function addContinueButtonListener(index, dataInp) {
+        continueBtn.addEventListener("click", async function () {
+            if (index === 0) {
+                const email = dataInp.value.trim();
+                const conditions = validateEmail(email);
 
-                document.body.style.cursor = "progress";
-                try {
-                    const response = await fetch("createProfile.php", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(formData)
-                    });
-
-                    if (response.ok) {
-                        await responseAnimation("200");
-                    } else {
-                        const errorMessage = await response.text();
-                        createResponseWindow(`Registration failed: ${errorMessage}`);
-                        await responseAnimation("404");
-                    }
-                } catch (fetchError) {
-                    createResponseWindow(`Fetch error: ${fetchError.message}`);
-                    await responseAnimation("404");
+                if (Object.keys(conditions).length > 0) {
+                    updateValidation(conditions);
+                    return;
                 }
-            } catch (err) {
-                createResponseWindow(`Error: ${err.message}`);
-                await responseAnimation("404");
+                updateFormData(index, dataInp);
+                createFormStep(index + 1);
+
+            } else if (index === 2) {
+                const selectedGender = document.querySelector(
+                    'input[name="gender-radio"]:checked'
+                );
+                if (selectedGender) {
+                    formData.gender = selectedGender.value;
+                    createFormStep(index + 1);
+                }
+            } else if (index === 3) {
+                const username = dataInp.value.trim();
+                const conditions = validateUsername(username);
+
+                if (Object.keys(conditions).length > 0) {
+                    updateValidation(conditions);
+                    return;
+                }
+                updateFormData(index, dataInp);
+                createFormStep(index + 1);
+
+            } else if (index === 5) {
+                const signatureData = await captureSignature();
+                if (signatureData) {
+                    formData.signature = signatureData;
+                    createFormStep(index + 1);
+                }
+            } else if (index === 6) {
+                const uniSelect = document.getElementById('uniNameSelect');
+                if (uniSelect && uniSelect.value) {
+                    formData.universityName = uniSelect.value;
+                    createFormStep(index + 1);
+                }
+            } else if (index === 7) {
+                const facultySelect = document.getElementById('facultySelect');
+                if (facultySelect && facultySelect.value) {
+                    formData.facultyName = facultySelect.value;
+                    createFormStep(index + 1);
+                }
+            } else {
+                const isValid = await validateField(dataInp, index);
+                if (isValid) {
+                    updateFormData(index, dataInp);
+                    createFormStep(index + 1);
+                }
             }
-            document.body.style.cursor = "default";
         });
     }
 
