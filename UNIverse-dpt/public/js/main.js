@@ -109,17 +109,14 @@ function renderRegistration() {
     function validateEmail(email) {
         let conditions = {};
 
-        if (!email.includes("@")) {
-            conditions.atSymbol = "-Tartalmaz @-ot";
+        if (!email || email.trim() === "") {
+            conditions.empty = "-Hiányzó email cím";
+            return conditions;
         }
 
-        if (email.split("@")[0].length === 0) {
-            conditions.prefix = "-Tartalmaz szöveget @ előtt";
-        }
-
-        const domainPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!email.split("@")[1] || !domainPattern.test(email.split("@")[1])) {
-            conditions.domain = "-Tartalmaz domain-t";
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            conditions.format = "-Helytelen email formátum";
         }
 
         return conditions;
@@ -128,10 +125,17 @@ function renderRegistration() {
     function validateUsername(username) {
         let conditions = {};
 
-        if (username.length < 8) {
-            conditions.length = "-Minimum 8 karakter hosszú";
-        } else if (username.length > 20) {
-            conditions.length = "-Maximum 20 karakter hosszú";
+        if (!username || username.trim() === "") {
+            conditions.empty = "-Hiányzó felhasználónév";
+            return conditions;
+        }
+
+        if (username.length < 6) {
+            conditions.length = "-Legalább 6 karakter";
+        }
+
+        if (username.length > 12) {
+            conditions.length = "-Legfeljebb 12 karakter";
         }
 
         const usernamePattern = /^[A-Za-z0-9_-]+$/;
@@ -916,12 +920,12 @@ function renderRegistration() {
         let conditions = {};
 
         if (!birthDate || birthDate.trim() === "") {
-            conditions.empty = "-Kötelező mező";
+            conditions.empty = "-Hiányzó születési dátum";
             return conditions;
         }
 
         if (birthDate.length !== 8) {
-            conditions.length = "-8 karakter hosszú";
+            conditions.format = "-Helytelen dátumformátum (ÉÉÉÉHHNN)";
             return conditions;
         }
 
@@ -929,45 +933,24 @@ function renderRegistration() {
         const month = parseInt(birthDate.slice(4, 6), 10);
         const day = parseInt(birthDate.slice(6, 8), 10);
 
-        if (isNaN(year) || month < 1 || month > 12 || day < 1 || day > 31) {
-            conditions.validDate = "-Nem megfelelő formátum (ÉÉÉÉHHNN)";
+        if (isNaN(year) || isNaN(month) || isNaN(day)) {
+            conditions.format = "-Helytelen dátumformátum (ÉÉÉÉHHNN)";
             return conditions;
         }
 
         const daysInMonth = [
             31,
             (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28,
-            31,
-            30,
-            31,
-            30,
-            31,
-            31,
-            30,
-            31,
-            30,
-            31
+            31, 30, 31, 30, 31, 31, 30, 31, 30, 31
         ];
-        if (day > daysInMonth[month - 1]) {
-            conditions.validDay = "-Hibás nap az adott hónapban";
+
+        if (month < 1 || month > 12) {
+            conditions.validDate = "-Hibás hónap";
             return conditions;
         }
 
-        const today = new Date();
-        const birthDateObj = new Date(year, month - 1, day);
-
-        if (birthDateObj > today) {
-            conditions.futureDate = "-Nem jövőbeli dátum";
-            return conditions;
-        }
-
-        const age =
-            today.getFullYear() -
-            year -
-            (today < new Date(today.getFullYear(), month - 1, day) ? 1 : 0);
-
-        if (age < 18 || age > 100) {
-            conditions.age = "-Életkor 18 és 100 közötti";
+        if (day < 1 || day > daysInMonth[month - 1]) {
+            conditions.validDate = "-Hibás nap az adott hónapban";
             return conditions;
         }
 
@@ -976,21 +959,19 @@ function renderRegistration() {
 
     function validatePassword(password) {
         let conditions = {};
-        let minLength = 8;
-        let maxLength = 18;
 
-        if (password.length < minLength) {
-            conditions.length = `-Minimum ${minLength} karakter hosszú`;
-        } else if (password.length > maxLength) {
-            conditions.length = `-Maximum ${maxLength} karakter hosszú`;
+        if (!password || password.trim() === "") {
+            conditions.empty = "-Hiányzó jelszó";
+            return conditions;
         }
 
-        if (!/[0-9]/.test(password)) {
-            conditions.hasNumber = "-Legalább egy számjegy";
+        if (password.length < 8) {
+            conditions.minLength = "-Legalább 8 karakter";
         }
 
-        if (!/[!@#$%^&*()\-_=+]/.test(password)) {
-            conditions.hasSpecialChar = "-Legalább egy speciális karakter";
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]+$/;
+        if (!passwordPattern.test(password)) {
+            conditions.pattern = "-Minimum 1 nagy-kisbetű és 1 szám)";
         }
 
         return conditions;
