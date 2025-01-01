@@ -5,7 +5,9 @@ function renderRegistration() {
         "Nem",
         "Felhasználónév",
         "Jelszó",
-        "Aláírás"
+        "Aláírás",
+        "Egyetem",
+        "Egyetemi kar"
     ];
     let currentIndex = 0;
 
@@ -16,7 +18,9 @@ function renderRegistration() {
         username: "",
         passwd: "",
         imgPasswd: "",
-        signature: null
+        signature: null,
+        universityName: "",
+        facultyName: ""
     };
 
     createFormStep(currentIndex);
@@ -43,26 +47,29 @@ function renderRegistration() {
             if (index === 2) {
                 const radioDiv = createGenderRadioButtons();
                 monitorScreenDiv.appendChild(radioDiv);
+            } else if (index === 5) {
+                const signatureDiv = document.createElement("div");
+                signatureDiv.id = "signatureDiv";
+                signatureDiv.innerHTML = `
+                    <canvas id="signatureCanvas"></canvas>
+                    <button id="resetCanvasBtn">Reset</button>`;
+                monitorScreenDiv.appendChild(signatureDiv);
+                continueBtn.querySelector("#continueBtn").style.opacity = "0.5";
+                continueBtn.querySelector("#continueBtn").style.pointerEvents = "none";
+                setupSignatureCanvas();
+            } else if (index === 6) {
+                const uniSelect = createUniversitySelect();
+                monitorScreenDiv.appendChild(uniSelect);
+            } else if (index === 7) {
+                // Create faculty select based on selected university
+                const facultySelect = createFacultySelect();
+                monitorScreenDiv.appendChild(facultySelect);
             } else {
                 dataInp = createInputField(index);
                 monitorScreenDiv.appendChild(dataInp);
 
                 if (index === 4) {
                     monitorScreenDiv.appendChild(createShowBtn(passwordInput));
-                }
-
-                if (index === 5) {
-                    const signatureDiv = document.createElement("div");
-                    signatureDiv.id = "signatureDiv";
-                    signatureDiv.innerHTML = `
-                      <canvas id="signatureCanvas"></canvas>
-                      <button id="resetCanvasBtn">Reset</button>`;
-                    monitorScreenDiv.querySelector("input").remove();
-                    monitorScreenDiv.appendChild(signatureDiv);
-                    continueBtn.querySelector("#continueBtn").style.opacity = "0.5";
-                    continueBtn.querySelector("#continueBtn").style.pointerEvents =
-                        "none";
-                    setupSignatureCanvas();
                 }
             }
 
@@ -371,6 +378,82 @@ function renderRegistration() {
         return radioDiv;
     }
 
+    function createUniversitySelect() {
+        const uniNameDiv = document.createElement("div");
+        const uniNameSelect = document.createElement("select");
+        uniNameSelect.id = "uniNameSelect";
+
+        const universityNames = [
+            { label: "Állatorvostudományi Egyetem", value: "ÁTE" },
+            { label: "Andrássy Gyula Budapesti Német Nyelvű Egyetem", value: "AUB" },
+            { label: "Budapesti Corvinus Egyetem", value: "BCE" },
+            { label: "Budapesti Gazdasági Egyetem", value: "BGE" },
+            { label: "Budapesti Metropolitan Egyetem", value: "METU" }
+        ];
+
+        for (let i = 0; i < universityNames.length; i++) {
+            const uniOption = document.createElement("option");
+            uniOption.value = universityNames[i].value;
+            uniOption.textContent = universityNames[i].label;
+            uniNameSelect.appendChild(uniOption);
+        }
+
+        uniNameSelect.addEventListener("input", () => {
+            formData.universityName = uniNameSelect.value;
+        });
+
+        uniNameDiv.appendChild(uniNameSelect);
+        return uniNameDiv;
+    }
+
+    // Add this new function for faculty selection
+    function createFacultySelect() {
+        const facultyDiv = document.createElement("div");
+        const facultySelect = document.createElement("select");
+        facultySelect.id = "facultySelect";
+
+        // Example faculties - you should populate this based on the selected university
+        const faculties = {
+            'ÁTE': [
+                'Állatorvostudományi Kar'
+            ],
+            'AUB': [
+                'Interdiszciplináris Kar'
+            ],
+            'BCE': [
+                'Gazdálkodástudományi Kar',
+                'Társadalomtudományi Kar',
+                'Közgazdaságtudományi Kar'
+            ],
+            'BGE': [
+                'Kereskedelmi, Vendéglátóipari és Idegenforgalmi Kar',
+                'Külkereskedelmi Kar',
+                'Pénzügyi és Számviteli Kar'
+            ],
+            'METU': [
+                'Művészeti és Kreatívipari Kar',
+                'Üzleti, Kommunikációs és Turisztikai Kar'
+            ]
+        };
+
+        const selectedUniversity = formData.universityName;
+        const universityFaculties = faculties[selectedUniversity] || [];
+
+        universityFaculties.forEach(faculty => {
+            const option = document.createElement("option");
+            option.value = faculty;
+            option.textContent = faculty;
+            facultySelect.appendChild(option);
+        });
+
+        facultySelect.addEventListener("change", () => {
+            formData.facultyName = facultySelect.value;
+        });
+
+        facultyDiv.appendChild(facultySelect);
+        return facultyDiv;
+    }
+
     function createInputField(index) {
         const dataInp = document.createElement("input");
         dataInp.classList.add("input");
@@ -466,7 +549,7 @@ function renderRegistration() {
                 const email = dataInp.value.trim();
                 // Uncomment for check with php
                 //if (await handleGenericValidation(email, "email", dataInp)) {
-                    createFormStep(index + 1);
+                createFormStep(index + 1);
                 //}
             } else if (index === 2) {
                 const selectedGender = document.querySelector(
@@ -480,12 +563,26 @@ function renderRegistration() {
                 const username = dataInp.value.trim();
                 // Uncomment for check with php
                 //if (await handleGenericValidation(username, "username", dataInp)) {
-                    createFormStep(index + 1);
+                createFormStep(index + 1);
                 //}
             } else if (index === 5) {
                 const signatureData = await captureSignature();
                 if (signatureData) {
                     formData.signature = signatureData;
+                    createFormStep(index + 1);
+                }
+            } else if (index === 6) {
+                // Handle university selection
+                const uniSelect = document.getElementById('uniNameSelect');
+                if (uniSelect && uniSelect.value) {
+                    formData.universityName = uniSelect.value;
+                    createFormStep(index + 1);
+                }
+            } else if (index === 7) {
+                // Handle faculty selection
+                const facultySelect = document.getElementById('facultySelect');
+                if (facultySelect && facultySelect.value) {
+                    formData.facultyName = facultySelect.value;
                     createFormStep(index + 1);
                 }
             } else {
