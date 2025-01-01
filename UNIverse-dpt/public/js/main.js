@@ -174,12 +174,11 @@ function renderRegistration() {
             6,
             8
         )}</p>
-              <p>Password: ************</p>
+              <p>University: ${formData.universityName}</p>
               <hr>
               <div>
                   <h1>UNIcard</h1>
-                  <img id="signatureImg" src="${formData.signature
-            }" alt="signature" style="max-width: 150px; max-height: 45px;">
+                  <img id="signatureImg" src="${formData.signature}" alt="signaturíe" style="max-width: 150px; max-height: 45px;">
               </div>`;
         monitorScreenDiv.appendChild(userDataDiv);
 
