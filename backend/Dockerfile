@@ -1,10 +1,9 @@
 # docker pull kamikou/universe:v1.0
-# docker run -t --name backend --link database:mysql -p 8080:8080 universe-backend
 # docker run --name database -e MYSQL_ROOT_PASSWORD=passin -p 3306:3306 -d mysql:8.4
-# docker run -t --name backend --link database:mysql -p 8080:8080 kamikou/universe:1.0
+# docker run -t --name backend --link database:mysql -p 8080:8080 kamikou/universe:v1.0
 
-# to build: docker build -t universe-backend .
-# to run: docker run -t --name backend --link database:mysql -p 8080:8080 universe-backend
+# to build:
+# docker build -t kamikou/universe:v1.0 .
 
 # Step 1: Use an official Maven image to build the application
 FROM maven:3.9.5-eclipse-temurin-17 AS builder
