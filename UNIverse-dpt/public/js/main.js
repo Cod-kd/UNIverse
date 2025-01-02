@@ -14,7 +14,7 @@ function renderRegistration() {
     const formData = {
         email: "",
         birthDate: "",
-        gender: "",
+        gender: null,
         username: "",
         passwd: "",
         imgPasswd: "",
@@ -278,9 +278,8 @@ function renderRegistration() {
         radioDiv.classList.add("radio-input");
 
         const genders = [
-            { value: "Male", label: "Férfi" },
-            { value: "Female", label: "Nő" },
-            { value: "Other", label: "Egyéb" }
+            { value: true, label: "Férfi" },
+            { value: false, label: "Nő" },
         ];
 
         genders.forEach((gender, i) => {
