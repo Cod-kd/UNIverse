@@ -171,13 +171,7 @@ function renderRegistration() {
               <p>Email: ${formData.email}</p>
               <p>Username: ${formData.username}</p>
               <p>Gender: ${formData.gender}</p>
-              <p>Birth Date: ${formData.birthDate.slice(
-            0,
-            4
-        )}/${formData.birthDate.slice(4, 6)}/${formData.birthDate.slice(
-            6,
-            8
-        )}</p>
+              <p>Birth Date: ${formData.birthDate}</p>
               <p>University: ${formData.universityName}</p>
               <hr>
               <div>
@@ -879,7 +873,15 @@ function renderRegistration() {
                 formData.email = dataInp.value.trim();
                 break;
             case 1:
-                formData.birthDate = dataInp.value.trim();
+                const dateVal = dataInp.value.trim();
+                if (dateVal.length === 8) {
+                    const year = dateVal.slice(0, 4);
+                    const month = dateVal.slice(4, 6);
+                    const day = dateVal.slice(6, 8);
+                    formData.birthDate = `${year}-${month}-${day}`;
+                } else {
+                    formData.birthDate = dateVal;
+                }
                 break;
             case 3:
                 formData.username = dataInp.value.trim();
