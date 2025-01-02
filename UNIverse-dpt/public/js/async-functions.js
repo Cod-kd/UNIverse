@@ -163,7 +163,7 @@ async function createResponseWindow(text) {
 async function renderLogin() {
     monitorScreenDiv.innerHTML = `
       <form id="loginForm" onsubmit="return false;">
-          <input id="emailInput" type="email" placeholder="Email..." class="input" name="email">
+          <input id="usernameInput" type="text" placeholder="Felhasználónév..." class="input" name="username">
           <input id="passwordInput" max="18" type="password" placeholder="Jelszó..." class="input" name="passwd">
           <button class="button" id="loginBtn">Bejelentkezés</button>
       </form>
@@ -178,7 +178,7 @@ async function renderLogin() {
         await fadeInMonitorScreen();
     };
 
-    document.getElementById("emailInput").addEventListener("keydown", (event) => {
+    document.getElementById("usernameInput").addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
             event.preventDefault();
             document.getElementById("passwordInput").focus();
@@ -189,35 +189,42 @@ async function renderLogin() {
     document.getElementById("loginBtn").addEventListener("click", async () => {
         document.body.style.cursor = "progress";
         const formData = new FormData(document.getElementById("loginForm"));
+
         try {
-            const response = await fetch("login.php", {
+            const username = "admin";
+            const password = "oneOfMyBestPasswords";
+
+            let headers = new Headers();
+            headers.set("Authorization", "Basic " + btoa(username + ":" + password));
+            headers.set("Content-Type", "application/json");
+
+            const response = await fetch("http://localhost:8080/user/login", {
+                headers: headers,
                 method: "POST",
-                body: formData
+                body: JSON.stringify({
+                    usernameIn: formData.get("username"),
+                    passwordIn: formData.get("passwd")
+                })
             });
 
-            if (!response.ok) {
-                await createResponseWindow("Network response was not ok");
-                return;
+            await fadeOutMonitorScreen();
+
+            switch (response.status) {
+                case 200:
+                    monitorScreenDiv.innerHTML = `<h1>${await response.text()}<br>Redirecting...</h1>`;
+                    break;
+                case 400:
+                    createResponseWindow("Hibás felhasználónév vagy jelszó!");
+                    break;
+                default:
+                    createResponseWindow("Szerveroldali hiba");
             }
 
-            const responseData = await response.json();
+            await fadeInMonitorScreen();
 
-            if (responseData.error) {
-                await createResponseWindow(responseData.error);
-                return;
-            }
-
-            if (responseData.success) {
-                await fadeOutMonitorScreen();
-                monitorScreenDiv.innerHTML = `<h1>Successful login!<br>Redirecting...</h1>`;
-                await fadeInMonitorScreen();
-                await delay(3000);
-                window.location.href = "mainPage.html";
-            }
         } catch (error) {
             await createResponseWindow(error.message);
-        }
-        finally {
+        } finally {
             document.body.style.cursor = "default";
         }
     });
