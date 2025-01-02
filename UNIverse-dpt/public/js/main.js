@@ -969,13 +969,14 @@ function renderRegistration() {
             conditions.minLength = "-Legalább 8 karakter";
         }
 
-        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]+$/;
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*(),.?":{}|<>]*$/;
         if (!passwordPattern.test(password)) {
-            conditions.pattern = "-Minimum 1 nagy-kisbetű és 1 szám)";
+            conditions.pattern = "-Minimum 1 nagybetű, 1 kisbetű, és 1 szám";
         }
 
         return conditions;
     }
+
 
     async function createDetailP(text, condition) {
         const inputDetailsDiv = document.getElementById("inputDetailsDiv");
