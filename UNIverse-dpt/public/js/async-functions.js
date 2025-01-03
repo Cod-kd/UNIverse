@@ -105,6 +105,7 @@ async function hashImage(file) {
 
 // Function used to create pop-up error messages
 // Use cases: 6 --> 4-2 (async-functions.js - main.js)
+// As component: response-window
 async function createResponseWindow(text) {
     let existingErrorWindow = document.querySelector("#errorWindow");
     if (!existingErrorWindow) {
