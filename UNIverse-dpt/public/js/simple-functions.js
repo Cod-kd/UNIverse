@@ -14,6 +14,7 @@ function createBasicButton({ id, text, initialTransform }) {
 
 // Function to create home button, when clicked => refreshes the page
 // Use cases: 4 --> 2-2 (async-functions.js - main.js)
+// As component: home-button
 function createHomeButton() {
     const homeBtn = document.createElement("button");
     homeBtn.id = "homeBtn";
@@ -26,6 +27,7 @@ function createHomeButton() {
 
 // Function to create the show-toggle button for password fields
 // Use cases: 2 --> 1-1 (async-functions.js - main.js)
+// As component: toggle-visibility-button
 function createShowBtn(elementToShow) {
     const showBtn = document.createElement("button");
     showBtn.id = "showBtn";
