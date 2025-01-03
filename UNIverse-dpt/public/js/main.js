@@ -164,7 +164,7 @@ function renderRegistration() {
         userDataDiv.innerHTML = `
               <p>Email: ${formData.email}</p>
               <p>Username: ${formData.username}</p>
-              <p>Gender: ${formData.gender}</p>
+              <p>Gender: ${formData.gender ? "Male" : "Female"}</p>
               <p>Birth Date: ${formData.birthDate}</p>
               <p>University: ${formData.universityName}</p>
               <hr>
