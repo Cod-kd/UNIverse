@@ -279,7 +279,6 @@ function renderRegistration() {
                     continueBtn.style.pointerEvents = "auto";
                 }
             } catch (exifError) {
-                console.error("Error with EXIF:", exifError);
                 // Fallback to saving without EXIF
                 const link = document.createElement("a");
                 link.download = `${formData.username}-UNIcard.jpg`;
@@ -289,7 +288,6 @@ function renderRegistration() {
                 document.body.removeChild(link);
             }
         } catch (err) {
-            console.error("Error in saveUNIcard:", err);
             createResponseWindow("Error saving the UNIcard: " + err.message);
         }
     }
@@ -315,7 +313,6 @@ function renderRegistration() {
 
             return new Blob([ab], { type: mimeString });
         } catch (error) {
-            console.error("Error in dataURItoBlob:", error);
             throw new Error("Failed to convert data URI to Blob");
         }
     }
