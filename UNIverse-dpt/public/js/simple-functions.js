@@ -1,5 +1,6 @@
 // Function to create a button with id, text, and css transform property specified
 // Use cases: 1 --> async-functions.js
+// As component: basic-button
 function createBasicButton({ id, text, initialTransform }) {
     const newBtn = document.createElement("button");
     newBtn.id = id;
