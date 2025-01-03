@@ -290,31 +290,11 @@
 
 #userDataDiv div h1 {
     position: relative;
-    justify-self: start;
+    justify-self: center;
 }
 
 #saveCardBtn {
     margin-top: 105%;
-}
-
-#signatureCanvas {
-    touch-action: none;
-    cursor: cell;
-    border: 1px solid var(--dark1);
-}
-
-#signatureDiv {
-    display: grid;
-    align-items: center;
-    justify-items: center;
-    gap: 30px;
-    margin-top: 20%;
-}
-
-#signatureImg {
-    justify-self: end;
-    margin-top: 13%;
-    border-radius: 12px;
 }
 
 /* Error window */

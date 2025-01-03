@@ -64,34 +64,6 @@ async function fadeInMonitorScreen() {
     await delay(100);
 }
 
-// Function used to save the user's signature as an image
-// Use cases: 1 --> main.js
-async function captureSignature() {
-    const canvas = document.getElementById("signatureCanvas");
-    if (!canvas) return null;
-
-    const context = canvas.getContext("2d");
-    const imageData = context.getImageData(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    ).data;
-
-    const hasSignature = Array.from(imageData).some((pixel, index) => {
-        if (index % 4 === 0) {
-            return pixel !== 20;
-        }
-        return false;
-    });
-
-    if (!hasSignature) {
-        return null;
-    }
-
-    return canvas.toDataURL("image/png");
-}
-
 async function fetchLogin(usrIn, passIn) {
     try {
         // Should be stored somewhere else

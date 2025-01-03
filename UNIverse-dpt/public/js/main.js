@@ -6,7 +6,6 @@ function renderRegistration() {
         "Nem",
         "Felhasználónév",
         "Jelszó",
-        "Aláírás",
         "Egyetem",
         "Egyetemi kar"
     ];
@@ -19,7 +18,6 @@ function renderRegistration() {
         username: "",
         passwd: "",
         imgPasswd: "",
-        signature: null,
         universityName: "",
         facultyName: ""
     };
@@ -50,19 +48,9 @@ function renderRegistration() {
                 const radioDiv = createGenderRadioButtons();
                 monitorScreenDiv.appendChild(radioDiv);
             } else if (index === 5) {
-                const signatureDiv = document.createElement("div");
-                signatureDiv.id = "signatureDiv";
-                signatureDiv.innerHTML = `
-                    <canvas id="signatureCanvas"></canvas>
-                    <button id="resetCanvasBtn">Reset</button>`;
-                monitorScreenDiv.appendChild(signatureDiv);
-                continueBtn.querySelector("#continueBtn").style.opacity = "0.5";
-                continueBtn.querySelector("#continueBtn").style.pointerEvents = "none";
-                setupSignatureCanvas();
-            } else if (index === 6) {
                 const uniSelect = createUniversitySelect();
                 monitorScreenDiv.appendChild(uniSelect);
-            } else if (index === 7) {
+            } else if (index === 6) {
                 // Create faculty select based on selected university
                 const facultySelect = createFacultySelect();
                 monitorScreenDiv.appendChild(facultySelect);
@@ -181,8 +169,7 @@ function renderRegistration() {
               <p>University: ${formData.universityName}</p>
               <hr>
               <div>
-                  <h1>UNIcard</h1>
-                  <img id="signatureImg" src="${formData.signature}" alt="signaturíe" style="max-width: 150px; max-height: 45px;">
+                <h1>UNIcard</h1>
               </div>`;
         monitorScreenDiv.appendChild(userDataDiv);
 
@@ -836,18 +823,12 @@ function renderRegistration() {
                 createFormStep(index + 1);
 
             } else if (index === 5) {
-                const signatureData = await captureSignature();
-                if (signatureData) {
-                    formData.signature = signatureData;
-                    createFormStep(index + 1);
-                }
-            } else if (index === 6) {
                 const uniSelect = document.getElementById('uniNameSelect');
                 if (uniSelect && uniSelect.value) {
                     formData.universityName = uniSelect.value;
                     createFormStep(index + 1);
                 }
-            } else if (index === 7) {
+            } else if (index === 6) {
                 const facultySelect = document.getElementById('facultySelect');
                 if (facultySelect && facultySelect.value) {
                     formData.facultyName = facultySelect.value;
