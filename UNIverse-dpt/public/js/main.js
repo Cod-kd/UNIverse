@@ -865,8 +865,54 @@ function renderRegistration() {
         await fadeInMonitorScreen();
     }
 
-    async function fetchRegister() {
-        console.log("FINISH FETCH REGISTER");
+    async function fetchRegister(registerData) {
+        try {
+            // Should be stored somewhere else
+            const username = "admin";
+            const password = "oneOfMyBestPasswords";
+
+            let headers = new Headers();
+            headers.set("Authorization", "Basic " + btoa(username + ":" + password));
+            headers.set("Content-Type", "application/json");
+
+            const response = await fetch("http://localhost:8080/user/registration", {
+                headers: headers,
+                method: "POST",
+                body: JSON.stringify({
+                    "emailIn": registerData.email,
+                    "usernameIn": registerData.username,
+                    "passwordIn": registerData.passwd,
+                    "nameIn": "ADD FULL NAME INPUT",
+                    "genderIn": registerData.gender,
+                    "birthDateIn": registerData.birthDate,
+                    "facultyIn": registerData.facultyName,
+                    "universityNameIn": registerData.universityName,
+                    "profilePictureExtensionIn": "ADD PROFILE PICTURE INPUT"
+                })
+            });
+
+            await fadeOutMonitorScreen();
+
+            switch (response.status) {
+                case 200:
+                    monitorScreenDiv.innerHTML = `<h1>Sikeres regisztráció!</h1>`;
+                    await delay(3000);
+                    renderLogin();
+                    break;
+                case 400:
+                    createResponseWindow("Foglalt felhasználónév vagy email!");
+                    break;
+                default:
+                    createResponseWindow("Szerveroldali hiba");
+            }
+
+            await fadeInMonitorScreen();
+
+        } catch (error) {
+            await createResponseWindow(error.message);
+        } finally {
+            document.body.style.cursor = "default";
+        }
     }
 
     // Function to update the formData, where the registration data is saved
