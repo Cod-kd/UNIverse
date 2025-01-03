@@ -1,3 +1,4 @@
+// Function to split the main button into register + login
 async function splitMainButton() {
     registerLoginBtn.style.transform = "scale(0)";
     registerLoginBtn.style.transition = "transform 0.5s";
@@ -48,16 +49,19 @@ async function splitMainButton() {
     }
 }
 
+// Function to represent data disappearing from monitorScreenDiv
 async function fadeOutMonitorScreen() {
     monitorScreenDiv.style.opacity = "0";
     await delay(200);
 }
 
+// Function to represent data appearing on monitorScreenDiv
 async function fadeInMonitorScreen() {
     monitorScreenDiv.style.opacity = "1";
     await delay(100);
 }
 
+// Function to create animation on response error - unnecessary?
 async function createNew404Effect() {
     const script = document.createElement("script");
     script.src =
@@ -82,6 +86,7 @@ async function createNew404Effect() {
     lottiePlayer.style.transform = "scale(1)";
 }
 
+// Function used to handle responses with animations
 async function responseAnimation(status) {
     const existing404El = document.getElementById("animated404");
     if (status === "200") {
@@ -108,6 +113,7 @@ async function responseAnimation(status) {
     }
 }
 
+// Function used to save the user's signature as an image
 async function captureSignature() {
     const canvas = document.getElementById("signatureCanvas");
     if (!canvas) return null;
@@ -134,17 +140,17 @@ async function captureSignature() {
     return canvas.toDataURL("image/png");
 }
 
+// Function to hash the inputted image file
 async function hashImage(file) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = new Uint8Array(arrayBuffer);
     const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray
-        .map((byte) => byte.toString(16).padStart(2, "0"))
-        .join("");
+    const hashHex = hashArray.map((byte) => byte.toString(16).padStart(2, "0")).join("");
     return hashHex;
 }
 
+// Function used to create pop-up error messages
 async function createResponseWindow(text) {
     let existingErrorWindow = document.querySelector("#errorWindow");
     if (!existingErrorWindow) {
@@ -160,6 +166,7 @@ async function createResponseWindow(text) {
     }
 }
 
+// Function used to render the login page's elements
 async function renderLogin() {
     monitorScreenDiv.innerHTML = `
       <form id="loginForm" onsubmit="return false;">

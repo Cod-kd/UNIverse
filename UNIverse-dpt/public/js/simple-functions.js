@@ -1,3 +1,4 @@
+// Function to create a button with id, text, and css transform property specified
 function createBasicButton({ id, text, initialTransform }) {
     const newBtn = document.createElement("button");
     newBtn.id = id;
@@ -9,6 +10,7 @@ function createBasicButton({ id, text, initialTransform }) {
     return newBtn;
 }
 
+// Function to create animation when response was successful
 function createSuccessfulResponseEffect() {
     const registerBtnDiv = document.getElementById("registerBtnDiv");
     const script = document.createElement("script");
@@ -27,6 +29,7 @@ function createSuccessfulResponseEffect() {
     registerBtnDiv.appendChild(lottiePlayer);
 }
 
+// Function to create heading with custom text
 function createResponseHeading(scaleUp, text) {
     const registerBtnDiv = document.getElementById("registerBtnDiv");
     let responseHeadingEl = document.getElementById("responseHeading");
@@ -44,6 +47,7 @@ function createResponseHeading(scaleUp, text) {
     }
 }
 
+// Function to create home button, when clicked => refreshes the page
 function createHomeButton() {
     const homeBtn = document.createElement("button");
     homeBtn.id = "homeBtn";
@@ -54,6 +58,7 @@ function createHomeButton() {
     return homeBtn;
 }
 
+// Function to create the show-toggle button for password fields
 function createShowBtn(elementToShow) {
     const showBtn = document.createElement("button");
     showBtn.id = "showBtn";
@@ -71,6 +76,7 @@ function createShowBtn(elementToShow) {
     return showBtn;
 }
 
+// Unnecessary function?
 function arrowBtnsConfig() {
     const roundElement = document.querySelector(".round");
     const arrows = document.querySelectorAll(".arrow");
@@ -85,6 +91,7 @@ function arrowBtnsConfig() {
     }
 }
 
+// Function to initialize the signature's canvas with it's properties
 function setupSignatureCanvas() {
     const canvas = document.getElementById("signatureCanvas");
     const resetCanvasBtn = document.getElementById("resetCanvasBtn");
@@ -113,6 +120,7 @@ function setupSignatureCanvas() {
 
     resetCanvasBtn.addEventListener("click", clearCanvas);
 
+    // Function to get the cursor's position on the canvas
     function getEventPosition(event) {
         const rect = canvas.getBoundingClientRect();
         if (event.touches && event.touches.length > 0) {
@@ -128,6 +136,7 @@ function setupSignatureCanvas() {
         }
     }
 
+    // Function to start drawing on the canvas
     function startDrawing(event) {
         isDrawing = true;
         const pos = getEventPosition(event);
@@ -138,6 +147,7 @@ function setupSignatureCanvas() {
         event.preventDefault();
     }
 
+    // Function to draw the signature
     function drawSignature(event) {
         if (!isDrawing) return;
         const pos = getEventPosition(event);
@@ -159,6 +169,7 @@ function setupSignatureCanvas() {
         event.preventDefault();
     }
 
+    // Function to stop drawing sequence
     function stopDrawing(event) {
         if (isDrawing) {
             isDrawing = false;
@@ -166,6 +177,7 @@ function setupSignatureCanvas() {
         }
     }
 
+    // Function to clear canvas's content
     function clearCanvas() {
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.fillStyle = "#141414";
@@ -174,6 +186,7 @@ function setupSignatureCanvas() {
         updateContinueButton();
     }
 
+    // Function to enable continue button after drawing signature
     function updateContinueButton() {
         const continueBtn = document.querySelector("#continueBtn");
         if (continueBtn) {
@@ -188,6 +201,7 @@ function setupSignatureCanvas() {
     }
 }
 
+// Function to extract email from uploaded UNIcard
 function extractEmail(text) {
     const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
     const matches = text.match(emailRegex);
