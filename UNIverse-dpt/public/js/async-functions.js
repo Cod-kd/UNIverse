@@ -103,6 +103,47 @@ async function hashImage(file) {
     return hashHex;
 }
 
+async function fetchLogin(usrIn, passIn) {
+    try {
+        // Should be stored somewhere else
+        const username = "admin";
+        const password = "oneOfMyBestPasswords";
+
+        let headers = new Headers();
+        headers.set("Authorization", "Basic " + btoa(username + ":" + password));
+        headers.set("Content-Type", "application/json");
+
+        const response = await fetch("http://localhost:8080/user/login", {
+            headers: headers,
+            method: "POST",
+            body: JSON.stringify({
+                usernameIn: usrIn,
+                passwordIn: passIn
+            })
+        });
+
+        await fadeOutMonitorScreen();
+
+        switch (response.status) {
+            case 200:
+                monitorScreenDiv.innerHTML = `<h1>${await response.text()}<br>Redirecting...</h1>`;
+                break;
+            case 400:
+                createResponseWindow("Hibás felhasználónév vagy jelszó!");
+                break;
+            default:
+                createResponseWindow("Szerveroldali hiba");
+        }
+
+        await fadeInMonitorScreen();
+
+    } catch (error) {
+        await createResponseWindow(error.message);
+    } finally {
+        document.body.style.cursor = "default";
+    }
+}
+
 // Function used to create pop-up error messages
 // Use cases: 6 --> 4-2 (async-functions.js - main.js)
 // As component: response-window
@@ -153,43 +194,7 @@ async function renderLogin() {
         document.body.style.cursor = "progress";
         const formData = new FormData(document.getElementById("loginForm"));
 
-        try {
-            const username = "admin";
-            const password = "oneOfMyBestPasswords";
-
-            let headers = new Headers();
-            headers.set("Authorization", "Basic " + btoa(username + ":" + password));
-            headers.set("Content-Type", "application/json");
-
-            const response = await fetch("http://localhost:8080/user/login", {
-                headers: headers,
-                method: "POST",
-                body: JSON.stringify({
-                    usernameIn: formData.get("username"),
-                    passwordIn: formData.get("passwd")
-                })
-            });
-
-            await fadeOutMonitorScreen();
-
-            switch (response.status) {
-                case 200:
-                    monitorScreenDiv.innerHTML = `<h1>${await response.text()}<br>Redirecting...</h1>`;
-                    break;
-                case 400:
-                    createResponseWindow("Hibás felhasználónév vagy jelszó!");
-                    break;
-                default:
-                    createResponseWindow("Szerveroldali hiba");
-            }
-
-            await fadeInMonitorScreen();
-
-        } catch (error) {
-            await createResponseWindow(error.message);
-        } finally {
-            document.body.style.cursor = "default";
-        }
+        fetchLogin(formData.get("username"), formData.get("passwd"));
     });
 
     // Card login
