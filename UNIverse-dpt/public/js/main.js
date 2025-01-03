@@ -865,12 +865,12 @@ function renderRegistration() {
                 formData.email,
                 formData.username,
                 formData.passwd,
-                "ADD FULL NAME INPUT",
+                "Test full name",
                 formData.gender,
                 formData.birthDate,
                 formData.facultyName,
                 formData.universityName,
-                "ADD PFP INPUT"
+                "jpg"
             )
         });
         await fadeInMonitorScreen();
@@ -910,7 +910,7 @@ function renderRegistration() {
                     await delay(3000);
                     renderLogin();
                     break;
-                case 400:
+                case 409:
                     createResponseWindow("Foglalt felhasználónév vagy email!");
                     break;
                 default:
