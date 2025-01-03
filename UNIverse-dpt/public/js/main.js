@@ -1,3 +1,4 @@
+// Main function to handle registration process
 function renderRegistration() {
     const requiredData = [
         "Email cím",
@@ -25,6 +26,7 @@ function renderRegistration() {
 
     createFormStep(currentIndex);
 
+    // Function used to step between registration's parts by index
     async function createFormStep(index) {
         await fadeOutMonitorScreen();
         monitorScreenDiv.innerHTML = ``;
@@ -106,6 +108,7 @@ function renderRegistration() {
         }
     }
 
+    // Function used to validate the inputted email's format
     function validateEmail(email) {
         let conditions = {};
 
@@ -122,6 +125,7 @@ function renderRegistration() {
         return conditions;
     }
 
+    // Function used to validate the username
     function validateUsername(username) {
         let conditions = {};
 
@@ -146,6 +150,7 @@ function renderRegistration() {
         return conditions;
     }
 
+    // Function used to update a validation's conditions that are met or not
     function updateValidation(conditions) {
         const inputDetailsDiv = document.getElementById("inputDetailsDiv");
 
@@ -160,6 +165,7 @@ function renderRegistration() {
         }
     }
 
+    // Function for the UNIcard creation in the registration
     async function createUNIverseCardStep(monitorScreenDiv) {
         await fadeOutMonitorScreen();
         monitorScreenDiv.innerHTML = "";
@@ -217,6 +223,7 @@ function renderRegistration() {
         }
     }
 
+    // Function to save the UNIcard as an image
     async function saveUNIcard() {
         const userDataDiv = document.getElementById("userDataDiv");
 
@@ -251,6 +258,7 @@ function renderRegistration() {
         }
     }
 
+    // Function to create heading with custom text
     function createHeading(text) {
         const heading = document.createElement("h1");
         heading.innerHTML = text;
@@ -258,6 +266,7 @@ function renderRegistration() {
         return heading;
     }
 
+    // Function to create continue or back button by boolean input
     function createNavigationButton(isBackButton) {
         const btnHelperDiv = document.createElement("div");
         btnHelperDiv.classList.add("btnHelperDiv");
@@ -273,6 +282,7 @@ function renderRegistration() {
         return btnHelperDiv;
     }
 
+    // Function to create the gender selection's radio type inputs
     function createGenderRadioButtons() {
         const radioDiv = document.createElement("div");
         radioDiv.classList.add("radio-input");
@@ -310,6 +320,7 @@ function renderRegistration() {
         return radioDiv;
     }
 
+    // Function to create the university select element with options
     function createUniversitySelect() {
         const uniNameDiv = document.createElement("div");
         const uniNameSelect = document.createElement("select");
@@ -371,7 +382,7 @@ function renderRegistration() {
         return uniNameDiv;
     }
 
-    // Add this new function for faculty selection
+    // Function for creating faculty select element with corresponding options
     function createFacultySelect() {
         const facultyDiv = document.createElement("div");
         const facultySelect = document.createElement("select");
@@ -641,6 +652,7 @@ function renderRegistration() {
         return facultyDiv;
     }
 
+    // Function to create an input field by index
     function createInputField(index) {
         const dataInp = document.createElement("input");
         dataInp.classList.add("input");
@@ -715,6 +727,7 @@ function renderRegistration() {
         return dataInp;
     }
 
+    // Function to add click event listener to a back button
     function addBackButtonListener(index, dataInp) {
         backBtn.addEventListener("click", async function () {
             if (index === requiredData.length + 1) {
@@ -730,6 +743,7 @@ function renderRegistration() {
         });
     }
 
+    // Function to add click event listener to a continue button
     function addContinueButtonListener(index, dataInp) {
         continueBtn.addEventListener("click", async function () {
             if (index === 0) {
@@ -790,66 +804,7 @@ function renderRegistration() {
         });
     }
 
-    function addContinueButtonListener(index, dataInp) {
-        continueBtn.addEventListener("click", async function () {
-            if (index === 0) {
-                const email = dataInp.value.trim();
-                const conditions = validateEmail(email);
-
-                if (Object.keys(conditions).length > 0) {
-                    updateValidation(conditions);
-                    return;
-                }
-                updateFormData(index, dataInp);
-                createFormStep(index + 1);
-
-            } else if (index === 2) {
-                const selectedGender = document.querySelector(
-                    'input[name="gender-radio"]:checked'
-                );
-                if (selectedGender) {
-                    formData.gender = selectedGender.value;
-                    createFormStep(index + 1);
-                }
-            } else if (index === 3) {
-                const username = dataInp.value.trim();
-                const conditions = validateUsername(username);
-
-                if (Object.keys(conditions).length > 0) {
-                    updateValidation(conditions);
-                    return;
-                }
-                updateFormData(index, dataInp);
-                createFormStep(index + 1);
-
-            } else if (index === 5) {
-                const signatureData = await captureSignature();
-                if (signatureData) {
-                    formData.signature = signatureData;
-                    createFormStep(index + 1);
-                }
-            } else if (index === 6) {
-                const uniSelect = document.getElementById('uniNameSelect');
-                if (uniSelect && uniSelect.value) {
-                    formData.universityName = uniSelect.value;
-                    createFormStep(index + 1);
-                }
-            } else if (index === 7) {
-                const facultySelect = document.getElementById('facultySelect');
-                if (facultySelect && facultySelect.value) {
-                    formData.facultyName = facultySelect.value;
-                    createFormStep(index + 1);
-                }
-            } else {
-                const isValid = await validateField(dataInp, index);
-                if (isValid) {
-                    updateFormData(index, dataInp);
-                    createFormStep(index + 1);
-                }
-            }
-        });
-    }
-
+    // Function to create the registration's last part
     async function createFinalRegistrationStep() {
         monitorScreenDiv.style.gridTemplateColumns = "";
         monitorScreenDiv.style.gap = "0px";
@@ -866,6 +821,7 @@ function renderRegistration() {
         await fadeInMonitorScreen();
     }
 
+    // Function to update the formData, where the registration data is saved
     function updateFormData(index, dataInp) {
         switch (index) {
             case 0:
@@ -891,6 +847,7 @@ function renderRegistration() {
         }
     }
 
+    // Function to validate an input field by index
     async function validateField(input, index) {
         if (!input) return true;
 
@@ -917,6 +874,7 @@ function renderRegistration() {
         return Object.keys(conditions).length === 0;
     }
 
+    // Function to validate inputted birth date
     function validateBirthDate(birthDate) {
         let conditions = {};
 
@@ -958,6 +916,7 @@ function renderRegistration() {
         return conditions;
     }
 
+    // Function to validate inputted password
     function validatePassword(password) {
         let conditions = {};
 
@@ -978,7 +937,7 @@ function renderRegistration() {
         return conditions;
     }
 
-
+    // Function to create condition details as paragraphs
     async function createDetailP(text, condition) {
         const inputDetailsDiv = document.getElementById("inputDetailsDiv");
         let existingP = Array.from(inputDetailsDiv.querySelectorAll("p")).find(

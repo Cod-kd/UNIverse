@@ -1,4 +1,5 @@
 // Function to create a button with id, text, and css transform property specified
+// Use cases: 1 --> async-functions.js
 function createBasicButton({ id, text, initialTransform }) {
     const newBtn = document.createElement("button");
     newBtn.id = id;
@@ -10,44 +11,8 @@ function createBasicButton({ id, text, initialTransform }) {
     return newBtn;
 }
 
-// Function to create animation when response was successful
-function createSuccessfulResponseEffect() {
-    const registerBtnDiv = document.getElementById("registerBtnDiv");
-    const script = document.createElement("script");
-    script.src =
-        "https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs";
-    script.type = "module";
-    registerBtnDiv.appendChild(script);
-
-    const lottiePlayer = document.createElement("dotlottie-player");
-    lottiePlayer.src =
-        "https://lottie.host/3b76d474-8015-414d-91bb-4b329d0ec66a/t8k7eXc8GS.json";
-    lottiePlayer.id = "responseHeadingEffect";
-    lottiePlayer.setAttribute("speed", "1");
-    lottiePlayer.setAttribute("autoplay", "");
-
-    registerBtnDiv.appendChild(lottiePlayer);
-}
-
-// Function to create heading with custom text
-function createResponseHeading(scaleUp, text) {
-    const registerBtnDiv = document.getElementById("registerBtnDiv");
-    let responseHeadingEl = document.getElementById("responseHeading");
-
-    if (!responseHeadingEl) {
-        responseHeadingEl = document.createElement("h2");
-        responseHeadingEl.id = "responseHeading";
-        responseHeadingEl.innerHTML = text;
-        responseHeadingEl.style.transform = "scale(0)";
-        registerBtnDiv.appendChild(responseHeadingEl);
-    }
-
-    if (scaleUp) {
-        responseHeadingEl.style.transform = "scale(1)";
-    }
-}
-
 // Function to create home button, when clicked => refreshes the page
+// Use cases: 4 --> 2-2 (async-functions.js - main.js)
 function createHomeButton() {
     const homeBtn = document.createElement("button");
     homeBtn.id = "homeBtn";
@@ -59,6 +24,7 @@ function createHomeButton() {
 }
 
 // Function to create the show-toggle button for password fields
+// Use cases: 2 --> 1-1 (async-functions.js - main.js)
 function createShowBtn(elementToShow) {
     const showBtn = document.createElement("button");
     showBtn.id = "showBtn";
@@ -76,22 +42,8 @@ function createShowBtn(elementToShow) {
     return showBtn;
 }
 
-// Unnecessary function?
-function arrowBtnsConfig() {
-    const roundElement = document.querySelector(".round");
-    const arrows = document.querySelectorAll(".arrow");
-    if (roundElement) {
-        roundElement.addEventListener("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            arrows.forEach((arrow) => {
-                arrow.classList.toggle("bounceAlpha");
-            });
-        });
-    }
-}
-
 // Function to initialize the signature's canvas with it's properties
+// Use cases: 1 --> main.js
 function setupSignatureCanvas() {
     const canvas = document.getElementById("signatureCanvas");
     const resetCanvasBtn = document.getElementById("resetCanvasBtn");
@@ -202,6 +154,7 @@ function setupSignatureCanvas() {
 }
 
 // Function to extract email from uploaded UNIcard
+// Use cases: 1 --> async-functions.js
 function extractEmail(text) {
     const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi;
     const matches = text.match(emailRegex);

@@ -1,4 +1,5 @@
 // Function to split the main button into register + login
+// Use cases: 1 --> index.html
 async function splitMainButton() {
     registerLoginBtn.style.transform = "scale(0)";
     registerLoginBtn.style.transition = "transform 0.5s";
@@ -50,70 +51,21 @@ async function splitMainButton() {
 }
 
 // Function to represent data disappearing from monitorScreenDiv
+// Use cases: 8 --> 4-4 (async-functions.js - main.js)
 async function fadeOutMonitorScreen() {
     monitorScreenDiv.style.opacity = "0";
     await delay(200);
 }
 
 // Function to represent data appearing on monitorScreenDiv
+// Use cases: 5-3 (async-functions.js - main.js)
 async function fadeInMonitorScreen() {
     monitorScreenDiv.style.opacity = "1";
     await delay(100);
 }
 
-// Function to create animation on response error - unnecessary?
-async function createNew404Effect() {
-    const script = document.createElement("script");
-    script.src =
-        "https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs";
-    script.type = "module";
-    registerBtnDiv.appendChild(script);
-
-    const lottiePlayer = document.createElement("dotlottie-player");
-    lottiePlayer.src =
-        "https://lottie.host/7ecd4f29-9d72-4ba1-83c7-8516c2b607dc/bwUOV026I3.json";
-    lottiePlayer.id = "animated404";
-    lottiePlayer.setAttribute("speed", "1");
-    lottiePlayer.setAttribute("autoplay", "");
-    lottiePlayer.setAttribute("loop", "true");
-
-    lottiePlayer.style.transform = "scale(0)";
-    lottiePlayer.style.transition = "transform 0.5s";
-
-    registerBtnDiv.appendChild(lottiePlayer);
-
-    await delay(10);
-    lottiePlayer.style.transform = "scale(1)";
-}
-
-// Function used to handle responses with animations
-async function responseAnimation(status) {
-    const existing404El = document.getElementById("animated404");
-    if (status === "200") {
-        createResponseHeading(false, "Sikeres regisztráció!<br>Jelentkezz be!");
-        await delay(1000);
-        createResponseHeading(true);
-        createSuccessfulResponseEffect();
-        registerBtnDiv.style.marginTop = "0%";
-        await delay(4000);
-        await fadeOutMonitorScreen();
-        renderLogin();
-        await fadeInMonitorScreen();
-    } else if (status === "404") {
-        await delay(1000);
-        createResponseHeading(false, "Hiba történt");
-        createResponseHeading(true);
-        if (existing404El) {
-            existing404El.style.transform = `scale(${operation === "scale1" ? 1 : 0
-                })`;
-        } else {
-            createNew404Effect();
-        }
-        registerBtnDiv.style.marginTop = "14%";
-    }
-}
-
 // Function used to save the user's signature as an image
+// Use cases: 1 --> main.js
 async function captureSignature() {
     const canvas = document.getElementById("signatureCanvas");
     if (!canvas) return null;
@@ -141,6 +93,7 @@ async function captureSignature() {
 }
 
 // Function to hash the inputted image file
+// Use cases: 2 --> 1-1 (async-functions.js - main.js)
 async function hashImage(file) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = new Uint8Array(arrayBuffer);
@@ -151,6 +104,7 @@ async function hashImage(file) {
 }
 
 // Function used to create pop-up error messages
+// Use cases: 6 --> 4-2 (async-functions.js - main.js)
 async function createResponseWindow(text) {
     let existingErrorWindow = document.querySelector("#errorWindow");
     if (!existingErrorWindow) {
@@ -167,6 +121,7 @@ async function createResponseWindow(text) {
 }
 
 // Function used to render the login page's elements
+// Use cases: 1 --> asnyc-functions.js
 async function renderLogin() {
     monitorScreenDiv.innerHTML = `
       <form id="loginForm" onsubmit="return false;">
