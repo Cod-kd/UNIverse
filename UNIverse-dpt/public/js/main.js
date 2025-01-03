@@ -17,7 +17,6 @@ function renderRegistration() {
         gender: null,
         username: "",
         passwd: "",
-        imgPasswd: "",
         universityName: "",
         facultyName: ""
     };
@@ -861,11 +860,23 @@ function renderRegistration() {
 
         addBackButtonListener(requiredData.length + 1, null);
         const finalRegisterBtn = document.getElementById("registerBtn");
-        finalRegisterBtn.addEventListener("click", fetchRegister);
+        finalRegisterBtn.addEventListener("click", () => {
+            fetchRegister(
+                formData.email,
+                formData.username,
+                formData.passwd,
+                "ADD FULL NAME INPUT",
+                formData.gender,
+                formData.birthDate,
+                formData.facultyName,
+                formData.universityName,
+                "ADD PFP INPUT"
+            )
+        });
         await fadeInMonitorScreen();
     }
 
-    async function fetchRegister(registerData) {
+    async function fetchRegister(email, usr, passwd, fullName, gender, birthDate, faculty, university, pfpExtension) {
         try {
             // Should be stored somewhere else
             const username = "admin";
@@ -879,15 +890,15 @@ function renderRegistration() {
                 headers: headers,
                 method: "POST",
                 body: JSON.stringify({
-                    "emailIn": registerData.email,
-                    "usernameIn": registerData.username,
-                    "passwordIn": registerData.passwd,
-                    "nameIn": "ADD FULL NAME INPUT",
-                    "genderIn": registerData.gender,
-                    "birthDateIn": registerData.birthDate,
-                    "facultyIn": registerData.facultyName,
-                    "universityNameIn": registerData.universityName,
-                    "profilePictureExtensionIn": "ADD PROFILE PICTURE INPUT"
+                    emailIn: email,
+                    usernameIn: usr,
+                    passwordIn: passwd,
+                    nameIn: fullName,
+                    genderIn: gender,
+                    birthDateIn: birthDate,
+                    facultyIn: faculty,
+                    universityNameIn: university,
+                    profilePictureExtensionIn: pfpExtension
                 })
             });
 
