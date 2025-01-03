@@ -201,20 +201,20 @@ async function renderLogin() {
     document.getElementById("cardLoginBtn").addEventListener("click", async function () {
         await fadeOutMonitorScreen();
         monitorScreenDiv.innerHTML = `
-          <form id="cardForm" onsubmit="return false">
-              <div id="cardContainer">
-                  <div class="folder">
-                      <div class="front-side">
-                          <div class="tip"></div>
-                          <div class="cover"></div>
-                      </div>
-                      <div class="back-side cover"></div>
-                  </div>
-                  <label class="custom-file-upload">
-                  <input id="cardInput" type="file" accept=".jpg, .jpeg">Saját UNIcard-od</label>
-              </div>
-              <button class="button" id="loginBtn">Bejelentkezés kártyával</button>
-          </form>`;
+            <form id="cardForm" onsubmit="return false">
+                <div id="cardContainer">
+                    <div class="folder">
+                        <div class="front-side">
+                            <div class="tip"></div>
+                            <div class="cover"></div>
+                        </div>
+                        <div class="back-side cover"></div>
+                    </div>
+                    <label class="custom-file-upload">
+                    <input id="cardInput" type="file" accept=".jpg, .jpeg">Saját UNIcard-od</label>
+                </div>
+                <button class="button" id="loginBtn">Bejelentkezés kártyával</button>
+            </form>`;
         monitorScreenDiv.appendChild(createHomeButton());
         await fadeInMonitorScreen();
 
@@ -230,40 +230,32 @@ async function renderLogin() {
                 return;
             }
 
-            const encodedImage = await hashImage(image);
             const reader = new FileReader();
 
             reader.onload = async function (event) {
                 const dataURL = event.target.result;
+
                 try {
-                    const {
-                        data: { text }
-                    } = await Tesseract.recognize(dataURL, "eng");
-                    const extractedEmail = extractEmail(text);
+                    // Load the EXIF data from the image
+                    const arrayBuffer = await image.arrayBuffer();
+                    const exifObj = piexifjs.load(arrayBuffer);
 
-                    if (extractedEmail) {
-                        const response = await fetch(
-                            `fetchCardUser.php?email=${encodeURIComponent(extractedEmail)}`
-                        );
-                        const userData = await response.json();
-
-                        if (userData && userData.imgPasswd) {
-                            if (encodedImage === userData.imgPasswd) {
-                                monitorScreenDiv.innerHTML = `<h1>Successful login!<br>Redirecting...</h1>`;
-                                await fadeInMonitorScreen();
-                                await delay(3000);
-                                window.location.href = "mainPage.html";
-                            } else {
-                                await handleError("Invalid login credentials!");
-                            }
-                        } else {
-                            await handleError("User not found!");
-                        }
-                    } else {
-                        await handleError("No email found!");
+                    // Extract username and password from UserComment metadata
+                    const userComment = exifObj['0th'][piexifjs.TagNames.UserComment];
+                    if (!userComment) {
+                        await handleError("No metadata found!");
+                        return;
                     }
+
+                    // Parse the extracted UserComment (assuming format "username: <username>, passwd: <password>")
+                    const metadata = userComment.split(',');
+                    const username = metadata[0].split(':')[1].trim();
+                    const password = metadata[1].split(':')[1].trim();
+
+                    // Call the fetchLogin function with the extracted credentials
+                    await fetchLogin(username, password);
                 } catch (err) {
-                    await handleError(`Error during recognition: ${err.message}`);
+                    await handleError(`Error reading the image metadata: ${err.message}`);
                 }
             };
             reader.readAsDataURL(image);

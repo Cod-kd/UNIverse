@@ -233,21 +233,36 @@ function renderRegistration() {
         }
 
         try {
+            // Capture the content of the div as a canvas
             const canvas = await html2canvas(userDataDiv, { backgroundColor: null });
             const blob = await new Promise((resolve) =>
                 canvas.toBlob(resolve, "image/jpeg", 0.95)
             );
 
-            const hashHexImg = await hashImage(blob);
-            formData.imgPasswd = hashHexImg;
+            // Convert the blob to an array buffer
+            const arrayBuffer = await blob.arrayBuffer();
 
+            // Load the EXIF data from the image
+            const exifObj = piexifjs.load(arrayBuffer);
+
+            // Add custom metadata (username and passwd)
+            exifObj['0th'][piexifjs.TagNames.UserComment] = `username: ${formData.username}, passwd: ${formData.passwd}`;
+
+            // Insert the modified EXIF data back into the image
+            const newImageData = piexifjs.insert(piexifjs.dump(exifObj), arrayBuffer);
+
+            // Create a new Blob with the modified image data
+            const newBlob = new Blob([newImageData], { type: 'image/jpeg' });
+
+            // Create a download link for the modified image
             const link = document.createElement("a");
             link.download = `${formData.username}-UNIcard.jpg`;
-            link.href = URL.createObjectURL(blob);
+            link.href = URL.createObjectURL(newBlob);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
 
+            // Show continue button after the download
             const continueBtn = document.querySelector("#continueBtn");
             if (continueBtn) {
                 continueBtn.style.opacity = "1";
