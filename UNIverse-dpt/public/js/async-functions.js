@@ -92,17 +92,6 @@ async function captureSignature() {
     return canvas.toDataURL("image/png");
 }
 
-// Function to hash the inputted image file
-// Use cases: 2 --> 1-1 (async-functions.js - main.js)
-async function hashImage(file) {
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = new Uint8Array(arrayBuffer);
-    const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map((byte) => byte.toString(16).padStart(2, "0")).join("");
-    return hashHex;
-}
-
 async function fetchLogin(usrIn, passIn) {
     try {
         // Should be stored somewhere else
