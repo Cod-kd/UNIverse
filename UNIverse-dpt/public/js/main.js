@@ -235,41 +235,88 @@ function renderRegistration() {
         try {
             // Capture the content of the div as a canvas
             const canvas = await html2canvas(userDataDiv, { backgroundColor: null });
-            const blob = await new Promise((resolve) =>
-                canvas.toBlob(resolve, "image/jpeg", 0.95)
-            );
 
-            // Convert the blob to an array buffer
-            const arrayBuffer = await blob.arrayBuffer();
+            // Convert canvas to base64 image (JPEG format)
+            const base64Image = canvas.toDataURL("image/jpeg", 0.95);
 
-            // Load the EXIF data from the image
-            const exifObj = piexifjs.load(arrayBuffer);
+            // Create a basic EXIF structure
+            const zeroth = {};
+            const exif = {};
+            const gps = {};
 
-            // Add custom metadata (username and passwd)
-            exifObj['0th'][piexifjs.TagNames.UserComment] = `username: ${formData.username}, passwd: ${formData.passwd}`;
+            // Add custom metadata as UserComment
+            // 37510 is the tag number for UserComment
+            zeroth[37510] = {
+                'type': 'Ascii',
+                'value': `username: ${formData.username}, passwd: ${formData.passwd}`
+            };
 
-            // Insert the modified EXIF data back into the image
-            const newImageData = piexifjs.insert(piexifjs.dump(exifObj), arrayBuffer);
+            // Create the EXIF dictionary
+            const exifObj = { "0th": zeroth, "Exif": exif, "GPS": gps };
 
-            // Create a new Blob with the modified image data
-            const newBlob = new Blob([newImageData], { type: 'image/jpeg' });
+            try {
+                // Dump EXIF data to binary
+                const exifBytes = piexifjs.dump(exifObj);
 
-            // Create a download link for the modified image
-            const link = document.createElement("a");
-            link.download = `${formData.username}-UNIcard.jpg`;
-            link.href = URL.createObjectURL(newBlob);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+                // Insert EXIF into image
+                const newImageData = piexifjs.insert(exifBytes, base64Image);
 
-            // Show continue button after the download
-            const continueBtn = document.querySelector("#continueBtn");
-            if (continueBtn) {
-                continueBtn.style.opacity = "1";
-                continueBtn.style.pointerEvents = "auto";
+                // Create a new Blob with the modified image data
+                const newBlob = dataURItoBlob(newImageData);
+
+                // Create a download link for the modified image
+                const link = document.createElement("a");
+                link.download = `${formData.username}-UNIcard.jpg`;
+                link.href = URL.createObjectURL(newBlob);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // Show continue button after the download
+                const continueBtn = document.querySelector("#continueBtn");
+                if (continueBtn) {
+                    continueBtn.style.opacity = "1";
+                    continueBtn.style.pointerEvents = "auto";
+                }
+            } catch (exifError) {
+                console.error("Error with EXIF:", exifError);
+                // Fallback to saving without EXIF
+                const link = document.createElement("a");
+                link.download = `${formData.username}-UNIcard.jpg`;
+                link.href = base64Image;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
         } catch (err) {
-            createResponseWindow("Error saving the UNIcard: ", err);
+            console.error("Error in saveUNIcard:", err);
+            createResponseWindow("Error saving the UNIcard: " + err.message);
+        }
+    }
+
+    function dataURItoBlob(dataURI) {
+        try {
+            // Handle both base64 and raw data URIs
+            const splitDataURI = dataURI.split(',');
+            const byteString = splitDataURI[0].indexOf('base64') >= 0 ?
+                atob(splitDataURI[1]) :
+                decodeURIComponent(splitDataURI[1]);
+
+            // Get the MIME type
+            const mimeString = splitDataURI[0].split(':')[1].split(';')[0];
+
+            // Write the bytes of the string to an ArrayBuffer
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+
+            return new Blob([ab], { type: mimeString });
+        } catch (error) {
+            console.error("Error in dataURItoBlob:", error);
+            throw new Error("Failed to convert data URI to Blob");
         }
     }
 
