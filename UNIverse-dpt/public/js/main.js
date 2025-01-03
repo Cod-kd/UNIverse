@@ -75,8 +75,6 @@ function renderRegistration() {
                 index > 0 ? "repeat(3, 1fr)" : "500px 0px";
         } else if (index === requiredData.length) {
             createUNIverseCardStep(monitorScreenDiv);
-        } else {
-            createFinalRegistrationStep();
         }
 
         const elements = monitorScreenDiv.children;
@@ -177,7 +175,12 @@ function renderRegistration() {
         saveButton.textContent = "Get my UNIcard";
         saveButton.classList.add("button");
         saveButton.id = "saveCardBtn";
-        saveButton.addEventListener("click", saveUNIcard);
+        saveButton.addEventListener("click", async () => {
+            await saveUNIcard();
+            await fadeOutMonitorScreen();
+            await createFinalRegistrationStep();
+            await fadeInMonitorScreen();
+        });
         monitorScreenDiv.appendChild(saveButton);
 
         const backBtn = createNavigationButton(true);
@@ -857,8 +860,13 @@ function renderRegistration() {
         monitorScreenDiv.appendChild(backBtn);
 
         addBackButtonListener(requiredData.length + 1, null);
-        addFinalRegisterButtonListener();
+        const finalRegisterBtn = document.getElementById("registerBtn");
+        finalRegisterBtn.addEventListener("click", fetchRegister);
         await fadeInMonitorScreen();
+    }
+
+    async function fetchRegister() {
+        console.log("FINISH FETCH REGISTER");
     }
 
     // Function to update the formData, where the registration data is saved
