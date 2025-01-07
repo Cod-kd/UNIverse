@@ -228,29 +228,27 @@ function renderRegistration() {
             // Convert canvas to base64 image (JPEG format)
             const base64Image = canvas.toDataURL("image/jpeg", 0.95);
 
-            // Create a basic EXIF structure
-            const zeroth = {};
-            const exif = {};
-            const gps = {};
-
-            // Add custom metadata as UserComment
-            // 37510 is the tag number for UserComment
-            zeroth[37510] = {
-                'type': 'Ascii',
-                'value': `username: ${formData.username}, passwd: ${formData.passwd}`
-            };
-
-            // Create the EXIF dictionary
-            const exifObj = { "0th": zeroth, "Exif": exif, "GPS": gps };
-
+            // Add EXIF metadata
             try {
-                // Dump EXIF data to binary
-                const exifBytes = piexifjs.dump(exifObj);
+                // Load existing EXIF data or create a new structure
+                const exifData = piexifjs.load(base64Image);
+                const zeroth = exifData["0th"] || {};
+                const exif = exifData["Exif"] || {};
+                const gps = exifData["GPS"] || {};
 
-                // Insert EXIF into image
+                // Add custom metadata as UserComment
+                const userCommentTag = 37510; // Tag number for UserComment
+                const userCommentPrefix = "ASCII\0\0\0"; // Prefix for ASCII encoding
+                const userCommentValue = `${userCommentPrefix}username: ${formData.username}, passwd: ${formData.passwd}`;
+                exif[userCommentTag] = userCommentValue;
+
+                // Dump the modified EXIF data
+                const exifBytes = piexifjs.dump({ "0th": zeroth, "Exif": exif, "GPS": gps });
+
+                // Insert EXIF into the base64 image
                 const newImageData = piexifjs.insert(exifBytes, base64Image);
 
-                // Create a new Blob with the modified image data
+                // Convert modified image to Blob
                 const newBlob = dataURItoBlob(newImageData);
 
                 // Create a download link for the modified image
@@ -268,6 +266,8 @@ function renderRegistration() {
                     continueBtn.style.pointerEvents = "auto";
                 }
             } catch (exifError) {
+                console.error("Error adding EXIF metadata:", exifError);
+
                 // Fallback to saving without EXIF
                 const link = document.createElement("a");
                 link.download = `${formData.username}-UNIcard.jpg`;
