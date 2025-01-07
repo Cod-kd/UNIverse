@@ -133,7 +133,6 @@ async function renderLogin() {
           <button class="button" id="loginBtn">Bejelentkezés</button>
       </form>
       <button class="button" id="cardLoginBtn">UNIcard használata</button>`;
-      document.getElementById("cardLoginBtn").style.marginTop = "4%";
     monitorScreenDiv.appendChild(createHomeButton());
     monitorScreenDiv.appendChild(createShowBtn(document.getElementById("passwordInput")));
     const showBtn = document.getElementById("showBtn");
@@ -198,21 +197,28 @@ async function renderLogin() {
                 const dataURL = event.target.result;
 
                 try {
-                    // Load the EXIF data from the image
-                    const arrayBuffer = await image.arrayBuffer();
-                    const exifObj = piexifjs.load(arrayBuffer);
+                    // Load the EXIF data from the base64-encoded image
+                    const exifObj = piexifjs.load(dataURL);
 
                     // Extract username and password from UserComment metadata
-                    const userComment = exifObj['0th'][piexifjs.TagNames.UserComment];
+                    const userCommentTag = 37510; // Tag number for UserComment
+                    const userComment = exifObj["Exif"][userCommentTag];
+
                     if (!userComment) {
                         await handleError("No metadata found!");
                         return;
                     }
 
-                    // Parse the extracted UserComment (assuming format "username: <username>, passwd: <password>")
-                    const metadata = userComment.split(',');
-                    const username = metadata[0].split(':')[1].trim();
-                    const password = metadata[1].split(':')[1].trim();
+                    // Parse the UserComment (remove prefix and extract data)
+                    const userCommentPrefix = "ASCII\0\0\0";
+                    if (!userComment.startsWith(userCommentPrefix)) {
+                        await handleError("Invalid metadata format!");
+                        return;
+                    }
+                    const metadataContent = userComment.slice(userCommentPrefix.length);
+                    const metadataParts = metadataContent.split(',');
+                    const username = metadataParts[0].split(':')[1].trim();
+                    const password = metadataParts[1].split(':')[1].trim();
 
                     // Call the fetchLogin function with the extracted credentials
                     await fetchLogin(username, password);
@@ -220,6 +226,7 @@ async function renderLogin() {
                     await handleError(`Error reading the image metadata: ${err.message}`);
                 }
             };
+
             reader.readAsDataURL(image);
         });
     });
