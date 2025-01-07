@@ -154,7 +154,6 @@ function renderRegistration() {
     async function createUNIverseCardStep(monitorScreenDiv) {
         await fadeOutMonitorScreen();
         monitorScreenDiv.innerHTML = "";
-        monitorScreenDiv.style.gridTemplateColumns = "repeat(3, 1fr)";
 
         const userDataDiv = document.createElement("div");
         userDataDiv.id = "userDataDiv";
@@ -882,6 +881,12 @@ function renderRegistration() {
             const username = "admin";
             const password = "oneOfMyBestPasswords";
 
+            // Format the birthDate with dashes for the API
+            const formattedBirthDate = birthDate.replace(
+                /^(\d{4})(\d{2})(\d{2})$/,
+                '$1-$2-$3'
+            );
+
             let headers = new Headers();
             headers.set("Authorization", "Basic " + btoa(username + ":" + password));
             headers.set("Content-Type", "application/json");
@@ -895,7 +900,7 @@ function renderRegistration() {
                     passwordIn: passwd,
                     nameIn: fullName,
                     genderIn: gender,
-                    birthDateIn: birthDate,
+                    birthDateIn: formattedBirthDate,
                     facultyIn: faculty,
                     universityNameIn: university,
                     profilePictureExtensionIn: pfpExtension
@@ -931,15 +936,8 @@ function renderRegistration() {
                 formData.email = dataInp.value.trim();
                 break;
             case 1:
-                const dateVal = dataInp.value.trim();
-                if (dateVal.length === 8) {
-                    const year = dateVal.slice(0, 4);
-                    const month = dateVal.slice(4, 6);
-                    const day = dateVal.slice(6, 8);
-                    formData.birthDate = `${year}-${month}-${day}`;
-                } else {
-                    formData.birthDate = dateVal;
-                }
+                // Store the date as YYYYMMDD
+                formData.birthDate = dataInp.value.trim();
                 break;
             case 3:
                 formData.username = dataInp.value.trim();
@@ -1050,10 +1048,10 @@ function renderRegistration() {
         if (existingP) {
             if (text) {
                 existingP.innerHTML = text;
-                existingP.style.animation = "appear 0.5s forwards ease";
+                existingP.style.animation = "appear 0.3s forwards ease";
                 existingP.style.display = "block";
             } else {
-                existingP.style.animation = "disappear 0.5s forwards ease";
+                existingP.style.animation = "disappear 0.3s forwards ease";
                 await delay(500);
                 existingP.remove();
             }
@@ -1062,7 +1060,7 @@ function renderRegistration() {
             newDetailP.innerHTML = text;
             newDetailP.dataset.condition = condition;
             inputDetailsDiv.appendChild(newDetailP);
-            newDetailP.style.animation = "appear 0.5s forwards ease";
+            newDetailP.style.animation = "appear 0.3s forwards ease";
         }
     }
 }

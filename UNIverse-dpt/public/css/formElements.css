@@ -149,8 +149,8 @@
 
 /* Extra Stylings for Form */
 .dataHeading {
-    position: fixed;
-    top: 17%;
+    position: absolute;
+    top: 20vh;
 }
 
 #showBtn, #showBtnLogin {
@@ -264,8 +264,8 @@
 #inputDetailsDiv {
     max-width: 320px;
     height: fit-content;
-    top: 40%;
-    color: #FF5A1F;
+    top: 50vh;
+    color: var(--main);
     background-color: transparent;
     position: fixed;
 }
@@ -294,7 +294,7 @@
 }
 
 #saveCardBtn {
-    margin-top: 105%;
+    margin-top: 85%;
 }
 
 /* Error window */

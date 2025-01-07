@@ -3,7 +3,6 @@
 async function splitMainButton() {
     registerLoginBtn.style.transform = "scale(0)";
     registerLoginBtn.style.transition = "transform 0.5s";
-    monitorScreenDiv.style.gap = "0.3em";
 
     await delay(500);
     registerLoginBtn.remove();
@@ -39,7 +38,6 @@ async function splitMainButton() {
         newBtn.addEventListener("click", async () => {
             await fadeOutMonitorScreen();
             monitorScreenDiv.innerHTML = ``;
-            monitorScreenDiv.style.gap = "1.5em";
             if (data.id === "registerBtn") {
                 renderRegistration();
             } else {

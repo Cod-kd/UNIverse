@@ -77,22 +77,20 @@ p {
     font-family: 'Nunito';
 }
 
-#monitorDiv {
-    width: 50em;
-    height: 45em;
-    text-align: center;
-    padding: 6em;
-}
-
-#monitorDiv p {
-    font-size: 1.5rem;
-}
-
 #monitorScreenDiv {
+    width: 90vh;
+    height: 50vh;
+    padding: 6em;
     display: grid;
     color: var(--main);
     z-index: 2;
     transition: all 0.3s;
     justify-items: center;
-    gap: 2em;
+    align-content: center;
+    text-align: center;
+    gap: 3em;
+}
+
+#monitorScreenDiv p {
+    font-size: 1.5rem;
 }
