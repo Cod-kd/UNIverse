@@ -906,8 +906,6 @@ function renderRegistration() {
 
             switch (response.status) {
                 case 200:
-                    monitorScreenDiv.innerHTML = `<h1>Sikeres regisztráció!</h1>`;
-                    await delay(3000);
                     renderLogin();
                     break;
                 case 409:

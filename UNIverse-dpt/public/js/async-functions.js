@@ -133,6 +133,7 @@ async function renderLogin() {
           <button class="button" id="loginBtn">Bejelentkezés</button>
       </form>
       <button class="button" id="cardLoginBtn">UNIcard használata</button>`;
+      document.getElementById("cardLoginBtn").style.marginTop = "4%";
     monitorScreenDiv.appendChild(createHomeButton());
     monitorScreenDiv.appendChild(createShowBtn(document.getElementById("passwordInput")));
     const showBtn = document.getElementById("showBtn");
