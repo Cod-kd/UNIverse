@@ -42,6 +42,7 @@
 .radio-input label {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 15px;
     padding: 0 20px;
     width: 290px;
@@ -63,7 +64,7 @@
     z-index: -1;
     transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     border-radius: 10px;
-    border: 2px solid transparent;
+    border: 2px solid var(--main);
 }
 
 .radio-input label:hover::before {
@@ -81,37 +82,16 @@
 
 .radio-input .label input[type="radio"] {
     appearance: none;
-    width: 17px;
-    height: 17px;
-    border: 2px solid var(--main);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.3s ease;
-    position: relative;
+    width: 0;
+    height: 0;
+    margin: 0;
+    position: absolute;
 }
+
 
 .radio-input .label input[type="radio"]:checked {
-    background-color: var(--dark2);
-    border-color: var(--dark2);
-}
-
-.radio-input .label input[type="radio"]::before {
-    content: "";
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
     background-color: var(--main);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    transition: transform 0.1s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-.radio-input .label input[type="radio"]:checked::before {
-    transform: translate(-50%, -50%) scale(1);
+    border-color: var(--main);
 }
 
 /* Username input */
