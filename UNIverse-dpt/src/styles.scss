@@ -16,6 +16,7 @@
 body {
     background: url("../public/images/background.jpg") no-repeat center center / cover;
     padding: 3em;
+    overflow: hidden;
 }
 
 body::before {
@@ -93,4 +94,9 @@ p {
 
 #monitorScreenDiv p {
     font-size: 1.5rem;
+}
+
+#registerLoginBtnDiv{
+    display: flex;
+    gap: 1em;
 }
