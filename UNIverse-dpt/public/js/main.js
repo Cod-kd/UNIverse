@@ -35,7 +35,7 @@ function renderRegistration() {
             const backBtn = createNavigationButton(true);
             const continueBtn = createNavigationButton(false);
 
-            monitorScreenDiv.appendChild(createHomeButton());
+            monitorScreenDiv.appendChild(createHomeButton(false));
 
             const inputDetailsDiv = document.createElement("div");
             inputDetailsDiv.id = "inputDetailsDiv";
@@ -184,7 +184,7 @@ function renderRegistration() {
         const backBtn = createNavigationButton(true);
         const continueBtn = createNavigationButton(false);
 
-        monitorScreenDiv.appendChild(createHomeButton());
+        monitorScreenDiv.appendChild(createHomeButton(false));
         monitorScreenDiv.insertBefore(backBtn, saveButton);
         monitorScreenDiv.appendChild(continueBtn);
 

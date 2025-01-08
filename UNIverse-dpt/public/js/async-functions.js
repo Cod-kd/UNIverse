@@ -130,7 +130,7 @@ async function renderLogin() {
           <button class="button" id="loginBtn">Bejelentkezés</button>
       </form>
       <button class="button" id="cardLoginBtn">UNIcard használata</button>`;
-    monitorScreenDiv.appendChild(createHomeButton());
+    monitorScreenDiv.appendChild(createHomeButton(true));
     monitorScreenDiv.appendChild(createShowBtn(document.getElementById("passwordInput")));
     const showBtn = document.getElementById("showBtn");
     showBtn.id = "showBtnLogin";
@@ -173,7 +173,7 @@ async function renderLogin() {
                 </div>
                 <button class="button" id="loginBtn">Bejelentkezés kártyával</button>
             </form>`;
-        monitorScreenDiv.appendChild(createHomeButton());
+        monitorScreenDiv.appendChild(createHomeButton(true));
         await fadeInMonitorScreen();
 
         const loginBtn = document.getElementById("loginBtn");

@@ -15,15 +15,20 @@ function createBasicButton({ id, text, initialTransform }) {
 // Function to create home button, when clicked => refreshes the page
 // Use cases: 4 --> 2-2 (async-functions.js - main.js)
 // As component: home-button
-function createHomeButton() {
+function createHomeButton(atLogin) {
     const homeBtn = document.createElement("button");
     homeBtn.id = "homeBtn";
-    homeBtn.innerHTML = `<i class="fa fa-home"></i>`;
+    homeBtn.innerHTML = `<span class="material-symbols-outlined">${atLogin?"badge":"login"}</span>`;
     homeBtn.addEventListener("click", async function () {
-        window.location.reload();
+        if (atLogin) {
+            renderRegistration();
+        } else {
+            renderLogin();
+        }
     });
     return homeBtn;
 }
+
 
 // Function to create the show-toggle button for password fields
 // Use cases: 2 --> 1-1 (async-functions.js - main.js)
