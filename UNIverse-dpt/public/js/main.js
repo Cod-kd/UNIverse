@@ -153,16 +153,16 @@ function renderRegistration() {
     // Function for the UNIcard creation in the registration
     async function createUNIverseCardStep(monitorScreenDiv) {
         await fadeOutMonitorScreen();
-    monitorScreenDiv.innerHTML = "";
-    
-    // Set consistent grid layout
-    monitorScreenDiv.style.gridTemplateColumns = "repeat(3, 1fr)"; // Keep 3-column layout
-    monitorScreenDiv.style.gap = "20px"; // Maintain spacing
+        monitorScreenDiv.innerHTML = "";
 
-    const userDataDiv = document.createElement("div");
-    userDataDiv.id = "userDataDiv";
-    userDataDiv.style.gridColumn = "2"; // Center the card in middle column
-    userDataDiv.innerHTML = `
+        // Set consistent grid layout
+        monitorScreenDiv.style.gridTemplateColumns = "repeat(3, 1fr)"; // Keep 3-column layout
+        monitorScreenDiv.style.gap = "20px"; // Maintain spacing
+
+        const userDataDiv = document.createElement("div");
+        userDataDiv.id = "userDataDiv";
+        userDataDiv.style.gridColumn = "2"; // Center the card in middle column
+        userDataDiv.innerHTML = `
         <p>Email: ${formData.email}</p>
         <p>Username: ${formData.username}</p>
         <p>Gender: ${formData.gender ? "Male" : "Female"}</p>
@@ -172,31 +172,31 @@ function renderRegistration() {
         <div>
             <h1>UNIcard</h1>
         </div>`;
-    monitorScreenDiv.appendChild(userDataDiv);
+        monitorScreenDiv.appendChild(userDataDiv);
 
-    const saveButton = document.createElement("button");
-    saveButton.textContent = "Get my UNIcard";
-    saveButton.classList.add("button");
-    saveButton.id = "saveCardBtn";
-    saveButton.style.gridColumn = "2"; // Center the button
-    saveButton.addEventListener("click", async () => {
-        await saveUNIcard();
-        await fadeOutMonitorScreen();
-        await createFinalRegistrationStep();
-        await fadeInMonitorScreen();
-    });
-    monitorScreenDiv.appendChild(saveButton);
+        const saveButton = document.createElement("button");
+        saveButton.textContent = "Get my UNIcard";
+        saveButton.classList.add("button");
+        saveButton.id = "saveCardBtn";
+        saveButton.style.gridColumn = "2"; // Center the button
+        saveButton.addEventListener("click", async () => {
+            await saveUNIcard();
+            await fadeOutMonitorScreen();
+            await createFinalRegistrationStep();
+            await fadeInMonitorScreen();
+        });
+        monitorScreenDiv.appendChild(saveButton);
 
-    // Keep back button in left column
-    const backBtn = createNavigationButton(true);
-    backBtn.style.gridColumn = "1"; // Force left alignment
-    monitorScreenDiv.appendChild(createHomeButton(false));
-    monitorScreenDiv.insertBefore(backBtn, saveButton);
+        // Keep back button in left column
+        const backBtn = createNavigationButton(true);
+        backBtn.style.gridColumn = "1"; // Force left alignment
+        monitorScreenDiv.appendChild(createHomeButton(false));
+        monitorScreenDiv.insertBefore(backBtn, saveButton);
 
-    addBackButtonListener(requiredData.length, null);
+        addBackButtonListener(requiredData.length, null);
 
-    // Animation logic remains the same
-    const elements = monitorScreenDiv.children;
+        // Animation logic remains the same
+        const elements = monitorScreenDiv.children;
         for (let el of elements) {
             el.style.opacity = "0";
             el.style.transform = "translateY(20px)";
@@ -745,11 +745,26 @@ function renderRegistration() {
             case 1:
                 dataInp.type = "text";
                 dataInp.id = "dateInput";
-                dataInp.placeholder = "Dátum: ÉÉÉÉHHNN";
+                dataInp.placeholder = "ÉÉÉÉ-HH-NN";
                 dataInp.value = formData.birthDate;
+                dataInp.maxLength = 10;
+
                 dataInp.addEventListener("input", function (e) {
-                    const birthDate = e.target.value;
-                    const conditions = validateBirthDate(birthDate);
+                    let value = e.target.value.replace(/\D/g, '');
+                    let formattedDate = '';
+
+                    if (value.length > 0) {
+                        formattedDate = value.substring(0, 4);
+                        if (value.length > 4) {
+                            formattedDate += '-' + value.substring(4, 6);
+                        }
+                        if (value.length > 6) {
+                            formattedDate += '-' + value.substring(6, 8);
+                        }
+                    }
+
+                    dataInp.value = formattedDate;
+                    const conditions = validateBirthDate(formattedDate);
                     updateValidation(conditions);
                 });
                 break;
@@ -920,12 +935,6 @@ function renderRegistration() {
             const username = "admin";
             const password = "oneOfMyBestPasswords";
 
-            // Format the birthDate with dashes for the API
-            const formattedBirthDate = birthDate.replace(
-                /^(\d{4})(\d{2})(\d{2})$/,
-                '$1-$2-$3'
-            );
-
             let headers = new Headers();
             headers.set("Authorization", "Basic " + btoa(username + ":" + password));
             headers.set("Content-Type", "application/json");
@@ -939,7 +948,7 @@ function renderRegistration() {
                     passwordIn: passwd,
                     nameIn: fullName,
                     genderIn: gender,
-                    birthDateIn: formattedBirthDate,
+                    birthDateIn: birthDate,
                     facultyIn: faculty,
                     universityNameIn: university,
                     profilePictureExtensionIn: pfpExtension
@@ -975,7 +984,6 @@ function renderRegistration() {
                 formData.email = dataInp.value.trim();
                 break;
             case 1:
-                // Store the date as YYYYMMDD
                 formData.birthDate = dataInp.value.trim();
                 break;
             case 3:
@@ -1023,14 +1031,16 @@ function renderRegistration() {
             return conditions;
         }
 
-        if (birthDate.length !== 8) {
-            conditions.format = "-Helytelen dátumformátum (ÉÉÉÉHHNN)";
+        const cleanDate = birthDate.replace(/-/g, '');
+
+        if (cleanDate.length !== 8) {
+            conditions.format = "-Helytelen dátumformátum (ÉÉÉÉ-HH-NN)";
             return conditions;
         }
 
-        const year = parseInt(birthDate.slice(0, 4), 10);
-        const month = parseInt(birthDate.slice(4, 6), 10);
-        const day = parseInt(birthDate.slice(6, 8), 10);
+        const year = parseInt(cleanDate.slice(0, 4), 10);
+        const month = parseInt(cleanDate.slice(4, 6), 10);
+        const day = parseInt(cleanDate.slice(6, 8), 10);
 
         if (isNaN(year) || isNaN(month) || isNaN(day)) {
             conditions.format = "-Helytelen dátumformátum (ÉÉÉÉHHNN)";
