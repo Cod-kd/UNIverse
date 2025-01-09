@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extract and Add Metadata</title>
+</head>
+
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/piexifjs/2.0.0-alpha.4/piexifjs.js"
+        integrity="sha512-CC1rvotFlC7kx0/whQESPo8xCLOleumDgQafAKwkZviT2UA/61N+K+3RUmjaPMXUUwBtgtIJwheCl1rm3gpEvw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <h1>Add and Read Metadata from an Image</h1>
+
+    <label for="fileInput">Upload an Image:</label>
+    <input type="file" id="fileInput" accept="image/*"><br><br>
+
+    <label for="username">Username:</label>
+    <input type="text" id="username" placeholder="Enter username"><br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" placeholder="Enter password"><br><br>
+
+    <button id="addMetadataBtn">Add Metadata and Download</button>
+    <button id="readMetadataBtn">Read Metadata</button>
+
+    <pre id="metadataOutput" style="background: #f4f4f4; padding: 10px; border: 1px solid #ddd; margin-top: 20px;"></pre>
+
+    <script>
+        // Helper function to convert a Data URI to a Blob
+        function dataURItoBlob(dataURI) {
+            const byteString = atob(dataURI.split(',')[1]);
+            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+
+            return new Blob([ab], { type: mimeString });
+        }
+
+        const fileInput = document.getElementById("fileInput");
+        const metadataOutput = document.getElementById("metadataOutput");
+
+        // Add Metadata and Download
+        document.getElementById("addMetadataBtn").addEventListener("click", function () {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if (!fileInput.files[0]) {
+                alert("Please upload an image.");
+                return;
+            }
+
+            if (!username || !password) {
+                alert("Please enter both username and password.");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                const base64Data = event.target.result;
+
+                try {
+                    // Load existing EXIF data or create a new structure
+                    const exifData = piexifjs.load(base64Data);
+                    const zeroth = exifData["0th"] || {};
+                    const exif = exifData["Exif"] || {};
+                    const gps = exifData["GPS"] || {};
+
+                    // Add UserComment metadata
+                    const userCommentTag = 37510; // Tag number for UserComment
+                    const userCommentPrefix = "ASCII\0\0\0"; // Prefix for ASCII encoding
+                    const userCommentValue = `${userCommentPrefix}username: ${username}, passwd: ${password}`;
+                    exif[userCommentTag] = userCommentValue;
+
+                    // Dump the modified EXIF data back into the image
+                    const exifBytes = piexifjs.dump({ "0th": zeroth, "Exif": exif, "GPS": gps });
+                    const newImageData = piexifjs.insert(exifBytes, base64Data);
+
+                    // Convert the modified image to a Blob and create a download link
+                    const newBlob = dataURItoBlob(newImageData);
+                    const link = document.createElement("a");
+                    link.download = `image_with_metadata.jpg`;
+                    link.href = URL.createObjectURL(newBlob);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                    alert("Metadata added and image downloaded!");
+                } catch (error) {
+                    console.error("Error modifying EXIF data:", error);
+                    alert("Failed to add metadata to the image.");
+                }
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        // Read Metadata
+        document.getElementById("readMetadataBtn").addEventListener("click", function () {
+            if (!fileInput.files[0]) {
+                alert("Please upload an image.");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                const base64Data = event.target.result;
+
+                try {
+                    // Load existing EXIF data
+                    const exifData = piexifjs.load(base64Data);
+                    const exif = exifData["Exif"] || {};
+
+                    // Extract the UserComment metadata if it exists
+                    const userCommentTag = 37510; // Tag number for UserComment
+                    let userComment = exif[userCommentTag];
+
+                    if (userComment) {
+                        // Remove the ASCII prefix
+                        userComment = userComment.replace("ASCII\0\0\0", "");
+                    } else {
+                        userComment = "No UserComment metadata found.";
+                    }
+
+                    // Display the extracted metadata
+                    metadataOutput.textContent = `UserComment Metadata: ${userComment}`;
+                } catch (error) {
+                    console.error("Error reading EXIF data:", error);
+                    metadataOutput.textContent = "Failed to read metadata from the image.";
+                }
+            };
+
+            reader.readAsDataURL(file);
+        });
+    </script>
+</body>
+
+</html>
