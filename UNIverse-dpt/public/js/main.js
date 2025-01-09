@@ -1098,7 +1098,7 @@ function renderRegistration() {
             let newDetailP = document.createElement("p");
             newDetailP.innerHTML = text;
             newDetailP.dataset.condition = condition;
-            inputDetailsDiv.insertBefore(newDetailP);
+            inputDetailsDiv.insertBefore(newDetailP, inputDetailsDiv.firstChild);
             newDetailP.style.animation = "appear 0.3s forwards ease";
         }
     }
