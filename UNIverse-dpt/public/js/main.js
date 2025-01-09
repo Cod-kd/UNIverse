@@ -182,17 +182,10 @@ function renderRegistration() {
         monitorScreenDiv.appendChild(saveButton);
 
         const backBtn = createNavigationButton(true);
-        const continueBtn = createNavigationButton(false);
-
         monitorScreenDiv.appendChild(createHomeButton(false));
         monitorScreenDiv.insertBefore(backBtn, saveButton);
-        monitorScreenDiv.appendChild(continueBtn);
 
         addBackButtonListener(requiredData.length, null);
-        addContinueButtonListener(requiredData.length, null);
-
-        continueBtn.style.opacity = "0.5";
-        continueBtn.style.pointerEvents = "none";
 
         const elements = monitorScreenDiv.children;
         for (let el of elements) {
