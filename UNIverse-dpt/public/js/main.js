@@ -411,11 +411,17 @@ function renderRegistration() {
             const uniOption = document.createElement("option");
             uniOption.value = universityNames[i].value;
             uniOption.textContent = universityNames[i].label;
+
+            if (formData.universityName === universityNames[i].value) {
+                uniOption.selected = true;
+            }
+
             uniNameSelect.appendChild(uniOption);
         }
 
-        uniNameSelect.addEventListener("input", () => {
+        uniNameSelect.addEventListener("change", () => {
             formData.universityName = uniNameSelect.value;
+            formData.facultyName = "";
         });
 
         uniNameDiv.appendChild(uniNameSelect);
@@ -427,8 +433,6 @@ function renderRegistration() {
         const facultyDiv = document.createElement("div");
         const facultySelect = document.createElement("select");
         facultySelect.id = "facultySelect";
-
-        // Example faculties - you should populate this based on the selected university
         const faculties = {
             'ÁTE': [
                 'Állatorvostudományi Kar'
@@ -681,6 +685,11 @@ function renderRegistration() {
             const option = document.createElement("option");
             option.value = faculty;
             option.textContent = faculty;
+
+            if (formData.facultyName === faculty) {
+                option.selected = true;
+            }
+
             facultySelect.appendChild(option);
         });
 
@@ -777,7 +786,22 @@ function renderRegistration() {
                 await fadeOutMonitorScreen();
                 createFormStep(index - 1);
             } else {
-                updateFormData(index, dataInp);
+                // If we're on the faculty select page
+                if (index === 6) {
+                    const facultySelect = document.getElementById('facultySelect');
+                    if (facultySelect) {
+                        formData.facultyName = facultySelect.value;
+                    }
+                }
+                // If we're on the university select page
+                else if (index === 5) {
+                    const uniSelect = document.getElementById('uniNameSelect');
+                    if (uniSelect) {
+                        formData.universityName = uniSelect.value;
+                    }
+                } else {
+                    updateFormData(index, dataInp);
+                }
                 createFormStep(index - 1);
             }
         });
@@ -786,7 +810,20 @@ function renderRegistration() {
     // Function to add click event listener to a continue button
     function addContinueButtonListener(index, dataInp) {
         continueBtn.addEventListener("click", async function () {
-            if (index === 0) {
+            if (index === 5) {
+                const uniSelect = document.getElementById('uniNameSelect');
+                if (uniSelect && uniSelect.value) {
+                    formData.universityName = uniSelect.value;
+                    createFormStep(index + 1);
+                }
+            } else if (index === 6) {
+                const facultySelect = document.getElementById('facultySelect');
+                if (facultySelect && facultySelect.value) {
+                    formData.facultyName = facultySelect.value;
+                    createFormStep(index + 1);
+                }
+            }
+            else if (index === 0) {
                 const email = dataInp.value.trim();
                 const conditions = validateEmail(email);
 
