@@ -133,19 +133,6 @@
     top: 20vh;
 }
 
-#showBtn, #showBtnLogin {
-    width: 60px;
-    height: 25px;
-    border-radius: 12px;
-    position: fixed;
-    right: 43%;
-}
-
-#showBtnLogin{
-    top: 26%;
-    right: 43.5%;
-}
-
 /* General Input */
 .input {
     width: 340px;

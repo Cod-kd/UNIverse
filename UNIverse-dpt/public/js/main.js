@@ -58,7 +58,7 @@ function renderRegistration() {
                 monitorScreenDiv.appendChild(dataInp);
 
                 if (index === 4) {
-                    monitorScreenDiv.appendChild(createShowBtn(passwordInput));
+                    // PASSWORD SHOW / HIDE TOGGLE HERE
                 }
             }
 

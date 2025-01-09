@@ -33,6 +33,7 @@ function createHomeButton(atLogin) {
 // Function to create the show-toggle button for password fields
 // Use cases: 2 --> 1-1 (async-functions.js - main.js)
 // As component: toggle-visibility-button
+/*
 function createShowBtn(elementToShow) {
     const showBtn = document.createElement("button");
     showBtn.id = "showBtn";
@@ -49,6 +50,7 @@ function createShowBtn(elementToShow) {
     });
     return showBtn;
 }
+*/
 
 // Function to extract email from uploaded UNIcard
 // Use cases: 1 --> async-functions.js

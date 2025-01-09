@@ -125,13 +125,13 @@ async function createResponseWindow(text) {
 async function renderLogin() {
     monitorScreenDiv.innerHTML = `
       <form id="loginForm" onsubmit="return false;">
-          <input id="usernameInput" type="text" placeholder="Felhasználónév..." class="input" name="username">
-          <input id="passwordInput" max="18" type="password" placeholder="Jelszó..." class="input" name="passwd">
-          <button class="button" id="loginBtn">Bejelentkezés</button>
+        <input id="usernameInput" type="text" placeholder="Felhasználónév..." class="input" name="username">
+        <input id="passwordInput" max="18" type="password" placeholder="Jelszó..." class="input" name="passwd">
+        <button class="button" id="loginBtn">Bejelentkezés</button>
       </form>
       <button class="button" id="cardLoginBtn">UNIcard használata</button>`;
     monitorScreenDiv.appendChild(createHomeButton(true));
-    monitorScreenDiv.appendChild(createShowBtn(document.getElementById("passwordInput")));
+    // PASSWORD SHOW / HIDE TOGGLER HERE
     const showBtn = document.getElementById("showBtn");
     showBtn.id = "showBtnLogin";
 
