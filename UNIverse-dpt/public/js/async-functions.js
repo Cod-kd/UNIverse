@@ -132,8 +132,8 @@ async function renderLogin() {
       <button class="button" id="cardLoginBtn">UNIcard használata</button>`;
     monitorScreenDiv.appendChild(createHomeButton(true));
     // PASSWORD SHOW / HIDE TOGGLER HERE
-    const showBtn = document.getElementById("showBtn");
-    showBtn.id = "showBtnLogin";
+    //const showBtn = document.getElementById("showBtn");
+    //showBtn.id = "showBtnLogin";
 
     const handleError = async (errorMessage) => {
         createResponseWindow(errorMessage);
