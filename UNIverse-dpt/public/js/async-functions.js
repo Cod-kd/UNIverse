@@ -123,6 +123,7 @@ async function createResponseWindow(text) {
 // Function used to render the login page's elements
 // Use cases: 1 --> asnyc-functions.js
 async function renderLogin() {
+    monitorScreenDiv.style.gridTemplateColumns = "";
     monitorScreenDiv.innerHTML = `
       <form id="loginForm" onsubmit="return false;">
         <input id="usernameInput" type="text" placeholder="Felhasználónév..." class="input" name="username">

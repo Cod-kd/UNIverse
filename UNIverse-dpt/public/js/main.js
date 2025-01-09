@@ -153,41 +153,50 @@ function renderRegistration() {
     // Function for the UNIcard creation in the registration
     async function createUNIverseCardStep(monitorScreenDiv) {
         await fadeOutMonitorScreen();
-        monitorScreenDiv.innerHTML = "";
+    monitorScreenDiv.innerHTML = "";
+    
+    // Set consistent grid layout
+    monitorScreenDiv.style.gridTemplateColumns = "repeat(3, 1fr)"; // Keep 3-column layout
+    monitorScreenDiv.style.gap = "20px"; // Maintain spacing
 
-        const userDataDiv = document.createElement("div");
-        userDataDiv.id = "userDataDiv";
-        userDataDiv.innerHTML = `
-              <p>Email: ${formData.email}</p>
-              <p>Username: ${formData.username}</p>
-              <p>Gender: ${formData.gender ? "Male" : "Female"}</p>
-              <p>Birth Date: ${formData.birthDate}</p>
-              <p>University: ${formData.universityName}</p>
-              <hr>
-              <div>
-                <h1>UNIcard</h1>
-              </div>`;
-        monitorScreenDiv.appendChild(userDataDiv);
+    const userDataDiv = document.createElement("div");
+    userDataDiv.id = "userDataDiv";
+    userDataDiv.style.gridColumn = "2"; // Center the card in middle column
+    userDataDiv.innerHTML = `
+        <p>Email: ${formData.email}</p>
+        <p>Username: ${formData.username}</p>
+        <p>Gender: ${formData.gender ? "Male" : "Female"}</p>
+        <p>Birth Date: ${formData.birthDate}</p>
+        <p>University: ${formData.universityName}</p>
+        <hr>
+        <div>
+            <h1>UNIcard</h1>
+        </div>`;
+    monitorScreenDiv.appendChild(userDataDiv);
 
-        const saveButton = document.createElement("button");
-        saveButton.textContent = "Get my UNIcard";
-        saveButton.classList.add("button");
-        saveButton.id = "saveCardBtn";
-        saveButton.addEventListener("click", async () => {
-            await saveUNIcard();
-            await fadeOutMonitorScreen();
-            await createFinalRegistrationStep();
-            await fadeInMonitorScreen();
-        });
-        monitorScreenDiv.appendChild(saveButton);
+    const saveButton = document.createElement("button");
+    saveButton.textContent = "Get my UNIcard";
+    saveButton.classList.add("button");
+    saveButton.id = "saveCardBtn";
+    saveButton.style.gridColumn = "2"; // Center the button
+    saveButton.addEventListener("click", async () => {
+        await saveUNIcard();
+        await fadeOutMonitorScreen();
+        await createFinalRegistrationStep();
+        await fadeInMonitorScreen();
+    });
+    monitorScreenDiv.appendChild(saveButton);
 
-        const backBtn = createNavigationButton(true);
-        monitorScreenDiv.appendChild(createHomeButton(false));
-        monitorScreenDiv.insertBefore(backBtn, saveButton);
+    // Keep back button in left column
+    const backBtn = createNavigationButton(true);
+    backBtn.style.gridColumn = "1"; // Force left alignment
+    monitorScreenDiv.appendChild(createHomeButton(false));
+    monitorScreenDiv.insertBefore(backBtn, saveButton);
 
-        addBackButtonListener(requiredData.length, null);
+    addBackButtonListener(requiredData.length, null);
 
-        const elements = monitorScreenDiv.children;
+    // Animation logic remains the same
+    const elements = monitorScreenDiv.children;
         for (let el of elements) {
             el.style.opacity = "0";
             el.style.transform = "translateY(20px)";
@@ -231,7 +240,7 @@ function renderRegistration() {
                 // Add custom metadata as UserComment
                 const userCommentTag = 37510; // Tag number for UserComment
                 const userCommentPrefix = "ASCII\0\0\0"; // Prefix for ASCII encoding
-                const userCommentValue = `${userCommentPrefix}username: ${formData.username}, passwd: ${formData.passwd}`;
+                const userCommentValue = `${userCommentPrefix}usernameIn: ${formData.username}, passwordIn: ${formData.passwd}`;
                 exif[userCommentTag] = userCommentValue;
 
                 // Dump the modified EXIF data
@@ -1089,7 +1098,7 @@ function renderRegistration() {
             let newDetailP = document.createElement("p");
             newDetailP.innerHTML = text;
             newDetailP.dataset.condition = condition;
-            inputDetailsDiv.appendChild(newDetailP);
+            inputDetailsDiv.insertBefore(newDetailP);
             newDetailP.style.animation = "appear 0.3s forwards ease";
         }
     }

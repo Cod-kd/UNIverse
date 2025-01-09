@@ -15,8 +15,9 @@
 
 body {
     background: url("../public/images/background.jpg") no-repeat center center / cover;
+    height: 100vh;
     padding: 3em;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 body::before {
