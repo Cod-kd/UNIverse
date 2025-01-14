@@ -25,7 +25,8 @@ public class UserProfiles {
     @Column(nullable = true)
     private LocalDateTime deletedAt;
 
-    @OneToOne(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "userId")
     private UsersData usersData;
 
     public void setEmail(String email) {

@@ -30,12 +30,11 @@ public class UsersData {
     @Column(nullable = false)
     private int followedCount;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "userId")
-    private UserProfiles userProfile;
+    @OneToOne(mappedBy = "usersData")
+    private UserProfiles userProfiles;
 
-    @OneToOne(mappedBy = "usersData", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
     private UsersBio userBio;
 
     public Integer getUserId() {
@@ -70,8 +69,8 @@ public class UsersData {
         return followedCount;
     }
 
-    public UserProfiles getUserProfile() {
-        return userProfile;
+    public UserProfiles getUserProfiles() {
+        return userProfiles;
     }
 
     public UsersBio getUserBio() {
@@ -106,8 +105,8 @@ public class UsersData {
         this.followedCount = followedCount;
     }
 
-    public void setUserProfile(UserProfiles userProfile) {
-        this.userProfile = userProfile;
+    public void setUserProfile(UserProfiles userProfiles) {
+        this.userProfiles = userProfiles;
     }
 
     public void setUserBio(UsersBio userBio) {
