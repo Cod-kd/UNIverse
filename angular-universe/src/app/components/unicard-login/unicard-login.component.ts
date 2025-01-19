@@ -12,7 +12,7 @@ export class UNIcardLoginComponent {
   constructor(private router: Router) { }
 
   loginWithCard() {
-    alert("Successful login");
+    this.router.navigate(["/main-site"]);
   }
 
   backToCredentialLogin() {

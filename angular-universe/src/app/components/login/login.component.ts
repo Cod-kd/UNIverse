@@ -17,10 +17,10 @@ export class LoginComponent {
   }
 
   loginWithCredentials() {
-    alert("Successful login!");
+    this.router.navigate(["/main-site"]);
   }
 
-  backToRegistration(){
+  backToRegistration() {
     this.router.navigate(["/registration"])
   }
 }
