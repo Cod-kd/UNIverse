@@ -1,11 +1,6 @@
-#center-container {
-    width: 90vh;
-    height: 35vh;
+#center-container{
     display: grid;
-    color: var(--main);
-    transition: all 0.3s;
     justify-items: center;
-    align-items: center;
 }
 
 h2,
@@ -30,7 +25,7 @@ hr{
     border-color: var(--main);
     border-width: 4px;
     border-radius: 6px;
-    width: 65vh;
+    width: 60vh;
     opacity: 1;
     place-self: center;
     margin-bottom: 4%;
