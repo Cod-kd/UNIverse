@@ -2,15 +2,18 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UniversityService } from '../../services/university.service';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ButtonComponent } from "../button/button.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registration',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, ButtonComponent],
   templateUrl: './registration.component.html',
   styleUrl: './registration.component.css'
 })
 export class RegistrationComponent {
+  constructor(private router: Router) { }
   private fb = inject(FormBuilder);
   private universityService = inject(UniversityService);
 
@@ -41,5 +44,13 @@ export class RegistrationComponent {
     if (this.registrationForm.valid) {
       console.log(this.registrationForm.value);
     }
+  }
+
+  registerNewUser() {
+    alert("Successful registration!");
+  }
+
+  returnToLogin() {
+    this.router.navigate(["/login"]);
   }
 }
