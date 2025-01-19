@@ -1,1 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+    background: url("../public/images/background.jpg") no-repeat center center / cover;
+    height: 100vh;
+    padding: 3em;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: -1;
+}

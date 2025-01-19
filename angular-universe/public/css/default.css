@@ -1,0 +1,14 @@
+:root {
+    --main: #FF5A1F;
+    --link: #5D3FD3;
+    --dark1: #343434;
+    --dark2: #141414;
+    --light1: #FFF0EB;
+    --light2: #FFD2C2;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
