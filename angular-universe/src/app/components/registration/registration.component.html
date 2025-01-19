@@ -1,1 +1,42 @@
-<p>registration works!</p>
+<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+    <input type="email" formControlName="email" placeholder="Email...">
+    <input type="text" formControlName="username" placeholder="Felhasználónév...">
+    
+    <div class="gender-select">
+      <label>
+        <input type="radio" formControlName="gender" value="male"> Férfi
+      </label>
+      <label>
+        <input type="radio" formControlName="gender" value="female"> Nő
+      </label>
+    </div>
+  
+    <input type="password" formControlName="password" placeholder="Jelszó...">
+    
+    <div>
+      <label for="dateInput">Születési dátum</label>
+      <input type="date" id="dateInput" formControlName="birthDate">
+    </div>
+  
+    <div>
+      <label for="universityName">Egyetem neve</label>
+      <select id="universityName" formControlName="university" (change)="onUniversityChange()">
+        <option value="">Válassz egyetemet</option>
+        @for (uni of universities(); track uni) {
+          <option [value]="uni.value">{{ uni.label }}</option>
+        }
+      </select>
+    </div>
+  
+    <div>
+      <label for="facultySelect">Kar neve</label>
+      <select id="facultySelect" formControlName="faculty" [disabled]="!registrationForm.get('university')?.value">
+        <option value="">Válassz kart</option>
+        @for (faculty of faculties(); track faculty) {
+          <option [value]="faculty">{{ faculty }}</option>
+        }
+      </select>
+    </div>
+  
+    <input type="submit" value="Regisztráció">
+  </form>
