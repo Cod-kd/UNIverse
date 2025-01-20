@@ -1,0 +1,33 @@
+#center-container{
+    display: grid;
+    justify-items: center;
+}
+
+h2,
+p {
+    color: var(--light1);
+    text-align: center;
+    font-family: 'Proza Libre';
+}
+
+p{
+    font-size: 1.2em;
+    width: 30em;
+}
+
+#registerLoginBtnDiv{
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+}
+
+hr{
+    border-color: var(--main);
+    border-width: 4px;
+    border-radius: 6px;
+    width: 60vh;
+    opacity: 1;
+    place-self: center;
+    margin-bottom: 4%;
+    margin-top: 4%;
+}

@@ -1,0 +1,18 @@
+<form id="cardForm" onsubmit="return false">
+    <div id="cardContainer">
+        <div class="folder">
+            <div class="front-side">
+                <div class="tip"></div>
+                <div class="cover"></div>
+            </div>
+            <div class="back-side cover"></div>
+        </div>
+        <label class="custom-file-upload">
+            <input id="cardInput" type="file" accept=".jpg, .jpeg">Saját UNIcard-od</label>
+    </div>
+    <app-button btnId="loginBtn" btnLabel="Bejelentkezés kártyával" (click)="loginWithCard()"></app-button>
+    <app-button btnId="backToLoginBtn" btnLabel="Bejelentkezés felhasználónévvel"
+        (click)="backToCredentialLogin()"></app-button>
+    <app-button btnId="backToRegistrationBtn" btnLabel="Vissza a regisztrációhoz"
+        (click)="backToRegistration()"></app-button>
+</form>
