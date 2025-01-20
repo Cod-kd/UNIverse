@@ -1,0 +1,21 @@
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4em;
+}
+
+#mainContent {
+    width: 90vh;
+    height: 40vh;
+    display: grid;
+    color: var(--main);
+    transition: all 0.3s;
+    justify-items: center;
+    align-items: center;
+}
+
+.cardDiv {
+    display: grid;
+    gap: 4em;
+}
