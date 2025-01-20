@@ -1,0 +1,21 @@
+#responseHeading {
+    color: #FF5A1F;
+    transition: all 0.5s;
+    font-size: 36px;
+}
+
+#registerBtnDiv {
+    width: fit-content;
+    height: fit-content;
+    top: 0;
+    text-align: center;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+}
+
+#responseHeadingEffect {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+}
