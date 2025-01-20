@@ -1,4 +1,4 @@
-<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="registrationForm">
   <input class="input" type="email" formControlName="email" placeholder="Email...">
   <input class="input" type="text" formControlName="username" placeholder="Felhasználónév...">
 
@@ -13,7 +13,7 @@
 
   <input class="input" type="password" formControlName="password" placeholder="Jelszó...">
 
-  <input class="input" type="number" id="dateInput" formControlName="birthDate" placeholder="Születési dátum...">
+  <input class="input" type="text" formControlName="birthDate" placeholder="ÉÉÉÉ-HH-NN" maxlength="10" (input)="formatBirthDate($event)">
 
   <div>
     <select id="universityName" formControlName="university" (change)="onUniversityChange()">

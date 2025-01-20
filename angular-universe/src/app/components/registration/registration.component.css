@@ -51,11 +51,15 @@ form::-webkit-scrollbar-thumb {
 .gender-select {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    justify-items: center;
-    width: 50%;
+    gap: 1rem;
+    width: 40%;
 }
 
-.gender-select label{
+.gender-select label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
     font-size: 20px;
     color: var(--light1);
 }
@@ -86,4 +90,25 @@ input[type="radio"]::before {
 input[type="radio"]:checked::before {
     background: var(--main);
     transform: scale(1);
+}
+
+select {
+    border: 2px solid var(--main);
+    border-radius: 16px;
+    background: transparent;
+    color: var(--main);
+    padding: 8px 12px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 16px;
+    outline: none;
+}
+
+select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+select::-ms-expand {
+    display: none;
 }

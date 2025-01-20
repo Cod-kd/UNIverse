@@ -1,0 +1,23 @@
+#unicardDiv{
+    display: grid;
+    gap: 1em;
+    justify-items: center;
+}
+
+#userDataDiv {
+    width: 350px;
+    background-color: var(--dark1);
+    padding: 10px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+#userDataDiv p{
+    font-size: 20px;
+}
+
+#userDataDiv hr{
+    border-width: 2px;
+    opacity: 1;
+    border-radius: 4px;
+}
