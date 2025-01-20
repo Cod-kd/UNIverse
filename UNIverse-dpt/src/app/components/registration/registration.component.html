@@ -1,0 +1,40 @@
+<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+  <input class="input" type="email" formControlName="email" placeholder="Email...">
+  <input class="input" type="text" formControlName="username" placeholder="Felhasználónév...">
+
+  <div class="gender-select">
+    <label>
+      <input type="radio" formControlName="gender" value="1" class="radio-input"> Férfi
+    </label>
+    <label>
+      <input type="radio" formControlName="gender" value="0" class="rado-input"> Nő
+    </label>
+  </div>
+
+  <input class="input" type="password" formControlName="password" placeholder="Jelszó...">
+
+  <input class="input" type="number" id="dateInput" formControlName="birthDate" placeholder="Születési dátum...">
+
+  <div>
+    <select id="universityName" formControlName="university" (change)="onUniversityChange()">
+      <option value="">Válassz egyetemet</option>
+      @for (uni of universities(); track uni) {
+      <option [value]="uni.value">{{ uni.label }}</option>
+      }
+    </select>
+  </div>
+
+  <div>
+    <select id="facultySelect" formControlName="faculty" [disabled]="!registrationForm.get('university')?.value">
+      <option value="">Válassz kart</option>
+      @for (faculty of faculties(); track faculty) {
+      <option [value]="faculty">{{ faculty }}</option>
+      }
+    </select>
+  </div>
+
+  <div id="btnDiv">
+    <app-button btnId="registerBtn" btnLabel="Regisztráció" (click)="registerNewUser()"></app-button>
+    <app-button btnId="backToLoginBtn" btnLabel="Van már fiókom" (click)="returnToLogin()"></app-button>
+  </div>
+</form>
