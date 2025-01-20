@@ -1,4 +1,4 @@
-<form id="cardForm" onsubmit="return false">
+<form (submit)="loginWithCard($event)">
     <div id="cardContainer">
         <div class="folder">
             <div class="front-side">
@@ -8,11 +8,27 @@
             <div class="back-side cover"></div>
         </div>
         <label class="custom-file-upload">
-            <input id="cardInput" type="file" accept=".jpg, .jpeg">Saját UNIcard-od</label>
+            <input 
+                type="file" 
+                accept=".jpg, .jpeg"
+                (change)="onFileSelected($event)"
+                #fileInput>
+            Saját UNIcard-od
+        </label>
     </div>
-    <app-button btnId="loginBtn" btnLabel="Bejelentkezés kártyával" (click)="loginWithCard()"></app-button>
-    <app-button btnId="backToLoginBtn" btnLabel="Bejelentkezés felhasználónévvel"
-        (click)="backToCredentialLogin()"></app-button>
-    <app-button btnId="backToRegistrationBtn" btnLabel="Vissza a regisztrációhoz"
-        (click)="backToRegistration()"></app-button>
+    <app-button 
+        btnId="loginBtn" 
+        btnLabel="Bejelentkezés kártyával" 
+        type="submit">
+    </app-button>
+    <app-button 
+        btnId="backToLoginBtn" 
+        btnLabel="Bejelentkezés felhasználónévvel"
+        (click)="backToCredentialLogin()">
+    </app-button>
+    <app-button 
+        btnId="backToRegistrationBtn" 
+        btnLabel="Vissza a regisztrációhoz"
+        (click)="backToRegistration()">
+    </app-button>
 </form>
