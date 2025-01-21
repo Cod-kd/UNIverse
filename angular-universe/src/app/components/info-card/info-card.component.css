@@ -43,6 +43,11 @@ h3 {
     margin: 0;
 }
 
+i {
+    font-size: 30px;
+    color: var(--main);
+}
+
 @media screen and (max-width: 768px) {
     .infoCard {
         width: 100%;
@@ -54,6 +59,10 @@ h3 {
 @media screen and (max-width: 480px) {
     .infoCard {
         padding: 1em 0.8em;
+    }
+
+    i{
+        font-size: 25px;
     }
 
     .infoCard div:first-child {

@@ -8,8 +8,7 @@ import { Component, Input } from '@angular/core';
   styleUrl: './info-card.component.scss'
 })
 export class InfoCardComponent {
-  @Input() imageSrc: string = '';
-  @Input() imageAlt: string = '';
+  @Input() iconClass: string = '';
   @Input() title: string = '';
   @Input() description: string = '';
 }

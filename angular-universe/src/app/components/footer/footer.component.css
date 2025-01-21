@@ -23,13 +23,10 @@ footer {
     gap: 2em;
 }
 
-#footer-row-1 #contacts img:first-child {
-    width: 2.7em;
-}
-
-#footer-row-1 #contacts img {
-    width: 1.8em;
-    height: 1.8em;
+#footer-row-1 #contacts i {
+    color: var(--main);
+    font-size: 30px;
+    cursor: pointer;
 }
 
 footer hr {
@@ -69,13 +66,10 @@ footer hr {
         align-items: center;
     }
 
-    #footer-row-1 #contacts img:first-child {
-        width: 2.1em;
-    }
-
-    #footer-row-1 #contacts img {
-        width: 1.5em;
-        height: 1.5em;
+    #footer-row-1 #contacts i {
+        color: var(--main);
+        font-size: 20px;
+        margin-bottom: -15%;
     }
 
     footer hr {

@@ -1,9 +1,9 @@
 <main>
   @if (isMainSite) {
   <div class="cardDiv">
-    <app-info-card [imageSrc]="'images/group.png'" [imageAlt]="'group'" [title]="'Csoportok'"
+    <app-info-card [iconClass]="'fa-solid fa-people-group'" [title]="'Csoportok'"
       [description]="'Fedezd fel a csoportokat vagy akár hozz létre egyet! Csatlakozz az ismerőseidhez, szervezzetek közös programokat, posztoljatok képeket, kérjétek el az aznapi anyagot!'"></app-info-card>
-    <app-info-card [imageSrc]="'images/calendar.png'" [imageAlt]="'calendar'" [title]="'Egyéni eseménynaptár'"
+    <app-info-card [iconClass]="'fa-regular fa-calendar'" [title]="'Egyéni eseménynaptár'"
       [description]="'Hozz létre egyedi naptárat, amelyet a saját eseményeiddel tudsz feltölteni. Adj az adott eseménynek egy időpontot és meg fog jelenni a naptár táblázatában, az adott napon pedig értesítést is kapsz!'"></app-info-card>
   </div>
   }
@@ -12,9 +12,9 @@
   </div>
   @if (isMainSite) {
   <div class="cardDiv">
-    <app-info-card [imageSrc]="'images/heart.png'" [imageAlt]="'heart'" [title]="'Élménydús egyetemi élet'"
+    <app-info-card [iconClass]="'fa-solid fa-heart'" [title]="'Élménydús egyetemi élet'"
       [description]="'Ne csak a tanulásról szóljon az egyetem! Legyen élményekkel és emlékekkel teli az egyetemi életed. Érdeklődj programok iránt amelyeket ismerősök szerveznek! Jelenj meg rajtuk, építs kapcsolatokat!'"></app-info-card>
-    <app-info-card [imageSrc]="'images/book.png'" [imageAlt]="'book'" [title]="'Közös tanulás online'"
+    <app-info-card [iconClass]="'fa-solid fa-book'" [title]="'Közös tanulás online'"
       [description]="'Jelöld be az egyetemi ismerőseidet és tanuljátok meg közösen azt amit órán nem értettetek vagy akár készüljetek vizsgákra többen!'"></app-info-card>
   </div>
   }
