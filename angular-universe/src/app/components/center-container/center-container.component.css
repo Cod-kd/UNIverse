@@ -50,16 +50,20 @@ hr {
     }
 
     #descriptionDiv {
-        width: 100%;
+        width: 110%;
     }
 
     hr {
         width: 90%;
-        margin: 1.5rem auto;
+        margin: 0.7rem;
     }
 
     p {
         padding: 0 1rem;
+    }
+
+    #center-container>hr:first-of-type {
+        margin-bottom: 9%;
     }
 }
 
