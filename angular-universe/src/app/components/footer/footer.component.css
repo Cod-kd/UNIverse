@@ -47,3 +47,49 @@ footer hr {
 #footer-row-2 span {
     color: var(--main);
 }
+
+@media screen and (max-width: 480px) {
+    footer {
+        margin-top: 5%;
+        padding: 1em;
+        height: auto;
+    }
+
+    #footer-row-1 {
+        row-gap: 1em;
+    }
+
+    #footer-row-1 img:first-child {
+        width: 7em;
+        height: auto;
+    }
+
+    #footer-row-1 #contacts {
+        gap: 1em;
+        align-items: center;
+    }
+
+    #footer-row-1 #contacts img:first-child {
+        width: 2.1em;
+    }
+
+    #footer-row-1 #contacts img {
+        width: 1.5em;
+        height: 1.5em;
+    }
+
+    footer hr {
+        width: 100%;
+    }
+
+    #footer-row-2 {
+        grid-template-columns: 1fr;
+        row-gap: 1em;
+        justify-items: center;
+        text-align: center;
+    }
+
+    #footer-row-2 span {
+        font-size: 0.9em;
+    }
+}
