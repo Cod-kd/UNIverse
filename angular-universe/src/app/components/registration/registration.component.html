@@ -15,7 +15,7 @@
 
   <input class="input" type="text" formControlName="birthDate" placeholder="ÉÉÉÉ-HH-NN" maxlength="10" (input)="formatBirthDate($event)">
 
-  <div>
+  <div id="universityDiv">
     <select id="universityName" formControlName="university" (change)="onUniversityChange()">
       <option value="">Válassz egyetemet</option>
       @for (uni of universities(); track uni) {
