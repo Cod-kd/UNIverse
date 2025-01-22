@@ -1,4 +1,4 @@
-#unicardDiv {
+#unicardDiv{
   display: grid;
   gap: 1em;
   justify-items: center;
@@ -6,23 +6,51 @@
 
 #userDataDiv {
   width: 350px;
-  background-color: var(--dark1);
-  padding: 10px;
-  border-radius: 12px;
+  background-color: var(--dark2);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+#userDataDiv:hover {
+  transform: translateY(-10px);
+}
+
+.profile-header {
+  background: linear-gradient(45deg, var(--dark2), var(--main));
+  color: var(--light1);
   text-align: center;
+  padding: 20px;
 }
 
-#userDataDiv p {
-  font-size: 20px;
+.profile-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
 }
 
-#userDataDiv hr {
-  border-width: 2px;
-  opacity: 1;
-  border-radius: 4px;
+.profile-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-span {
+.profile-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.profile-item i {
+  font-size: 1.5rem;
+  color: var(--main);
+}
+
+.profile-item span {
+  flex-grow: 1;
   color: var(--light1);
 }
 
