@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UniversityService } from '../../services/university.service';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -11,10 +11,9 @@ import { ToggleInputComponent } from "../toggle-input/toggle-input.component";
   standalone: true,
   imports: [ReactiveFormsModule, ButtonComponent, ToggleInputComponent],
   templateUrl: './registration.component.html',
-  styleUrl: './registration.component.css'
+  styleUrls: ['./registration.component.css']
 })
-
-export class RegistrationComponent {
+export class RegistrationComponent implements OnInit {
   @ViewChild(ToggleInputComponent) passwordInput!: ToggleInputComponent;
   constructor(private router: Router) { }
   private fb = inject(FormBuilder);
@@ -31,8 +30,12 @@ export class RegistrationComponent {
     password: ['', Validators.required],
     birthDate: ['', Validators.required],
     university: ['', Validators.required],
-    faculty: [{ value: '', disabled: true }]
+    faculty: ['']  // No need for disabled here
   });
+
+  ngOnInit() {
+    this.onUniversityChange();  // Ensure this method runs when the component initializes
+  }
 
   formatBirthDate(event: any) {
     let input = event.target;
@@ -57,12 +60,18 @@ export class RegistrationComponent {
 
   onUniversityChange() {
     const universityId = this.registrationForm.get('university')?.value;
+
+    // Reset the faculty value and set it to the default option
+    this.registrationForm.get('faculty')?.setValue('');
+
     if (universityId) {
       this.registrationForm.get('faculty')?.enable();
       this.universityService.loadFaculties(universityId);
-      universityId ? this.registrationForm.get('faculty')?.enable() : null;
+    } else {
+      this.registrationForm.get('faculty')?.disable();
     }
   }
+
 
   registerNewUser() {
     this.registrationForm.patchValue({
@@ -71,7 +80,7 @@ export class RegistrationComponent {
 
     if (this.registrationForm.valid) {
       this.showCard = true;
-      // Only redirect here if username and email isnt already present in database (code != 200)
+      // Only redirect here if username and email isn't already present in database (code != 200)
       this.router.navigate(['/get-unicard'], {
         state: { userData: this.registrationForm.value }
       });

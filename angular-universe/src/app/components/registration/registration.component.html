@@ -13,7 +13,8 @@
 
   <app-toggle-input></app-toggle-input>
 
-  <input class="input" type="text" formControlName="birthDate" placeholder="ÉÉÉÉ-HH-NN" maxlength="10" (input)="formatBirthDate($event)">
+  <input class="input" type="text" formControlName="birthDate" placeholder="ÉÉÉÉ-HH-NN" maxlength="10"
+    (input)="formatBirthDate($event)">
 
   <div id="universityDiv">
     <select id="universityName" formControlName="university" (change)="onUniversityChange()">
@@ -25,7 +26,7 @@
   </div>
 
   <div id="facultyDiv">
-    <select id="facultySelect" formControlName="faculty" [disabled]="!registrationForm.get('university')?.value">
+    <select id="facultySelect" formControlName="faculty">
       <option value="">Válassz kart</option>
       @for (faculty of faculties(); track faculty) {
       <option [value]="faculty">{{ faculty }}</option>
