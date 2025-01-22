@@ -110,3 +110,32 @@
 .custom-file-upload input[type="file"] {
     display: none;
 }
+
+#btnsDiv{
+    display: grid;
+    gap: 1em;
+}
+
+@media (max-width: 480px) {
+    #cardContainer {
+        --folder-W: 80px;
+        --folder-H: 60px;
+        max-height: 500px;
+    }
+
+    .folder {
+        top: -10px;
+        left: calc(50% - 40px);
+    }
+
+    .folder .tip {
+        width: 50px;
+        height: 12px;
+        top: -6px;
+    }
+
+    .custom-file-upload {
+        font-size: 0.9em;
+        padding: 6px 25px;
+    }
+}
