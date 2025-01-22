@@ -56,8 +56,8 @@
 
 @media screen and (max-width: 480px) {
     .button {
-        width: min(20em, 80vw);
-        height: 3em;
+        width: min(15em, 70vw);
+        height: 2.7em;
         font-size: 1.2em;
         border-radius: 1.5em;
     }
