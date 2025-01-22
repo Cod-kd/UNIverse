@@ -1,0 +1,23 @@
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+#passwordInput {
+    flex: 1;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--main);
+}
+
+.toggle-password:focus {
+    outline: none;
+}
