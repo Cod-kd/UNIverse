@@ -111,7 +111,7 @@ select {
     outline: none;
 }
 
-#universityDiv {
+#universityDiv, #facultyDiv {
     display: grid;
     place-items: center;
 }

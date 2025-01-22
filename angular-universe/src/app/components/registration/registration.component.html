@@ -24,7 +24,7 @@
     </select>
   </div>
 
-  <div>
+  <div id="facultyDiv">
     <select id="facultySelect" formControlName="faculty" [disabled]="!registrationForm.get('university')?.value">
       <option value="">Válassz kart</option>
       @for (faculty of faculties(); track faculty) {

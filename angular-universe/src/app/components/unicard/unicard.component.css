@@ -1,23 +1,37 @@
-#unicardDiv{
-    display: grid;
-    gap: 1em;
-    justify-items: center;
+#unicardDiv {
+  display: grid;
+  gap: 1em;
+  justify-items: center;
 }
 
 #userDataDiv {
-    width: 350px;
-    background-color: var(--dark1);
-    padding: 10px;
-    border-radius: 12px;
-    text-align: center;
+  width: 350px;
+  background-color: var(--dark1);
+  padding: 10px;
+  border-radius: 12px;
+  text-align: center;
 }
 
-#userDataDiv p{
-    font-size: 20px;
+#userDataDiv p {
+  font-size: 20px;
 }
 
-#userDataDiv hr{
-    border-width: 2px;
-    opacity: 1;
-    border-radius: 4px;
+#userDataDiv hr {
+  border-width: 2px;
+  opacity: 1;
+  border-radius: 4px;
+}
+
+span {
+  color: var(--light1);
+}
+
+@media screen and (max-width: 480px) {
+  #userDataDiv {
+    width: 90%;
+  }
+
+  #userDataDiv p {
+    font-size: 16px;
+  }
 }
