@@ -53,6 +53,7 @@ form::-webkit-scrollbar-thumb {
     width: 100%;
     max-width: 250px;
     justify-content: center;
+    margin-top: 5%;
 }
 
 .gender-select {
@@ -130,7 +131,7 @@ select::-ms-expand {
     form {
         gap: 1.5rem;
         padding: 0.5rem;
-        max-height: 600px;
+        max-height: 650px;
     }
 
     .gender-select {

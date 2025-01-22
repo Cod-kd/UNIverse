@@ -20,11 +20,12 @@
         <app-button 
         btnId="loginBtn" 
         btnLabel="Bejelentkezés kártyával" 
-        type="submit">
+        type="submit"
+        (click)="loginWithCard($event)">
     </app-button>
     <app-button 
         btnId="backToLoginBtn" 
-        btnLabel="Bejelentkezés felhasználónévvel"
+        btnLabel="Bejelentkezés adatokkal"
         (click)="backToCredentialLogin()">
     </app-button>
     <app-button 

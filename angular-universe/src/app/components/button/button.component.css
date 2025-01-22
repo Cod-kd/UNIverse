@@ -1,6 +1,6 @@
 .button {
-    width: min(18em, 90vw);
-    height: clamp(3em, 8vh, 4em);
+    width: min(16em, 90vw);
+    height: clamp(3em, 7vh, 4em);
     background-color: var(--main);
     color: var(--dark2);
     border-radius: clamp(1em, 4vw, 2em);
