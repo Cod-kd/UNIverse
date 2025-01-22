@@ -1,19 +1,21 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UniversityService } from '../../services/university.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ButtonComponent } from "../button/button.component";
 import { Router } from '@angular/router';
+import { ToggleInputComponent } from "../toggle-input/toggle-input.component";
 
 @Component({
   selector: 'app-registration',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonComponent],
+  imports: [ReactiveFormsModule, ButtonComponent, ToggleInputComponent],
   templateUrl: './registration.component.html',
   styleUrl: './registration.component.css'
 })
 
 export class RegistrationComponent {
+  @ViewChild(ToggleInputComponent) passwordInput!: ToggleInputComponent;
   constructor(private router: Router) { }
   private fb = inject(FormBuilder);
   private universityService = inject(UniversityService);
@@ -63,8 +65,13 @@ export class RegistrationComponent {
   }
 
   registerNewUser() {
+    this.registrationForm.patchValue({
+      password: this.passwordInput.passwordControl.value
+    });
+
     if (this.registrationForm.valid) {
       this.showCard = true;
+      // Only redirect here if username and email isnt already present in database (code != 200)
       this.router.navigate(['/get-unicard'], {
         state: { userData: this.registrationForm.value }
       });

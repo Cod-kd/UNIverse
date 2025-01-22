@@ -14,8 +14,8 @@
     width: 280px;
 }
 
-.input {
-    width: 250px;
+#loginForm .input {
+    width: 240px;
     height: 40px;
     background-color: transparent;
     color: var(--main);
@@ -26,4 +26,17 @@
     box-shadow: 0 10px 20px -18px var(--main);
     border-bottom: 3px solid var(--main);
     transition: 0.2s ease;
+}
+
+.input::placeholder {
+    font-size: clamp(16px, 4vw, 20px);
+}
+
+@media screen and (max-width: 480px) {
+    #loginForm .input{
+        width: 240px;
+    }
+    #loginForm .input:hover{
+        width: 240px;
+    }
 }

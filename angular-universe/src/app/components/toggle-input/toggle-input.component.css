@@ -22,8 +22,12 @@
     outline: none;
 }
 
-.input:hover{
+.input:hover {
     width: 280px;
+}
+
+.input::placeholder {
+    font-size: clamp(16px, 4vw, 20px);
 }
 
 .input {
@@ -38,4 +42,13 @@
     box-shadow: 0 10px 20px -18px var(--main);
     border-bottom: 3px solid var(--main);
     transition: 0.2s ease;
+}
+
+@media screen and (max-width: 480px) {
+    .input{
+        width: 240px;
+    }
+    .input:hover{
+        width: 240px;
+    }
 }
