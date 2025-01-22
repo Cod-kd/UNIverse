@@ -1,19 +1,19 @@
 <form [formGroup]="registrationForm">
-  <input class="input" type="email" formControlName="email" placeholder="Email...">
-  <input class="input" type="text" formControlName="username" placeholder="Felhasználónév...">
+  <input id="emailInput" class="input" type="email" formControlName="email" placeholder="Email...">
+  <input id="usernameInput" class="input" type="text" formControlName="username" placeholder="Felhasználónév...">
 
   <div class="gender-select">
     <label>
-      <input type="radio" formControlName="gender" value="1" class="radio-input"> Férfi
+      <input id="maleRadioInput" type="radio" formControlName="gender" value="1" class="radio-input"> Férfi
     </label>
     <label>
-      <input type="radio" formControlName="gender" value="0" class="rado-input"> Nő
+      <input id="femaleRadioInput" type="radio" formControlName="gender" value="0" class="rado-input"> Nő
     </label>
   </div>
 
   <app-toggle-input></app-toggle-input>
 
-  <input class="input" type="text" formControlName="birthDate" placeholder="ÉÉÉÉ-HH-NN" maxlength="10"
+  <input id="birthDateInput" class="input" type="text" formControlName="birthDate" placeholder="ÉÉÉÉ-HH-NN" maxlength="10"
     (input)="formatBirthDate($event)">
 
   <div id="universityDiv">
