@@ -24,6 +24,10 @@ export class LoginComponent {
 
   constructor(private router: Router) { }
 
+  ngOnInit(): void {
+    this.checkStoredCredentials();
+  }
+
   loginWithCredentials() {
     this.loginForm.patchValue({
       password: this.passwordInput.passwordControl.value
@@ -38,6 +42,26 @@ export class LoginComponent {
         },
         error: (err) => {
           this.loginService.handleError(err);
+        }
+      });
+    }
+  }
+
+  private checkStoredCredentials(): void {
+    const storedUsername = localStorage.getItem('username');
+    const storedPassword = localStorage.getItem('password');
+
+    if (storedUsername && storedPassword) {
+      this.loginService.fetchLogin(storedUsername, storedPassword).subscribe({
+        next: (response) => {
+          this.loginService.handleLoginResponse(response, { 
+            username: storedUsername, 
+            password: storedPassword 
+          });
+        },
+        error: () => {
+          localStorage.removeItem('username');
+          localStorage.removeItem('password');
         }
       });
     }
