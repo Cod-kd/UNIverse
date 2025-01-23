@@ -1,6 +1,6 @@
 <div id="loginDiv">
     <form id="loginForm" [formGroup]="loginForm">
-      <input id="usernameInput" type="text" placeholder="Felhasználónév..." class="input" formControlName="username">
+      <input (blur)="onUsernameChange()" id="usernameInput" type="text" placeholder="Felhasználónév..." class="input" formControlName="username">
       <app-toggle-input></app-toggle-input>
     </form>
     <app-button btnId="loginBtn" btnLabel="Bejelentkezés" (click)="loginWithCredentials()"></app-button>

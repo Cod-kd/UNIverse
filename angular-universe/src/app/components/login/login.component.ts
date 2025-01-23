@@ -4,6 +4,8 @@ import { ButtonComponent } from "../button/button.component";
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToggleInputComponent } from '../toggle-input/toggle-input.component';
 import { LoginService } from '../../services/login.service';
+import { ValidationService } from '../../services/validation.service';
+import { PopupService } from '../../services/popup-message.service';
 
 @Component({
   selector: 'app-login',
@@ -14,28 +16,43 @@ import { LoginService } from '../../services/login.service';
 })
 export class LoginComponent {
   @ViewChild(ToggleInputComponent) passwordInput!: ToggleInputComponent;
+
   private fb = inject(FormBuilder);
   private loginService = inject(LoginService);
+  private validationService = inject(ValidationService);
 
   loginForm = this.fb.group({
     username: ['', Validators.required],
     password: ['', Validators.required]
   });
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private popupService: PopupService) { }
 
   ngOnInit(): void {
     this.checkStoredCredentials();
   }
 
+  onUsernameChange() {
+    const username = this.loginForm.get('username')?.value;
+    if (typeof username === 'string') {
+      this.validationService.validateUsername(username);
+    }
+  }
+
   loginWithCredentials() {
-    this.loginForm.patchValue({
-      password: this.passwordInput.passwordControl.value
-    });
+    const username = this.loginForm.get('username')?.value ?? '';
+    const password = this.passwordInput.passwordControl.value ?? '';
 
-    const { username, password } = this.loginForm.value;
+    if (!username.trim() && !password.trim()) {
+      this.popupService.show("Hiányzó adatok");
+      return;
+    }
 
-    if (username && password) {
+    const isUsernameValid = this.validationService.validateUsername(username);
+    const isPasswordValid = this.validationService.validatePassword(password);
+
+    if (isUsernameValid && isPasswordValid) {
+      this.loginForm.patchValue({ password });
       this.loginService.fetchLogin(username, password).subscribe({
         next: (response) => {
           this.loginService.handleLoginResponse(response, this.loginForm.value);
@@ -54,9 +71,9 @@ export class LoginComponent {
     if (storedUsername && storedPassword) {
       this.loginService.fetchLogin(storedUsername, storedPassword).subscribe({
         next: (response) => {
-          this.loginService.handleLoginResponse(response, { 
-            username: storedUsername, 
-            password: storedPassword 
+          this.loginService.handleLoginResponse(response, {
+            username: storedUsername,
+            password: storedPassword
           });
         },
         error: () => {
