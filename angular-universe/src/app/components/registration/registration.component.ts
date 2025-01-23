@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { ToggleInputComponent } from "../toggle-input/toggle-input.component";
 import { RegisterService } from '../../services/register.service';
 import { debounceTime } from 'rxjs/operators';
+import { ValidationService } from '../../services/validation.service';
 
 @Component({
   selector: 'app-registration',
@@ -23,7 +24,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   private registerService = inject(RegisterService);
   private formStorageKey = 'registrationFormData';
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private validationService: ValidationService) { }
 
   showCard = false;
 
@@ -54,6 +55,27 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.saveFormData();
   }
+
+  onEmailChange() {
+    const email = this.registrationForm.get('email')?.value;
+    if (typeof email === 'string') {
+      this.validationService.validateEmail(email);
+    }
+  }
+  
+  onUsernameChange() {
+    const username = this.registrationForm.get('username')?.value;
+    if (typeof username === 'string') {
+      this.validationService.validateUsername(username);
+    }
+  }
+  
+  onBirthDateChange() {
+    const birthDate = this.registrationForm.get('birthDate')?.value;
+    if (typeof birthDate === 'string') {
+      this.validationService.validateBirthDate(birthDate);
+    }
+  }  
 
   private saveFormData() {
     const formData = this.registrationForm.value;

@@ -1,5 +1,5 @@
 <div class="password-container">
-    <input id="passwordInput" [formControl]="passwordControl" [type]="showPassword ? 'text' : 'password'" placeholder="Jelszó..."
+    <input id="passwordInput" (blur)="onPasswordChange()" [formControl]="passwordControl" [type]="showPassword ? 'text' : 'password'" placeholder="Jelszó..."
         class="input" />
     <button type="button" class="toggle-password" (click)="showPassword = !showPassword">
         <i class="fa" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
