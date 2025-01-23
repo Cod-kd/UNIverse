@@ -1,13 +1,3 @@
-.modal-content {
-    display: none;
-    height: fit-content;
-    background-color: transparent;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    text-align: center;
-}
-
 .modal-content.active {
     display: flex;
     animation: fadeIn 0.5s ease-out forwards;
