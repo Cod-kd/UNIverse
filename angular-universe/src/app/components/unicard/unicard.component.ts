@@ -51,8 +51,6 @@ export class UNIcardComponent {
         const userCommentValue = `${userCommentPrefix}usernameIn: ${this.userData.username}, passwordIn: ${this.userData.password}`;
         exif[userCommentTag] = userCommentValue;
 
-        console.log('EXIF metadata added:', userComment);
-
         const exifBytes = piexifjs.dump({
           '0th': zeroth,
           Exif: exif,

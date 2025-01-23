@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ButtonComponent } from '../button/button.component';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import * as piexifjs from 'piexifjs';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-unicard-login',
@@ -13,8 +14,9 @@ import * as piexifjs from 'piexifjs';
 })
 export class UNIcardLoginComponent {
   selectedFile: File | null = null;
+  private loginService = inject(LoginService);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -27,7 +29,7 @@ export class UNIcardLoginComponent {
     event.preventDefault();
 
     if (!this.selectedFile) {
-      alert('Kérlek, válassz ki egy UNIcard képet.');
+      console.error('Kérlek, válassz ki egy UNIcard képet.');
       return;
     }
 
@@ -35,12 +37,22 @@ export class UNIcardLoginComponent {
       const credentials = await this.readCardMetadata(this.selectedFile);
 
       if (credentials) {
-        await this.router.navigate(['/main-site']);
+        const { username, password } = credentials;
+        if (username && password) {
+          this.loginService.fetchLogin(username, password).subscribe({
+            next: (response) => {
+              this.loginService.handleLoginResponse(response, credentials);
+            },
+            error: (err) => {
+              this.loginService.handleError(err);
+            }
+          });
+        }
       } else {
-        alert('Nem található bejelentkezési adat a kártyán.');
+        console.error('Nem található bejelentkezési adat a kártyán.');
       }
     } catch (error) {
-      alert('Hiba történt a kártya beolvasása közben. Kérlek, próbáld újra.');
+      console.error('Hiba történt a kártya beolvasása közben. Kérlek, próbáld újra.');
     }
   }
 
@@ -74,14 +86,13 @@ export class UNIcardLoginComponent {
                 username: match[1],
                 password: match[2],
               };
-              console.log('Credentials extracted:', result);
               resolve(result);
             } else {
-              console.log('No credential pattern found in comment');
+              console.error('No credential pattern found in comment');
               resolve(null);
             }
           } else {
-            console.log('No UserComment metadata found');
+            console.error('No UserComment metadata found');
             resolve(null);
           }
         } catch (error) {

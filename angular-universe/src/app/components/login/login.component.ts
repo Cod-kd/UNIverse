@@ -3,40 +3,46 @@ import { Router } from '@angular/router';
 import { ButtonComponent } from "../button/button.component";
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToggleInputComponent } from '../toggle-input/toggle-input.component';
+import { LoginService } from '../../services/login.service';
 
 @Component({
- selector: 'app-login',
- standalone: true,
- imports: [ButtonComponent, ReactiveFormsModule, ToggleInputComponent],
- templateUrl: './login.component.html',
- styleUrl: './login.component.css'
+  selector: 'app-login',
+  standalone: true,
+  imports: [ButtonComponent, ReactiveFormsModule, ToggleInputComponent],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
- @ViewChild(ToggleInputComponent) passwordInput!: ToggleInputComponent;
- private fb = inject(FormBuilder);
+  @ViewChild(ToggleInputComponent) passwordInput!: ToggleInputComponent;
+  private fb = inject(FormBuilder);
+  private loginService = inject(LoginService);
 
- loginForm = this.fb.group({
-   username: ['', Validators.required],
-   password: ['', Validators.required]
- });
+  loginForm = this.fb.group({
+    username: ['', Validators.required],
+    password: ['', Validators.required]
+  });
 
- constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
- loginWithCredentials() {
-   this.loginForm.patchValue({
-     password: this.passwordInput.passwordControl.value
-   });
+  loginWithCredentials() {
+    this.loginForm.patchValue({
+      password: this.passwordInput.passwordControl.value
+    });
 
-   // value access --> this.loginForm.value.password / username
+    const { username, password } = this.loginForm.value;
 
-   if(this.loginForm.valid) {
-     this.router.navigate(["/main-site"], {
-       state: { credentials: this.loginForm.value }
+    if (username && password) {
+      this.loginService.fetchLogin(username, password).subscribe({
+        next: (response) => {
+          this.loginService.handleLoginResponse(response, this.loginForm.value);
+        },
+        error: (err) => {
+          this.loginService.handleError(err);
+        }
       });
-      
-   }
- }
+    }
+  }
 
- onUNIcardLoginClick = () => this.router.navigate(["/UNIcard-login"]);
- backToRegistration = () => this.router.navigate(["/registration"]);
+  onUNIcardLoginClick = () => this.router.navigate(["/UNIcard-login"]);
+  backToRegistration = () => this.router.navigate(["/registration"]);
 }

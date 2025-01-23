@@ -5,7 +5,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ButtonComponent } from "../button/button.component";
 import { Router } from '@angular/router';
 import { ToggleInputComponent } from "../toggle-input/toggle-input.component";
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { RegisterService } from '../../services/register.service';
 
 @Component({
   selector: 'app-registration',
@@ -19,12 +19,11 @@ export class RegistrationComponent implements OnInit {
 
   private fb = inject(FormBuilder);
   private universityService = inject(UniversityService);
-  private http = inject(HttpClient);
+  private registerService = inject(RegisterService);
 
   constructor(private router: Router) { }
 
   showCard = false;
-  userExists = false;
 
   universities = toSignal(this.universityService.getUniversities());
   faculties = toSignal(this.universityService.faculties$);
@@ -82,53 +81,18 @@ export class RegistrationComponent implements OnInit {
       password: this.passwordInput.passwordControl.value
     });
 
-    this.fetchRegister();
-  }
+    const { email, username, password, gender, birthDate, university, faculty } = this.registrationForm.value;
 
-  private fetchRegister() {
-    const username = "admin";
-    const password = "oneOfMyBestPasswords";
-
-    const headers = new HttpHeaders({
-      'Authorization': 'Basic ' + btoa(username + ':' + password),
-      'Content-Type': 'application/json'
-    });
-
-    const email = this.registrationForm.value.email || '';
-    const nameIn = email.split('@')[0];
-
-    const body = {
-      emailIn: this.registrationForm.value.email,
-      usernameIn: this.registrationForm.value.username,
-      passwordIn: this.registrationForm.value.password,
-      nameIn: nameIn,
-      genderIn: this.registrationForm.value.gender === '1' ? true : false,
-      birthDateIn: this.registrationForm.value.birthDate,
-      facultyIn: this.registrationForm.value.faculty,
-      universityNameIn: this.registrationForm.value.university,
-      profilePictureExtensionIn: "jpg"
-    };
-
-    this.http.post('http://localhost:8080/user/registration', body, {
-      headers,
-      responseType: 'text'
-    })
-      .subscribe({
+    if (email && username && password && gender && birthDate && university && faculty) {
+      this.registerService.fetchRegister(email, username, password, gender, birthDate, university, faculty).subscribe({
         next: (response) => {
-          console.log('Registration successful', response);
-          this.showCard = true;
-          this.router.navigate(['/get-unicard'], {
-            state: { userData: this.registrationForm.value }
-          });
+          this.registerService.handleRegisterResponse(response, this.registrationForm.value);
         },
         error: (err) => {
-          if (err.status === 409) {
-            console.error("Foglalt felhasználónév vagy email!");
-          } else {
-            console.error("Szerveroldali hiba", err);
-          }
+          this.registerService.handleError(err);
         }
       });
+    }
   }
 
   returnToLogin() {

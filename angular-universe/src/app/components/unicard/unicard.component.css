@@ -11,7 +11,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.3s ease;
-  animation: float 4s infinite forwards ease;
+  animation: float 3s infinite forwards ease-in-out;
 }
 
 @keyframes float {
