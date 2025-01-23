@@ -7,64 +7,72 @@ import {
 } from '@angular/core';
 import { PopupComponent } from '../components/popup/popup.component';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class PopupService {
-  private popupRef: ComponentRef<PopupComponent> | null = null;
+  private activePopups: ComponentRef<PopupComponent>[] = [];
 
   constructor(
     private appRef: ApplicationRef,
     private injector: EnvironmentInjector
   ) {}
 
-  show(message: string): void {
-    this.destroy();
+  show(message: string, duration = 3000): void {
+    if (this.activePopups.length >= 3) {
+      this.destroyOldestPopup();
+    }
 
     const popupComponent = createComponent(PopupComponent, {
       environmentInjector: this.injector,
     });
 
     popupComponent.instance.popupMessage = message;
-
     this.appRef.attachView(popupComponent.hostView);
-    const domElem = (popupComponent.hostView as any).rootNodes[0] as HTMLElement;
 
-    Object.assign(domElem.style, {
-      position: 'fixed',
-      ...(window.innerWidth <= 480 ? {bottom: "20px"} : {top: "20px"}),
-      left: '50%',
-      transform: 'translateX(-50%)',
-      zIndex: '1',
-    });
+    const domElem = popupComponent.location.nativeElement;
+    this.positionPopup(domElem);
 
     const modalContent = domElem.querySelector('.modal-content');
     modalContent?.classList.add('active');
 
     document.body.appendChild(domElem);
-    this.popupRef = popupComponent;
+    this.activePopups.push(popupComponent);
 
-    setTimeout(() => this.fadeOutAndDestroy(), 3000);
+    setTimeout(() => this.fadeOutAndDestroy(popupComponent), duration);
   }
 
-  private fadeOutAndDestroy(): void {
-    if (this.popupRef) {
-      const domElem = (this.popupRef.hostView as any)
-        .rootNodes[0] as HTMLElement;
-      const modalContent = domElem.querySelector('.modal-content');
+  private positionPopup(domElem: HTMLElement): void {
+    Object.assign(domElem.style, {
+      position: 'fixed',
+      zIndex: '1',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      ...(window.innerWidth <= 480 
+        ? { bottom: '20px' }
+        : { top: '20px' }
+      )
+    });
+  }
 
-      modalContent?.classList.remove('active');
-      modalContent?.classList.add('inactive');
-
-      setTimeout(() => this.destroy(), 500);
+  private destroyOldestPopup(): void {
+    const oldestPopup = this.activePopups.shift();
+    if (oldestPopup) {
+      this.destroyPopup(oldestPopup);
     }
   }
 
-  destroy(): void {
-    if (this.popupRef) {
-      this.appRef.detachView(this.popupRef.hostView);
-      this.popupRef.destroy();
-      this.popupRef = null;
-    }
+  private fadeOutAndDestroy(popupComponent: ComponentRef<PopupComponent>): void {
+    const domElem = popupComponent.location.nativeElement;
+    const modalContent = domElem.querySelector('.modal-content');
+
+    modalContent?.classList.remove('active');
+    modalContent?.classList.add('inactive');
+
+    setTimeout(() => this.destroyPopup(popupComponent), 500);
+  }
+
+  private destroyPopup(popupComponent: ComponentRef<PopupComponent>): void {
+    this.activePopups = this.activePopups.filter(p => p !== popupComponent);
+    this.appRef.detachView(popupComponent.hostView);
+    popupComponent.destroy();
   }
 }
