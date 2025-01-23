@@ -30,11 +30,13 @@ export class LoginService {
       responseType: 'text'
     }).pipe(
       catchError(err => {
+        let errorMessage = "Szerveroldali hiba";
         if (err.status === 409) {
-          return throwError(() => new Error("Hibás felhasználónév vagy jelszó!"));
-        } else {
-          return throwError(() => new Error("Szerveroldali hiba"));
+          errorMessage = "Hibás felhasználónév vagy jelszó!";
         }
+
+        console.error(errorMessage);
+        return throwError(() => new Error(errorMessage));
       })
     );
   }

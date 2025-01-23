@@ -47,11 +47,13 @@ export class RegisterService {
       responseType: 'text'
     }).pipe(
       catchError(err => {
+        let errorMessage = "Szerveroldali hiba";
         if (err.status === 409) {
-          return throwError(() => new Error("Foglalt felhasználónév vagy email!"));
-        } else {
-          return throwError(() => new Error("Szerveroldali hiba"));
+          errorMessage = "Foglalt felhasználónév vagy email!";
         }
+
+        console.error(errorMessage);
+        return throwError(() => new Error(errorMessage));
       })
     );
   }
