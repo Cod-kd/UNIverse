@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
 import { CardMetadataService } from '../../services/card-meta-data.service';
+import { PopupComponent } from "../popup/popup.component";
 
 @Component({
   selector: 'app-unicard-login',
   standalone: true,
-  imports: [ButtonComponent, FormsModule],
+  imports: [ButtonComponent, FormsModule, PopupComponent],
   templateUrl: './unicard-login.component.html',
   styleUrls: ['./unicard-login.component.css'],
 })
