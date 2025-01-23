@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ButtonComponent } from '../button/button.component';
 import { Router } from '@angular/router';
 import { CardMetadataService } from '../../services/card-meta-data.service';
+import { PopupService } from '../../services/popup-message.service';
 
 interface UserData {
   email: string;
@@ -24,12 +25,12 @@ export class UNIcardComponent {
   userData: UserData = history.state.userData;
   private cardMetadataService = inject(CardMetadataService);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private popupService: PopupService) {}
 
   saveUniCard = async () => {
     const userDataDiv = document.getElementById('userDataDiv');
     if (!userDataDiv) {
-      console.error('User data div not found.');
+      this.popupService.show('UNIcard not found.');
       return;
     }
 
@@ -37,7 +38,7 @@ export class UNIcardComponent {
       await this.cardMetadataService.saveCardData(this.userData, userDataDiv);
       this.router.navigate(['/UNIcard-login']);
     } catch (error) {
-      console.error(`UNIcard save failed: ${error}`);
+      this.popupService.show(`UNIcard save failed: ${error}`);
     }
   };
 }

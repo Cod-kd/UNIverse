@@ -3,13 +3,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { PopupService } from './popup-message.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private popupService: PopupService) { }
 
   fetchLogin(loginUsername: string, loginPassword: string): Observable<any> {
     const username = "admin";
@@ -35,7 +36,7 @@ export class LoginService {
           errorMessage = "Hibás felhasználónév vagy jelszó!";
         }
 
-        console.error(errorMessage);
+        this.popupService.show(errorMessage);
         return throwError(() => new Error(errorMessage));
       })
     );
@@ -49,6 +50,6 @@ export class LoginService {
   }
 
   handleError(err: any) {
-    console.error(err.message);
+    this.popupService.show(err.message);
   }
 }

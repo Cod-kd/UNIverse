@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
 import { CardMetadataService } from '../../services/card-meta-data.service';
 import { PopupComponent } from "../popup/popup.component";
+import { PopupService } from '../../services/popup-message.service';
 
 @Component({
   selector: 'app-unicard-login',
@@ -18,7 +19,7 @@ export class UNIcardLoginComponent {
   private loginService = inject(LoginService);
   private cardMetadataService = inject(CardMetadataService);
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private popupService: PopupService) { }
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -29,9 +30,8 @@ export class UNIcardLoginComponent {
 
   async loginWithCard(event: Event) {
     event.preventDefault();
-
     if (!this.selectedFile) {
-      console.error('Kérlek, válassz ki egy UNIcard képet.');
+      this.popupService.show('Kérlek, válassz ki egy UNIcard képet.');
       return;
     }
 
@@ -51,10 +51,10 @@ export class UNIcardLoginComponent {
           });
         }
       } else {
-        console.error('Nem található bejelentkezési adat a kártyán.');
+        this.popupService.show('Nem található bejelentkezési adat a kártyán.');
       }
     } catch (error) {
-      console.error('Hiba történt a kártya beolvasása közben. Kérlek, próbáld újra.');
+      this.popupService.show('Hiba történt a kártya beolvasása közben. Kérlek, próbáld újra.');
     }
   }
 

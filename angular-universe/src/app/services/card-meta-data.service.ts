@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import * as piexifjs from 'piexifjs';
 import html2canvas from 'html2canvas';
+import { PopupService } from './popup-message.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CardMetadataService {
+
+  constructor(private popupService: PopupService){}
 
   async readCardMetadata(file: File): Promise<{ username: string; password: string } | null> {
     return new Promise((resolve, reject) => {
@@ -33,21 +36,21 @@ export class CardMetadataService {
               };
               resolve(result);
             } else {
-              console.error('No credential pattern found in comment');
+              this.popupService.show('No credential pattern found in comment');
               resolve(null);
             }
           } else {
-            console.error('No UserComment metadata found');
+            this.popupService.show('No UserComment metadata found');
             resolve(null);
           }
         } catch (error: any) {
-          console.error('Error in metadata processing: ' + error.message);
+          this.popupService.show('Error in metadata processing: ' + error.message);
           reject(error);
         }
       };
 
       reader.onerror = (error) => {
-        console.error('Error reading file: ' + error);
+        this.popupService.show('Error reading file: ' + error);
         reject(new Error('Failed to read file'));
       };
 
@@ -89,11 +92,11 @@ export class CardMetadataService {
         document.body.removeChild(link);
 
       } catch (err: any) {
-        console.error('Error while adding EXIF data: ' + err.message);
+        this.popupService.show('Error while adding EXIF data: ' + err.message);
         throw new Error('Error while adding EXIF data');
       }
     } catch (err: any) {
-      console.error('Error while capturing user data: ' + err.message);
+      this.popupService.show('Error while capturing user data: ' + err.message);
       throw new Error('Error while capturing user data');
     }
   }
