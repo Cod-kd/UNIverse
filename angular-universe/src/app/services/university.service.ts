@@ -6,6 +6,11 @@ interface University {
   value: string;
 }
 
+interface FacultyOption {
+  label: string;
+  value: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -297,7 +302,7 @@ export class UniversityService {
     ]
   };
 
-  private facultiesSubject = new BehaviorSubject<string[]>([]);
+  private facultiesSubject = new BehaviorSubject<FacultyOption[]>([]);
   faculties$ = this.facultiesSubject.asObservable();
 
   getUniversities(): Observable<University[]> {
@@ -305,6 +310,10 @@ export class UniversityService {
   }
 
   loadFaculties(universityId: string): void {
-    this.facultiesSubject.next(this.faculties[universityId] || []);
+    const faculties = (this.faculties[universityId] || []).map(faculty => ({
+      label: faculty,
+      value: universityId
+    }));
+    this.facultiesSubject.next(faculties);
   }
 }

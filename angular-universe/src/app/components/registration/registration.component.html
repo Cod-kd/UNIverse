@@ -29,7 +29,7 @@
     <select id="facultySelect" formControlName="faculty">
       <option value="">Válassz kart</option>
       @for (faculty of faculties(); track faculty) {
-      <option [value]="faculty">{{ faculty }}</option>
+      <option [value]="faculty.value">{{ faculty.label }}</option>
       }
     </select>
   </div>

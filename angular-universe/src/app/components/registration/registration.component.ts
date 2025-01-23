@@ -5,6 +5,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ButtonComponent } from "../button/button.component";
 import { Router } from '@angular/router';
 import { ToggleInputComponent } from "../toggle-input/toggle-input.component";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-registration',
@@ -15,10 +16,15 @@ import { ToggleInputComponent } from "../toggle-input/toggle-input.component";
 })
 export class RegistrationComponent implements OnInit {
   @ViewChild(ToggleInputComponent) passwordInput!: ToggleInputComponent;
-  constructor(private router: Router) { }
+
   private fb = inject(FormBuilder);
   private universityService = inject(UniversityService);
+  private http = inject(HttpClient);
+
+  constructor(private router: Router) { }
+
   showCard = false;
+  userExists = false;
 
   universities = toSignal(this.universityService.getUniversities());
   faculties = toSignal(this.universityService.faculties$);
@@ -30,16 +36,16 @@ export class RegistrationComponent implements OnInit {
     password: ['', Validators.required],
     birthDate: ['', Validators.required],
     university: ['', Validators.required],
-    faculty: ['']  // No need for disabled here
+    faculty: ['']
   });
 
   ngOnInit() {
-    this.onUniversityChange();  // Ensure this method runs when the component initializes
+    this.onUniversityChange();
   }
 
   formatBirthDate(event: any) {
-    let input = event.target;
-    let value = input.value.replace(/\D/g, '');
+    const input = event.target;
+    const value = input.value.replace(/\D/g, '');
 
     if (value.length > 0) {
       let formattedDate = '';
@@ -61,7 +67,6 @@ export class RegistrationComponent implements OnInit {
   onUniversityChange() {
     const universityId = this.registrationForm.get('university')?.value;
 
-    // Reset the faculty value and set it to the default option
     this.registrationForm.get('faculty')?.setValue('');
 
     if (universityId) {
@@ -72,19 +77,58 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
-
   registerNewUser() {
     this.registrationForm.patchValue({
       password: this.passwordInput.passwordControl.value
     });
 
-    if (this.registrationForm.valid) {
-      this.showCard = true;
-      // Only redirect here if username and email isn't already present in database (code != 200)
-      this.router.navigate(['/get-unicard'], {
-        state: { userData: this.registrationForm.value }
+    this.fetchRegister();
+  }
+
+  private fetchRegister() {
+    const username = "admin";
+    const password = "oneOfMyBestPasswords";
+
+    const headers = new HttpHeaders({
+      'Authorization': 'Basic ' + btoa(username + ':' + password),
+      'Content-Type': 'application/json'
+    });
+
+    const email = this.registrationForm.value.email || '';
+    const nameIn = email.split('@')[0];
+
+    const body = {
+      emailIn: this.registrationForm.value.email,
+      usernameIn: this.registrationForm.value.username,
+      passwordIn: this.registrationForm.value.password,
+      nameIn: nameIn,
+      genderIn: this.registrationForm.value.gender === '1' ? true : false,
+      birthDateIn: this.registrationForm.value.birthDate,
+      facultyIn: this.registrationForm.value.faculty,
+      universityNameIn: this.registrationForm.value.university,
+      profilePictureExtensionIn: "jpg"
+    };
+
+    this.http.post('http://localhost:8080/user/registration', body, {
+      headers,
+      responseType: 'text'
+    })
+      .subscribe({
+        next: (response) => {
+          console.log('Registration successful', response);
+          this.showCard = true;
+          this.router.navigate(['/get-unicard'], {
+            state: { userData: this.registrationForm.value }
+          });
+        },
+        error: (err) => {
+          if (err.status === 409) {
+            console.error("Foglalt felhasználónév vagy email!");
+          } else {
+            console.error("Szerveroldali hiba", err);
+          }
+        }
       });
-    }
   }
 
   returnToLogin() {
