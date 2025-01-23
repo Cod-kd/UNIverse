@@ -8,6 +8,7 @@ import { ToggleInputComponent } from "../toggle-input/toggle-input.component";
 import { RegisterService } from '../../services/register.service';
 import { debounceTime } from 'rxjs/operators';
 import { ValidationService } from '../../services/validation.service';
+import { PopupService } from '../../services/popup-message.service';
 
 @Component({
   selector: 'app-registration',
@@ -24,7 +25,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   private registerService = inject(RegisterService);
   private formStorageKey = 'registrationFormData';
 
-  constructor(private router: Router, private validationService: ValidationService) { }
+  constructor(private router: Router, private validationService: ValidationService, private popupService: PopupService) { }
 
   showCard = false;
 
@@ -44,7 +45,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.onUniversityChange();
     this.restoreFormData();
-    
+
     this.registrationForm.valueChanges
       .pipe(
         debounceTime(500)
@@ -62,20 +63,20 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       this.validationService.validateEmail(email);
     }
   }
-  
+
   onUsernameChange() {
     const username = this.registrationForm.get('username')?.value;
     if (typeof username === 'string') {
       this.validationService.validateUsername(username);
     }
   }
-  
+
   onBirthDateChange() {
     const birthDate = this.registrationForm.get('birthDate')?.value;
     if (typeof birthDate === 'string') {
       this.validationService.validateBirthDate(birthDate);
     }
-  }  
+  }
 
   private saveFormData() {
     const formData = this.registrationForm.value;
@@ -128,9 +129,9 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFacultyChange(){
+  onFacultyChange() {
     const registrationDiv = document.querySelector("form");
-    if(registrationDiv){
+    if (registrationDiv) {
       registrationDiv.scrollTo(0, registrationDiv.scrollHeight)
     }
   }
@@ -139,23 +140,32 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     this.registrationForm.patchValue({
       password: this.passwordInput.passwordControl.value
     });
- 
-    const { email, username, password, gender, birthDate, university, faculty } = this.registrationForm.value;
- 
-    if (email && username && password && gender && birthDate && university && faculty) {
-      this.registerService.fetchRegister(
-        email, username, password, gender, birthDate, university, faculty
-      ).subscribe({
-        next: (response) => {
-          this.clearSavedFormData();
-          this.registerService.handleRegisterResponse(response, this.registrationForm.value);
-        },
-        error: (err) => {
-          this.registerService.handleError(err);
-        }
-      });
+
+    const email = this.registrationForm.get('email')?.value ?? '';
+    const username = this.registrationForm.get('username')?.value ?? '';
+    const birthDate = this.registrationForm.get('birthDate')?.value ?? '';
+    const password = this.registrationForm.get('password')?.value ?? '';
+
+    this.validationService.validateEmail(email);
+    this.validationService.validateUsername(username);
+    this.validationService.validateBirthDate(birthDate);
+    this.validationService.validatePassword(password);
+
+    const { email: formEmail, username: formUsername, password: formPassword, gender, birthDate: formBirthDate, university, faculty } = this.registrationForm.value;
+    if (formEmail && formUsername && formPassword && gender && formBirthDate && university && faculty) {
+      this.registerService.fetchRegister(formEmail, formUsername, password, gender, formBirthDate, university, faculty)
+        .subscribe({
+          next: (response) => {
+            this.clearSavedFormData();
+            this.registerService.handleRegisterResponse(response, this.registrationForm.value);
+          },
+          error: (err) => {
+            this.registerService.handleError(err);
+          },
+        });
     }
   }
+
 
   returnToLogin() {
     this.router.navigate(["/login"]);
