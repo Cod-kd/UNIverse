@@ -106,6 +106,13 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     }
   }
 
+  onFacultyChange(){
+    const registrationDiv = document.querySelector("form");
+    if(registrationDiv){
+      registrationDiv.scrollTo(0, registrationDiv.scrollHeight)
+    }
+  }
+
   registerNewUser() {
     this.registrationForm.patchValue({
       password: this.passwordInput.passwordControl.value

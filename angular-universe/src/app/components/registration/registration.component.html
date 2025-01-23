@@ -26,7 +26,7 @@
   </div>
 
   <div id="facultyDiv">
-    <select id="facultySelect" formControlName="faculty">
+    <select id="facultySelect" formControlName="faculty" (change)="onFacultyChange()">
       <option value="">Válassz kart</option>
       @for (faculty of faculties(); track faculty) {
       <option [value]="faculty.value">{{ faculty.label }}</option>

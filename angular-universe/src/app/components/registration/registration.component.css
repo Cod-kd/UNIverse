@@ -7,6 +7,7 @@ form {
     width: min(70vh, 90%);
     margin: 0 auto;
     padding: 1rem;
+    scroll-behavior: smooth;
 }
 
 form::-webkit-scrollbar {
