@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ButtonComponent } from '../button/button.component';
 import html2canvas from 'html2canvas';
 import * as piexifjs from 'piexifjs';
+import { Router } from '@angular/router';
 
 interface UserData {
   email: string;
@@ -22,6 +23,8 @@ interface UserData {
 })
 export class UNIcardComponent {
   userData: UserData = history.state.userData;
+
+  constructor(private router: Router) {}
 
   saveUniCard = async () => {
     const userDataDiv = document.getElementById('userDataDiv');
@@ -69,6 +72,7 @@ export class UNIcardComponent {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        this.router.navigate(["/UNIcard-login"]);
       } catch (err) {
         console.error('Error: ', err);
       }
