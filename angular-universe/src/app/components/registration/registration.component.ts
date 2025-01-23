@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UniversityService } from '../../services/university.service';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -6,6 +6,7 @@ import { ButtonComponent } from "../button/button.component";
 import { Router } from '@angular/router';
 import { ToggleInputComponent } from "../toggle-input/toggle-input.component";
 import { RegisterService } from '../../services/register.service';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-registration',
@@ -14,12 +15,13 @@ import { RegisterService } from '../../services/register.service';
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css']
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent implements OnInit, OnDestroy {
   @ViewChild(ToggleInputComponent) passwordInput!: ToggleInputComponent;
 
   private fb = inject(FormBuilder);
   private universityService = inject(UniversityService);
   private registerService = inject(RegisterService);
+  private formStorageKey = 'registrationFormData';
 
   constructor(private router: Router) { }
 
@@ -40,6 +42,34 @@ export class RegistrationComponent implements OnInit {
 
   ngOnInit() {
     this.onUniversityChange();
+    this.restoreFormData();
+    
+    this.registrationForm.valueChanges
+      .pipe(
+        debounceTime(500)
+      )
+      .subscribe(() => this.saveFormData());
+  }
+
+  ngOnDestroy() {
+    this.saveFormData();
+  }
+
+  private saveFormData() {
+    const formData = this.registrationForm.value;
+    localStorage.setItem(this.formStorageKey, JSON.stringify(formData));
+  }
+
+  private restoreFormData() {
+    const savedData = localStorage.getItem(this.formStorageKey);
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      this.registrationForm.patchValue(parsedData, { emitEvent: false });
+    }
+  }
+
+  private clearSavedFormData() {
+    localStorage.removeItem(this.formStorageKey);
   }
 
   formatBirthDate(event: any) {
@@ -80,12 +110,15 @@ export class RegistrationComponent implements OnInit {
     this.registrationForm.patchValue({
       password: this.passwordInput.passwordControl.value
     });
-
+ 
     const { email, username, password, gender, birthDate, university, faculty } = this.registrationForm.value;
-
+ 
     if (email && username && password && gender && birthDate && university && faculty) {
-      this.registerService.fetchRegister(email, username, password, gender, birthDate, university, faculty).subscribe({
+      this.registerService.fetchRegister(
+        email, username, password, gender, birthDate, university, faculty
+      ).subscribe({
         next: (response) => {
+          this.clearSavedFormData();
           this.registerService.handleRegisterResponse(response, this.registrationForm.value);
         },
         error: (err) => {
