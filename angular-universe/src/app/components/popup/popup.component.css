@@ -1,17 +1,45 @@
-.modal{
-    top: 0;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+.modal-content {
     display: none;
     height: fit-content;
     background-color: transparent;
     align-items: center;
     justify-content: center;
+    position: absolute;
 }
 
-.modal.active{
+.modal-content.active {
+    display: flex;
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.modal-content.inactive {
+    animation: fadeOut 0.5s ease-out forwards;
     display: flex;
 }
 
-.modal-content{
+.modal-content {
     background-color: var(--dark2);
     color: var(--light1);
     width: 300px;
@@ -22,7 +50,7 @@
     border-radius: 1em;
 }
 
-.modal-content:before{
+.modal-content:before {
     background-color: var(--main);
     border-radius: 50%;
     content: "";
@@ -37,7 +65,7 @@
     transform: background-color 0.3s;
 }
 
-.closeIcon i{
+.closeIcon i {
     position: absolute;
     right: 20px;
     top: 20px;
@@ -48,11 +76,11 @@
     z-index: 1;
 }
 
-.closeIcon i:hover{
+.closeIcon i:hover {
     color: var(--main);
 }
 
-.modal-body{
+.modal-body {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -61,12 +89,12 @@
     padding: 20px;
 }
 
-.icon{
+.icon {
     font-size: 30px;
     color: var(--main);
 }
 
-.right-items{
+.right-items {
     margin-left: 15px;
     width: 180px;
     max-width: 180px;
