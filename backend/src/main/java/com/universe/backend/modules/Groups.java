@@ -3,7 +3,7 @@ package com.universe.backend.modules;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "groups")
+@Table(name = "`groups`")
 public class Groups {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,7 +12,7 @@ public class Groups {
     @Column(name = "name", nullable = false, length = 60)
     private String name;
 
-    @Column(name = "public", nullable = false)
+    @Column(name = "`public`", nullable = false)
     private Boolean isPublic;
 
     @Column(name = "membersCount", nullable = false)
