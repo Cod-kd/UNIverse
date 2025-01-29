@@ -2,6 +2,7 @@ package com.universe.backend.controllers;
 
 import com.universe.backend.dto.UserLoginDTO;
 import com.universe.backend.dto.UserRegistrationDTO;
+import com.universe.backend.modules.UsersBio;
 import com.universe.backend.services.user.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,5 +38,11 @@ public class UserController {
     public ResponseEntity<String> registration(@RequestBody @Valid UserRegistrationDTO urDTO) {
         rs.registerUser(urDTO);
         return ResponseEntity.ok("Sikeres regisztráció!");
+    }
+    
+    @GetMapping("name/{username}")
+    public ResponseEntity<UsersBio> getUsersBioByUsername(@PathVariable String username) {
+        UsersBio usersBio = us.getUsersBioByUsername(username);
+        return ResponseEntity.ok(usersBio);
     }
 }
