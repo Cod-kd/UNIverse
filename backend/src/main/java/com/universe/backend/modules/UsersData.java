@@ -1,5 +1,6 @@
 package com.universe.backend.modules;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -31,10 +32,12 @@ public class UsersData {
     private int followedCount;
 
     @OneToOne(mappedBy = "usersData")
+    @JsonBackReference
     private UserProfiles userProfiles;
 
     @OneToOne
     @JoinColumn(name = "userId", referencedColumnName = "userId")
+    @JsonBackReference
     private UsersBio userBio;
 
     public Integer getUserId() {

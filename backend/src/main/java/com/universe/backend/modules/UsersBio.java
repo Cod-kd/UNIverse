@@ -1,5 +1,7 @@
 package com.universe.backend.modules;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ public class UsersBio {
 
     @OneToOne
     @JoinColumn(name = "userId", referencedColumnName = "userId")
+    @JsonManagedReference
     private UsersData usersData;
     
     @OneToMany(mappedBy = "usersBio", cascade = CascadeType.ALL, orphanRemoval = true)
