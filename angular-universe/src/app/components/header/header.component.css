@@ -1,0 +1,22 @@
+header,
+div,
+nav {
+    display: flex;
+    background-color: red;
+    width: 100vh;
+    max-width: 100%;
+}
+
+nav {
+    display: flex;
+    gap: 10%;
+}
+
+header a {
+    color: var(--light1);
+    text-decoration: none;
+}
+
+header a.selected {
+    color: var(--main);
+}
