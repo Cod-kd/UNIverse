@@ -59,7 +59,7 @@ nav a {
 #search-bar {
   background: transparent;
   border: none;
-  color: var(--light2);
+  color: var(--dark2);
   outline: none;
   width: 180px;
   padding-left: 5%;
@@ -67,7 +67,7 @@ nav a {
 }
 
 #search-bar::placeholder {
-  color: var(--light1);
+  color: var(--dark2);
 }
 
 .fa-user {
