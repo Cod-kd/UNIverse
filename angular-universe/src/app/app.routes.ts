@@ -10,13 +10,34 @@ import { GroupComponent } from './components/group/group.component';
 import { EventComponent } from './components/event/event.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { authGuard } from './guards/auth.guard';
+import { rootGuard } from './guards/root.guard';
 
 export const routes: Routes = [
-    { path: '', component: CenterContainerComponent },
-    { path: 'registration', component: RegistrationComponent },
-    { path: 'get-unicard', component: UNIcardComponent },
-    { path: 'login', component: LoginComponent },
-    { path: 'UNIcard-login', component: UNIcardLoginComponent },
+    {
+        path: '',
+        component: CenterContainerComponent,
+        canActivate: [rootGuard]
+    },
+    {
+        path: 'registration',
+        component: RegistrationComponent,
+        canActivate: [rootGuard]
+    },
+    {
+        path: 'get-unicard',
+        component: UNIcardComponent,
+        canActivate: [rootGuard]
+    },
+    {
+        path: 'login',
+        component: LoginComponent,
+        canActivate: [rootGuard]
+    },
+    {
+        path: 'UNIcard-login',
+        component: UNIcardLoginComponent,
+        canActivate: [rootGuard]
+    },
     {
         path: 'main-site',
         component: MainSiteComponent,
