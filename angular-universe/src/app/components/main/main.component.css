@@ -4,6 +4,7 @@ main {
     align-items: center;
     gap: 2rem;
     padding: 1rem;
+    padding-top: 5%;
     flex-wrap: wrap;
 }
 
@@ -21,32 +22,6 @@ main {
     display: grid;
     gap: 2rem;
     width: min(400px, 100%);
-}
-
-@media screen and (max-width: 1200px) {
-    main {
-        flex-direction: column;
-        gap: 2rem;
-    }
-
-    .cardDiv {
-        width: min(600px, 90%);
-    }
-
-    #mainContent {
-        order: -1;
-        width: 90%;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    main {
-        padding: 0.5rem;
-    }
-
-    .cardDiv {
-        gap: 1.5rem;
-    }
 }
 
 @media screen and (max-width: 480px) {

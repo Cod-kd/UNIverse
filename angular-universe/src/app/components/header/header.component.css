@@ -5,6 +5,7 @@ header {
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  position: fixed;
 }
 
 #logo {
@@ -139,7 +140,6 @@ nav a {
 @media screen and (max-width: 468px) {
   header {
     padding: 0.5rem 1rem;
-    position: fixed;
     z-index: 2;
     border-bottom: 2px solid var(--main);
   }
