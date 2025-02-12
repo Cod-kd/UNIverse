@@ -1,5 +1,6 @@
 import { Component, HostListener, ElementRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { ViewportScroller } from '@angular/common';
 
 @Component({
   selector: 'app-header',
@@ -13,7 +14,10 @@ export class HeaderComponent {
   isMobile = false;
   private lastScrollPosition = 0;
 
-  constructor(private elementRef: ElementRef) { }
+  constructor(
+    private elementRef: ElementRef,
+    private viewportScroller: ViewportScroller
+  ) { }
 
   ngOnInit() {
     this.checkScreenSize();
@@ -36,14 +40,19 @@ export class HeaderComponent {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    // Close menu if clicking outside
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.isMenuOpen = false;
     }
   }
 
   toggleMenu(event: Event) {
-    event.stopPropagation(); // Prevent document click from immediately closing
+    event.stopPropagation();
     this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  // New method to handle navigation
+  onNavigate() {
+    this.isMenuOpen = false;
+    this.viewportScroller.scrollToPosition([0, 0]);
   }
 }

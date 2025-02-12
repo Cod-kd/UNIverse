@@ -1,19 +1,21 @@
 <header>
   <!-- Logo -->
-  <a [routerLink]="['/']"><img src="images/simpleLogo.png" alt="simpleLogo" id="logo"></a>
+  <a [routerLink]="['/']" (click)="onNavigate()">
+    <img src="images/simpleLogo.png" alt="simpleLogo" id="logo">
+  </a>
 
   <!-- Desktop Navigation -->
   <nav class="desktop-nav">
-    <a [routerLink]="['/main-site/profile']" class="link link--elara">
+    <a [routerLink]="['/main-site/profile']" class="link link--elara" (click)="onNavigate()">
       <span>Profil</span>
     </a>
-    <a [routerLink]="['/main-site/groups']" class="link link--elara">
+    <a [routerLink]="['/main-site/groups']" class="link link--elara" (click)="onNavigate()">
       <span>Csoportok</span>
     </a>
-    <a [routerLink]="['/main-site/events']" class="link link--elara">
+    <a [routerLink]="['/main-site/events']" class="link link--elara" (click)="onNavigate()">
       <span>Események</span>
     </a>
-    <a [routerLink]="['/main-site/calendar']" class="link link--elara">
+    <a [routerLink]="['/main-site/calendar']" class="link link--elara" (click)="onNavigate()">
       <span>Naptár</span>
     </a>
   </nav>
@@ -26,13 +28,16 @@
         <i class="fa-solid fa-search"></i>
       </div>
     </div>
-    <a [routerLink]="['/main-site/profile']"><i class="fa-solid fa-user"></i></a>
+    <a [routerLink]="['/main-site/profile']" (click)="onNavigate()">
+      <i class="fa-solid fa-user"></i>
+    </a>
   </div>
 
   <!-- Mobile Hamburger Button -->
   <button class="hamburger-btn" (click)="toggleMenu($event)">
     <i class="fa-solid fa-bars"></i>
   </button>
+  
   <!-- Mobile Menu -->
   <div class="mobile-menu" [class.active]="isMenuOpen">
     <nav>
@@ -45,16 +50,16 @@
           </div>
         </div>
       </div>
-      <a [routerLink]="['/main-site/profile']" class="link link--elara">
+      <a [routerLink]="['/main-site/profile']" class="link link--elara" (click)="onNavigate()">
         <span>Profil</span>
       </a>
-      <a [routerLink]="['/main-site/groups']" class="link link--elara">
+      <a [routerLink]="['/main-site/groups']" class="link link--elara" (click)="onNavigate()">
         <span>Csoportok</span>
       </a>
-      <a [routerLink]="['/main-site/events']" class="link link--elara">
+      <a [routerLink]="['/main-site/events']" class="link link--elara" (click)="onNavigate()">
         <span>Események</span>
       </a>
-      <a [routerLink]="['/main-site/calendar']" class="link link--elara">
+      <a [routerLink]="['/main-site/calendar']" class="link link--elara" (click)="onNavigate()">
         <span>Naptár</span>
       </a>
     </nav>
