@@ -4,13 +4,14 @@ import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PopupService } from './popup-message.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
 
-  constructor(private http: HttpClient, private router: Router, private popupService: PopupService) { }
+  constructor(private http: HttpClient, private router: Router, private popupService: PopupService, private authService: AuthService) { }
 
   fetchLogin(loginUsername: string, loginPassword: string): Observable<any> {
     const username = "admin";
@@ -44,6 +45,7 @@ export class LoginService {
 
   handleLoginResponse(response: any, credentials: any) {
     console.log('Login successful', response);
+    this.authService.login();
     this.router.navigate(["/main-site"], {
       state: { credentials }
     });

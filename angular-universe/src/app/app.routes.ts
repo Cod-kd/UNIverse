@@ -9,6 +9,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { GroupComponent } from './components/group/group.component';
 import { EventComponent } from './components/event/event.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     { path: '', component: CenterContainerComponent },
@@ -16,9 +17,29 @@ export const routes: Routes = [
     { path: 'get-unicard', component: UNIcardComponent },
     { path: 'login', component: LoginComponent },
     { path: 'UNIcard-login', component: UNIcardLoginComponent },
-    { path: 'main-site', component: MainSiteComponent },
-    { path: 'profile', component: ProfileComponent },
-    { path: 'groups', component: GroupComponent },
-    { path: 'events', component: EventComponent },
-    { path: 'calendar', component: CalendarComponent }
+    {
+        path: 'main-site',
+        component: MainSiteComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'groups',
+        component: GroupComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'events',
+        component: EventComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'calendar',
+        component: CalendarComponent,
+        canActivate: [authGuard]
+    }
 ];
