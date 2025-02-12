@@ -60,5 +60,12 @@ export const routes: Routes = [
                 component: CalendarComponent
             }
         ]
+    },
+    {
+        path: '**',
+        redirectTo: '',
+        pathMatch: 'full',
+        // 404 component?
     }
+
 ];

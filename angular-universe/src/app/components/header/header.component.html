@@ -1,19 +1,19 @@
 <header>
   <!-- Logo -->
-  <a href="/"><img src="images/simpleLogo.png" alt="simpleLogo" id="logo"></a>
+  <a [routerLink]="['/']"><img src="images/simpleLogo.png" alt="simpleLogo" id="logo"></a>
 
   <!-- Desktop Navigation -->
   <nav class="desktop-nav">
-    <a href="/main-site/profile" class="link link--elara">
+    <a [routerLink]="['/main-site/profile']" class="link link--elara">
       <span>Profil</span>
     </a>
-    <a href="/main-site/groups" class="link link--elara">
+    <a [routerLink]="['/main-site/groups']" class="link link--elara">
       <span>Csoportok</span>
     </a>
-    <a href="/main-site/events" class="link link--elara">
+    <a [routerLink]="['/main-site/events']" class="link link--elara">
       <span>Események</span>
     </a>
-    <a href="/main-site/calendar" class="link link--elara">
+    <a [routerLink]="['/main-site/calendar']" class="link link--elara">
       <span>Naptár</span>
     </a>
   </nav>
@@ -26,7 +26,7 @@
         <i class="fa-solid fa-search"></i>
       </div>
     </div>
-    <a href="/main-site/profile"><i class="fa-solid fa-user"></i></a>
+    <a [routerLink]="['/main-site/profile']"><i class="fa-solid fa-user"></i></a>
   </div>
 
   <!-- Mobile Hamburger Button -->
@@ -45,19 +45,18 @@
           </div>
         </div>
       </div>
-      <a href="/main-site/profile" class="link link--elara">
+      <a [routerLink]="['/main-site/profile']" class="link link--elara">
         <span>Profil</span>
       </a>
-      <a href="/main-site/groups" class="link link--elara">
+      <a [routerLink]="['/main-site/groups']" class="link link--elara">
         <span>Csoportok</span>
       </a>
-      <a href="/main-site/events" class="link link--elara">
+      <a [routerLink]="['/main-site/events']" class="link link--elara">
         <span>Események</span>
       </a>
-      <a href="/main-site/calendar" class="link link--elara">
+      <a [routerLink]="['/main-site/calendar']" class="link link--elara">
         <span>Naptár</span>
       </a>
-
     </nav>
   </div>
 </header>
