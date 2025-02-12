@@ -7,21 +7,10 @@ header {
   width: 100%;
 }
 
-#logo-section {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 #logo {
-  width: 3rem;
-  height: 3rem;
+  width: 9em;
+  height: 2.5em;
   cursor: pointer;
-}
-
-#brand-text {
-  color: var(--light1);
-  font-size: 1.25rem;
 }
 
 nav {
@@ -165,11 +154,6 @@ nav a {
     display: block;
     z-index: 3;
     /* Ensure it stays above the mobile menu */
-  }
-
-  /* Center logo section */
-  #logo-section {
-    margin: 0;
   }
 
   /* Mobile menu styling */
