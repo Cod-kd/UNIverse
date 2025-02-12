@@ -16,7 +16,7 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     this.router.events.subscribe(() => {
-      this.isMainSite = this.router.url !== "/main-site";
+      this.isMainSite = this.router.url.includes("/main-site");
     });
   }
 }
