@@ -16,51 +16,23 @@ export const routes: Routes = [
     {
         path: '',
         component: CenterContainerComponent,
-        canActivate: [rootGuard]
-    },
-    {
-        path: 'registration',
-        component: RegistrationComponent,
-        canActivate: [rootGuard]
-    },
-    {
-        path: 'get-unicard',
-        component: UNIcardComponent,
-        canActivate: [rootGuard]
-    },
-    {
-        path: 'login',
-        component: LoginComponent,
-        canActivate: [rootGuard]
-    },
-    {
-        path: 'UNIcard-login',
-        component: UNIcardLoginComponent,
-        canActivate: [rootGuard]
+        canActivate: [rootGuard],
+        children: [
+            { path: 'registration', component: RegistrationComponent },
+            { path: 'get-unicard', component: UNIcardComponent },
+            { path: 'login', component: LoginComponent },
+            { path: 'UNIcard-login', component: UNIcardLoginComponent }
+        ]
     },
     {
         path: 'main-site',
         component: MainSiteComponent,
-        canActivate: [authGuard]
-    },
-    {
-        path: 'profile',
-        component: ProfileComponent,
-        canActivate: [authGuard]
-    },
-    {
-        path: 'groups',
-        component: GroupComponent,
-        canActivate: [authGuard]
-    },
-    {
-        path: 'events',
-        component: EventComponent,
-        canActivate: [authGuard]
-    },
-    {
-        path: 'calendar',
-        component: CalendarComponent,
-        canActivate: [authGuard]
+        canActivate: [authGuard],
+        children: [
+            { path: 'profile', component: ProfileComponent },
+            { path: 'groups', component: GroupComponent },
+            { path: 'events', component: EventComponent },
+            { path: 'calendar', component: CalendarComponent }
+        ]
     }
 ];
