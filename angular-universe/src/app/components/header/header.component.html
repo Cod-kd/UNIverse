@@ -1,9 +1,12 @@
 <header>
+  <!-- Logo Section -->
   <div id="logo-section">
     <img src="images/logo.png" alt="UNI Logo" id="logo">
-    <span id="brand-text">UNIverse</span>
+    <span id="brand-text" [class.mobile-brand]="isMobile">UNIverse</span>
   </div>
-  <nav>
+
+  <!-- Desktop Navigation -->
+  <nav class="desktop-nav">
     <a href="/profile" class="link link--elara">
       <span>Profil</span>
     </a>
@@ -17,7 +20,9 @@
       <span>Naptár</span>
     </a>
   </nav>
-  <div id="search-section">
+
+  <!-- Desktop Search Section -->
+  <div id="search-section" class="desktop-search">
     <div id="searchIconDiv">
       <input type="search" id="search-bar" placeholder="Keresés...">
       <div id="search">
@@ -25,5 +30,37 @@
       </div>
     </div>
     <i class="fa-solid fa-user"></i>
+  </div>
+
+  <!-- Mobile Hamburger Button -->
+  <button class="hamburger-btn" (click)="toggleMenu($event)">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" [class.active]="isMenuOpen">
+    <nav>
+      <a href="/profile" class="link link--elara">
+        <span>Profil</span>
+      </a>
+      <a href="/groups" class="link link--elara">
+        <span>Csoportok</span>
+      </a>
+      <a href="/events" class="link link--elara">
+        <span>Események</span>
+      </a>
+      <a href="/calendar" class="link link--elara">
+        <span>Naptár</span>
+      </a>
+      <!-- Search bar inside mobile menu -->
+      <div id="mobile-search-section">
+        <div id="searchIconDiv">
+          <input type="search" id="search-bar" placeholder="Keresés...">
+          <div id="search">
+            <i class="fa-solid fa-search"></i>
+          </div>
+        </div>
+      </div>
+    </nav>
   </div>
 </header>
