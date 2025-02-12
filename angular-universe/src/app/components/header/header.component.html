@@ -33,10 +33,18 @@
   <button class="hamburger-btn" (click)="toggleMenu($event)">
     <i class="fa-solid fa-bars"></i>
   </button>
-
   <!-- Mobile Menu -->
   <div class="mobile-menu" [class.active]="isMenuOpen">
     <nav>
+      <!-- Search bar inside mobile menu -->
+      <div id="mobile-search-section">
+        <div id="searchIconDiv">
+          <input type="search" id="search-bar" placeholder="Keresés...">
+          <div id="search">
+            <i class="fa-solid fa-search"></i>
+          </div>
+        </div>
+      </div>
       <a href="/profile" class="link link--elara">
         <span>Profil</span>
       </a>
@@ -49,15 +57,7 @@
       <a href="/calendar" class="link link--elara">
         <span>Naptár</span>
       </a>
-      <!-- Search bar inside mobile menu -->
-      <div id="mobile-search-section">
-        <div id="searchIconDiv">
-          <input type="search" id="search-bar" placeholder="Keresés...">
-          <div id="search">
-            <i class="fa-solid fa-search"></i>
-          </div>
-        </div>
-      </div>
+
     </nav>
   </div>
 </header>
