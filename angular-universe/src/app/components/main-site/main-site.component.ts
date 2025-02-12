@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-site',
@@ -9,5 +9,8 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './main-site.component.css'
 })
 export class MainSiteComponent {
+  constructor(private router: Router) { }
 
+  // Check if URL is exactly /main-site with no child routes
+  isExactMainSitePath = () => this.router.url === '/main-site';
 }
