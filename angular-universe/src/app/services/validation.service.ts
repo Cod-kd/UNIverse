@@ -9,6 +9,8 @@ export class ValidationService {
     usernameValid: boolean = false;
     birthDateValid: boolean = false;
     passwordValid: boolean = false;
+    universityValid: boolean = false;
+    facultyValid: boolean = false;
 
     constructor(private popupService: PopupService) { }
 
@@ -94,7 +96,39 @@ export class ValidationService {
         return this.passwordValid;
     }
 
+    validateUniversity(university: string): boolean {
+        this.universityValid = true;
+        if (!university || university.trim() === "") {
+            this.popupService.show("Válassz egy egyetemet!");
+            this.universityValid = false;
+            // Reset faculty validation when uni is invalid
+            this.facultyValid = true;
+        }
+        return this.universityValid;
+    }
+
+    validateFaculty(faculty: string): boolean {
+        // Only validate faculty if university is valid
+        if (!this.universityValid) {
+            return true;
+        }
+
+        this.facultyValid = true;
+        if (!faculty || faculty.trim() === "") {
+            this.popupService.show("Válassz egy kart!");
+            this.facultyValid = false;
+        }
+        return this.facultyValid;
+    }
+
     isFormValid(): boolean {
-        return this.emailValid && this.usernameValid && this.birthDateValid && this.passwordValid;
+        return (
+            this.emailValid &&
+            this.usernameValid &&
+            this.birthDateValid &&
+            this.passwordValid &&
+            this.universityValid &&
+            this.facultyValid
+        );
     }
 }

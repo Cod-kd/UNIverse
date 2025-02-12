@@ -39,7 +39,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     password: ['', Validators.required],
     birthDate: ['', Validators.required],
     university: ['', Validators.required],
-    faculty: ['']
+    faculty: ['', Validators.required]
   });
 
   ngOnInit() {
@@ -79,7 +79,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   private saveFormData() {
-    const formData = this.registrationForm.value;
+    const { university, faculty, ...formData } = this.registrationForm.value;
     localStorage.setItem(this.formStorageKey, JSON.stringify(formData));
   }
 
@@ -137,33 +137,50 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   registerNewUser() {
+    if (!this.passwordInput || !this.passwordInput.passwordControl) {
+      console.error("Password input component is not initialized.");
+      return;
+    }
+
+    // Patch password value from ToggleInputComponent
     this.registrationForm.patchValue({
       password: this.passwordInput.passwordControl.value
     });
 
+    // Extract form values safely
     const email = this.registrationForm.get('email')?.value ?? '';
     const username = this.registrationForm.get('username')?.value ?? '';
-    const birthDate = this.registrationForm.get('birthDate')?.value ?? '';
     const password = this.registrationForm.get('password')?.value ?? '';
+    const gender = this.registrationForm.get('gender')?.value ?? '';
+    const birthDate = this.registrationForm.get('birthDate')?.value ?? '';
+    const university = this.registrationForm.get('university')?.value ?? '';
+    const faculty = this.registrationForm.get('faculty')?.value ?? '';
 
+    // Validate inputs
     this.validationService.validateEmail(email);
     this.validationService.validateUsername(username);
     this.validationService.validateBirthDate(birthDate);
     this.validationService.validatePassword(password);
+    this.validationService.validateUniversity(university);
+    this.validationService.validateFaculty(faculty);
 
-    const { email: formEmail, username: formUsername, password: formPassword, gender, birthDate: formBirthDate, university, faculty } = this.registrationForm.value;
-    if (formEmail && formUsername && formPassword && gender && formBirthDate && university && faculty) {
-      this.registerService.fetchRegister(formEmail, formUsername, password, gender, formBirthDate, university, faculty)
-        .subscribe({
-          next: (response) => {
-            this.clearSavedFormData();
-            this.registerService.handleRegisterResponse(response, this.registrationForm.value);
-          },
-          error: (err) => {
-            this.registerService.handleError(err);
-          },
-        });
+    // Check if the form is valid before proceeding
+    if (!email || !username || !password || !gender || !birthDate || !university || !faculty) {
+      console.warn("Some required fields are missing.");
+      return;
     }
+
+    // Call register service
+    this.registerService.fetchRegister(email, username, password, gender, birthDate, university, faculty)
+      .subscribe({
+        next: (response) => {
+          this.clearSavedFormData();
+          this.registerService.handleRegisterResponse(response, this.registrationForm.value);
+        },
+        error: (err) => {
+          this.registerService.handleError(err);
+        },
+      });
   }
 
 
