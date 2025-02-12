@@ -11,6 +11,7 @@ import { EventComponent } from './components/event/event.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { authGuard } from './guards/auth.guard';
 import { rootGuard } from './guards/root.guard';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 export const routes: Routes = [
     {
@@ -63,9 +64,8 @@ export const routes: Routes = [
     },
     {
         path: '**',
-        redirectTo: '',
+        component: PageNotFoundComponent,
         pathMatch: 'full',
-        // 404 component?
     }
 
 ];
