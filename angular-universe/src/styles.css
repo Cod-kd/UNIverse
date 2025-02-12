@@ -6,6 +6,20 @@ body {
     overflow-x: hidden;
     position: relative;
     margin: 0;
+    scroll-behavior: smooth;
+}
+
+body::-webkit-scrollbar {
+    width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+    background: var(--dark2);
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: var(--main);
+    border-radius: 20px;
 }
 
 body::before {
