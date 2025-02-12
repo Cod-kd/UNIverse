@@ -41,26 +41,24 @@ export const routes: Routes = [
     {
         path: 'main-site',
         component: MainSiteComponent,
-        canActivate: [authGuard]
-    },
-    {
-        path: 'profile',
-        component: ProfileComponent,
-        canActivate: [authGuard]
-    },
-    {
-        path: 'groups',
-        component: GroupComponent,
-        canActivate: [authGuard]
-    },
-    {
-        path: 'events',
-        component: EventComponent,
-        canActivate: [authGuard]
-    },
-    {
-        path: 'calendar',
-        component: CalendarComponent,
-        canActivate: [authGuard]
+        canActivate: [authGuard],
+        children: [
+            {
+                path: 'profile',
+                component: ProfileComponent
+            },
+            {
+                path: 'groups',
+                component: GroupComponent
+            },
+            {
+                path: 'events',
+                component: EventComponent
+            },
+            {
+                path: 'calendar',
+                component: CalendarComponent
+            }
+        ]
     }
 ];
