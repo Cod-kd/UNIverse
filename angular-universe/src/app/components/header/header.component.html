@@ -18,6 +18,11 @@
     <a [routerLink]="['/main-site/calendar']" class="link link--elara" (click)="onNavigate()">
       <span>Naptár</span>
     </a>
+    @if (isLoggedIn$ | async) {
+    <a href="#" class="link link--elara" (click)="logout()">
+      <span>Kijelentkezés</span>
+    </a>
+    }
   </nav>
 
   <!-- Desktop Search Section -->
@@ -37,7 +42,7 @@
   <button class="hamburger-btn" (click)="toggleMenu($event)">
     <i class="fa-solid fa-bars"></i>
   </button>
-  
+
   <!-- Mobile Menu -->
   <div class="mobile-menu" [class.active]="isMenuOpen">
     <nav>
@@ -62,6 +67,11 @@
       <a [routerLink]="['/main-site/calendar']" class="link link--elara" (click)="onNavigate()">
         <span>Naptár</span>
       </a>
+      @if (isLoggedIn$ | async) {
+      <a href="#" class="link link--elara" (click)="logout()">
+        <span>Kijelentkezés</span>
+      </a>
+      }
     </nav>
   </div>
 </header>

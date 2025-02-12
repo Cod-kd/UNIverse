@@ -1,11 +1,12 @@
 import { Component, HostListener, ElementRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ViewportScroller } from '@angular/common';
+import { CommonModule, ViewportScroller } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, CommonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
@@ -13,11 +14,15 @@ export class HeaderComponent {
   isMenuOpen = false;
   isMobile = false;
   private lastScrollPosition = 0;
+  isLoggedIn$; // Declare without initialization
 
   constructor(
     private elementRef: ElementRef,
-    private viewportScroller: ViewportScroller
-  ) { }
+    private viewportScroller: ViewportScroller,
+    private authService: AuthService // Initialize in constructor
+  ) {
+    this.isLoggedIn$ = this.authService.isLoggedIn$; // Move initialization here
+  }
 
   ngOnInit() {
     this.checkScreenSize();
@@ -54,5 +59,9 @@ export class HeaderComponent {
   onNavigate() {
     this.isMenuOpen = false;
     this.viewportScroller.scrollToPosition([0, 0]);
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }
