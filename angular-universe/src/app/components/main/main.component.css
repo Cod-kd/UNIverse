@@ -3,8 +3,7 @@ main {
     justify-content: center;
     align-items: center;
     gap: 2rem;
-    padding: 1rem;
-    padding-top: 5%;
+    padding-top: 6em;
     flex-wrap: wrap;
 }
 
@@ -16,6 +15,7 @@ main {
     transition: all 0.3s;
     justify-items: center;
     align-items: center;
+    padding-top: 2rem;
 }
 
 .cardDiv {
@@ -27,11 +27,15 @@ main {
 @media screen and (max-width: 480px) {
     main {
         gap: 1.5rem;
+        flex-direction: column;
+        padding-top: 3em;
     }
 
     #mainContent {
+        order: -1;
         min-height: 30vh;
-        margin-top: 25%;
+        width: 95%;
+        margin-top: 5%;
     }
 
     .cardDiv {
