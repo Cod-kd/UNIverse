@@ -10,15 +10,19 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class LoginService {
+  private readonly adminUsername = "admin";
+  private readonly adminPassword = "oneOfMyBestPasswords";
 
-  constructor(private http: HttpClient, private router: Router, private popupService: PopupService, private authService: AuthService) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private popupService: PopupService,
+    private authService: AuthService
+  ) { }
 
   fetchLogin(loginUsername: string, loginPassword: string): Observable<any> {
-    const username = "admin";
-    const password = "oneOfMyBestPasswords";
-
     const headers = new HttpHeaders({
-      'Authorization': 'Basic ' + btoa(username + ':' + password),
+      'Authorization': 'Basic ' + btoa(this.adminUsername + ':' + this.adminPassword),
       'Content-Type': 'application/json'
     });
 
@@ -36,7 +40,6 @@ export class LoginService {
         if (err.status === 409) {
           errorMessage = "Hibás felhasználónév vagy jelszó!";
         }
-
         this.popupService.show(errorMessage);
         return throwError(() => new Error(errorMessage));
       })

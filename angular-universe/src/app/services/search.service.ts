@@ -9,10 +9,8 @@ import { PopupService } from './popup-message.service';
 })
 export class SearchService {
   private baseUrl = 'http://localhost:8080';
-  private readonly adminCredentials = {
-    username: 'admin',
-    password: 'oneOfMyBestPasswords'
-  };
+  private readonly adminUsername = 'admin';
+  private readonly adminPassword = 'oneOfMyBestPasswords';
 
   constructor(
     private http: HttpClient,
@@ -21,7 +19,7 @@ export class SearchService {
 
   search(endpoint: string, searchTerm: string): Observable<any> {
     const headers = new HttpHeaders({
-      'Authorization': 'Basic ' + btoa(this.adminCredentials.username + ':' + this.adminCredentials.password),
+      'Authorization': 'Basic ' + btoa(this.adminUsername + ':' + this.adminPassword),
       'Content-Type': 'application/json'
     });
 

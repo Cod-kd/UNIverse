@@ -9,11 +9,14 @@ import { PopupService } from './popup-message.service';
   providedIn: 'root',
 })
 export class RegisterService {
+  private readonly adminUsername = 'admin';
+  private readonly adminPassword = 'oneOfMyBestPasswords';
+
   constructor(
     private http: HttpClient,
     private router: Router,
     private popupService: PopupService
-  ) {}
+  ) { }
 
   fetchRegister(
     email: string,
@@ -24,11 +27,8 @@ export class RegisterService {
     university: string,
     faculty: string
   ): Observable<any> {
-    const adminUsername = 'admin';
-    const adminPassword = 'oneOfMyBestPasswords';
-
     const headers = new HttpHeaders({
-      Authorization: 'Basic ' + btoa(adminUsername + ':' + adminPassword),
+      Authorization: 'Basic ' + btoa(this.adminUsername + ':' + this.adminPassword),
       'Content-Type': 'application/json',
     });
 
@@ -57,7 +57,6 @@ export class RegisterService {
           if (err.status === 409) {
             errorMessage = 'Foglalt felhasználónév vagy email!';
           }
-
           this.popupService.show(errorMessage);
           return throwError(() => new Error(errorMessage));
         })
