@@ -1,9 +1,9 @@
-// single-group.component.css
 .group-card {
     background-color: var(--main);
     border-radius: 8px;
     padding: 16px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: black;
 }
 
 .group-header {
