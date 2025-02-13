@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-event',
+  selector: 'app-events',
   standalone: true,
   imports: [],
   templateUrl: './events.component.html',

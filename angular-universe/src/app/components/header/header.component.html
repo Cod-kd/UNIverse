@@ -6,7 +6,7 @@
 
   <!-- Desktop Navigation -->
   <nav class="desktop-nav">
-    <a [routerLink]="['/main-site/profile']" class="link link--elara" (click)="onNavigate()">
+    <a [routerLink]="['/main-site/profiles']" class="link link--elara" (click)="onNavigate()">
       <span>Profil</span>
     </a>
     <a [routerLink]="['/main-site/groups']" class="link link--elara" (click)="onNavigate()">
@@ -28,7 +28,7 @@
   <!-- Desktop Search Section -->
   <div id="searchBarProfile">
     <app-search-bar></app-search-bar>
-    <a [routerLink]="['/main-site/profile']" (click)="onNavigate()">
+    <a [routerLink]="['/main-site/profiles']" (click)="onNavigate()">
       <i class="fa-solid fa-user"></i>
     </a>
   </div>
@@ -43,7 +43,7 @@
     <nav>
       <!-- Search bar inside mobile menu -->
       <app-search-bar [isMobileSearch]=true></app-search-bar>
-      <a [routerLink]="['/main-site/profile']" class="link link--elara" (click)="onNavigate()">
+      <a [routerLink]="['/main-site/profiles']" class="link link--elara" (click)="onNavigate()">
         <span>Profil</span>
       </a>
       <a [routerLink]="['/main-site/groups']" class="link link--elara" (click)="onNavigate()">

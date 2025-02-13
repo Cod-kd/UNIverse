@@ -5,7 +5,7 @@ import { LoginComponent } from './components/login/login.component';
 import { UNIcardLoginComponent } from './components/unicard-login/unicard-login.component';
 import { MainSiteComponent } from './components/main-site/main-site.component';
 import { UNIcardComponent } from './components/unicard/unicard.component';
-import { ProfileComponent } from './components/profile/profile.component';
+import { ProfilesComponent } from './components/profiles/profiles.component';
 import { GroupsComponent } from './components/groups/groups.component';
 import { EventsComponent } from './components/events/events.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
@@ -45,8 +45,8 @@ export const routes: Routes = [
         canActivate: [authGuard],
         children: [
             {
-                path: 'profile',
-                component: ProfileComponent
+                path: 'profiles',
+                component: ProfilesComponent
             },
             {
                 path: 'groups',

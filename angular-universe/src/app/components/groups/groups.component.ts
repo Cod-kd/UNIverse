@@ -5,7 +5,7 @@ import { SingleGroupComponent } from '../single-group/single-group.component';
 import { Group } from '../../models/group/group.model';
 
 @Component({
-  selector: 'app-group',
+  selector: 'app-groups',
   standalone: true,
   imports: [CommonModule, SingleGroupComponent],
   templateUrl: './groups.component.html',
