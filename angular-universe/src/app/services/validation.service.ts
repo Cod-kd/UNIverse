@@ -17,12 +17,12 @@ export class ValidationService {
     validateEmail(email: string): boolean {
         this.emailValid = true;
         if (!email || email.trim() === "") {
-            this.popupService.show("Hiányzó email cím");
+            this.popupService.show("Hiányzó e-mail cím");
             this.emailValid = false;
         } else {
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailPattern.test(email)) {
-                this.popupService.show("Helytelen email formátum");
+                this.popupService.show("Helytelen e-mail formátum");
                 this.emailValid = false;
             }
         }
