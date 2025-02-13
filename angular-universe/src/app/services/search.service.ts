@@ -28,12 +28,8 @@ export class SearchService {
       responseType: 'json'
     }).pipe(
       catchError(err => {
-        let errorMessage = 'Szerveroldali hiba';
-        if (err.status === 404) {
-          errorMessage = 'Nem található!';
-        }
-        this.popupService.show(errorMessage);
-        return throwError(() => new Error(errorMessage));
+        this.popupService.show(err);
+        return throwError(() => new Error(err));
       })
     );
   }
