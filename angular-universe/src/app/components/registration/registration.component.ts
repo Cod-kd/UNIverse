@@ -137,11 +137,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   registerNewUser() {
-    if (!this.passwordInput || !this.passwordInput.passwordControl) {
-      console.error("Password input component is not initialized.");
-      return;
-    }
-
     // Patch password value from ToggleInputComponent
     this.registrationForm.patchValue({
       password: this.passwordInput.passwordControl.value
@@ -164,12 +159,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     this.validationService.validateUniversity(university);
     this.validationService.validateFaculty(faculty);
 
-    // Check if the form is valid before proceeding
-    if (!email || !username || !password || !gender || !birthDate || !university || !faculty) {
-      console.warn("Some required fields are missing.");
-      return;
-    }
-
     // Call register service
     this.registerService.fetchRegister(email, username, password, gender, birthDate, university, faculty)
       .subscribe({
@@ -182,7 +171,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         },
       });
   }
-
 
   returnToLogin() {
     this.router.navigate(["/login"]);

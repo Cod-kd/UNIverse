@@ -1,10 +1,12 @@
 @if(!isMobileSearch){
 <div id="search-section" class="desktop-search">
     <div id="searchIconDiv">
-        <input type="search" id="search-bar" placeholder="Keresés...">
-        <div id="search">
-            <i class="fa-solid fa-search"></i>
-        </div>
+        <form (submit)="search($event, searchInput.value)">
+            <input type="search" id="search-bar" placeholder="Keresés..." #searchInput>
+            <button id="search" type="submit">
+                <i class="fa-solid fa-search"></i>
+            </button>
+        </form>
     </div>
 </div>
 }
@@ -12,10 +14,12 @@
 @if(isMobileSearch){
 <div id="mobile-search-section">
     <div id="searchIconDiv">
-        <input type="search" id="search-bar" placeholder="Keresés...">
-        <div id="search">
-            <i class="fa-solid fa-search"></i>
-        </div>
+        <form (submit)="search($event, mobileSearchInput.value)">
+            <input type="search" id="search-bar" placeholder="Keresés..." #mobileSearchInput>
+            <button id="search" type="submit">
+                <i class="fa-solid fa-search"></i>
+            </button>
+        </form>
     </div>
 </div>
 }
