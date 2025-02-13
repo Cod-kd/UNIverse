@@ -2,11 +2,12 @@ import { Component, HostListener, ElementRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule, ViewportScroller } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { SearchBarComponent } from "../search-bar/search-bar.component";
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, SearchBarComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })

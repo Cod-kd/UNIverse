@@ -1,0 +1,21 @@
+@if(!isMobileSearch){
+<div id="search-section" class="desktop-search">
+    <div id="searchIconDiv">
+        <input type="search" id="search-bar" placeholder="Keresés...">
+        <div id="search">
+            <i class="fa-solid fa-search"></i>
+        </div>
+    </div>
+</div>
+}
+
+@if(isMobileSearch){
+<div id="mobile-search-section">
+    <div id="searchIconDiv">
+        <input type="search" id="search-bar" placeholder="Keresés...">
+        <div id="search">
+            <i class="fa-solid fa-search"></i>
+        </div>
+    </div>
+</div>
+}

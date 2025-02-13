@@ -26,13 +26,8 @@
   </nav>
 
   <!-- Desktop Search Section -->
-  <div id="search-section" class="desktop-search">
-    <div id="searchIconDiv">
-      <input type="search" id="search-bar" placeholder="Keresés...">
-      <div id="search">
-        <i class="fa-solid fa-search"></i>
-      </div>
-    </div>
+  <div id="searchBarProfile">
+    <app-search-bar></app-search-bar>
     <a [routerLink]="['/main-site/profile']" (click)="onNavigate()">
       <i class="fa-solid fa-user"></i>
     </a>
@@ -47,14 +42,7 @@
   <div class="mobile-menu" [class.active]="isMenuOpen">
     <nav>
       <!-- Search bar inside mobile menu -->
-      <div id="mobile-search-section">
-        <div id="searchIconDiv">
-          <input type="search" id="search-bar" placeholder="Keresés...">
-          <div id="search">
-            <i class="fa-solid fa-search"></i>
-          </div>
-        </div>
-      </div>
+      <app-search-bar [isMobileSearch]=true></app-search-bar>
       <a [routerLink]="['/main-site/profile']" class="link link--elara" (click)="onNavigate()">
         <span>Profil</span>
       </a>

@@ -26,48 +26,10 @@ nav a {
   text-decoration: none;
 }
 
-#search-section {
+#searchBarProfile {
   display: flex;
   align-items: center;
-  gap: 1rem;
-}
-
-#searchIconDiv {
-  position: relative;
-  display: flex;
-  align-items: center;
-  background-color: var(--main);
-  border-radius: 25px;
-  padding: 8px 16px;
-}
-
-#searchIconDiv i {
-  color: var(--main);
-}
-
-#search {
-  background-color: var(--dark2);
-  border-radius: 50%;
-  width: 35px;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-#search-bar {
-  background: transparent;
-  border: none;
-  color: var(--dark2);
-  outline: none;
-  width: 180px;
-  padding-left: 5%;
-  padding-right: 5%;
-}
-
-#search-bar::placeholder {
-  color: var(--dark2);
+  gap: 1.5em;
 }
 
 .fa-user {
@@ -145,8 +107,7 @@ nav a {
   }
 
   /* Hide desktop navigation and search */
-  .desktop-nav,
-  .desktop-search {
+  .desktop-nav {
     display: none;
   }
 
@@ -184,22 +145,7 @@ nav a {
     margin: 0 0 2rem 0;
   }
 
-  #mobile-search-section {
-    display: flex;
-    justify-content: center;
-  }
-
-  .mobile-menu #searchIconDiv {
-    width: 90%;
-    margin: 0 auto;
-  }
-
-  .mobile-menu #search-bar {
-    width: 80%;
-  }
-
-  /* Hide mobile search in header */
-  header>#search-section {
-    display: none;
+  .fa-user{
+    margin-left: 5rem;
   }
 }
