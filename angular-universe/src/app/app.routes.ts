@@ -6,7 +6,7 @@ import { UNIcardLoginComponent } from './components/unicard-login/unicard-login.
 import { MainSiteComponent } from './components/main-site/main-site.component';
 import { UNIcardComponent } from './components/unicard/unicard.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { GroupComponent } from './components/groups/group.component';
+import { GroupsComponent } from './components/groups/groups.component';
 import { EventComponent } from './components/event/event.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { authGuard } from './guards/auth.guard';
@@ -50,7 +50,7 @@ export const routes: Routes = [
             },
             {
                 path: 'groups',
-                component: GroupComponent
+                component: GroupsComponent
             },
             {
                 path: 'events',

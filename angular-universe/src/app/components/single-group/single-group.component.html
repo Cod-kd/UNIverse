@@ -1,0 +1,33 @@
+<!-- single-group.component.html -->
+<div class="group-card">
+    <div class="group-header">
+        <h2>
+            {{ group.name }}
+            <span class="visibility-badge" [class.public]="group.isPublic" [class.private]="!group.isPublic">
+                {{ group.isPublic ? 'Public' : 'Private' }}
+            </span>
+        </h2>
+    </div>
+
+    <div class="group-stats">
+        <div class="stat-item">
+            <span>Members:</span>
+            <strong>{{ group.membersCount }}</strong>
+        </div>
+
+        <div class="stat-item">
+            <span>Posts:</span>
+            <strong>{{ group.postCount }}</strong>
+        </div>
+
+        <div class="stat-item">
+            <span>Current Events:</span>
+            <strong>{{ group.actualEventCount }}</strong>
+        </div>
+
+        <div class="stat-item">
+            <span>Total Events:</span>
+            <strong>{{ group.allEventCount }}</strong>
+        </div>
+    </div>
+</div>

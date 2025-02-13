@@ -1,0 +1,8 @@
+<div id="groupDiv">
+    <h1>Groups</h1>
+    <div class="groups-container">
+        @for(group of groups; track group.id) {
+        <app-single-group [group]="group"></app-single-group>
+        }
+    </div>
+</div>
