@@ -55,7 +55,7 @@ export class RegisterService {
         catchError((err) => {
           let errorMessage = 'Szerveroldali hiba';
           if (err.status === 409) {
-            errorMessage = 'Foglalt felhasználónév vagy email!';
+            errorMessage = 'Foglalt felhasználónév vagy e-mail!';
           }
           this.popupService.show(errorMessage);
           return throwError(() => new Error(errorMessage));
