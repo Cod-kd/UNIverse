@@ -1,17 +1,17 @@
 import { Routes } from '@angular/router';
-import { RegistrationComponent } from './components/registration/registration.component';
-import { CenterContainerComponent } from './components/center-container/center-container.component';
-import { LoginComponent } from './components/login/login.component';
-import { UNIcardLoginComponent } from './components/unicard-login/unicard-login.component';
-import { MainSiteComponent } from './components/main-site/main-site.component';
-import { UNIcardComponent } from './components/unicard/unicard.component';
-import { ProfilesComponent } from './components/profiles/profiles.component';
-import { GroupsComponent } from './components/groups/groups.component';
-import { EventsComponent } from './components/events/events.component';
-import { CalendarComponent } from './components/calendar/calendar.component';
-import { authGuard } from './guards/auth.guard';
-import { rootGuard } from './guards/root.guard';
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { RegistrationComponent } from './components/root-page-components/registration/registration.component';
+import { CenterContainerComponent } from './components/root-page-components/center-container/center-container.component';
+import { LoginComponent } from './components/root-page-components/login/login.component';
+import { UNIcardLoginComponent } from './components/root-page-components/unicard-login/unicard-login.component';
+import { MainSiteComponent } from './components/main-site-components/main-site/main-site.component';
+import { UNIcardComponent } from './components/root-page-components/unicard/unicard.component';
+import { ProfilesComponent } from './components/main-site-components/profiles/profiles.component';
+import { GroupsComponent } from './components/main-site-components/groups/groups.component';
+import { EventsComponent } from './components/main-site-components/events/events.component';
+import { CalendarComponent } from './components/main-site-components/calendar/calendar.component';
+import { authGuard } from './guards/auth/auth.guard';
+import { rootGuard } from './guards/root/root.guard';
+import { PageNotFoundComponent } from './components/main-site-components/page-not-found/page-not-found.component';
 
 export const routes: Routes = [
     {
@@ -67,5 +67,4 @@ export const routes: Routes = [
         component: PageNotFoundComponent,
         pathMatch: 'full',
     }
-
 ];
