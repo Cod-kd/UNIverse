@@ -1,3 +1,53 @@
-<div id="profilesDiv">
-    <h1>Your profile here</h1>
+<div class="profiles-page">
+    <app-search-bar></app-search-bar>
+
+    @if(profile){
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <img [src]="'assets/profile-pictures/' + profile.usersData.userId + profile.usersData.profilePictureExtension"
+                    [alt]="profile.usersData.name + '\'s profile picture'" class="profile-picture">
+                <h2>{{profile.usersData.name}}</h2>
+            </div>
+
+            <div class="profile-info">
+                <p><strong>Egyetem:</strong> {{profile.usersData.universityName}}</p>
+                <p><strong>Kar:</strong> {{profile.faculty}}</p>
+                <p><strong>Leírás:</strong> {{profile.description}}</p>
+
+                <div class="profile-stats">
+                    <span>Követők: {{profile.usersData.followerCount}}</span>
+                    <span>Követések: {{profile.usersData.followedCount}}</span>
+                </div>
+                @if(profile.interests.length){
+                <div class="interests">
+                    <h3>Érdeklődési körök</h3>
+                    <div class="tags">
+                        @for(interest of profile.interests; track interest){
+                        <span class="tag">{{interest}}</span>
+                        }
+                    </div>
+                </div>
+                }
+
+                @if(profile.roles.length){
+                <div class="roles">
+                    <h3>Szerepkörök</h3>
+                    <div class="tags">
+                        @for(role of profile.roles; track role){
+                        <span class="tag">{{role}}</span>
+                        }
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+    }
+
+    @if(!profile){
+    <div class="no-profile">
+        Keressen egy profilt a megjelenítéshez!
+    </div>
+    }
 </div>

@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule, ViewportScroller } from '@angular/common';
 import { AuthService } from '../../../services/auth/auth.service';
 import { SearchBarComponent } from "../search-bar/search-bar.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -15,14 +16,19 @@ export class HeaderComponent {
   isMenuOpen = false;
   isMobile = false;
   private lastScrollPosition = 0;
-  isLoggedIn$; // Declare without initialization
+  isLoggedIn$;
 
   constructor(
     private elementRef: ElementRef,
     private viewportScroller: ViewportScroller,
-    private authService: AuthService // Initialize in constructor
+    private authService: AuthService,
+    private router: Router
   ) {
-    this.isLoggedIn$ = this.authService.isLoggedIn$; // Move initialization here
+    this.isLoggedIn$ = this.authService.isLoggedIn$;
+  }
+
+  shouldShowSearchBar(): boolean {
+    return this.router.url !== '/main-site/profiles';
   }
 
   ngOnInit() {

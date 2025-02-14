@@ -7,7 +7,7 @@
   <!-- Desktop Navigation -->
   <nav class="desktop-nav">
     <a [routerLink]="['/main-site/profiles']" class="link link--elara" (click)="onNavigate()">
-      <span>Profil</span>
+      <span>Profilok</span>
     </a>
     <a [routerLink]="['/main-site/groups']" class="link link--elara" (click)="onNavigate()">
       <span>Csoportok</span>
@@ -27,7 +27,9 @@
 
   <!-- Desktop Search Section -->
   <div id="searchBarProfile">
+    @if (shouldShowSearchBar()) {
     <app-search-bar></app-search-bar>
+    }
     <a [routerLink]="['/main-site/profiles']" (click)="onNavigate()">
       <i class="fa-solid fa-user"></i>
     </a>
