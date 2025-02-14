@@ -20,5 +20,18 @@ export class GroupsComponent implements OnInit {
     this.searchService.searchResults$.subscribe((results: Group[]) => {
       this.groups = results;
     });
+
+    this.fetchAllGroups();
+  }
+
+  private fetchAllGroups() {
+    this.searchService.fetchAll().subscribe({
+      next: (response) => {
+        this.searchService.handleSearchResponse(response);
+      },
+      error: (err) => {
+        this.searchService.handleError(err);
+      }
+    });
   }
 }
