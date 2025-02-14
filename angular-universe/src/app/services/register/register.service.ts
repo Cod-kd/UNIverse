@@ -64,7 +64,6 @@ export class RegisterService {
   }
 
   handleRegisterResponse(response: any, registrationData: any) {
-    console.log('Registration successful', response);
     this.router.navigate(['/get-unicard'], {
       state: { userData: registrationData },
     });

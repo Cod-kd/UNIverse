@@ -47,7 +47,6 @@ export class LoginService {
   }
 
   handleLoginResponse(response: any, credentials: any) {
-    console.log('Login successful', response);
     this.authService.login();
     this.router.navigate(["/main-site"], {
       state: { credentials }

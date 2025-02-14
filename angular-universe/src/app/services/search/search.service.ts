@@ -42,7 +42,6 @@ export class SearchService {
   }
 
   handleSearchResponse(response: Group[]) {
-    console.log('Search results:', response);
     this.searchResultsSubject.next(response);
     return response;
   }
