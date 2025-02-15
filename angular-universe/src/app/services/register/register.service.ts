@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PopupService } from '../popup-message/popup-message.service';
+import { AnimationService } from '../animation/animation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,8 @@ export class RegisterService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private popupService: PopupService
+    private popupService: PopupService,
+    private animationService: AnimationService
   ) { }
 
   fetchRegister(
@@ -64,9 +66,15 @@ export class RegisterService {
   }
 
   handleRegisterResponse(registrationData: any) {
-    this.router.navigate(['/get-unicard'], {
-      state: { userData: registrationData },
-    });
+    this.animationService.playAnimation(
+      'svgs/registration.svg',
+      '/get-unicard',
+      () => {
+        this.router.navigate(['/get-unicard'], {
+          state: { userData: registrationData }
+        });
+      }
+    );
   }
 
   handleError(err: any) {

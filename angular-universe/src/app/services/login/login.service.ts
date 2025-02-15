@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PopupService } from '../popup-message/popup-message.service';
 import { AuthService } from '../auth/auth.service';
+import { AnimationService } from '../animation/animation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class LoginService {
     private http: HttpClient,
     private router: Router,
     private popupService: PopupService,
-    private authService: AuthService
+    private authService: AuthService,
+    private animationService: AnimationService
   ) { }
 
   fetchLogin(loginUsername: string, loginPassword: string): Observable<any> {
@@ -47,12 +49,15 @@ export class LoginService {
   }
 
   handleLoginResponse(credentials: any) {
-    this.authService.login();
-    localStorage.setItem("username", credentials.username);
-    localStorage.setItem("password", credentials.password);
-    this.router.navigate(["/main-site"], {
-      state: { credentials }
-    });
+    this.animationService.playAnimation(
+      'svgs/login.svg',
+      '/main-site',
+      () => {
+        this.authService.login();
+        localStorage.setItem("username", credentials.username);
+        localStorage.setItem("password", credentials.password);
+      }
+    );
   }
 
   handleError(err: any) {

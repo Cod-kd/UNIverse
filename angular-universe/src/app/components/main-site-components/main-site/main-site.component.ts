@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet, Router } from '@angular/router';
 import { SearchBarComponent } from '../../general-components/search-bar/search-bar.component';
+import { AnimationService } from '../../../services/animation/animation.service';
 
 @Component({
   selector: 'app-main-site',
@@ -12,10 +13,19 @@ import { SearchBarComponent } from '../../general-components/search-bar/search-b
 export class MainSiteComponent {
   currentUser: string = "user";
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private animationService: AnimationService
+  ) {
     const storedData = localStorage.getItem("username");
     if (storedData) {
       this.currentUser = storedData;
+    }
+  }
+
+  ngOnInit() {
+    if (this.router.url === '/main-site') {
+      this.animationService.playAnimation('svgs/welcome.svg');
     }
   }
 

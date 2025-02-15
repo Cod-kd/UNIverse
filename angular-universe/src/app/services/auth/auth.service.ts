@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { AnimationService } from '../animation/animation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ export class AuthService {
   private isLoggedIn = new BehaviorSubject<boolean>(this.getStoredLoginStatus());
   isLoggedIn$ = this.isLoggedIn.asObservable();
 
-  constructor() {
+  constructor(private animationService: AnimationService) {
     this.isLoggedIn.next(this.getStoredLoginStatus());
   }
 
