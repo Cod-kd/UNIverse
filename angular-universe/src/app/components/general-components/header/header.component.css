@@ -15,7 +15,7 @@ header {
 }
 
 nav {
-  margin-left: 7%;
+  margin-left: -6%;
   display: flex;
   align-items: center;
   gap: 1.5rem;
@@ -24,12 +24,6 @@ nav {
 nav a {
   color: var(--light1);
   text-decoration: none;
-}
-
-#searchBarProfile {
-  display: flex;
-  align-items: center;
-  gap: 1.5em;
 }
 
 .fa-user {
@@ -125,7 +119,7 @@ nav a {
     top: 9.7%;
     right: -100%;
     width: 70%;
-    height: 45vh;
+    height: 35vh;
     border-bottom-left-radius: 12px;
     background-color: var(--dark2);
     padding: 1rem;
@@ -145,7 +139,7 @@ nav a {
     margin: 0 0 2rem 0;
   }
 
-  .fa-user{
-    margin-left: 5rem;
+  .fa-user {
+    margin-left: 7rem;
   }
 }

@@ -24,16 +24,9 @@
     </a>
     }
   </nav>
-
-  <!-- Desktop Search Section -->
-  <div id="searchBarProfile">
-    @if (shouldShowSearchBar()) {
-    <app-search-bar></app-search-bar>
-    }
-    <a [routerLink]="['/main-site/profiles']" (click)="onNavigate()">
-      <i class="fa-solid fa-user"></i>
-    </a>
-  </div>
+  <a [routerLink]="['/main-site/profiles']" (click)="onNavigate()">
+    <i class="fa-solid fa-user"></i>
+  </a>
 
   <!-- Mobile Hamburger Button -->
   <button class="hamburger-btn" (click)="toggleMenu($event)">
@@ -43,8 +36,6 @@
   <!-- Mobile Menu -->
   <div class="mobile-menu" [class.active]="isMenuOpen">
     <nav>
-      <!-- Search bar inside mobile menu -->
-      <app-search-bar [isMobileSearch]=true></app-search-bar>
       <a [routerLink]="['/main-site/profiles']" class="link link--elara" (click)="onNavigate()">
         <span>Profil</span>
       </a>
