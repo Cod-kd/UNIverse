@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { Profile } from '../../../models/profile/profile.model';
 import { SearchService } from '../../../services/search/search.service';
-import { SearchBarComponent } from '../../general-components/search-bar/search-bar.component';
 
 // profiles.component.ts
 @Component({
   selector: 'app-profiles',
   standalone: true,
-  imports: [SearchBarComponent],
+  imports: [],
   templateUrl: './profiles.component.html',
   styleUrl: './profiles.component.css'
 })

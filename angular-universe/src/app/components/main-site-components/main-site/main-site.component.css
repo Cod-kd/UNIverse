@@ -1,21 +1,37 @@
-div {
+#router {
     text-align: center;
     width: 40vw;
-    height: 70vh;
-    overflow-y: auto;
-    scroll-behavior: smooth;
+    height: 65vh;
     padding: 1rem;
 }
 
-div::-webkit-scrollbar {
+#router::-webkit-scrollbar {
     width: 8px;
 }
 
-div::-webkit-scrollbar-track {
+#router::-webkit-scrollbar-track {
     background: var(--dark2);
 }
 
-div::-webkit-scrollbar-thumb {
+#router::-webkit-scrollbar-thumb {
     background-color: var(--main);
     border-radius: 20px;
+}
+
+#router{
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+#searchBarDiv{
+    place-items: center;
+    margin-top: -4%;
+}
+
+hr{
+    border: 2px solid var(--dark2);
+    border-radius: 6px;
+    width: 40em;
+    place-self: center;
+    opacity: 0.5;
 }

@@ -1,5 +1,4 @@
-// search-bar.component.ts
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { SearchService, SearchResult } from '../../../services/search/search.service';
 
 @Component({
@@ -10,8 +9,6 @@ import { SearchService, SearchResult } from '../../../services/search/search.ser
   styleUrl: './search-bar.component.css'
 })
 export class SearchBarComponent {
-  @Input() isMobileSearch = false;
-
   constructor(
     private searchService: SearchService,
   ) { }

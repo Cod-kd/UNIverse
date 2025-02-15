@@ -1,4 +1,3 @@
-@if(!isMobileSearch){
 <div id="search-section" class="desktop-search">
     <div id="searchIconDiv">
         <form (submit)="search($event, searchInput.value)">
@@ -9,17 +8,3 @@
         </form>
     </div>
 </div>
-}
-
-@if(isMobileSearch){
-<div id="mobile-search-section">
-    <div id="searchIconDiv">
-        <form (submit)="search($event, mobileSearchInput.value)">
-            <input type="search" id="search-bar" placeholder="Keresés..." #mobileSearchInput>
-            <button id="search" type="submit">
-                <i class="fa-solid fa-search"></i>
-            </button>
-        </form>
-    </div>
-</div>
-}

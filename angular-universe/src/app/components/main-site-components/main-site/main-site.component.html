@@ -2,5 +2,13 @@
     @if (isExactMainSitePath()) {
     <h1>HELLO USER</h1>
     }
-    <router-outlet></router-outlet>
+    @if(!isExactMainSitePath()){
+    <div id="searchBarDiv">
+        <app-search-bar></app-search-bar>
+        <hr>
+    </div>
+    }
+    <div id="router">
+        <router-outlet></router-outlet>
+    </div>
 </div>
