@@ -48,6 +48,8 @@ export class LoginService {
 
   handleLoginResponse(credentials: any) {
     this.authService.login();
+    localStorage.setItem("username", credentials.username);
+    localStorage.setItem("password", credentials.password);
     this.router.navigate(["/main-site"], {
       state: { credentials }
     });

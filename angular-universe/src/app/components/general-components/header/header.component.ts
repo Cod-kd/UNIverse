@@ -68,5 +68,7 @@ export class HeaderComponent {
 
   logout() {
     this.authService.logout();
+    localStorage.removeItem("username");
+    localStorage.removeItem("password");
   }
 }

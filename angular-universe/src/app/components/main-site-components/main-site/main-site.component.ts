@@ -10,7 +10,14 @@ import { SearchBarComponent } from '../../general-components/search-bar/search-b
   styleUrl: './main-site.component.css'
 })
 export class MainSiteComponent {
-  constructor(private router: Router) { }
+  currentUser: string = "user";
+
+  constructor(private router: Router) {
+    const storedData = localStorage.getItem("username");
+    if (storedData) {
+      this.currentUser = storedData;
+    }
+  }
 
   isExactMainSitePath = () => this.router.url === '/main-site';
 }

@@ -1,6 +1,6 @@
 <div id="mainDiv">
     @if (isExactMainSitePath()) {
-    <h1>HELLO USER</h1>
+    <h1>HELLO {{currentUser}}</h1>
     }
     @if(!isExactMainSitePath()){
     <div id="searchBarDiv">

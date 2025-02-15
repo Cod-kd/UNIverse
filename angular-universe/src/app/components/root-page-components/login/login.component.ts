@@ -75,10 +75,6 @@ export class LoginComponent {
             username: storedUsername,
             password: storedPassword
           });
-        },
-        error: () => {
-          localStorage.removeItem('username');
-          localStorage.removeItem('password');
         }
       });
     }
