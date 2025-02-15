@@ -1,8 +1,12 @@
 #router {
-    text-align: center;
     width: 40vw;
     height: 65vh;
     padding: 1rem;
+}
+
+#mainDiv,
+#router {
+    text-align: center;
 }
 
 #router::-webkit-scrollbar {
@@ -18,17 +22,17 @@
     border-radius: 20px;
 }
 
-#router{
+#router {
     overflow-y: auto;
     scroll-behavior: smooth;
 }
 
-#searchBarDiv{
+#searchBarDiv {
     place-items: center;
     margin-top: -4%;
 }
 
-hr{
+hr {
     border: 2px solid var(--dark2);
     border-radius: 6px;
     width: 40em;
