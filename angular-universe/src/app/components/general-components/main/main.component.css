@@ -29,6 +29,7 @@ main {
         gap: 1.5rem;
         flex-direction: column;
         padding-top: 3em;
+        padding-left: 0.8em;
     }
 
     #mainContent {
