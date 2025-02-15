@@ -1,0 +1,5 @@
+svg path {
+    stroke: var(--main);
+    stroke-width: 10px;
+    fill: none;
+}
