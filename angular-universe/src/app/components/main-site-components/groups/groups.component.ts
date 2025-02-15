@@ -14,24 +14,22 @@ import { Group } from '../../../models/group/group.model';
 export class GroupsComponent implements OnInit {
   groups: Group[] = [];
 
-  constructor(private searchService: SearchService) { }
+  constructor(private searchService: SearchService) {
+    this.searchService.searchResults$.subscribe((results) => {
+      if (Array.isArray(results)) {
+        this.groups = results;
+      }
+    });
+  }
 
   ngOnInit() {
-    this.searchService.searchResults$.subscribe((results: Group[]) => {
-      this.groups = results;
-    });
-
     this.fetchAllGroups();
   }
 
   private fetchAllGroups() {
     this.searchService.fetchAll().subscribe({
-      next: (response) => {
-        this.searchService.handleSearchResponse(response);
-      },
-      error: (err) => {
-        this.searchService.handleError(err);
-      }
+      next: (response) => this.searchService.handleSearchResponse(response),
+      error: (err) => this.searchService.handleError(err)
     });
   }
 }

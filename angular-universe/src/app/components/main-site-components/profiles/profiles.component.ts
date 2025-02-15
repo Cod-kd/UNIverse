@@ -3,6 +3,7 @@ import { Profile } from '../../../models/profile/profile.model';
 import { SearchService } from '../../../services/search/search.service';
 import { SearchBarComponent } from '../../general-components/search-bar/search-bar.component';
 
+// profiles.component.ts
 @Component({
   selector: 'app-profiles',
   standalone: true,
@@ -14,11 +15,11 @@ export class ProfilesComponent {
   profile: Profile | null = null;
 
   constructor(private searchService: SearchService) {
-    // Subscribe to search results when the component is created
-    this.searchService.searchResults$.subscribe((result: any) => {
-      this.profile = result;
+    // Subscribe with type checking
+    this.searchService.searchResults$.subscribe((result) => {
+      if (result && !Array.isArray(result)) {
+        this.profile = result as Profile;
+      }
     });
   }
-
-  // Remove ngOnInit as we don't want to fetch data on component initialization
 }

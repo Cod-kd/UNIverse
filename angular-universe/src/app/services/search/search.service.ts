@@ -5,6 +5,10 @@ import { catchError, tap } from 'rxjs/operators';
 import { PopupService } from '../popup-message/popup-message.service';
 import { Group } from '../../models/group/group.model';
 import { Router } from '@angular/router';
+import { Profile } from '../../models/profile/profile.model';
+
+// Type for handling both Group[] and Profile responses
+export type SearchResult = Group[] | Profile | null;
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +18,7 @@ export class SearchService {
   private readonly adminUsername = 'admin';
   private readonly adminPassword = 'oneOfMyBestPasswords';
 
-  private searchResultsSubject = new BehaviorSubject<Group[]>([]);
+  private searchResultsSubject = new BehaviorSubject<SearchResult>(null);
   searchResults$ = this.searchResultsSubject.asObservable();
 
   constructor(
@@ -53,21 +57,23 @@ export class SearchService {
     }
   }
 
-  fetchAll(): Observable<Group[]> {
-    const headers = new HttpHeaders({
-      'Authorization': 'Basic ' + btoa(this.adminUsername + ':' + this.adminPassword),
+  private getHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Authorization': 'Basic ' + btoa(`${this.adminUsername}:${this.adminPassword}`),
       'Content-Type': 'application/json'
     });
+  }
 
+  fetchAll(): Observable<Group[]> {
     try {
       const endpoint = this.getBaseEndpointByUrl();
       return this.http.get<Group[]>(`${this.baseUrl}${endpoint}`, {
-        headers,
+        headers: this.getHeaders(),
         responseType: 'json'
       }).pipe(
         tap(results => this.searchResultsSubject.next(results)),
         catchError(() => {
-          let errorMessage = "Szerveroldali hiba";
+          const errorMessage = "Szerveroldali hiba";
           this.popupService.show(errorMessage);
           return throwError(() => new Error(errorMessage));
         })
@@ -80,21 +86,16 @@ export class SearchService {
     }
   }
 
-  search(searchTerm: string): Observable<Group[]> {
-    const headers = new HttpHeaders({
-      'Authorization': 'Basic ' + btoa(this.adminUsername + ':' + this.adminPassword),
-      'Content-Type': 'application/json'
-    });
-
+  search(searchTerm: string): Observable<SearchResult> {
     try {
       const endpoint = this.getFetchByUrl();
-      return this.http.get<Group[]>(`${this.baseUrl}${endpoint}${searchTerm}`, {
-        headers,
+      return this.http.get<SearchResult>(`${this.baseUrl}${endpoint}${searchTerm}`, {
+        headers: this.getHeaders(),
         responseType: 'json'
       }).pipe(
         tap(results => this.searchResultsSubject.next(results)),
         catchError(() => {
-          let errorMessage = "Szerveroldali hiba";
+          const errorMessage = "Szerveroldali hiba";
           this.popupService.show(errorMessage);
           return throwError(() => new Error(errorMessage));
         })
@@ -107,7 +108,7 @@ export class SearchService {
     }
   }
 
-  handleSearchResponse(response: Group[]) {
+  handleSearchResponse(response: SearchResult) {
     this.searchResultsSubject.next(response);
     return response;
   }

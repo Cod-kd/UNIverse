@@ -1,8 +1,10 @@
-/* profiles.component.css */
 .profiles-page {
     padding: 80px 20px 20px;
     max-width: 800px;
     margin: 0 auto;
+    display: grid;
+    place-items: center;
+    justify-content: center;
   }
   
   .profile-container {
@@ -58,8 +60,8 @@
   .no-profile {
     text-align: center;
     padding: 40px;
-    color: var(--dark2);
-    font-size: 1.1em;
+    color: var(--main);
+    font-size: 2em;
   }
   
   @media screen and (max-width: 468px) {

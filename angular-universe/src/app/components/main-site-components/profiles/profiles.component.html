@@ -1,4 +1,9 @@
 <div class="profiles-page">
+    @if(!profile){
+    <div class="no-profile">
+        Keressen egy profilt a megjelenítéshez!
+    </div>
+    }
     <app-search-bar></app-search-bar>
 
     @if(profile){
@@ -42,12 +47,6 @@
                 }
             </div>
         </div>
-    </div>
-    }
-
-    @if(!profile){
-    <div class="no-profile">
-        Keressen egy profilt a megjelenítéshez!
     </div>
     }
 </div>
