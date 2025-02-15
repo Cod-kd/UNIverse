@@ -1,10 +1,7 @@
 <header>
-  <!-- Logo -->
   <a [routerLink]="['/']" (click)="onNavigate()">
     <img src="images/simpleLogo.png" alt="simpleLogo" id="logo">
   </a>
-
-  <!-- Desktop Navigation -->
   <nav class="desktop-nav">
     <a [routerLink]="['/main-site/profiles']" class="link link--elara" (click)="onNavigate()">
       <span>Profilok</span>
@@ -27,13 +24,9 @@
   <a [routerLink]="['/main-site/profiles']" (click)="onNavigate()">
     <i class="fa-solid fa-user"></i>
   </a>
-
-  <!-- Mobile Hamburger Button -->
   <button class="hamburger-btn" (click)="toggleMenu($event)">
     <i class="fa-solid fa-bars"></i>
   </button>
-
-  <!-- Mobile Menu -->
   <div class="mobile-menu" [class.active]="isMenuOpen">
     <nav>
       <a [routerLink]="['/main-site/profiles']" class="link link--elara" (click)="onNavigate()">

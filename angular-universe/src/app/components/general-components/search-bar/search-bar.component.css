@@ -53,17 +53,4 @@
     .mobile-menu #search-bar {
         width: 80%;
     }
-
-    /* Hide mobile search in header */
-    #search-section {
-        display: none;
-    }
-
-    .desktop-search {
-        display: none;
-    }
-
-    form {
-        display: flex;
-    }
 }

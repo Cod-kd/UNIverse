@@ -41,8 +41,8 @@ export class UNIcardLoginComponent {
         const { username, password } = credentials;
         if (username && password) {
           this.loginService.fetchLogin(username, password).subscribe({
-            next: (response) => {
-              this.loginService.handleLoginResponse(response, credentials);
+            next: () => {
+              this.loginService.handleLoginResponse(credentials);
             },
             error: (err) => {
               this.loginService.handleError(err);

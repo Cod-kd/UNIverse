@@ -46,7 +46,7 @@ export class LoginService {
     );
   }
 
-  handleLoginResponse(response: any, credentials: any) {
+  handleLoginResponse(credentials: any) {
     this.authService.login();
     this.router.navigate(["/main-site"], {
       state: { credentials }

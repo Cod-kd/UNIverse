@@ -101,14 +101,12 @@ export class ValidationService {
         if (!university || university.trim() === "") {
             this.popupService.show("Válassz egy egyetemet!");
             this.universityValid = false;
-            // Reset faculty validation when uni is invalid
             this.facultyValid = true;
         }
         return this.universityValid;
     }
 
     validateFaculty(faculty: string): boolean {
-        // Only validate faculty if university is valid
         if (!this.universityValid) {
             return true;
         }

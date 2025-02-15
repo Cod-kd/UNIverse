@@ -63,7 +63,7 @@ export class RegisterService {
       );
   }
 
-  handleRegisterResponse(response: any, registrationData: any) {
+  handleRegisterResponse(registrationData: any) {
     this.router.navigate(['/get-unicard'], {
       state: { userData: registrationData },
     });

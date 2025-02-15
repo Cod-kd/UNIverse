@@ -137,12 +137,10 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   registerNewUser() {
-    // Patch password value from ToggleInputComponent
     this.registrationForm.patchValue({
       password: this.passwordInput.passwordControl.value
     });
 
-    // Extract form values safely
     const email = this.registrationForm.get('email')?.value ?? '';
     const username = this.registrationForm.get('username')?.value ?? '';
     const password = this.registrationForm.get('password')?.value ?? '';
@@ -151,7 +149,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     const university = this.registrationForm.get('university')?.value ?? '';
     const faculty = this.registrationForm.get('faculty')?.value ?? '';
 
-    // Validate inputs
     this.validationService.validateEmail(email);
     this.validationService.validateUsername(username);
     this.validationService.validateBirthDate(birthDate);
@@ -159,12 +156,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     this.validationService.validateUniversity(university);
     this.validationService.validateFaculty(faculty);
 
-    // Call register service
     this.registerService.fetchRegister(email, username, password, gender, birthDate, university, faculty)
       .subscribe({
-        next: (response) => {
+        next: () => {
           this.clearSavedFormData();
-          this.registerService.handleRegisterResponse(response, this.registrationForm.value);
+          this.registerService.handleRegisterResponse(this.registrationForm.value);
         },
         error: (err) => {
           this.registerService.handleError(err);

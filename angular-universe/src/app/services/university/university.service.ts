@@ -15,7 +15,6 @@ interface FacultyOption {
   providedIn: 'root'
 })
 export class UniversityService {
-  // Universities + faculties data
   private readonly universities: University[] = [
     { label: "Állatorvostudományi Egyetem", value: "ÁTE" },
     { label: "Andrássy Gyula Budapesti Német Nyelvű Egyetem", value: "AUB" },

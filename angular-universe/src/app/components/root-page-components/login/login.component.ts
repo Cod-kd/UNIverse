@@ -54,8 +54,8 @@ export class LoginComponent {
     if (isUsernameValid && isPasswordValid) {
       this.loginForm.patchValue({ password });
       this.loginService.fetchLogin(username, password).subscribe({
-        next: (response) => {
-          this.loginService.handleLoginResponse(response, this.loginForm.value);
+        next: () => {
+          this.loginService.handleLoginResponse(this.loginForm.value);
         },
         error: (err) => {
           this.loginService.handleError(err);
@@ -70,8 +70,8 @@ export class LoginComponent {
 
     if (storedUsername && storedPassword) {
       this.loginService.fetchLogin(storedUsername, storedPassword).subscribe({
-        next: (response) => {
-          this.loginService.handleLoginResponse(response, {
+        next: () => {
+          this.loginService.handleLoginResponse({
             username: storedUsername,
             password: storedPassword
           });

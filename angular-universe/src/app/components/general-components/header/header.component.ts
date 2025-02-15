@@ -61,7 +61,6 @@ export class HeaderComponent {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  // New method to handle navigation
   onNavigate() {
     this.isMenuOpen = false;
     this.viewportScroller.scrollToPosition([0, 0]);

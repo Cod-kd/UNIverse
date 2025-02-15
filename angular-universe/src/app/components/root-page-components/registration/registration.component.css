@@ -38,10 +38,8 @@ form::-webkit-scrollbar-thumb {
     transition: 0.2s ease;
 }
 
-@media (hover: hover) {
-    .input:hover {
-        width: min(280px, 95%);
-    }
+.input:hover {
+    width: min(280px, 95%);
 }
 
 .input::placeholder {
@@ -127,7 +125,6 @@ select::-ms-expand {
     display: none;
 }
 
-/* Add media queries for smaller screens */
 @media screen and (max-width: 480px) {
     form {
         gap: 1.5rem;

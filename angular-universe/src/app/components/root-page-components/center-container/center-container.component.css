@@ -66,9 +66,3 @@ hr {
         margin-bottom: 9%;
     }
 }
-
-@media screen and (max-width: 768px) {
-    #center-container {
-        padding: 0.5rem;
-    }
-}

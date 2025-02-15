@@ -48,14 +48,6 @@ i {
     color: var(--main);
 }
 
-@media screen and (max-width: 768px) {
-    .infoCard {
-        width: 100%;
-        min-height: auto;
-        padding: 1.5em 1em;
-    }
-}
-
 @media screen and (max-width: 480px) {
     .infoCard {
         padding: 1em 0.8em;

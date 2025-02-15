@@ -7,7 +7,6 @@ import { Group } from '../../models/group/group.model';
 import { Router } from '@angular/router';
 import { Profile } from '../../models/profile/profile.model';
 
-// Type for handling both Group[] and Profile responses
 export type SearchResult = Group[] | Profile | null;
 
 @Injectable({

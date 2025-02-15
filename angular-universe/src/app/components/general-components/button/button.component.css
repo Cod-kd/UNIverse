@@ -47,13 +47,6 @@
     animation: lightspeed 1s infinite linear;
 }
 
-@media screen and (max-width: 768px) {
-    .button {
-        width: min(15em, 85vw);
-        height: clamp(2.8em, 7vh, 3.5em);
-    }
-}
-
 @media screen and (max-width: 480px) {
     .button {
         width: min(15em, 70vw);
@@ -64,22 +57,5 @@
 
     .button:hover {
         transform: scale(1.02);
-    }
-}
-
-/* For touch devices */
-@media (hover: none) {
-    .button:hover {
-        transform: none;
-    }
-
-    .button:active {
-        background-color: var(--main);
-        opacity: 0.9;
-    }
-
-    .button::before,
-    .button:hover::before {
-        display: none;
     }
 }

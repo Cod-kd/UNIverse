@@ -12,6 +12,5 @@ import { SearchBarComponent } from '../../general-components/search-bar/search-b
 export class MainSiteComponent {
   constructor(private router: Router) { }
 
-  // Check if URL is exactly /main-site with no child routes
   isExactMainSitePath = () => this.router.url === '/main-site';
 }

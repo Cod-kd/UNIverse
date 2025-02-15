@@ -1,4 +1,3 @@
-// services/auth.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -10,7 +9,6 @@ export class AuthService {
   isLoggedIn$ = this.isLoggedIn.asObservable();
 
   constructor() {
-    // Initialize from localStorage on service creation
     this.isLoggedIn.next(this.getStoredLoginStatus());
   }
 

@@ -100,19 +100,15 @@ nav a {
     border-bottom: 2px solid var(--main);
   }
 
-  /* Hide desktop navigation and search */
   .desktop-nav {
     display: none;
   }
 
-  /* Show hamburger button */
   .hamburger-btn {
     display: block;
     z-index: 3;
-    /* Ensure it stays above the mobile menu */
   }
 
-  /* Mobile menu styling */
   .mobile-menu {
     display: block;
     position: fixed;
