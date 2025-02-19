@@ -1,4 +1,10 @@
-h1,
-h2 {
-    text-align: center;
+div{
+    display: grid;
+    place-items: center;
+}
+
+iframe{
+    border: none;
+    width: 50em;
+    height: 55vh;
 }

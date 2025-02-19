@@ -1,18 +1,17 @@
 import { Component } from '@angular/core';
+import { ButtonComponent } from "../../general-components/button/button.component";
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-page-not-found',
   standalone: true,
-  imports: [],
+  imports: [ButtonComponent],
   templateUrl: './page-not-found.component.html',
   styleUrl: './page-not-found.component.css'
 })
 export class PageNotFoundComponent {
   constructor(private router: Router) { }
-  ngOnInit() {
-    setTimeout(() => {
-      this.router.navigate(["/main-site"])
-    }, 3000);
+  backToHome() {
+    this.router.navigate(["/main-site"]);
   }
 }
