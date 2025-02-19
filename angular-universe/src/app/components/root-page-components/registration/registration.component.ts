@@ -9,11 +9,12 @@ import { RegisterService } from '../../../services/register/register.service';
 import { debounceTime } from 'rxjs/operators';
 import { ValidationService } from '../../../services/validation/validation.service';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
+import { SvgAnimationComponent } from '../../general-components/svg-animation/svg-animation.component';
 
 @Component({
   selector: 'app-registration',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonComponent, ToggleInputComponent],
+  imports: [ReactiveFormsModule, ButtonComponent, ToggleInputComponent, SvgAnimationComponent],
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css']
 })

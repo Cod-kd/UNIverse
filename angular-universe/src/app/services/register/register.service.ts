@@ -6,7 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { PopupService } from '../popup-message/popup-message.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class RegisterService {
   private readonly adminUsername = 'admin';
@@ -63,7 +63,10 @@ export class RegisterService {
       );
   }
 
-  handleRegisterResponse(registrationData: any) {
+  async handleRegisterResponse(registrationData: any) {
+    const animationDiv = document.querySelector('#animationDiv');
+    animationDiv?.classList.add('active-animation');
+    await new Promise(resolve => setTimeout(resolve, 5000));
     this.router.navigate(['/get-unicard'], {
       state: { userData: registrationData },
     });
