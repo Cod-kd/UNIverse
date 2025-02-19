@@ -12,13 +12,6 @@ import { SearchBarComponent } from '../../general-components/search-bar/search-b
 export class MainSiteComponent {
   currentUser: string = "user";
 
-  async ngOnInit() {
-    const animationDiv = document.querySelector('#animationDiv');
-    animationDiv?.classList.add('active-animation');
-    await new Promise(resolve => setTimeout(resolve, 5000));
-    animationDiv?.classList.remove('active-animation');
-  }
-
   constructor(private router: Router) {
     const storedData = localStorage.getItem("username");
     if (storedData) {
