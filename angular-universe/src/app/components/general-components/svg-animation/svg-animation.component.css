@@ -9,9 +9,17 @@
     align-items: center;
     justify-content: center;
     z-index: 20;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
 }
 
-#animationDiv div{
+#animationDiv.active-animation {
+    opacity: 1;
+    visibility: visible;
+}
+
+#animationDiv div {
     width: 45%;
     height: 60%;
     display: flex;

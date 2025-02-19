@@ -46,13 +46,22 @@ export class LoginService {
     );
   }
 
-  handleLoginResponse(credentials: any) {
+  async handleLoginResponse(credentials: any) {
     this.authService.login();
     localStorage.setItem("username", credentials.username);
     localStorage.setItem("password", credentials.password);
-    this.router.navigate(["/main-site"], {
-      state: { credentials }
-    });
+
+    // Get animation container and trigger sequence
+    const animationDiv = document.querySelector('#animationDiv');
+    animationDiv?.classList.add('active-animation');
+
+    // Wait for complete animation sequence
+    await new Promise(resolve => setTimeout(resolve, 5000)); // 1s fade-in + 3s animation + 1s fade-out
+
+    animationDiv?.classList.remove('active-animation');
+
+    // Navigate after fade-out
+    this.router.navigate(["/main-site"], { state: { credentials } });
   }
 
   handleError(err: any) {
