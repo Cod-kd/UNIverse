@@ -20,7 +20,7 @@ body::before {
 }
 
 svg path {
-    stroke: red;
+    stroke: var(--main);
     stroke-width: 10px;
     fill: none;
 }
@@ -28,7 +28,7 @@ svg path {
 svg{
     width: 90%;
     height: 100%;
-    background-color: var(--dark2);
+    /* background-color: var(--dark2); */
     border-radius: 16px;
 }
 
