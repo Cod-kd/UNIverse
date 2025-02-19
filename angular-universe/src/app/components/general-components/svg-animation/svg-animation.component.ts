@@ -1,5 +1,4 @@
-import { Component, Input, ElementRef, AfterViewInit } from '@angular/core';
-import { PopupService } from '../../../services/popup-message/popup-message.service';
+import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-svg-animation',
@@ -9,23 +8,20 @@ import { PopupService } from '../../../services/popup-message/popup-message.serv
   styleUrl: './svg-animation.component.css'
 })
 export class SvgAnimationComponent implements AfterViewInit {
-  @Input() svgPath: string = "";
+  @Input() svgName = "";
+  @ViewChild('svgContainer', { static: true }) svgContainer!: ElementRef;
 
-  constructor(private el: ElementRef, private popupService: PopupService) { }
-
-  async ngAfterViewInit() {
-    if (this.svgPath) {
-      await this.loadAndAnimateSvg();
-    }
+  ngAfterViewInit() {
+    this.showAnimation();
   }
 
-  private async loadAndAnimateSvg() {
-    try {
-      const response = await fetch(this.svgPath);
-      const data = await response.text();
-      const container = this.el.nativeElement.querySelector("div");
-      container.innerHTML = data;
+  async showAnimation() {
+    const response = await fetch(`svgs/${this.svgName}`);
+    const data = await response.text();
+    const container = this.svgContainer.nativeElement;
+    container.innerHTML = data;
 
+    setTimeout(() => {
       const allPaths = container.querySelectorAll("path");
       allPaths.forEach((path: SVGPathElement) => {
         const length = path.getTotalLength();
@@ -35,8 +31,6 @@ export class SvgAnimationComponent implements AfterViewInit {
         path.style.transition = "stroke-dashoffset 3s ease-in-out";
         path.style.strokeDashoffset = "0";
       });
-    } catch (error) {
-      this.popupService.show("Error loading SVG: " + error);
-    }
+    }, 0);
   }
 }

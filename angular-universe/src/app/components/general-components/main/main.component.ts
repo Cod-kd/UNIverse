@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { InfoCardComponent } from '../../root-page-components/info-card/info-card.component';
 import { RouterOutlet, Router } from '@angular/router';
+import { SvgAnimationComponent } from "../svg-animation/svg-animation.component";
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [InfoCardComponent, RouterOutlet],
+  imports: [InfoCardComponent, RouterOutlet, SvgAnimationComponent],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
 })

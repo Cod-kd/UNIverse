@@ -19,6 +19,12 @@ body::before {
     z-index: -1;
 }
 
+svg path {
+    stroke: red;
+    stroke-width: 10px;
+    fill: none;
+}
+
 @media screen and (max-width: 480px) {
     body {
         background: rgba(0, 0, 0, 0.7);
