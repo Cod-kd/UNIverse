@@ -6,12 +6,11 @@ import { ToggleInputComponent } from '../toggle-input/toggle-input.component';
 import { LoginService } from '../../../services/login/login.service';
 import { ValidationService } from '../../../services/validation/validation.service';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
-import { SvgAnimationComponent } from '../../general-components/svg-animation/svg-animation.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ButtonComponent, ReactiveFormsModule, ToggleInputComponent, SvgAnimationComponent],
+  imports: [ButtonComponent, ReactiveFormsModule, ToggleInputComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })

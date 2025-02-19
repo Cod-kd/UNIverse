@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet, Router } from '@angular/router';
 import { SearchBarComponent } from '../../general-components/search-bar/search-bar.component';
-import { SvgAnimationComponent } from '../../general-components/svg-animation/svg-animation.component';
 
 @Component({
   selector: 'app-main-site',
   standalone: true,
-  imports: [RouterOutlet, SearchBarComponent, SvgAnimationComponent],
+  imports: [RouterOutlet, SearchBarComponent],
   templateUrl: './main-site.component.html',
   styleUrl: './main-site.component.css'
 })

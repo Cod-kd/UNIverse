@@ -1,7 +1,6 @@
 <div id="mainDiv">
     @if (isExactMainSitePath()) {
     <h1>HELLO {{currentUser}}</h1>
-    <app-svg-animation [svgName]="'welcome.svg'"></app-svg-animation>
     }
     @if(!isExactMainSitePath()){
     <div id="searchBarDiv">
@@ -13,4 +12,3 @@
         <router-outlet></router-outlet>
     </div>
 </div>
-<app-svg-animation [svgName]="'logout.svg'"></app-svg-animation>

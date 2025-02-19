@@ -5,12 +5,11 @@ import { FormsModule } from '@angular/forms';
 import { LoginService } from '../../../services/login/login.service';
 import { CardMetadataService } from '../../../services/card-meta-data/card-meta-data.service';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
-import { SvgAnimationComponent } from "../../general-components/svg-animation/svg-animation.component";
 
 @Component({
   selector: 'app-unicard-login',
   standalone: true,
-  imports: [ButtonComponent, FormsModule, SvgAnimationComponent],
+  imports: [ButtonComponent, FormsModule],
   templateUrl: './unicard-login.component.html',
   styleUrls: ['./unicard-login.component.css'],
 })

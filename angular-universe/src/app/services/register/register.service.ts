@@ -64,10 +64,6 @@ export class RegisterService {
   }
 
   async handleRegisterResponse(registrationData: any) {
-    const animationDiv = document.querySelector('#animationDiv');
-    animationDiv?.classList.add('active-animation');
-    await new Promise(resolve => setTimeout(resolve, 5000));
-    animationDiv?.classList.remove('active-animation');
     this.router.navigate(['/get-unicard'], {
       state: { userData: registrationData },
     });

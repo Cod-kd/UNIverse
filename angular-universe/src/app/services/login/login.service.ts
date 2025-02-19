@@ -50,11 +50,6 @@ export class LoginService {
     this.authService.login();
     localStorage.setItem("username", credentials.username);
     localStorage.setItem("password", credentials.password);
-
-    const animationDiv = document.querySelector('#animationDiv');
-    animationDiv?.classList.add('active-animation');
-    await new Promise(resolve => setTimeout(resolve, 5000));
-    animationDiv?.classList.remove('active-animation');
     this.router.navigate(["/main-site"], { state: { credentials } });
   }
 
