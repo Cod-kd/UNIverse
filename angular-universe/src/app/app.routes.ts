@@ -12,6 +12,7 @@ import { CalendarComponent } from './components/main-site-components/calendar/ca
 import { authGuard } from './guards/auth/auth.guard';
 import { rootGuard } from './guards/root/root.guard';
 import { PageNotFoundComponent } from './components/main-site-components/page-not-found/page-not-found.component';
+import { SelfProfileComponent } from './components/main-site-components/self-profile/self-profile.component';
 
 export const routes: Routes = [
     {
@@ -59,6 +60,10 @@ export const routes: Routes = [
             {
                 path: 'calendar',
                 component: CalendarComponent
+            },
+            {
+                path: 'you',
+                component: SelfProfileComponent
             }
         ]
     },
