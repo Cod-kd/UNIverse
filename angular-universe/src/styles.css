@@ -25,6 +25,13 @@ svg path {
     fill: none;
 }
 
+svg{
+    width: 90%;
+    height: 100%;
+    background-color: var(--dark2);
+    border-radius: 16px;
+}
+
 @media screen and (max-width: 480px) {
     body {
         background: rgba(0, 0, 0, 0.7);
