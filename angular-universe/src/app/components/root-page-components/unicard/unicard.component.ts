@@ -24,13 +24,8 @@ interface UserData {
 export class UNIcardComponent {
   userData: UserData = history.state.userData;
   private cardMetadataService = inject(CardMetadataService);
-  showLottie: boolean = true;
 
-  constructor(private router: Router, private popupService: PopupService) {
-    setTimeout(() => {
-      this.showLottie = false;
-    }, 1300);
-  }
+  constructor(private router: Router, private popupService: PopupService) { }
 
   saveUniCard = async () => {
     const userDataDiv = document.getElementById('userDataDiv');
