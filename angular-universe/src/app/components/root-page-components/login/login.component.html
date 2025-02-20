@@ -1,5 +1,5 @@
 <div id="loginDiv">
-    <form id="loginForm" [formGroup]="loginForm">
+    <form autocomplete="off" id="loginForm" [formGroup]="loginForm">
       <input (blur)="onUsernameChange()" id="usernameInput" type="text" placeholder="Felhasználónév..." class="input" formControlName="username">
       <app-toggle-input></app-toggle-input>
     </form>

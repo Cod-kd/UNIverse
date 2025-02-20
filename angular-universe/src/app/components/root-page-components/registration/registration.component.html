@@ -1,4 +1,4 @@
-<form [formGroup]="registrationForm">
+<form autocomplete="off" [formGroup]="registrationForm">
   <input id="emailInput" class="input" type="email" formControlName="email" placeholder="E-mail..."
     (blur)="onEmailChange()">
 
