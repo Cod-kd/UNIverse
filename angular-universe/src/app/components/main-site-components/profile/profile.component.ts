@@ -1,16 +1,19 @@
 import { Component } from '@angular/core';
 import { Profile } from '../../../models/profile/profile.model';
 import { SearchService } from '../../../services/search/search.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent {
   profile: Profile | null = null;
+  isFriendAdded = false;
+  isProfileSaved = false;
 
   constructor(private searchService: SearchService) {
     this.searchService.searchResults$.subscribe((result) => {
@@ -18,5 +21,17 @@ export class ProfileComponent {
         this.profile = result as Profile;
       }
     });
+  }
+
+  addFriend() {
+    if (!this.isFriendAdded) {
+      this.isFriendAdded = true;
+    }
+  }
+
+  saveProfile() {
+    if (!this.isProfileSaved) {
+      this.isProfileSaved = true;
+    }
   }
 }

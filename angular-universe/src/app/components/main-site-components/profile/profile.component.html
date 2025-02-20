@@ -12,6 +12,14 @@
                 <img [src]="profile.usersData.profilePictureExtension === 'jpg' ? '/images/default-pfp.jpg' : 'assets/profile-pictures/' + profile.usersData.userId + profile.usersData.profilePictureExtension"
                     [alt]="profile.usersData.name + '\'s profile picture'" class="profile-picture">
                 <h2>{{profile.usersData.name}}</h2>
+
+                <div (click)="addFriend()" class="add-friend">
+                    <i class="fa-solid" [ngClass]="isFriendAdded ? 'fa-user-check' : 'fa-user-plus'"></i>
+                </div>
+
+                <div (click)="saveProfile()" class="save-profile">
+                    <i class="fa-solid" [ngClass]="isProfileSaved ? 'fa-check' : 'fa-floppy-disk'"></i>
+                </div>
             </div>
 
             <div class="profile-info">
@@ -20,9 +28,11 @@
                 <p><strong>Leírás:</strong> {{profile.description || 'Nincs megadott leírás'}}</p>
 
                 <div class="profile-stats">
-                    <span>{{ profile.usersData.followerCount > 0 ? 'Követők: ' + profile.usersData.followerCount : 'Még nincsenek követői' }}</span>
+                    <span>{{ profile.usersData.followerCount > 0 ? 'Követők: ' + profile.usersData.followerCount : 'Még
+                        nincsenek követői' }}</span>
                     <span>|</span>
-                    <span>{{ profile.usersData.followedCount > 0 ? 'Követések: ' + profile.usersData.followedCount : 'Még nem követ senkit' }}</span>
+                    <span>{{ profile.usersData.followedCount > 0 ? 'Követések: ' + profile.usersData.followedCount :
+                        'Még nem követ senkit' }}</span>
                 </div>
 
                 <p>{{ profile.contacts.length ? '' : 'Nincsenek elérhetőségek' }}</p>
