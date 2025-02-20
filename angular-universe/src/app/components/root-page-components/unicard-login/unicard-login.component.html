@@ -1,0 +1,37 @@
+<form (submit)="loginWithCard($event)">
+    <div id="cardContainer">
+        <div class="folder">
+            <div class="front-side">
+                <div class="tip"></div>
+                <div class="cover"></div>
+            </div>
+            <div class="back-side cover"></div>
+        </div>
+        <label class="custom-file-upload">
+            <input 
+                type="file" 
+                accept=".jpg, .jpeg"
+                (change)="onFileSelected($event)"
+                #fileInput>
+            Válaszd ki a UNIcard-od!
+        </label>
+    </div>
+    <div id="btnsDiv">
+        <app-button 
+        btnId="loginBtn" 
+        btnLabel="Bejelentkezés kártyával" 
+        type="submit"
+        (click)="loginWithCard($event)">
+    </app-button>
+    <app-button 
+        btnId="backToLoginBtn" 
+        btnLabel="Bejelentkezés adatokkal"
+        (click)="backToCredentialLogin()">
+    </app-button>
+    <app-button 
+        btnId="backToRegistrationBtn" 
+        btnLabel="Vissza a regisztrációhoz"
+        (click)="backToRegistration()">
+    </app-button>
+    </div>
+</form>

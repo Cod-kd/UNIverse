@@ -1,0 +1,54 @@
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+#passwordInput {
+    flex: 1;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--main);
+}
+
+.toggle-password:focus {
+    outline: none;
+}
+
+.input:hover {
+    width: 280px;
+}
+
+.input::placeholder {
+    font-size: clamp(16px, 4vw, 20px);
+}
+
+.input {
+    width: 250px;
+    height: 40px;
+    background-color: transparent;
+    color: var(--main);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    outline: none;
+    border: none;
+    box-shadow: 0 10px 20px -18px var(--main);
+    border-bottom: 3px solid var(--main);
+    transition: 0.2s ease;
+}
+
+@media screen and (max-width: 480px) {
+    .input{
+        width: 240px;
+    }
+    .input:hover{
+        width: 240px;
+    }
+}

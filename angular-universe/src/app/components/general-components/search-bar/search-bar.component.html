@@ -1,0 +1,10 @@
+<div id="search-section" class="desktop-search">
+    <div id="searchIconDiv">
+        <form (submit)="search($event, searchInput.value)">
+            <input type="search" id="search-bar" placeholder="Keresés..." #searchInput>
+            <button id="search" type="submit">
+                <i class="fa-solid fa-search"></i>
+            </button>
+        </form>
+    </div>
+</div>

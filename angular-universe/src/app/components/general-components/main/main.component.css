@@ -1,0 +1,46 @@
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    padding-top: 6em;
+    flex-wrap: wrap;
+}
+
+#mainContent {
+    width: min(90vh, 90%);
+    min-height: 40vh;
+    display: grid;
+    color: var(--main);
+    transition: all 0.3s;
+    justify-items: center;
+    align-items: center;
+    padding-top: 2rem;
+}
+
+.cardDiv {
+    display: grid;
+    gap: 2rem;
+    width: min(400px, 100%);
+}
+
+@media screen and (max-width: 480px) {
+    main {
+        gap: 1.5rem;
+        flex-direction: column;
+        padding-top: 3em;
+        padding-left: 0.8em;
+    }
+
+    #mainContent {
+        order: -1;
+        min-height: 30vh;
+        width: 95%;
+        margin-top: 5%;
+    }
+
+    .cardDiv {
+        gap: 1rem;
+        width: 95%;
+    }
+}

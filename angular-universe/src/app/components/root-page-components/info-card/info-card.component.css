@@ -1,0 +1,68 @@
+.infoCard {
+    width: min(23em, 90vw);
+    min-height: min(21em, 90vh);
+    padding: clamp(0.8em, 2vw, 1em);
+    background-color: var(--main);
+    color: var(--dark2);
+    font-weight: bold;
+    border-radius: clamp(0.5em, 2vw, 1em);
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: clamp(0.5em, 2vw, 1em);
+}
+
+.infoCard div:first-child {
+    width: clamp(3.5em, 8vw, 5em);
+    height: clamp(3.5em, 8vw, 5em);
+    display: grid;
+    place-items: center;
+    justify-self: center;
+    border-radius: 50%;
+    background-color: var(--dark1);
+}
+
+.infoCard div:first-child img {
+    width: clamp(2em, 5vw, 3em);
+    height: auto;
+    object-fit: contain;
+}
+
+p {
+    font-family: 'Nunito';
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
+    line-height: 1.5;
+    margin: 0;
+    padding: 0 clamp(0.5em, 2vw, 1em);
+}
+
+h3 {
+    font-family: 'Proza Libre';
+    font-size: clamp(1.1rem, 3vw, 1.3rem);
+    margin: 0;
+}
+
+i {
+    font-size: 30px;
+    color: var(--main);
+}
+
+@media screen and (max-width: 480px) {
+    .infoCard {
+        padding: 1em 0.8em;
+    }
+
+    i{
+        font-size: 25px;
+    }
+
+    .infoCard div:first-child {
+        width: 3.5em;
+        height: 3.5em;
+    }
+
+    .infoCard div:first-child img {
+        width: 2em;
+    }
+}

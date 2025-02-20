@@ -1,0 +1,49 @@
+#router {
+    width: 40vw;
+    height: 65vh;
+    padding: 1rem;
+}
+
+#mainDiv,
+#router {
+    text-align: center;
+}
+
+#router::-webkit-scrollbar {
+    width: 8px;
+}
+
+#router::-webkit-scrollbar-track {
+    background: var(--dark2);
+}
+
+#router::-webkit-scrollbar-thumb {
+    background-color: var(--main);
+    border-radius: 20px;
+}
+
+#router {
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+#searchBarDiv {
+    place-items: center;
+    margin-top: -4%;
+}
+
+hr {
+    border: 2px solid var(--dark2);
+    border-radius: 6px;
+    width: 40em;
+    place-self: center;
+    opacity: 0.5;
+}
+
+iframe{
+    width: 40em;
+    height: 30em;
+    position: fixed;
+    top: 20%;
+    left: 33%;
+}

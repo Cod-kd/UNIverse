@@ -1,0 +1,43 @@
+#loginDiv{
+    display: grid;
+    gap: 1em;
+}
+
+#loginForm {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    justify-items: center;
+    gap: 20px;
+    height: 130px;
+}
+
+#loginForm .input:hover{
+    width: 280px;
+}
+
+#loginForm .input {
+    width: 240px;
+    height: 40px;
+    background-color: transparent;
+    color: var(--main);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    outline: none;
+    border: none;
+    box-shadow: 0 10px 20px -18px var(--main);
+    border-bottom: 3px solid var(--main);
+    transition: 0.2s ease;
+}
+
+.input::placeholder {
+    font-size: clamp(16px, 4vw, 20px);
+}
+
+@media screen and (max-width: 480px) {
+    #loginForm .input{
+        width: 240px;
+    }
+    #loginForm .input:hover{
+        width: 240px;
+    }
+}
