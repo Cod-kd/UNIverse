@@ -10,15 +10,16 @@
         <div class="profile-card">
             <div class="profile-header">
                 <img [src]="profile.usersData.profilePictureExtension === 'jpg' ? '/images/cat-pfp.jpg' : 'images/' + profile.usersData.userId + profile.usersData.profilePictureExtension"
-                [alt]="profile.usersData.name + '\'s profile picture'" class="profile-picture" (click)="spinProfilePicture($event)">            
+                    [alt]="profile.usersData.name + '\'s profile picture'" class="profile-picture"
+                    (click)="spinProfilePicture($event)">
                 <h2>{{profile.usersData.name}}</h2>
-
-                <div (click)="addFriend()" class="add-friend">
-                    <i class="fa-solid" [ngClass]="isFriendAdded ? 'fa-user-check' : 'fa-user-plus'"></i>
-                </div>
-
-                <div (click)="saveProfile()" class="save-profile">
-                    <i class="fa-solid" [ngClass]="isProfileSaved ? 'fa-check' : 'fa-floppy-disk'"></i>
+                <div class="action-buttons">
+                    <div (click)="addFriend()" class="action-btn">
+                        <i class="fa-solid" [ngClass]="isFriendAdded ? 'fa-user-check' : 'fa-user-plus'"></i>
+                    </div>
+                    <div (click)="saveProfile()" class="action-btn">
+                        <i class="fa-solid" [ngClass]="isProfileSaved ? 'fa-check' : 'fa-floppy-disk'"></i>
+                    </div>
                 </div>
             </div>
 

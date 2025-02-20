@@ -22,6 +22,7 @@
   background: linear-gradient(90deg, var(--main), var(--dark2));
   background-size: 200% 200%;
   animation: gradientAnimation 15s linear infinite;
+  position: relative;
 }
 
 @keyframes gradientAnimation {
@@ -109,20 +110,6 @@
   cursor: pointer;
 }
 
-.add-friend,
-.save-profile {
-  color: var(--light1);
-  font-size: 1.5em;
-  width: fit-content;
-  transition: color 0.2s ease;
-}
-
-.add-friend:hover,
-.save-profile:hover {
-  color: var(--link);
-  cursor: pointer;
-}
-
 @keyframes spinAnimation {
   0% {
     transform: rotateY(0deg);
@@ -135,4 +122,23 @@
 
 .profile-picture.spin {
   animation: spinAnimation 1s ease-in-out;
+}
+
+.action-buttons{
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.action-btn{
+  color: var(--light1);
+  font-size: 1.5em;
+  transition: color 0.2s ease;
+}
+
+.action-btn:hover{
+  color: var(--main);
+  cursor: pointer;
 }
