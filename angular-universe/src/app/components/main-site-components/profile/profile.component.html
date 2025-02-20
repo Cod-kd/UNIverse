@@ -9,7 +9,7 @@
     <div class="profile-container">
         <div class="profile-card">
             <div class="profile-header">
-                <img [src]="profile.usersData.profilePictureExtension === 'jpg' ? '/images/default-pfp.jpg' : 'assets/profile-pictures/' + profile.usersData.userId + profile.usersData.profilePictureExtension"
+                <img [src]="profile.usersData.profilePictureExtension === 'jpg' ? '/images/cat-pfp.jpg' : 'images/' + profile.usersData.userId + profile.usersData.profilePictureExtension"
                 [alt]="profile.usersData.name + '\'s profile picture'" class="profile-picture" (click)="spinProfilePicture($event)">            
                 <h2>{{profile.usersData.name}}</h2>
 
