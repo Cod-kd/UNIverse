@@ -12,7 +12,9 @@ import { RouterOutlet, Router } from '@angular/router';
 export class MainComponent implements OnInit {
   isMainSite = false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {
+    this.isMainSite = this.router.url.includes("/main-site");
+  }
 
   ngOnInit(): void {
     this.router.events.subscribe(() => {
