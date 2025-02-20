@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Profile } from '../../../models/profile/profile.model';
 import { SearchService } from '../../../services/search/search.service';
 import { CommonModule } from '@angular/common';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-profile',
@@ -11,6 +12,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent {
+  @ViewChild('profileCard') profileCard!: ElementRef;
   profile: Profile | null = null;
   isFriendAdded = false;
   isProfileSaved = false;
@@ -29,10 +31,23 @@ export class ProfileComponent {
     }
   }
 
-  saveProfile() {
-    if (!this.isProfileSaved) {
-      this.isProfileSaved = true;
-    }
+  async saveProfile() {
+    if (!this.profileCard) return;
+
+    const card = this.profileCard.nativeElement;
+    card.classList.add('capture-animation');
+
+    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    const canvas = await html2canvas(card);
+    const link = document.createElement('a');
+    link.download = `${this.profile?.usersData.name || 'profile'}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+
+    card.classList.remove('capture-animation');
+    this.isProfileSaved = true;
   }
 
   spinProfilePicture(event: Event) {

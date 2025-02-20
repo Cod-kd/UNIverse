@@ -1,22 +1,24 @@
-.profile-page {
+#profile-page {
   display: flex;
   justify-content: center;
   height: 100%;
 }
 
-.profile-container {
+#profile-container {
   width: 100%;
   max-width: 500px;
 }
 
-.profile-card {
+#profile-card {
   background-color: var(--dark1);
   border-radius: 1rem;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.6s ease;
+  transform: scale(1);
 }
 
-.profile-header {
+#profile-header {
   padding: 1.5rem;
   text-align: center;
   background: linear-gradient(90deg, var(--main), var(--dark2));
@@ -39,7 +41,7 @@
   }
 }
 
-.profile-picture {
+#profile-picture {
   width: 100px;
   height: 100px;
   border-radius: 50%;
@@ -48,23 +50,23 @@
   cursor: pointer;
 }
 
-.profile-header h2 {
+#profile-header h2 {
   color: var(--light1);
   margin: 0;
   font-size: 1.5rem;
 }
 
-.profile-info {
+#profile-info {
   padding: 1.5rem;
   color: var(--light1);
   font-size: 0.9rem;
 }
 
-.profile-info p {
+#profile-info p {
   margin: 0.3rem 0;
 }
 
-.profile-stats {
+#profile-stats {
   display: flex;
   gap: 1rem;
   margin: 1rem 0;
@@ -76,12 +78,12 @@
   font-size: 0.9rem;
 }
 
-.profile-stats span:nth-child(2) {
+#profile-stats span:nth-child(2) {
   color: var(--main);
 }
 
-.interests,
-.roles {
+#interests,
+#roles {
   margin: 1rem 0;
   text-align: center;
   font-size: 0.9rem;
@@ -120,11 +122,11 @@
   }
 }
 
-.profile-picture.spin {
+#profile-picture.spin {
   animation: spinAnimation 1s ease-in-out;
 }
 
-.action-buttons{
+#action-buttons {
   position: absolute;
   top: 1rem;
   right: 1rem;
@@ -132,13 +134,39 @@
   gap: 0.75rem;
 }
 
-.action-btn{
+.action-btn {
   color: var(--light1);
   font-size: 1.5em;
   transition: color 0.2s ease;
 }
 
-.action-btn:hover{
+.action-btn:hover {
   color: var(--main);
   cursor: pointer;
+}
+
+.capture-animation {
+  border-radius: 0 !important;
+  opacity: 0.5;
+  animation: capture 0.6s ease;
+}
+
+@keyframes capture {
+  0% {
+    opacity: 1;
+    border-radius: 1rem;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.5;
+    border-radius: 0;
+    transform: scale(1.05);
+  }
+
+  100% {
+    opacity: 1;
+    border-radius: 1rem;
+    transform: scale(1);
+  }
 }

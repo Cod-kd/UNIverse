@@ -1,19 +1,19 @@
-<div class="profile-page">
+<div id="profile-page">
     @if(!profile){
-    <div class="no-profile">
+    <div id="no-profile">
         Keress egy profilt a megjelenítéshez!
     </div>
     }
 
     @if(profile){
-    <div class="profile-container">
-        <div class="profile-card">
-            <div class="profile-header">
+    <div id="profile-container">
+        <div id="profile-card" #profileCard>
+            <div id="profile-header">
                 <img [src]="profile.usersData.profilePictureExtension === 'jpg' ? '/images/cat-pfp.jpg' : 'images/' + profile.usersData.userId + profile.usersData.profilePictureExtension"
-                    [alt]="profile.usersData.name + '\'s profile picture'" class="profile-picture"
+                    [alt]="profile.usersData.name + '\'s profile picture'" id="profile-picture"
                     (click)="spinProfilePicture($event)">
                 <h2>{{profile.usersData.name}}</h2>
-                <div class="action-buttons">
+                <div id="action-buttons">
                     <div (click)="startFollowing()" class="action-btn">
                         <i class="fa-solid" [ngClass]="isFriendAdded ? 'fa-user-check' : 'fa-user-plus'"></i>
                     </div>
@@ -23,12 +23,12 @@
                 </div>
             </div>
 
-            <div class="profile-info">
+            <div id="profile-info">
                 <p><strong>Egyetem:</strong> {{profile.usersData.universityName}}</p>
                 <p><strong>Kar:</strong> {{profile.faculty}}</p>
                 <p><strong>Leírás:</strong> {{profile.description || 'Nincs megadott leírás'}}</p>
 
-                <div class="profile-stats">
+                <div id="profile-stats">
                     <span>{{ profile.usersData.followerCount }} Követő</span>
                     <span>|</span>
                     <span>{{ profile.usersData.followedCount }} Követés</span>
@@ -37,7 +37,7 @@
                 <p>{{ profile.contacts.length ? '' : 'Nincsenek elérhetőségek' }}</p>
 
                 @if(profile.interests.length){
-                <div class="interests">
+                <div id="interests">
                     <h3>Érdeklődési körök</h3>
                     <div class="tags">
                         @for(interest of profile.interests; track interest){
@@ -50,7 +50,7 @@
                 }
 
                 @if(profile.roles.length){
-                <div class="roles">
+                <div id="roles">
                     <h3>Szerepkörök</h3>
                     <div class="tags">
                         @for(role of profile.roles; track role){
