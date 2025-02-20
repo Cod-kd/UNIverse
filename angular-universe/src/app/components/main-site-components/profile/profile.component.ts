@@ -3,13 +3,13 @@ import { Profile } from '../../../models/profile/profile.model';
 import { SearchService } from '../../../services/search/search.service';
 
 @Component({
-  selector: 'app-profiles',
+  selector: 'app-profile',
   standalone: true,
   imports: [],
-  templateUrl: './profiles.component.html',
-  styleUrl: './profiles.component.css'
+  templateUrl: './profile.component.html',
+  styleUrl: './profile.component.css'
 })
-export class ProfilesComponent {
+export class ProfileComponent {
   profile: Profile | null = null;
 
   constructor(private searchService: SearchService) {

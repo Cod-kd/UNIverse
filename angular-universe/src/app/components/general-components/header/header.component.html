@@ -3,7 +3,7 @@
     <img src="images/simpleLogo.png" alt="simpleLogo" id="logo">
   </a>
   <nav class="desktop-nav">
-    <a [routerLink]="['/main-site/profiles']" class="link link--elara" (click)="onNavigate()">
+    <a [routerLink]="['/main-site/profile']" class="link link--elara" (click)="onNavigate()">
       <span>Profilok</span>
     </a>
     <a [routerLink]="['/main-site/groups']" class="link link--elara" (click)="onNavigate()">
@@ -29,7 +29,7 @@
   </button>
   <div class="mobile-menu" [class.active]="isMenuOpen" [style.height]="(isLoggedIn$ | async) ? '35vh' : '30vh'">
     <nav>
-      <a [routerLink]="['/main-site/profiles']" class="link link--elara" (click)="onNavigate()">
+      <a [routerLink]="['/main-site/profile']" class="link link--elara" (click)="onNavigate()">
         <span>Profil</span>
       </a>
       <a [routerLink]="['/main-site/groups']" class="link link--elara" (click)="onNavigate()">
