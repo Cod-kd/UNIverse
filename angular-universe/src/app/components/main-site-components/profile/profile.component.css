@@ -19,7 +19,23 @@
 .profile-header {
   padding: 1.5rem;
   text-align: center;
-  background: linear-gradient(to right, var(--main), var(--dark2));
+  background: linear-gradient(90deg, var(--main), var(--dark2));
+  background-size: 200% 200%;
+  animation: gradientAnimation 15s linear infinite;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .profile-picture {
