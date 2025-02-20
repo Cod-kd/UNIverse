@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { SearchService, SearchResult } from '../../../services/search/search.service';
 
 @Component({
   selector: 'app-self-profile',
@@ -7,6 +8,13 @@ import { Component } from '@angular/core';
   templateUrl: './self-profile.component.html',
   styleUrl: './self-profile.component.css'
 })
-export class SelfProfileComponent {
+export class SelfProfileComponent implements OnInit {
 
+  constructor(private searchService: SearchService) { }
+
+  ngOnInit(): void {
+    this.searchService.searchResults$.subscribe((results: SearchResult) => {
+      console.log('Fetched search results:', results);
+    });
+  }
 }

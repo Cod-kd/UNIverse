@@ -24,31 +24,28 @@ export class SearchService {
     private http: HttpClient,
     private popupService: PopupService,
     private router: Router
-  ) { }
+  ) {
+    this.autoSearchIfOnYouPage();
+  }
 
-  getFetchByUrl(): string {
-    switch (this.router.url) {
-      case "/main-site/profile":
-        return "/user/name/";
-      case "/main-site/groups":
-        return "/groups/search?name=";
-      case "/main-site/events":
-        return "/events/search?name=";
-      case "/main-site/calendar":
-        return "/unknown";
-      default:
-        throw new Error("Unknown url");
+  private autoSearchIfOnYouPage(): void {
+    if (this.router.url === '/main-site/you') {
+      const username = localStorage.getItem('username');
+      if (username) {
+        this.search(username).subscribe();
+      }
     }
   }
 
-  getBaseEndpointByUrl(): string {
+  getEndpointByUrl(searchTerm: string | null = null): string {
     switch (this.router.url) {
       case "/main-site/profile":
-        return "/user/name/";
+      case "/main-site/you":
+        return searchTerm ? `/user/name/${searchTerm}` : "/user/name/";
       case "/main-site/groups":
-        return "/groups/search?name=";
+        return searchTerm ? `/groups/search?name=${searchTerm}` : "/groups/search?name=";
       case "/main-site/events":
-        return "/events/all";
+        return searchTerm ? `/events/search?name=${searchTerm}` : "/events/all";
       case "/main-site/calendar":
         return "/calendar/all";
       default:
@@ -65,7 +62,7 @@ export class SearchService {
 
   fetchAll(): Observable<Group[]> {
     try {
-      const endpoint = this.getBaseEndpointByUrl();
+      const endpoint = this.getEndpointByUrl();
       return this.http.get<Group[]>(`${this.baseUrl}${endpoint}`, {
         headers: this.getHeaders(),
         responseType: 'json'
@@ -86,18 +83,20 @@ export class SearchService {
   }
 
   search(searchTerm: string): Observable<SearchResult> {
-    const endpoint = this.getFetchByUrl();
-
     if (this.router.url === "/main-site/profile" && !searchTerm.trim()) {
       return throwError(() => new Error("Adj meg egy felhasználónevet!"));
     }
 
     try {
-      return this.http.get<SearchResult>(`${this.baseUrl}${endpoint}${searchTerm}`, {
+      const endpoint = this.getEndpointByUrl(searchTerm);
+      return this.http.get<SearchResult>(`${this.baseUrl}${endpoint}`, {
         headers: this.getHeaders(),
         responseType: 'json'
       }).pipe(
-        tap(results => this.searchResultsSubject.next(results)),
+        tap(results => {
+          console.log("Fetched search results:", results);
+          this.searchResultsSubject.next(results);
+        }),
         catchError(() => {
           const errorMessage = "Szerveroldali hiba";
           this.popupService.show(errorMessage);
