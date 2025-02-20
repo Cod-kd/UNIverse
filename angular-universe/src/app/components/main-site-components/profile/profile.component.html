@@ -28,10 +28,9 @@
                 <p><strong>Leírás:</strong> {{profile.description || 'Nincs megadott leírás'}}</p>
 
                 <div class="profile-stats">
-                    <span>{{ profile.usersData.followerCount > 0 ? 'Követők: ' + profile.usersData.followerCount : 'Még nincsenek követői' }}</span>
+                    <span>{{ profile.usersData.followerCount }} Követő</span>
                     <span>|</span>
-                    <span>{{ profile.usersData.followedCount > 0 ? 'Követések: ' + profile.usersData.followedCount :
-                        'Még nem követ senkit' }}</span>
+                    <span>{{ profile.usersData.followedCount }} Követés</span>
                 </div>
 
                 <p>{{ profile.contacts.length ? '' : 'Nincsenek elérhetőségek' }}</p>
