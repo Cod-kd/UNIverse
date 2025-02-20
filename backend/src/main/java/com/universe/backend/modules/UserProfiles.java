@@ -1,5 +1,6 @@
 package com.universe.backend.modules;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*; //important!
 import java.time.LocalDateTime;
 
@@ -25,7 +26,9 @@ public class UserProfiles {
     @Column(nullable = true)
     private LocalDateTime deletedAt;
 
-    @OneToOne(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "userId")
+    @JsonManagedReference
     private UsersData usersData;
 
     public void setEmail(String email) {

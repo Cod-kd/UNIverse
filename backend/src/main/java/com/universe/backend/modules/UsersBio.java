@@ -1,6 +1,10 @@
 package com.universe.backend.modules;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "usersbio")
@@ -15,9 +19,42 @@ public class UsersBio {
     private String description = "";
 
     @OneToOne
-    @MapsId
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    @JsonManagedReference
     private UsersData usersData;
+    
+    @OneToMany(mappedBy = "usersBio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UsersContact> contacts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "usersBio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserRole> roles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "usersBio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserInterest> interests = new ArrayList<>();
+
+    public void setContacts(List<UsersContact> contacts) {
+        this.contacts = contacts;
+    }
+
+    public void setRoles(List<UserRole> roles) {
+        this.roles = roles;
+    }
+
+    public void setInterests(List<UserInterest> interests) {
+        this.interests = interests;
+    }
+
+    public List<UsersContact> getContacts() {
+        return contacts;
+    }
+
+    public List<UserRole> getRoles() {
+        return roles;
+    }
+
+    public List<UserInterest> getInterests() {
+        return interests;
+    }
 
     public Integer getUserId() {
         return userId;

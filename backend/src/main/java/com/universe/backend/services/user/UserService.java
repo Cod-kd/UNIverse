@@ -5,9 +5,11 @@ import com.universe.backend.exceptions.UserIsDeletedExistsException;
 import com.universe.backend.exceptions.UserNonExistsException;
 import com.universe.backend.exceptions.UserWrongPasswordException;
 import com.universe.backend.modules.UserProfiles;
+import com.universe.backend.modules.UsersBio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.universe.backend.repositories.UserProfilesRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import static java.util.Objects.isNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -35,5 +37,10 @@ public class UserService {
             throw new UserWrongPasswordException("A jelszó hibás");
         
         return up;
+    }
+    
+    public UsersBio getUsersBioByUsername(String username) {
+        return upRepo.findUsersBioByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("UsersBio not found for username: " + username));
     }
 }
