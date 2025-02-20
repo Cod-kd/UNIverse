@@ -28,7 +28,7 @@ export class SearchService {
 
   getFetchByUrl(): string {
     switch (this.router.url) {
-      case "/main-site/profiles":
+      case "/main-site/profile":
         return "/user/name/";
       case "/main-site/groups":
         return "/groups/search?name=";

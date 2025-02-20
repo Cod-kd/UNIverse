@@ -74,6 +74,10 @@
   font-size: 0.9rem;
 }
 
+.profile-stats span:nth-child(2){
+  color: var(--main);
+}
+
 .interests,
 .roles {
   margin: 1rem 0;

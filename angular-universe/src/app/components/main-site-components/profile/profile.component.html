@@ -1,4 +1,4 @@
-<!-- <div class="profile-page">
+<div class="profile-page">
     @if(!profile){
     <div class="no-profile">
         Keress egy profilt a megjelenítéshez!
@@ -9,7 +9,7 @@
     <div class="profile-container">
         <div class="profile-card">
             <div class="profile-header">
-                <img [src]="'assets/profile-pictures/' + profile.usersData.userId + profile.usersData.profilePictureExtension"
+                <img [src]="profile.usersData.profilePictureExtension === 'jpg' ? '/images/default-pfp.jpg' : 'assets/profile-pictures/' + profile.usersData.userId + profile.usersData.profilePictureExtension"
                     [alt]="profile.usersData.name + '\'s profile picture'" class="profile-picture">
                 <h2>{{profile.usersData.name}}</h2>
             </div>
@@ -17,12 +17,16 @@
             <div class="profile-info">
                 <p><strong>Egyetem:</strong> {{profile.usersData.universityName}}</p>
                 <p><strong>Kar:</strong> {{profile.faculty}}</p>
-                <p><strong>Leírás:</strong> {{profile.description}}</p>
+                <p><strong>Leírás:</strong> {{profile.description || 'Nincs megadott leírás'}}</p>
 
                 <div class="profile-stats">
-                    <span>Követők: {{profile.usersData.followerCount}}</span>
-                    <span>Követések: {{profile.usersData.followedCount}}</span>
+                    <span>{{ profile.usersData.followerCount > 0 ? 'Követők: ' + profile.usersData.followerCount : 'Még nincsenek követői' }}</span>
+                    <span>|</span>
+                    <span>{{ profile.usersData.followedCount > 0 ? 'Követések: ' + profile.usersData.followedCount : 'Még nem követ senkit' }}</span>
                 </div>
+
+                <p>{{ profile.contacts.length ? '' : 'Nincsenek elérhetőségek' }}</p>
+
                 @if(profile.interests.length){
                 <div class="interests">
                     <h3>Érdeklődési körök</h3>
@@ -32,6 +36,8 @@
                         }
                     </div>
                 </div>
+                } @else {
+                <p>Nem adott meg érdeklődési kört</p>
                 }
 
                 @if(profile.roles.length){
@@ -43,48 +49,9 @@
                         }
                     </div>
                 </div>
+                } @else {
+                <p>Jelenleg nincs szerepköre</p>
                 }
-            </div>
-        </div>
-    </div>
-    }
-</div> -->
-<div class="profile-page">
-    @if(true){
-    <div class="profile-container">
-        <div class="profile-card">
-            <div class="profile-header">
-                <img [src]="'images/default-pfp.png'"
-                    [alt]="'John Doe\'s profile picture'" class="profile-picture">
-                <h2>John Doe</h2>
-            </div>
-
-            <div class="profile-info">
-                <p><strong>Egyetem:</strong> Example University</p>
-                <p><strong>Kar:</strong> Faculty of Engineering</p>
-                <p><strong>Leírás:</strong> Passionate software developer with an interest in embedded systems.</p>
-
-                <div class="profile-stats">
-                    <span>Követők: 150</span>
-                    <span>Követések: 75</span>
-                </div>
-                
-                <div class="interests">
-                    <h3>Érdeklődési körök</h3>
-                    <div class="tags">
-                        <span class="tag">Electronics</span>
-                        <span class="tag">Programming</span>
-                        <span class="tag">IoT</span>
-                    </div>
-                </div>
-                
-                <div class="roles">
-                    <h3>Szerepkörök</h3>
-                    <div class="tags">
-                        <span class="tag">Student</span>
-                        <span class="tag">Developer</span>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
