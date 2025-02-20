@@ -86,8 +86,13 @@ export class SearchService {
   }
 
   search(searchTerm: string): Observable<SearchResult> {
+    const endpoint = this.getFetchByUrl();
+
+    if (this.router.url === "/main-site/profile" && !searchTerm.trim()) {
+      return throwError(() => new Error("Adj meg egy felhasználónevet!"));
+    }
+
     try {
-      const endpoint = this.getFetchByUrl();
       return this.http.get<SearchResult>(`${this.baseUrl}${endpoint}${searchTerm}`, {
         headers: this.getHeaders(),
         responseType: 'json'
