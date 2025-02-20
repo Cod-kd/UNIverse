@@ -14,11 +14,11 @@
                     (click)="spinProfilePicture($event)">
                 <h2>{{profile.usersData.name}}</h2>
                 <div class="action-buttons">
-                    <div (click)="addFriend()" class="action-btn">
+                    <div (click)="startFollowing()" class="action-btn">
                         <i class="fa-solid" [ngClass]="isFriendAdded ? 'fa-user-check' : 'fa-user-plus'"></i>
                     </div>
                     <div (click)="saveProfile()" class="action-btn">
-                        <i class="fa-solid" [ngClass]="isProfileSaved ? 'fa-check' : 'fa-floppy-disk'"></i>
+                        <i class="fa-solid" [ngClass]="isProfileSaved ? 'fa-check' : 'fa-camera'"></i>
                     </div>
                 </div>
             </div>

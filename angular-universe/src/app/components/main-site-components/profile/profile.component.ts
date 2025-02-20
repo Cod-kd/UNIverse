@@ -23,7 +23,7 @@ export class ProfileComponent {
     });
   }
 
-  addFriend() {
+  startFollowing() {
     if (!this.isFriendAdded) {
       this.isFriendAdded = true;
     }
