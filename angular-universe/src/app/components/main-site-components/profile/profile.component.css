@@ -44,6 +44,7 @@
   border-radius: 50%;
   border: 3px solid var(--light1);
   margin-bottom: 0.75rem;
+  cursor: pointer;
 }
 
 .profile-header h2 {
@@ -108,19 +109,30 @@
   cursor: pointer;
 }
 
-.profile-picture:hover {
-  transform: scale(1.05);
-  transition: transform 0.2s ease;
-}
-
-.add-friend, .save-profile{
+.add-friend,
+.save-profile {
   color: var(--light1);
   font-size: 1.5em;
   width: fit-content;
   transition: color 0.2s ease;
 }
 
-.add-friend:hover, .save-profile:hover{
+.add-friend:hover,
+.save-profile:hover {
   color: var(--link);
   cursor: pointer;
+}
+
+@keyframes spinAnimation {
+  0% {
+    transform: rotateY(0deg);
+  }
+
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+.profile-picture.spin {
+  animation: spinAnimation 1s ease-in-out;
 }

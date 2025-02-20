@@ -34,4 +34,13 @@ export class ProfileComponent {
       this.isProfileSaved = true;
     }
   }
+
+  spinProfilePicture(event: Event) {
+    const image = event.target as HTMLElement;
+    image.classList.remove('spin')
+    setTimeout(() => {
+      image.classList.add('spin');
+    }, 10);
+  }
+
 }
