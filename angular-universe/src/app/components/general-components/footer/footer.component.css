@@ -64,6 +64,7 @@ footer hr {
     #footer-row-1 #contacts {
         gap: 1em;
         align-items: center;
+        margin-top: 15%;
     }
 
     #footer-row-1 #contacts i {
