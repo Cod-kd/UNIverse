@@ -20,4 +20,8 @@ export class MainSiteComponent {
   }
 
   isExactMainSitePath = () => this.router.url === '/main-site';
+  
+  shouldShowSearchBar(): boolean {
+    return !this.isExactMainSitePath() && this.router.url !== '/main-site/you';
+  }
 }

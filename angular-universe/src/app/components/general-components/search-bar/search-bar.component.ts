@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
 import { SearchService, SearchResult } from '../../../services/search/search.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search-bar',
@@ -9,11 +11,23 @@ import { SearchService, SearchResult } from '../../../services/search/search.ser
   styleUrl: './search-bar.component.css'
 })
 export class SearchBarComponent {
+  @ViewChild('searchInput') searchInput!: ElementRef;
+
   constructor(
     private searchService: SearchService,
-  ) { }
+    private router: Router
+  ) {
+    // Clear search input on navigation
+    this.router.events.pipe(
+      filter((event: RouterEvent): event is NavigationEnd => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      if (this.searchInput) {
+        this.searchInput.nativeElement.value = '';
+      }
+    });
+  }
 
-  async search(event: Event, value: string) {
+  async search(event: SubmitEvent, value: string) {
     event?.preventDefault();
 
     this.searchService.search(value).subscribe({
