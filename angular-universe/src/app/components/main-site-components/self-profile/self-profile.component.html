@@ -1,3 +1,14 @@
-<div id="self-profile">
-    <p>your profile details here</p>
-</div>
+@if(profile){
+<p><strong>Faculty:</strong> {{ profile.faculty }}</p>
+<p><strong>Description:</strong> {{ profile.description || 'No description available' }}</p>
+<p><strong>Name:</strong> {{ profile.usersData.name }}</p>
+<p><strong>Gender:</strong> {{ profile.usersData.gender ? 'Male' : 'Female' }}</p>
+<p><strong>Birthdate:</strong> {{ profile.usersData.birthDate }}</p>
+<p><strong>University:</strong> {{ profile.usersData.universityName }}</p>
+<p><strong>Followers:</strong> {{ profile.usersData.followerCount }}</p>
+<p><strong>Following:</strong> {{ profile.usersData.followedCount }}</p>
+
+<p><strong>Contacts:</strong> {{ profile.contacts.length ? profile.contacts.join(', ') : 'None' }}</p>
+<p><strong>Roles:</strong> {{ profile.roles.length ? profile.roles.join(', ') : 'None' }}</p>
+<p><strong>Interests:</strong> {{ profile.interests.length ? profile.interests.join(', ') : 'None' }}</p>
+}

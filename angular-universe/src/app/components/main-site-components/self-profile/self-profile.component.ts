@@ -9,12 +9,16 @@ import { SearchService, SearchResult } from '../../../services/search/search.ser
   styleUrl: './self-profile.component.css'
 })
 export class SelfProfileComponent implements OnInit {
+  profile: any = null;
 
   constructor(private searchService: SearchService) { }
 
   ngOnInit(): void {
-    this.searchService.searchResults$.subscribe((results: SearchResult) => {
-      console.log('Fetched search results:', results);
+    this.searchService.searchResults$.subscribe((result: SearchResult) => {
+      if (result && 'usersData' in result) {
+        this.profile = result;
+      }
+      console.log('Fetched search results:', result);
     });
   }
 }
