@@ -27,7 +27,7 @@
   <button class="hamburger-btn" (click)="toggleMenu($event)">
     <i class="fa-solid fa-bars"></i>
   </button>
-  <div class="mobile-menu" [class.active]="isMenuOpen">
+  <div class="mobile-menu" [class.active]="isMenuOpen" [style.height]="(isLoggedIn$ | async) ? '35vh' : '30vh'">
     <nav>
       <a [routerLink]="['/main-site/profiles']" class="link link--elara" (click)="onNavigate()">
         <span>Profil</span>

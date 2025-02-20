@@ -36,7 +36,7 @@ export class HeaderComponent {
 
   @HostListener('window:resize')
   checkScreenSize() {
-    this.isMobile = window.innerWidth <= 768;
+    this.isMobile = window.innerWidth <= 468;
     if (!this.isMobile) this.isMenuOpen = false;
   }
 
