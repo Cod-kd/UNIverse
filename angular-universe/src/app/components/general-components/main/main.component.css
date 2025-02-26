@@ -1,15 +1,14 @@
 main {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    padding-top: 6em;
-    flex-wrap: wrap;
+    flex-direction: column;
+    min-height: 0;
+    /* Remove any min-height if exists */
+    width: 100%;
 }
 
 #mainContent {
-    width: min(90vh, 90%);
-    min-height: 40vh;
+    width: 100%;
+    flex: 1;
     display: grid;
     color: var(--main);
     transition: all 0.3s;
@@ -19,9 +18,11 @@ main {
 }
 
 .cardDiv {
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 2rem;
-    width: min(400px, 100%);
+    margin: 2rem 0;
 }
 
 @media screen and (max-width: 480px) {

@@ -1,6 +1,8 @@
+#mainDiv{
+    width: 100%;
+}
+
 #router {
-    width: 40vw;
-    height: 65vh;
     padding: 1rem;
 }
 
@@ -28,8 +30,9 @@
 }
 
 #searchBarDiv {
+    width: 100%;
+    margin-bottom: 1rem;
     place-items: center;
-    margin-top: -4%;
 }
 
 hr {
