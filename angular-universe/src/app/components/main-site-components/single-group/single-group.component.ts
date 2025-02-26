@@ -11,4 +11,8 @@ import { Group } from '../../../models/group/group.model';
 })
 export class SingleGroupComponent {
   @Input() group!: Group;
+
+  joinGroup(){
+    alert("Joined group!");
+  }
 }
