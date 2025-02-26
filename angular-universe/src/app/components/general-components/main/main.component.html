@@ -7,9 +7,11 @@
       [description]="'Hozz létre egyedi naptárat, amelyet a saját eseményeiddel tudsz feltölteni. Adj az adott eseménynek egy időpontot és meg fog jelenni a naptár táblázatában, az adott napon pedig értesítést is kapsz!'"></app-info-card>
   </div>
   }
+
   <div id="mainContent">
     <router-outlet></router-outlet>
   </div>
+
   @if (!isMainSite) {
   <div class="cardDiv">
     <app-info-card [iconClass]="'fa-solid fa-heart'" [title]="'Élménydús egyetemi élet'"

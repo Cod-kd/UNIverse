@@ -114,7 +114,7 @@ select::-ms-expand {
 @media screen and (max-width: 480px) {
     form {
         gap: 1.5rem;
-        padding: 0.5rem;
+        padding: 0;
         max-height: 650px;
     }
 

@@ -1,47 +1,61 @@
 main {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-areas: "left-cards main-content right-cards";
     min-height: 0;
     width: 100%;
     padding-top: 3rem;
+    padding-left: 5rem;
 }
 
 #mainContent {
+    grid-area: main-content;
     width: 100%;
-    flex: 1;
     display: grid;
     color: var(--main);
-    transition: all 0.3s;
     justify-items: center;
     align-items: center;
     padding-top: 2rem;
+    margin-top: -20em;
 }
 
 .cardDiv {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-rows: auto auto;
     gap: 2rem;
     margin: 2rem 0;
 }
 
-@media screen and (max-width: 480px) {
+.cardDiv:first-of-type {
+    grid-area: left-cards;
+}
+
+.cardDiv:last-of-type {
+    grid-area: right-cards;
+}
+
+@media screen and (max-width: 468px) {
     main {
-        gap: 1.5rem;
-        flex-direction: column;
-        padding-top: 3em;
-        padding-left: 0.8em;
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "main-content"
+            "left-cards" 
+            "right-cards";
+        padding-left: 0.6em;
+        place-items: center;
     }
 
     #mainContent {
-        order: -1;
         min-height: 30vh;
         width: 95%;
         margin-top: 5%;
+        margin-bottom: 1rem;
     }
 
     .cardDiv {
-        gap: 1rem;
         width: 95%;
+        justify-self: center;
+        gap: 1rem;
+        margin: 0.6rem 0;
     }
 }
