@@ -2,8 +2,8 @@ main {
     display: flex;
     flex-direction: column;
     min-height: 0;
-    /* Remove any min-height if exists */
     width: 100%;
+    padding-top: 3rem;
 }
 
 #mainContent {

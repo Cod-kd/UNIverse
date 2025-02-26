@@ -27,7 +27,7 @@ p {
 #registerLoginBtnDiv {
     display: flex;
     justify-content: center;
-    gap: 2em;
+    gap: 5em;
     width: 100%;
     flex-wrap: wrap;
 }

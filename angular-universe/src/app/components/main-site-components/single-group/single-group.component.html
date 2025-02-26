@@ -28,9 +28,5 @@
             <span class="stat-value">{{ group.allEventCount }}</span>
         </div>
     </div>
-
-    <button (click)="joinGroup()" class="join-button">
-        <i class="fa fa-sign-in"></i>
-        Belépés
-    </button>
+    <app-button (click)="joinGroup()" btnLabel="Belépés" iconClass="fa fa-sign-in"></app-button>
 </div>

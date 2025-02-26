@@ -1,1 +1,6 @@
-<button [id]="btnId" class="button" type="button">{{ btnLabel }}</button>
+<button class="button" type="button">
+    @if(iconClass){
+        <i [class]="iconClass"></i>
+    }
+    {{btnLabel}}
+</button>

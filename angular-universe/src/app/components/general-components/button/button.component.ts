@@ -10,6 +10,6 @@ import { RouterModule } from '@angular/router';
 })
 
 export class ButtonComponent {
-  @Input() btnId: string = "";
   @Input() btnLabel: string = "";
+  @Input() iconClass: string = "";
 }
