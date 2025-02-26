@@ -2,26 +2,12 @@ form {
     display: grid;
     justify-items: center;
     gap: 2rem;
-    max-height: min(500px, 90vh);
-    overflow-y: auto;
     width: min(70vh, 90%);
     margin: 0 auto;
     padding: 1rem;
     scroll-behavior: smooth;
-}
-
-form::-webkit-scrollbar {
-    width: 8px;
-}
-
-form::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-form::-webkit-scrollbar-thumb {
-    background-color: var(--main);
-    border-radius: 4px;
-    border: none;
+    min-height: min-content;
+    margin-bottom: 2rem;
 }
 
 .input {
