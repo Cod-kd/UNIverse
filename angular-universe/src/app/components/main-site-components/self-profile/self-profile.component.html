@@ -1,14 +1,101 @@
-@if(profile){
-<p><strong>Faculty:</strong> {{ profile.faculty }}</p>
-<p><strong>Description:</strong> {{ profile.description || 'No description available' }}</p>
-<p><strong>Name:</strong> {{ profile.usersData.name }}</p>
-<p><strong>Gender:</strong> {{ profile.usersData.gender ? 'Male' : 'Female' }}</p>
-<p><strong>Birthdate:</strong> {{ profile.usersData.birthDate }}</p>
-<p><strong>University:</strong> {{ profile.usersData.universityName }}</p>
-<p><strong>Followers:</strong> {{ profile.usersData.followerCount }}</p>
-<p><strong>Following:</strong> {{ profile.usersData.followedCount }}</p>
+@if (profile) {
+<div class="profile-container">
+    <div class="profile-header">
+        <h2>{{ profile.usersData.name }}'s Profile</h2>
+        <div>
+            <span>Followers: {{ profile.usersData.followerCount }}</span> |
+            <span>Following: {{ profile.usersData.followedCount }}</span>
+        </div>
+    </div>
 
-<p><strong>Contacts:</strong> {{ profile.contacts.length ? profile.contacts.join(', ') : 'None' }}</p>
-<p><strong>Roles:</strong> {{ profile.roles.length ? profile.roles.join(', ') : 'None' }}</p>
-<p><strong>Interests:</strong> {{ profile.interests.length ? profile.interests.join(', ') : 'None' }}</p>
+    <div class="profile-field">
+        <span class="field-label">Faculty</span>
+        <div class="field-value">{{ profile.faculty }}</div>
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Description <i class="fa-solid fa-pen-to-square"></i></span>
+        @if (editingDescription) {
+        <textarea class="edit-textarea" [(ngModel)]="tempDescription" (blur)="saveDescription()"
+            (keydown.enter)="$event.preventDefault(); saveDescription()">
+          </textarea>
+        } @else {
+        <div class="field-value" (click)="editDescription()">
+            {{ profile.description || 'No description available. Click to add one.' }}
+        </div>
+        }
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">University</span>
+        <div class="field-value">{{ profile.usersData.universityName }}</div>
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Basic Information</span>
+        <div class="field-value">
+            {{ profile.usersData.gender ? 'Male' : 'Female' }} |
+            Born: {{ profile.usersData.birthDate | date:'mediumDate' }}
+        </div>
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Contacts <i class="fa-solid fa-pen-to-square"></i></span>
+        <div class="tags-container">
+            @for (contact of profile.contacts; track contact) {
+            <div class="tag">
+                {{ contact }}
+                <span class="tag-close" (click)="removeContact(contact)">×</span>
+            </div>
+            }
+        </div>
+        <select class="dropdown" [(ngModel)]="newContact" (change)="addContact()">
+            <option value="" disabled selected>Add contact...</option>
+            @for (option of contactOptions; track option) {
+            <option [value]="option">{{ option }}</option>
+            }
+        </select>
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Roles <i class="fa-solid fa-pen-to-square"></i></span>
+        <div class="tags-container">
+            @for (role of profile.roles; track role) {
+            <div class="tag">
+                {{ role }}
+                <span class="tag-close" (click)="removeRole(role)">×</span>
+            </div>
+            }
+        </div>
+        <select class="dropdown" [(ngModel)]="newRole" (change)="addRole()">
+            <option value="" disabled selected>Select a role...</option>
+            @for (option of roleOptions; track option) {
+            <option [value]="option">{{ option }}</option>
+            }
+        </select>
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Interests <i class="fa-solid fa-pen-to-square"></i></span>
+        <div class="tags-container">
+            @for (interest of profile.interests; track interest) {
+            <div class="tag">
+                {{ interest }}
+                <span class="tag-close" (click)="removeInterest(interest)">×</span>
+            </div>
+            }
+        </div>
+        <select class="dropdown" [(ngModel)]="newInterest" (change)="addInterest()">
+            <option value="" disabled selected>Select an interest...</option>
+            @for (option of interestOptions; track option) {
+            <option [value]="option">{{ option }}</option>
+            }
+        </select>
+    </div>
+
+    <div class="actions">
+        <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+        <button class="btn btn-primary" (click)="saveChanges()">Save Changes</button>
+    </div>
+</div>
 }
