@@ -12,6 +12,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
+    gap: 2rem;
     border-bottom: 1px solid var(--dark1);
     padding-bottom: 0.75rem;
 }
