@@ -22,5 +22,7 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
            "JOIN d.userProfiles p " +
            "WHERE p.username = :username")
     Optional<UsersBio> findUsersBioByUsername(@Param("username") String username);
-        
+    
+    @Procedure(name = "addFollower")
+    void addFollower(@Param("followerIdIn") Integer followerId, @Param("followedIdIn") Integer followedId);
 }

@@ -43,4 +43,8 @@ public class UserService {
         return upRepo.findUsersBioByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("UsersBio not found for username: " + username));
     }
+    
+    public void followUser(Integer followerId, Integer followedId) {
+        upRepo.addFollower(followerId, followedId);
+    }
 }
