@@ -23,6 +23,7 @@
     left: calc(50% - 60px);
     animation: float 2.5s infinite ease-in-out;
     transition: transform var(--transition) ease;
+    cursor: pointer;
 }
 
 .folder:hover {

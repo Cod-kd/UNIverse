@@ -1,20 +1,21 @@
 <form (submit)="loginWithCard($event)">
     <div id="cardContainer">
-        <div class="folder">
+        <label for="fileInput" class="folder">
             <div class="front-side">
                 <div class="tip"></div>
                 <div class="cover"></div>
             </div>
             <div class="back-side cover"></div>
-        </div>
-        <label class="custom-file-upload">
+        </label>
+        <div class="custom-file-upload">
             <input 
+                id="fileInput"
                 type="file" 
                 accept=".jpg, .jpeg"
                 (change)="onFileSelected($event)"
                 #fileInput>
             Válaszd ki a UNIcard-od!
-        </label>
+        </div>
     </div>
     <div id="btnsDiv">
         <app-button 
