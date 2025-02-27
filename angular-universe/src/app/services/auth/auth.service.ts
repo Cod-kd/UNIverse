@@ -38,10 +38,12 @@ export class AuthService {
   
   private clearUserData(): void {
     localStorage.removeItem('username');
+    localStorage.removeItem('userId');
   }
 
   login(): void {
     localStorage.setItem('isLoggedIn', 'true');
+    localStorage.removeItem("registrationFormData");
     this.isLoggedIn.next(true);
   }
 
