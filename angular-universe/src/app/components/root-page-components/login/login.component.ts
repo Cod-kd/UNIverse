@@ -16,7 +16,7 @@ import { PopupService } from '../../../services/popup-message/popup-message.serv
 })
 export class LoginComponent {
   @ViewChild(ToggleInputComponent) passwordInput!: ToggleInputComponent;
-  isLoginDisabled: boolean = true;
+  isLoginDisabled = true;
   private fb = inject(FormBuilder);
   private loginService = inject(LoginService);
   private validationService = inject(ValidationService);
@@ -28,7 +28,7 @@ export class LoginComponent {
 
   constructor(private router: Router, private popupService: PopupService) {
     this.loginForm.valueChanges.subscribe(() => {
-      this.isLoginDisabled = !this.loginForm.valid;
+      this.updateLoginButtonState();
     });
   }
 
@@ -40,12 +40,18 @@ export class LoginComponent {
     const username = this.loginForm.get('username')?.value;
     if (typeof username === 'string') {
       this.validationService.validateUsername(username);
+      this.updateLoginButtonState();
     }
+  }
+
+  updateLoginButtonState() {
+    this.isLoginDisabled = !(this.validationService.usernameValid &&
+      this.validationService.passwordValid);
   }
 
   loginWithCredentials() {
     const username = this.loginForm.get('username')?.value ?? '';
-    const password = this.passwordInput.passwordControl.value ?? '';
+    const password = this.loginForm.get('password')?.value ?? '';
 
     if (!username.trim() && !password.trim()) {
       this.popupService.show("Hiányzó adatok");
@@ -56,7 +62,6 @@ export class LoginComponent {
     const isPasswordValid = this.validationService.validatePassword(password);
 
     if (isUsernameValid && isPasswordValid) {
-      this.loginForm.patchValue({ password });
       this.loginService.fetchLogin(username, password).subscribe({
         next: () => {
           this.loginService.handleLoginResponse(this.loginForm.value);
