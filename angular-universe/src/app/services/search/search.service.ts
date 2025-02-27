@@ -7,6 +7,7 @@ import { Group } from '../../models/group/group.model';
 import { Router } from '@angular/router';
 import { Profile } from '../../models/profile/profile.model';
 import { environment } from '../../../environments/environment';
+import { NavigationEnd } from '@angular/router';
 
 export type SearchResult = Group[] | Profile | null;
 
@@ -27,17 +28,15 @@ export class SearchService {
     private popupService: PopupService,
     private router: Router
   ) {
-    this.autoSearchIfOnYouPage();
-  }
-
-  private autoSearchIfOnYouPage(): void {
-    if (this.router.url === '/main-site/you') {
-      const username = localStorage.getItem('username');
-      if (username) {
-        this.search(username).subscribe();
-        this.searchedUsernameSubject.next(username);
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd && event.url === '/main-site/you') {
+        const username = localStorage.getItem('username');
+        if (username) {
+          this.search(username).subscribe();
+          this.searchedUsernameSubject.next(username);
+        }
       }
-    }
+    });
   }
 
   getEndpointByUrl(searchTerm: string | null = null): string {
