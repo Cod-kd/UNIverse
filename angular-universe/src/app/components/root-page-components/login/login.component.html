@@ -1,9 +1,9 @@
 <div id="loginDiv">
-    <form autocomplete="off" id="loginForm" [formGroup]="loginForm">
-      <input (blur)="onUsernameChange()" id="usernameInput" type="text" placeholder="Felhasználónév..." class="input" formControlName="username">
-      <app-toggle-input></app-toggle-input>
-    </form>
-    <app-button btnId="loginBtn" btnLabel="Bejelentkezés" (click)="loginWithCredentials()"></app-button>
-    <app-button btnId="cardLoginBtn" btnLabel="UNIcard használata" (click)="onUNIcardLoginClick()"></app-button>
-    <app-button btnId="backToRegistrationBtn" btnLabel="Vissza a regisztrációhoz" (click)="backToRegistration()"></app-button>
+  <form autocomplete="off" id="loginForm" [formGroup]="loginForm">
+    <input (blur)="onUsernameChange()" id="usernameInput" type="text" placeholder="Felhasználónév..." class="input" formControlName="username">
+    <app-toggle-input formControlName="password"></app-toggle-input>
+  </form>
+  <app-button [isDisabled]="isLoginDisabled" btnId="loginBtn" btnLabel="Bejelentkezés" (click)="loginWithCredentials()"></app-button>
+  <app-button btnId="cardLoginBtn" btnLabel="UNIcard használata" (click)="onUNIcardLoginClick()"></app-button>
+  <app-button btnId="backToRegistrationBtn" btnLabel="Vissza a regisztrációhoz" (click)="backToRegistration()"></app-button>
 </div>

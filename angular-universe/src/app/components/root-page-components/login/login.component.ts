@@ -16,7 +16,7 @@ import { PopupService } from '../../../services/popup-message/popup-message.serv
 })
 export class LoginComponent {
   @ViewChild(ToggleInputComponent) passwordInput!: ToggleInputComponent;
-
+  isLoginDisabled: boolean = true;
   private fb = inject(FormBuilder);
   private loginService = inject(LoginService);
   private validationService = inject(ValidationService);
@@ -26,7 +26,11 @@ export class LoginComponent {
     password: ['', Validators.required]
   });
 
-  constructor(private router: Router, private popupService: PopupService) { }
+  constructor(private router: Router, private popupService: PopupService) {
+    this.loginForm.valueChanges.subscribe(() => {
+      this.isLoginDisabled = !this.loginForm.valid;
+    });
+  }
 
   ngOnInit(): void {
     this.checkStoredCredentials();
