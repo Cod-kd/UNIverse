@@ -17,6 +17,9 @@ export class SearchService {
   private readonly adminUsername = 'admin';
   private readonly adminPassword = 'oneOfMyBestPasswords';
 
+  private searchedUsernameSubject = new BehaviorSubject<string>('');
+  searchedUsername$ = this.searchedUsernameSubject.asObservable();
+
   private searchResultsSubject = new BehaviorSubject<SearchResult>(null);
   searchResults$ = this.searchResultsSubject.asObservable();
 
@@ -33,6 +36,7 @@ export class SearchService {
       const username = localStorage.getItem('username');
       if (username) {
         this.search(username).subscribe();
+        this.searchedUsernameSubject.next(username);
       }
     }
   }
@@ -87,6 +91,10 @@ export class SearchService {
       return throwError(() => new Error("Adj meg egy felhasználónevet!"));
     }
 
+    if (this.router.url === "/main-site/profile" || this.router.url === "/main-site/you") {
+      this.searchedUsernameSubject.next(searchTerm.trim());
+    }
+
     try {
       const endpoint = this.getEndpointByUrl(searchTerm);
       return this.http.get<SearchResult>(`${this.baseUrl}${endpoint}`, {
@@ -94,7 +102,6 @@ export class SearchService {
         responseType: 'json'
       }).pipe(
         tap(results => {
-          console.log("Fetched search results:", results);
           this.searchResultsSubject.next(results);
         }),
         catchError(() => {

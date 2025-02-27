@@ -2,11 +2,12 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
 import { SearchService, SearchResult } from '../../../services/search/search.service';
 import { filter } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-search-bar',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.css'
 })
@@ -17,7 +18,6 @@ export class SearchBarComponent {
     private searchService: SearchService,
     private router: Router
   ) {
-    // Clear search input on navigation
     this.router.events.pipe(
       filter((event: RouterEvent): event is NavigationEnd => event instanceof NavigationEnd)
     ).subscribe(() => {
@@ -30,7 +30,13 @@ export class SearchBarComponent {
   async search(event: SubmitEvent, value: string) {
     event?.preventDefault();
 
-    this.searchService.search(value).subscribe({
+    const searchTerm = value.trim();
+
+    if (!searchTerm) {
+      return;
+    }
+
+    this.searchService.search(searchTerm).subscribe({
       next: (response: SearchResult) => this.searchService.handleSearchResponse(response),
       error: (err) => this.searchService.handleError(err)
     });
