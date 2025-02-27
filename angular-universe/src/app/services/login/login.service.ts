@@ -46,12 +46,40 @@ export class LoginService {
     );
   }
 
+  fetchUserId(url: string) {
+    const headers = new HttpHeaders({
+      'Authorization': 'Basic ' + btoa(this.adminUsername + ':' + this.adminPassword),
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get(url, {
+      headers,
+      responseType: 'text'
+    }).pipe(
+      catchError(() => {
+        let errorMessage = "Szerveroldali hiba";
+        this.popupService.show(errorMessage);
+        return throwError(() => new Error(errorMessage));
+      })
+    );
+  }
+
   async handleLoginResponse(credentials: any) {
     localStorage.setItem("username", credentials.username);
+
+    this.fetchUserId(`http://localhost:8080/user/id?username=${credentials.username}`).subscribe({
+      next: (userId) => {
+        localStorage.setItem("userId", userId);
+      },
+      error: (err) => {
+        this.popupService.show("Error fetching user ID:", err);
+      }
+    });
+
     this.authService.login();
-    
     this.router.navigate(["/main-site"], { state: { credentials } });
   }
+
 
   handleError(err: any) {
     this.popupService.show(err.message);
