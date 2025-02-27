@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { PopupService } from '../popup-message/popup-message.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RegisterService {
-  private readonly adminUsername = 'admin';
-  private readonly adminPassword = 'oneOfMyBestPasswords';
+  private baseUrl = environment.apiUrl;
 
   constructor(
     private http: HttpClient,
@@ -28,11 +28,6 @@ export class RegisterService {
     university: string,
     faculty: string
   ): Observable<any> {
-    const headers = new HttpHeaders({
-      Authorization: 'Basic ' + btoa(this.adminUsername + ':' + this.adminPassword),
-      'Content-Type': 'application/json',
-    });
-
     const body = {
       emailIn: email,
       usernameIn: username,
@@ -46,8 +41,7 @@ export class RegisterService {
     };
 
     return this.http
-      .post('http://localhost:8080/user/registration', body, {
-        headers,
+      .post(`${this.baseUrl}/user/registration`, body, {
         responseType: 'text',
       })
       .pipe(

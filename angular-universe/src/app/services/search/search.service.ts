@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { PopupService } from '../popup-message/popup-message.service';
 import { Group } from '../../models/group/group.model';
 import { Router } from '@angular/router';
 import { Profile } from '../../models/profile/profile.model';
+import { environment } from '../../../environments/environment';
 
 export type SearchResult = Group[] | Profile | null;
 
@@ -13,9 +14,7 @@ export type SearchResult = Group[] | Profile | null;
   providedIn: 'root'
 })
 export class SearchService {
-  private baseUrl = 'http://localhost:8080';
-  private readonly adminUsername = 'admin';
-  private readonly adminPassword = 'oneOfMyBestPasswords';
+  private baseUrl = environment.apiUrl;
 
   private searchedUsernameSubject = new BehaviorSubject<string>('');
   searchedUsername$ = this.searchedUsernameSubject.asObservable();
@@ -57,18 +56,10 @@ export class SearchService {
     }
   }
 
-  private getHeaders(): HttpHeaders {
-    return new HttpHeaders({
-      'Authorization': 'Basic ' + btoa(`${this.adminUsername}:${this.adminPassword}`),
-      'Content-Type': 'application/json'
-    });
-  }
-
   fetchAll(): Observable<Group[]> {
     try {
       const endpoint = this.getEndpointByUrl();
       return this.http.get<Group[]>(`${this.baseUrl}${endpoint}`, {
-        headers: this.getHeaders(),
         responseType: 'json'
       }).pipe(
         tap(results => this.searchResultsSubject.next(results)),
@@ -98,7 +89,6 @@ export class SearchService {
     try {
       const endpoint = this.getEndpointByUrl(searchTerm);
       return this.http.get<SearchResult>(`${this.baseUrl}${endpoint}`, {
-        headers: this.getHeaders(),
         responseType: 'json'
       }).pipe(
         tap(results => {

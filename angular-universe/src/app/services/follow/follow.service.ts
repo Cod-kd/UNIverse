@@ -1,24 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FollowService {
-  private baseUrl = 'http://localhost:8080';
-  private readonly adminUsername = "admin";
-  private readonly adminPassword = "oneOfMyBestPasswords";
-  
-  constructor(private http: HttpClient) { }
+  private baseUrl = environment.apiUrl;
 
-  private getAuthHeaders(): HttpHeaders {
-    return new HttpHeaders({
-      'Authorization': 'Basic ' + btoa(this.adminUsername + ':' + this.adminPassword),
-      'Content-Type': 'application/json'
-    });
-  }
+  constructor(private http: HttpClient) { }
 
   followUser(targetUserName: string): Observable<any> {
     const followerId = localStorage.getItem('userId');
@@ -28,9 +20,9 @@ export class FollowService {
     }
 
     return this.http.post(
-      `${this.baseUrl}/user/name/${targetUserName}/follow`, 
+      `${this.baseUrl}/user/name/${targetUserName}/follow`,
       { followerId },
-      { headers: this.getAuthHeaders(), responseType: 'text' }
+      { responseType: 'text' }
     ).pipe(
       catchError(err => throwError(() => err))
     );
@@ -45,11 +37,10 @@ export class FollowService {
     }
 
     return this.http.get<boolean>(
-      `${this.baseUrl}/user/name/${targetUserName}/follow/status?followerId=${followerId}`,
-      { headers: this.getAuthHeaders() }
+      `${this.baseUrl}/user/name/${targetUserName}/follow/status?followerId=${followerId}`
     ).pipe(
       catchError(err => throwError(() => err))
     );
   }
-    */
+  */
 }
