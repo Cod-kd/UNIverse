@@ -4,8 +4,10 @@ main {
     grid-template-areas: "left-cards main-content right-cards";
     min-height: 0;
     width: 100%;
+    max-width: 1700px;
+    margin: 0 auto;
     padding-top: 3rem;
-    padding-left: 4rem;
+    gap: 1.5rem;
 }
 
 #mainContent {
@@ -14,9 +16,9 @@ main {
     display: grid;
     color: var(--main);
     justify-items: center;
-    align-items: center;
+    align-items: flex-start;
     padding-top: 2rem;
-    margin-top: -20em;
+    margin-top: 0;
 }
 
 .cardDiv {
@@ -24,6 +26,7 @@ main {
     grid-template-rows: auto auto;
     gap: 2rem;
     margin: 2rem 0;
+    padding: 0 1rem;
 }
 
 .cardDiv:first-of-type {
@@ -41,14 +44,15 @@ main {
             "main-content"
             "left-cards" 
             "right-cards";
-        padding-left: 0.6em;
+        margin-left: -1.5%;
         place-items: center;
+        padding-top: 5rem;
     }
 
     #mainContent {
         min-height: 30vh;
         width: 95%;
-        margin-top: 5%;
+        margin-top: 0;
         margin-bottom: 1rem;
     }
 

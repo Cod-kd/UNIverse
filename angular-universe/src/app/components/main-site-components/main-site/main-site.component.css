@@ -38,12 +38,14 @@
 hr {
     border: 2px solid var(--dark2);
     border-radius: 6px;
-    width: 40em;
+    width: 100%;
+    max-width: 40em;
     place-self: center;
     opacity: 0.5;
 }
 
 iframe{
-    width: 40em;
+    width: 100%;
+    max-width: 40em;
     height: 30em;
 }
