@@ -15,6 +15,7 @@ import { PopupService } from '../../../services/popup-message/popup-message.serv
 })
 export class UNIcardLoginComponent {
   selectedFile: File | null = null;
+  isLoginDisabled = true;
   private loginService = inject(LoginService);
   private cardMetadataService = inject(CardMetadataService);
 
@@ -24,6 +25,7 @@ export class UNIcardLoginComponent {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
+      this.isLoginDisabled = false;
     }
   }
 

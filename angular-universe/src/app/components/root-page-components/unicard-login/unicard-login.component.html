@@ -7,7 +7,7 @@
             </div>
             <div class="back-side cover"></div>
         </label>
-        <div class="custom-file-upload">
+        <label for="fileInput" class="custom-file-upload">
             <input 
                 id="fileInput"
                 type="file" 
@@ -15,15 +15,16 @@
                 (change)="onFileSelected($event)"
                 #fileInput>
             Válaszd ki a UNIcard-od!
-        </div>
+        </label>
     </div>
     <div id="btnsDiv">
         <app-button 
-        [isDisabled]="true" 
+        [isDisabled]="isLoginDisabled" 
         btnId="loginBtn" 
         btnLabel="Bejelentkezés kártyával" 
         type="submit"
-        (click)="loginWithCard($event)">
+        (click)="loginWithCard($event)"
+        #loginBtn>
     </app-button>
     <app-button 
         btnId="backToLoginBtn" 

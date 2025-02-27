@@ -15,12 +15,14 @@
     padding: 0 clamp(1em, 3vw, 2em);
     white-space: nowrap;
     text-overflow: ellipsis;
+    opacity: 1;
 }
 
 .button:disabled {
     background-color: var(--dark2);
     color: var(--main);
     cursor: not-allowed;
+    opacity: 0.5;
 }
 
 .button:disabled:hover,
