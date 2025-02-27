@@ -21,6 +21,7 @@ export class RegisterService {
   fetchRegister(
     email: string,
     username: string,
+    fullName: string,
     password: string,
     gender: string,
     birthDate: string,
@@ -32,13 +33,11 @@ export class RegisterService {
       'Content-Type': 'application/json',
     });
 
-    const nameIn = email.split('@')[0];
-
     const body = {
       emailIn: email,
       usernameIn: username,
       passwordIn: password,
-      nameIn: nameIn,
+      nameIn: fullName,
       genderIn: gender === '1' ? true : false,
       birthDateIn: birthDate,
       facultyIn: faculty,

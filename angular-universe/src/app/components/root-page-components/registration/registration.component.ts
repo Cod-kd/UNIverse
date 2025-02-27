@@ -8,7 +8,6 @@ import { ToggleInputComponent } from '../toggle-input/toggle-input.component';
 import { RegisterService } from '../../../services/register/register.service';
 import { debounceTime } from 'rxjs/operators';
 import { ValidationService } from '../../../services/validation/validation.service';
-import { PopupService } from '../../../services/popup-message/popup-message.service';
 
 @Component({
   selector: 'app-registration',
@@ -25,7 +24,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   private registerService = inject(RegisterService);
   private formStorageKey = 'registrationFormData';
 
-  constructor(private router: Router, private validationService: ValidationService, private popupService: PopupService) { }
+  constructor(private router: Router, private validationService: ValidationService) { }
 
   showCard = false;
 
@@ -35,6 +34,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   registrationForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     username: ['', Validators.required],
+    fullName: ['', Validators.required],
     gender: ['', Validators.required],
     password: ['', Validators.required],
     birthDate: ['', Validators.required],
@@ -68,6 +68,13 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     const username = this.registrationForm.get('username')?.value;
     if (typeof username === 'string') {
       this.validationService.validateUsername(username);
+    }
+  }
+
+  onFullNameChange(){
+    const fullName = this.registrationForm.get('fullName')?.value;
+    if(typeof fullName === 'string'){
+      this.validationService.validateFullName(fullName);
     }
   }
 
@@ -143,6 +150,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
     const email = this.registrationForm.get('email')?.value ?? '';
     const username = this.registrationForm.get('username')?.value ?? '';
+    const fullName = this.registrationForm.get('fullName')?.value ?? '';
     const password = this.registrationForm.get('password')?.value ?? '';
     const gender = this.registrationForm.get('gender')?.value ?? '';
     const birthDate = this.registrationForm.get('birthDate')?.value ?? '';
@@ -151,12 +159,13 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
     this.validationService.validateEmail(email);
     this.validationService.validateUsername(username);
+    this.validationService.validateFullName(fullName);
     this.validationService.validateBirthDate(birthDate);
     this.validationService.validatePassword(password);
     this.validationService.validateUniversity(university);
     this.validationService.validateFaculty(faculty);
 
-    this.registerService.fetchRegister(email, username, password, gender, birthDate, university, faculty)
+    this.registerService.fetchRegister(email, username, fullName, password, gender, birthDate, university, faculty)
       .subscribe({
         next: () => {
           this.clearSavedFormData();

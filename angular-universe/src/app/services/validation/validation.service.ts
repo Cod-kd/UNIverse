@@ -7,6 +7,7 @@ import { PopupService } from '../popup-message/popup-message.service';
 export class ValidationService {
     emailValid: boolean = false;
     usernameValid: boolean = false;
+    fullNameValid: boolean = false;
     birthDateValid: boolean = false;
     passwordValid: boolean = false;
     universityValid: boolean = false;
@@ -48,6 +49,28 @@ export class ValidationService {
             }
         }
         return this.usernameValid;
+    }
+
+    validateFullName(fullName: string): boolean {
+        this.fullNameValid = true;
+
+        if (!fullName || fullName.trim() === "") {
+            this.popupService.show("Hiányzó teljes név");
+            this.fullNameValid = false;
+        } else if (fullName.length < 1) {
+            this.popupService.show("Legalább 1 karakter");
+            this.fullNameValid = false;
+        } else if (fullName.length > 80) {
+            this.popupService.show("Legfeljebb 80 karakter");
+            this.fullNameValid = false;
+        } else {
+            const fullNamePattern = /^[A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű ]+$/;
+            if (!fullNamePattern.test(fullName)) {
+                this.popupService.show("Csak betűket tartalmazhat");
+                this.fullNameValid = false;
+            }
+        }
+        return this.fullNameValid;
     }
 
     validateBirthDate(birthDate: string): boolean {
