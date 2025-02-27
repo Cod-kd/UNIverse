@@ -24,9 +24,10 @@
             </div>
 
             <div id="profile-info">
+                <p><strong>Leírás:</strong> {{profile.description || 'Nincs megadott leírás'}}</p>
                 <p><strong>Egyetem:</strong> {{universityName || profile.usersData.universityName}}</p>
                 <p><strong>Kar:</strong> {{facultyName || profile.faculty}}</p>
-                <p><strong>Leírás:</strong> {{profile.description || 'Nincs megadott leírás'}}</p>
+                <p><strong>Nem:</strong> {{genderDisplay}}</p>
 
                 <div id="profile-stats">
                     <span>{{ profile.usersData.followerCount }} Követő</span>

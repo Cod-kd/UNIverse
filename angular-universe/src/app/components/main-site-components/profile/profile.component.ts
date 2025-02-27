@@ -53,10 +53,13 @@ export class ProfileComponent implements OnInit {
 
     this.universityService.loadFaculties(uniValue);
     this.universityService.faculties$.subscribe(faculties => {
-
       const faculty = faculties.find(f => f.label === this.profile?.faculty);
       this.facultyName = faculty?.label || this.profile?.faculty || '';
     });
+  }
+
+  get genderDisplay(): string {
+    return this.profile?.usersData.gender ? 'Férfi' : 'Nő';
   }
 
   startFollowing() {
