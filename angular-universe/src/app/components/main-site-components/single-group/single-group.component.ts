@@ -12,8 +12,13 @@ import { ButtonComponent } from '../../general-components/button/button.componen
 })
 export class SingleGroupComponent {
   @Input() group!: Group;
+  isExpanded: boolean = false;
 
-  joinGroup(){
+  toggleExpand() {
+    this.isExpanded = !this.isExpanded;
+  }
+
+  joinGroup() {
     alert("Joined group!");
   }
 }

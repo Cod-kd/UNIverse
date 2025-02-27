@@ -1,4 +1,4 @@
-<div class="group-card">
+<div class="group-card" (click)="toggleExpand()">
     <div class="group-header">
         <h2 class="group-title">{{ group.name }}</h2>
         <span class="visibility-badge" [class]="group.isPublic ? 'public' : 'private'">
@@ -7,26 +7,29 @@
         </span>
     </div>
 
-    <div class="group-stats">
-        <div class="stat-item">
-            <span class="stat-label">Members</span>
-            <span class="stat-value">{{ group.membersCount }}</span>
+    <div class="group-details" [class.expanded]="isExpanded">
+        <div class="group-stats">
+            <div class="stat-item">
+                <span class="stat-label">Members</span>
+                <span class="stat-value">{{ group.membersCount }}</span>
+            </div>
+
+            <div class="stat-item">
+                <span class="stat-label">Posts</span>
+                <span class="stat-value">{{ group.postCount }}</span>
+            </div>
+
+            <div class="stat-item">
+                <span class="stat-label">Current Events</span>
+                <span class="stat-value">{{ group.actualEventCount }}</span>
+            </div>
+
+            <div class="stat-item">
+                <span class="stat-label">Total Events</span>
+                <span class="stat-value">{{ group.allEventCount }}</span>
+            </div>
         </div>
 
-        <div class="stat-item">
-            <span class="stat-label">Posts</span>
-            <span class="stat-value">{{ group.postCount }}</span>
-        </div>
-
-        <div class="stat-item">
-            <span class="stat-label">Current Events</span>
-            <span class="stat-value">{{ group.actualEventCount }}</span>
-        </div>
-
-        <div class="stat-item">
-            <span class="stat-label">Total Events</span>
-            <span class="stat-value">{{ group.allEventCount }}</span>
-        </div>
+        <app-button (click)="joinGroup()" btnLabel="Belépés" iconClass="fa fa-sign-in"></app-button>
     </div>
-    <app-button (click)="joinGroup()" btnLabel="Belépés" iconClass="fa fa-sign-in"></app-button>
 </div>
