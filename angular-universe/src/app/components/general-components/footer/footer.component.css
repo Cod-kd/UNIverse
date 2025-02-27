@@ -41,8 +41,9 @@ footer hr {
     justify-items: center;
 }
 
-#footer-row-2 span {
+#footer-row-2 a {
     color: var(--main);
+    text-decoration: none;
 }
 
 @media screen and (max-width: 480px) {
