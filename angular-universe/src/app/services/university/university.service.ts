@@ -304,6 +304,20 @@ export class UniversityService {
   private facultiesSubject = new BehaviorSubject<FacultyOption[]>([]);
   faculties$ = this.facultiesSubject.asObservable();
 
+  getUniversityName(code: string): string {
+    const university = this.universities.find(u => u.value === code);
+    return university?.label || code;
+  }
+
+  getFacultyList(universityCode: string): string[] {
+    return this.faculties[universityCode] || [];
+  }
+
+  isFacultyValid(universityCode: string, facultyName: string): boolean {
+    const faculties = this.faculties[universityCode] || [];
+    return faculties.includes(facultyName);
+  }
+
   getUniversities(): Observable<University[]> {
     return of(this.universities);
   }
@@ -311,7 +325,7 @@ export class UniversityService {
   loadFaculties(universityId: string): void {
     const faculties = (this.faculties[universityId] || []).map(faculty => ({
       label: faculty,
-      value: universityId
+      value: faculty
     }));
     this.facultiesSubject.next(faculties);
   }

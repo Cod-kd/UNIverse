@@ -1,7 +1,8 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { Profile } from '../../../models/profile/profile.model';
 import { SearchService } from '../../../services/search/search.service';
 import { CommonModule } from '@angular/common';
+import { UniversityService } from '../../../services/university/university.service';
 import html2canvas from 'html2canvas';
 
 @Component({
@@ -11,17 +12,50 @@ import html2canvas from 'html2canvas';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
   @ViewChild('profileCard') profileCard!: ElementRef;
   profile: Profile | null = null;
   isFriendAdded = false;
   isProfileSaved = false;
 
-  constructor(private searchService: SearchService) {
+  universityMap: Map<string, string> = new Map();
+  facultyMap: Map<string, string[]> = new Map();
+
+  universityName: string = '';
+  facultyName: string = '';
+
+  constructor(
+    private searchService: SearchService,
+    private universityService: UniversityService
+  ) {
     this.searchService.searchResults$.subscribe((result) => {
       if (result && !Array.isArray(result)) {
         this.profile = result as Profile;
+        this.updateUniversityAndFaculty();
       }
+    });
+  }
+
+  ngOnInit(): void {
+    this.universityService.getUniversities().subscribe(universities => {
+      universities.forEach(uni => {
+        this.universityMap.set(uni.value, uni.label);
+      });
+      this.updateUniversityAndFaculty();
+    });
+  }
+
+  private updateUniversityAndFaculty(): void {
+    if (!this.profile) return;
+
+    const uniValue = this.profile.usersData.universityName;
+    this.universityName = this.universityMap.get(uniValue) || uniValue;
+
+    this.universityService.loadFaculties(uniValue);
+    this.universityService.faculties$.subscribe(faculties => {
+
+      const faculty = faculties.find(f => f.label === this.profile?.faculty);
+      this.facultyName = faculty?.label || this.profile?.faculty || '';
     });
   }
 
@@ -57,5 +91,4 @@ export class ProfileComponent {
       image.classList.add('spin');
     }, 10);
   }
-
 }

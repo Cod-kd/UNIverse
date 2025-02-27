@@ -3,6 +3,7 @@ import { ButtonComponent } from '../../general-components/button/button.componen
 import { Router } from '@angular/router';
 import { CardMetadataService } from '../../../services/card-meta-data/card-meta-data.service';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
+import { UniversityService } from '../../../services/university/university.service';
 
 interface UserData {
   email: string;
@@ -10,8 +11,8 @@ interface UserData {
   fullName: string;
   gender: string;
   birthDate: string;
-  university: string;
-  faculty: string;
+  university: string; // Stores university code (e.g., "BME")
+  faculty: string;    // Stores faculty name or code
   password: string;
 }
 
@@ -25,13 +26,36 @@ interface UserData {
 export class UNIcardComponent implements OnInit {
   userData: UserData = history.state.userData || {} as UserData;
   private cardMetadataService = inject(CardMetadataService);
+  
+  // Display names for UI
+  universityName: string = '';
+  facultyName: string = '';
 
-  constructor(private router: Router, private popupService: PopupService) {}
+  constructor(
+    private router: Router, 
+    private popupService: PopupService,
+    private universityService: UniversityService
+  ) {}
 
   ngOnInit(): void {
-    localStorage.removeItem('registrationFormData'); 
+    localStorage.removeItem('registrationFormData');
+    
     if (!this.userData?.username) {
       this.router.navigate(['/UNIcard-login']);
+      return;
+    }
+    
+    // Get display names for university and faculty
+    this.universityName = this.universityService.getUniversityName(this.userData.university);
+    
+    // Check if faculty is a valid name for this university, otherwise show as-is
+    if (this.universityService.isFacultyValid(this.userData.university, this.userData.faculty)) {
+      this.facultyName = this.userData.faculty; // It's already the full name
+    } else {
+      // Try to find faculty by matching with the faculties for this university
+      const faculties = this.universityService.getFacultyList(this.userData.university);
+      // Default to original value if no match found
+      this.facultyName = this.userData.faculty;
     }
   }
 
