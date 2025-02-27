@@ -1,4 +1,4 @@
-#cardForm{
+#cardForm {
     display: grid;
     justify-content: center;
     gap: 1em;
@@ -112,7 +112,7 @@
     display: none;
 }
 
-#btnsDiv{
+#btnsDiv {
     display: grid;
     gap: 1em;
 }

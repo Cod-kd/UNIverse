@@ -11,17 +11,34 @@
     transition: all 0.5s;
     position: relative;
     z-index: 1;
-    cursor: pointer;
     overflow: hidden;
     padding: 0 clamp(1em, 3vw, 2em);
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 
-.button:hover {
+.button:disabled {
+    background-color: var(--dark2);
+    color: var(--main);
+    cursor: not-allowed;
+}
+
+.button:disabled:hover,
+.button:disabled:active {
+    background-color: var(--dark2);
+    transform: none;
+    box-shadow: none;
+}
+
+.button:disabled::before {
+    content: none;
+}
+
+.button:hover:not(:disabled) {
     background-color: #e7511c;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(255, 90, 31, 0.4);
+    cursor: pointer;
 }
 
 .button:active {

@@ -12,4 +12,5 @@ import { RouterModule } from '@angular/router';
 export class ButtonComponent {
   @Input() btnLabel: string = "";
   @Input() iconClass: string = "";
+  @Input() isDisabled: boolean = false;
 }
