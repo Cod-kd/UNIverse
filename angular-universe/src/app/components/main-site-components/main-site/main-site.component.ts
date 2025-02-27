@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, Router } from '@angular/router';
 import { SearchBarComponent } from '../../general-components/search-bar/search-bar.component';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-main-site',
@@ -9,13 +10,26 @@ import { SearchBarComponent } from '../../general-components/search-bar/search-b
   templateUrl: './main-site.component.html',
   styleUrl: './main-site.component.css'
 })
-export class MainSiteComponent {
+export class MainSiteComponent implements OnInit {
   currentUser: string = "user";
 
-  constructor(private router: Router) {
-    const storedData = localStorage.getItem("username");
-    if (storedData) {
-      this.currentUser = storedData;
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
+  
+  ngOnInit() {
+    if (!this.authService.getLoginStatus()) {
+      this.router.navigate(['/UNIcard-login']);
+      return;
+    }
+    
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+      this.currentUser = storedUsername;
+    } else {
+      this.authService.logout();
+      this.router.navigate(['/UNIcard-login']);
     }
   }
 

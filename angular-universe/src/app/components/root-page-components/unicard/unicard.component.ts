@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ButtonComponent } from '../../general-components/button/button.component';
 import { Router } from '@angular/router';
 import { CardMetadataService } from '../../../services/card-meta-data/card-meta-data.service';
@@ -21,13 +21,26 @@ interface UserData {
   templateUrl: './unicard.component.html',
   styleUrls: ['./unicard.component.css'],
 })
-export class UNIcardComponent {
-  userData: UserData = history.state.userData;
+export class UNIcardComponent implements OnInit {
+  userData: UserData = history.state.userData || {} as UserData;
   private cardMetadataService = inject(CardMetadataService);
 
-  constructor(private router: Router, private popupService: PopupService) { }
+  constructor(private router: Router, private popupService: PopupService) {}
+
+  ngOnInit(): void {
+    localStorage.removeItem('registrationFormData'); 
+    if (!this.userData?.username) {
+      this.router.navigate(['/UNIcard-login']);
+    }
+  }
 
   saveUniCard = async () => {
+    if (!this.userData?.username) {
+      this.popupService.show('Invalid user data');
+      this.router.navigate(['/UNIcard-login']);
+      return;
+    }
+
     const userDataDiv = document.getElementById('userDataDiv');
     if (!userDataDiv) {
       this.popupService.show('UNIcard not found.');
@@ -42,4 +55,3 @@ export class UNIcardComponent {
     }
   };
 }
-

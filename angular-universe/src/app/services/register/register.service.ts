@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { PopupService } from '../popup-message/popup-message.service';
 
 @Injectable({
@@ -52,6 +52,9 @@ export class RegisterService {
         responseType: 'text',
       })
       .pipe(
+        tap(() => {
+          localStorage.removeItem('registrationFormData');
+        }),
         catchError((err) => {
           let errorMessage = 'Szerveroldali hiba';
           if (err.status === 409) {
