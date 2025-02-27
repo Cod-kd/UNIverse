@@ -10,46 +10,48 @@ export class AuthService {
   isLoggedIn$ = this.isLoggedIn.asObservable();
 
   constructor(private router: Router) {
+    window.addEventListener('storage', () => this.checkAndUpdateLoginStatus());
+    
     this.checkAndUpdateLoginStatus();
     
-    window.addEventListener('storage', () => {
-      this.checkAndUpdateLoginStatus();
+    this.isLoggedIn.subscribe(isLoggedIn => {
+      if (!isLoggedIn) {
+        this.clearUserData();
+      }
     });
   }
 
   private getStoredLoginStatus(): boolean {
-    const storedLoginStatus = localStorage.getItem('isLoggedIn');
-    const storedUsername = localStorage.getItem('username');
-    return storedLoginStatus === 'true' && !!storedUsername;
+    return localStorage.getItem('isLoggedIn') === 'true' && !!localStorage.getItem('username');
   }
   
   private checkAndUpdateLoginStatus(): void {
-    const isCurrentlyValid = this.getStoredLoginStatus();
-    if (this.isLoggedIn.value && !isCurrentlyValid) {
-      this.logout();
-      this.router.navigate(['/UNIcard-login']);
-    }
+    const validLoginStatus = this.getStoredLoginStatus();
     
-    this.isLoggedIn.next(isCurrentlyValid);
+    if (this.isLoggedIn.value && !validLoginStatus) {
+      this.isLoggedIn.next(false);
+      this.router.navigate(['/UNIcard-login']);
+    } else {
+      this.isLoggedIn.next(validLoginStatus);
+    }
+  }
+  
+  private clearUserData(): void {
+    localStorage.removeItem('username');
   }
 
-  login() {
+  login(): void {
     localStorage.setItem('isLoggedIn', 'true');
     this.isLoggedIn.next(true);
   }
 
-  logout() {
+  logout(): void {
     localStorage.setItem('isLoggedIn', 'false');
-    localStorage.removeItem('username');
+    this.clearUserData();
     this.isLoggedIn.next(false);
   }
 
-  getLoginStatus() {
-    const currentStatus = this.getStoredLoginStatus();
-    if (this.isLoggedIn.value !== currentStatus) {
-      this.isLoggedIn.next(currentStatus);
-    }
-    
-    return currentStatus;
+  getLoginStatus(): boolean {
+    return this.getStoredLoginStatus();
   }
 }
