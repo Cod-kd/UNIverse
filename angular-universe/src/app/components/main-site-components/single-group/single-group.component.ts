@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Group } from '../../../models/group/group.model';
 import { ButtonComponent } from '../../general-components/button/button.component';
@@ -12,13 +12,16 @@ import { ButtonComponent } from '../../general-components/button/button.componen
 })
 export class SingleGroupComponent {
   @Input() group!: Group;
-  isExpanded: boolean = false;
+  @Input() isExpanded: boolean = false;
+  @Output() toggleRequest = new EventEmitter<number>();
 
-  toggleExpand() {
-    this.isExpanded = !this.isExpanded;
+  toggleExpand(event: Event) {
+    event.stopPropagation();
+    this.toggleRequest.emit(this.group.id);
   }
 
-  joinGroup() {
+  joinGroup(event: Event) {
+    event.stopPropagation();
     alert("Joined group!");
   }
 }

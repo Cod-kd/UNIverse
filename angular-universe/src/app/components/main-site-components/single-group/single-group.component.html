@@ -1,4 +1,4 @@
-<div class="group-card" (click)="toggleExpand()">
+<div class="group-card" (click)="toggleExpand($event)">
     <div class="group-header">
         <h2 class="group-title">{{ group.name }}</h2>
         <span class="visibility-badge" [class]="group.isPublic ? 'public' : 'private'">
@@ -30,6 +30,6 @@
             </div>
         </div>
 
-        <app-button (click)="joinGroup()" btnLabel="Belépés" iconClass="fa fa-sign-in"></app-button>
+        <app-button (click)="joinGroup($event)" btnLabel="Belépés" iconClass="fa fa-sign-in"></app-button>
     </div>
 </div>

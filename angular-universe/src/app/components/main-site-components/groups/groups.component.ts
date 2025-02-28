@@ -13,6 +13,7 @@ import { Group } from '../../../models/group/group.model';
 })
 export class GroupsComponent implements OnInit {
   groups: Group[] = [];
+  activeGroupId: number | null = null; // Changed to number type
 
   constructor(private searchService: SearchService) {
     this.searchService.searchResults$.subscribe((results) => {
@@ -31,5 +32,13 @@ export class GroupsComponent implements OnInit {
       next: (response) => this.searchService.handleSearchResponse(response),
       error: (err) => this.searchService.handleError(err)
     });
+  }
+
+  handleGroupToggle(groupId: number) {
+    this.activeGroupId = this.activeGroupId === groupId ? null : groupId;
+  }
+
+  isGroupExpanded(groupId: number): boolean {
+    return this.activeGroupId === groupId;
   }
 }
