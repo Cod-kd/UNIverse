@@ -1,55 +1,37 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { PopupService } from '../popup-message/popup-message.service';
 import { AuthService } from '../auth/auth.service';
-import { environment } from '../../../environments/environment';
+import { FetchService } from '../fetch/fetch.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  private baseUrl = environment.apiUrl;
-
   constructor(
-    private http: HttpClient,
+    private fetchService: FetchService,
     private router: Router,
     private popupService: PopupService,
     private authService: AuthService
   ) { }
 
-  fetchLogin(loginUsername: string, loginPassword: string): Observable<any> {
+  fetchLogin(loginUsername: string, loginPassword: string): Observable<string> {
     const body = {
       usernameIn: loginUsername,
       passwordIn: loginPassword,
     };
 
-    return this.http.post(`${this.baseUrl}/user/login`, body, {
+    return this.fetchService.post<string>('/user/login', body, {
       responseType: 'text'
-    }).pipe(
-      catchError(err => {
-        let errorMessage = "Szerveroldali hiba";
-        if (err.status === 409) {
-          errorMessage = "Hibás felhasználónév vagy jelszó!";
-        }
-        this.popupService.show(errorMessage);
-        return throwError(() => new Error(errorMessage));
-      })
-    );
+    });
   }
 
-  fetchUserId(username: string) {
-    return this.http.get(`${this.baseUrl}/user/id?username=${username}`, {
-      responseType: 'text'
-    }).pipe(
-      catchError(() => {
-        let errorMessage = "Szerveroldali hiba";
-        this.popupService.show(errorMessage);
-        return throwError(() => new Error(errorMessage));
-      })
-    );
+  fetchUserId(username: string): Observable<string> {
+    return this.fetchService.get<string>(`/user/id`, {
+      responseType: 'text',
+      params: { username }
+    });
   }
 
   async handleLoginResponse(credentials: any) {

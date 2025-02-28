@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { PopupService } from '../popup-message/popup-message.service';
 import { Group } from '../../models/group/group.model';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { Profile } from '../../models/profile/profile.model';
-import { environment } from '../../../environments/environment';
-import { NavigationEnd } from '@angular/router';
+import { FetchService } from '../fetch/fetch.service';
 
 export type SearchResult = Group[] | Profile | null;
 
@@ -15,8 +13,6 @@ export type SearchResult = Group[] | Profile | null;
   providedIn: 'root'
 })
 export class SearchService {
-  private baseUrl = environment.apiUrl;
-
   private searchedUsernameSubject = new BehaviorSubject<string>('');
   searchedUsername$ = this.searchedUsernameSubject.asObservable();
 
@@ -24,7 +20,7 @@ export class SearchService {
   searchResults$ = this.searchResultsSubject.asObservable();
 
   constructor(
-    private http: HttpClient,
+    private fetchService: FetchService,
     private popupService: PopupService,
     private router: Router
   ) {
@@ -45,9 +41,9 @@ export class SearchService {
       case "/main-site/you":
         return searchTerm ? `/user/name/${searchTerm}` : "/user/name/";
       case "/main-site/groups":
-        return searchTerm ? `/groups/search?name=${searchTerm}` : "/groups/search?name=";
+        return searchTerm ? `/groups/search` : "/groups/search";
       case "/main-site/events":
-        return searchTerm ? `/events/search?name=${searchTerm}` : "/events/all";
+        return searchTerm ? `/events/search` : "/events/all";
       case "/main-site/calendar":
         return "/calendar/all";
       default:
@@ -58,27 +54,27 @@ export class SearchService {
   fetchAll(): Observable<Group[]> {
     try {
       const endpoint = this.getEndpointByUrl();
-      return this.http.get<Group[]>(`${this.baseUrl}${endpoint}`, {
-        responseType: 'json'
+      
+      // For groups search, we need an empty name param
+      const params = this.router.url === "/main-site/groups" ? { name: '' } : undefined;
+      
+      return this.fetchService.get<Group[]>(endpoint, {
+        responseType: 'json',
+        params
       }).pipe(
-        tap(results => this.searchResultsSubject.next(results)),
-        catchError(() => {
-          const errorMessage = "Szerveroldali hiba";
-          this.popupService.show(errorMessage);
-          return throwError(() => new Error(errorMessage));
-        })
+        tap(results => this.searchResultsSubject.next(results))
       );
     } catch (error) {
       if (error instanceof Error) {
         this.popupService.show(error.message);
       }
-      return throwError(() => new Error("Failed to fetch data"));
+      throw error;
     }
   }
 
   search(searchTerm: string): Observable<SearchResult> {
     if (this.router.url === "/main-site/profile" && !searchTerm.trim()) {
-      return throwError(() => new Error("Adj meg egy felhasználónevet!"));
+      throw new Error("Adj meg egy felhasználónevet!");
     }
 
     if (this.router.url === "/main-site/profile" || this.router.url === "/main-site/you") {
@@ -87,23 +83,24 @@ export class SearchService {
 
     try {
       const endpoint = this.getEndpointByUrl(searchTerm);
-      return this.http.get<SearchResult>(`${this.baseUrl}${endpoint}`, {
-        responseType: 'json'
+      
+      // Handle different parameter formats based on URL
+      let params: Record<string, string> | undefined;
+      if (this.router.url === "/main-site/groups" || this.router.url === "/main-site/events") {
+        params = { name: searchTerm };
+      }
+      
+      return this.fetchService.get<SearchResult>(endpoint, {
+        responseType: 'json',
+        params
       }).pipe(
-        tap(results => {
-          this.searchResultsSubject.next(results);
-        }),
-        catchError(() => {
-          const errorMessage = "Szerveroldali hiba";
-          this.popupService.show(errorMessage);
-          return throwError(() => new Error(errorMessage));
-        })
+        tap(results => this.searchResultsSubject.next(results))
       );
     } catch (error) {
       if (error instanceof Error) {
         this.popupService.show(error.message);
       }
-      return throwError(() => new Error("Failed to fetch data"));
+      throw error;
     }
   }
 
