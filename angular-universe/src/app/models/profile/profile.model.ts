@@ -1,7 +1,7 @@
 export interface UsersData {
     userId: number,
     name: string,
-    gender: boolean,
+    gender: boolean | null,
     birthDate: string,
     universityName: string,
     profilePictureExtension: string,

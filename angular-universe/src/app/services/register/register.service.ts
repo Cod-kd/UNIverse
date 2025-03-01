@@ -33,7 +33,7 @@ export class RegisterService {
       usernameIn: username,
       passwordIn: password,
       nameIn: fullName,
-      genderIn: gender === '1' ? true : false,
+      genderIn: gender === '1' ? true : gender === '0' ? false : null,
       birthDateIn: birthDate,
       facultyIn: faculty,
       universityNameIn: university,

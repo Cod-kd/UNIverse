@@ -34,7 +34,8 @@
     <div class="profile-field">
         <span class="field-label">Basic Information</span>
         <div class="field-value">
-            {{ profile.usersData.gender ? 'Male' : 'Female' }} |
+            {{ profile.usersData.gender === true ? 'Male' :
+            profile.usersData.gender === false ? 'Female' : 'PNTS' }} |
             Born: {{ profile.usersData.birthDate | date:'mediumDate' }}
         </div>
     </div>

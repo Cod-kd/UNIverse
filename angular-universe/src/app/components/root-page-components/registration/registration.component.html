@@ -5,7 +5,8 @@
   <input id="usernameInput" class="input" type="text" formControlName="username" placeholder="Felhasználónév..."
     (blur)="onUsernameChange()">
 
-  <input id="fullNameInput" class="input" type="text" formControlName="fullName" placeholder="Teljes név..." (blur)="onFullNameChange()">
+  <input id="fullNameInput" class="input" type="text" formControlName="fullName" placeholder="Teljes név..."
+    (blur)="onFullNameChange()">
 
   <div class="gender-select">
     <label>
@@ -13,6 +14,9 @@
     </label>
     <label>
       <input id="femaleRadioInput" type="radio" formControlName="gender" value="0" class="radio-input"> Nő
+    </label>
+    <label>
+      <input id="pntsRadioInput" type="radio" formControlName="gender" value="null" class="radio-input"> PNTS
     </label>
   </div>
 

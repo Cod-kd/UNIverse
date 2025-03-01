@@ -30,7 +30,10 @@
             </div>
             <div class="profile-item">
                 <i class="fas fa-venus-mars"></i>
-                <span>{{ userData.gender === '1' ? 'Férfi' : 'Nő' }}</span>
+                <span>{{
+                    userData.gender === '1' ? 'Férfi' :
+                    userData.gender === '0' ? 'Nő' : 'PNTS'
+                    }}</span>
             </div>
         </div>
     </div>

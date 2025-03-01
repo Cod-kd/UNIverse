@@ -40,9 +40,9 @@ form {
 
 .gender-select {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
-    width: min(200px, 90%);
+    width: min(280px, 90%);
 }
 
 .gender-select label {
@@ -94,7 +94,8 @@ select {
     outline: none;
 }
 
-#universityDiv, #facultyDiv {
+#universityDiv,
+#facultyDiv {
     display: grid;
     place-items: center;
 }
@@ -116,7 +117,7 @@ select::-ms-expand {
     }
 
     .gender-select {
-        width: min(180px, 95%);
+        width: min(260px, 95%);
     }
 
     #btnDiv {
