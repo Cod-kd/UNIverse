@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SearchService, SearchResult } from '../../../services/search/search.service';
+import { interests } from '../../../constants/interest';
+import { roles } from '../../../constants/roles';
+import { contacts } from '../../../constants/contacts';
 
 @Component({
   selector: 'app-self-profile',
@@ -21,9 +24,9 @@ export class SelfProfileComponent implements OnInit {
   newRole = '';
   newInterest = '';
 
-  contactOptions = ['Email', 'Phone', 'Website', 'LinkedIn', 'GitHub', 'Twitter'];
-  roleOptions = ['role-1', 'role-2', 'role-3'];
-  interestOptions = ['IT', 'Electronics', 'Cats', 'Music', 'Sports', 'Art', 'Reading'];
+  contactOptions = contacts;
+  roleOptions = roles;
+  interestOptions = interests;
 
   constructor(private searchService: SearchService) { }
 

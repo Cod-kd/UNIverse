@@ -1,0 +1,1 @@
+export const contacts = ['Email', 'Phone', 'Website', 'LinkedIn', 'GitHub', 'Twitter'];
