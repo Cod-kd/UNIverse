@@ -1,4 +1,4 @@
-#mainDiv{
+#mainDiv {
     width: 100%;
 }
 
@@ -44,8 +44,92 @@ hr {
     opacity: 0.5;
 }
 
-iframe{
+.main-hr{
+    border: 2px solid var(--main);
+    opacity: 1;
+}
+
+iframe {
     width: 100%;
     max-width: 40em;
     height: 30em;
+}
+
+.welcome-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem auto;
+    max-width: 1000px;
+}
+
+.quick-card {
+    background-color: var(--dark2);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: left;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.quick-card:hover {
+    transform: translateY(-5px);
+}
+
+.quick-card h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: var(--main);
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+}
+
+.stat-label {
+    color: #aaa;
+}
+
+.activity-list {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.activity-date {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.quick-links {
+    display: flex;
+    flex-direction: column;
+}
+
+.quick-links a {
+    padding: 0.5rem 0;
+    color: var(--main);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.quick-links a:hover {
+    text-decoration: underline;
 }

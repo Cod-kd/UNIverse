@@ -1,7 +1,56 @@
 <div id="mainDiv">
     @if (isExactMainSitePath()) {
-    <h1>HELLO {{currentUser}}</h1>
-    <iframe loading="lazy" src="https://lottie.host/embed/a7367aee-80b4-4eae-b7e3-248b1bd7e160/7cEuf6GBYd.lottie"></iframe>
+    <div class="welcome-container">
+        <h1>Üdv {{currentUser}}!</h1>
+
+        <div class="card-container">
+            <div class="quick-card">
+                <h3>Összefoglaló</h3>
+                <hr class="main-hr">
+                <div class="item">
+                    <span class="stat-label">Idő:</span>
+                    <span class="stat-value">{{ currentTime }}</span>
+                </div>
+
+                <div class="item">
+                    <span class="stat-label">Dátum:</span>
+                    <span class="stat-value">{{ currentDate }}</span>
+                </div>
+
+                <div class="item">
+                    <span class="stat-label">Nap:</span>
+                    <span class="stat-value">{{ currentDay }}</span>
+                </div>
+            </div>
+
+            <div class="quick-card">
+                <h3>Aktivitás</h3>
+                <hr class="main-hr">
+                <div class="activity-list">
+                    @for (activity of recentActivities; track activity.date) {
+                    <div class="item">
+                        <span class="activity-date">{{activity.date | date:'shortDate'}}</span>
+                        <span class="activity-desc">{{activity.description}}</span>
+                    </div>
+                    }
+                </div>
+            </div>
+
+            <div class="quick-card">
+                <h3>Gyors linkek</h3>
+                <hr class="main-hr">
+                <div class="quick-links">
+                    <a (click)="navigateTo('/main-site/you')">Saját profil</a>
+                    <a (click)="navigateTo('/main-site/settings')">Beállítások</a>
+                    <a (click)="navigateTo('/main-site/help')">Help Center</a>
+                </div>
+                <app-button id="addLinkBtn" iconClass="fa-solid fa-plus"></app-button>
+            </div>
+        </div>
+
+        <iframe loading="lazy"
+            src="https://lottie.host/embed/a7367aee-80b4-4eae-b7e3-248b1bd7e160/7cEuf6GBYd.lottie"></iframe>
+    </div>
     }
     @if(shouldShowSearchBar()){
     <div id="searchBarDiv">
