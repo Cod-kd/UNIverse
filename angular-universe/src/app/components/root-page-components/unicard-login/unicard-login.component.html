@@ -8,33 +8,17 @@
             <div class="back-side cover"></div>
         </label>
         <label for="fileInput" class="custom-file-upload">
-            <input 
-                id="fileInput"
-                type="file" 
-                accept=".jpg, .jpeg"
-                (change)="onFileSelected($event)"
-                #fileInput>
+            <input id="fileInput" type="file" accept=".jpg, .jpeg" (change)="onFileSelected($event)" #fileInput>
             Válaszd ki a UNIcard-od!
         </label>
     </div>
     <div id="btnsDiv">
-        <app-button 
-        [isDisabled]="isLoginDisabled" 
-        btnId="loginBtn" 
-        btnLabel="Bejelentkezés kártyával" 
-        type="submit"
-        (click)="loginWithCard($event)"
-        #loginBtn>
-    </app-button>
-    <app-button 
-        btnId="backToLoginBtn" 
-        btnLabel="Bejelentkezés adatokkal"
-        (click)="backToCredentialLogin()">
-    </app-button>
-    <app-button 
-        btnId="backToRegistrationBtn" 
-        btnLabel="Vissza a regisztrációhoz"
-        (click)="backToRegistration()">
-    </app-button>
+        <app-button [isDisabled]="isLoginDisabled" [btnLabel]="'Bejelentkezés kártyával'"  type="submit" [size]="'big'"
+            (click)="loginWithCard($event)" #loginBtn>
+        </app-button>
+        <app-button [btnLabel]="'Bejelentkezés adatokkal'" [size]="'big'" (click)="backToCredentialLogin()">
+        </app-button>
+        <app-button [btnLabel]="'Vissza a regisztrációhoz'" [size]="'big'" (click)="backToRegistration()">
+        </app-button>
     </div>
 </form>

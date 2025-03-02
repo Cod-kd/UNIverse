@@ -9,7 +9,7 @@
     </div>
     <hr>
     <div id="registerLoginBtnDiv">
-        <app-button btnLabel="Bejelentkezés" iconClass="fa-solid fa-id-card-clip" (click)="onLoginClick()"></app-button>
-        <app-button btnLabel="Regisztráció" iconClass="fa-solid fa-address-card" (click)="onRegisterClick()"></app-button>
+        <app-button [btnLabel]="'Bejelentkezés'" iconClass="fa-solid fa-id-card-clip" [size]="'big'" (click)="onLoginClick()"></app-button>
+        <app-button [btnLabel]="'Regisztráció'" iconClass="fa-solid fa-address-card" [size]="'big'" (click)="onRegisterClick()"></app-button>
     </div>
 </div>

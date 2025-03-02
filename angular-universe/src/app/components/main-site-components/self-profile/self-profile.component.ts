@@ -5,11 +5,12 @@ import { SearchService, SearchResult } from '../../../services/search/search.ser
 import { interests } from '../../../constants/interest';
 import { roles } from '../../../constants/roles';
 import { contacts } from '../../../constants/contacts';
+import { ButtonComponent } from "../../general-components/button/button.component";
 
 @Component({
   selector: 'app-self-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ButtonComponent],
   templateUrl: './self-profile.component.html',
   styleUrl: './self-profile.component.css'
 })
@@ -94,9 +95,5 @@ export class SelfProfileComponent implements OnInit {
   saveChanges(): void {
     console.log('Saving profile:', this.profile);
     this.originalProfile = JSON.parse(JSON.stringify(this.profile));
-  }
-
-  cancel(): void {
-    this.profile = JSON.parse(JSON.stringify(this.originalProfile));
   }
 }

@@ -37,5 +37,5 @@
             </div>
         </div>
     </div>
-    <app-button btnId="getUNIcardBtn" btnLabel="Kérem a kártyám!" (click)="saveUniCard()"></app-button>
+    <app-button [btnLabel]="'Kérem a kártyám!'" iconClass="fa-solid fa-download" [size]="'big'" (click)="saveUniCard()"></app-button>
 </div>

@@ -44,9 +44,11 @@
   </div>
 
   <div id="btnDiv">
-    <app-button btnId="registerBtn" btnLabel="Regisztráció" (click)="registerNewUser()">
+    <app-button [btnLabel]="'Regisztráció'" iconClass="fa-solid fa-address-card" [size]="'big'"
+      (click)="registerNewUser()">
     </app-button>
-    <app-button btnId="backToLoginBtn" btnLabel="Van már fiókom" (click)="returnToLogin()">
+    <app-button [btnLabel]="'Van már fiókom'" iconClass="fa-solid fa-id-card-clip" [size]="'big'"
+      (click)="returnToLogin()">
     </app-button>
   </div>
 </form>
