@@ -1,66 +1,110 @@
 <div id="profile-page">
-    @if(!profile){
-    <div id="no-profile">
+    @if (!profile) {
+    <div id="no-profile" class="empty-message">
         Keress egy létező profilt a megjelenítéshez!
     </div>
     }
 
-    @if(profile){
+    @if (profile) {
     <div id="profile-container">
         <div id="profile-card" #profileCard>
             <div id="profile-header">
-                <img [src]="profile.usersData.profilePictureExtension === 'jpg' ? '/images/cat-pfp.jpg' : 'images/' + profile.usersData.userId + profile.usersData.profilePictureExtension"
-                    [alt]="profile.usersData.name + '\'s profile picture'" id="profile-picture"
-                    (click)="spinProfilePicture($event)">
+                <img [src]="getProfileImageSrc()" [alt]="profile.usersData.name + '\'s profile picture'"
+                    id="profile-picture" (click)="spinProfilePicture($event)">
                 <h2>{{profile.usersData.name}}</h2>
-                <div id="action-buttons">
-                    <div (click)="startFollowing()" class="action-btn">
-                        <i class="fa-solid" [ngClass]="isFriendAdded ? 'fa-user-check' : 'fa-user-plus'"></i>
+
+                <div id="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">{{ profile.usersData.followerCount }}</span>
+                        <span class="stat-label">Követő</span>
                     </div>
-                    <div (click)="saveProfile()" class="action-btn">
-                        <i class="fa-solid" [ngClass]="isProfileSaved ? 'fa-check' : 'fa-camera'"></i>
+                    <div class="stat-item">
+                        <span class="stat-value">{{ profile.usersData.followedCount }}</span>
+                        <span class="stat-label">Követés</span>
                     </div>
+                </div>
+
+                <div id="action-buttons-container">
+                    <app-button [btnLabel]="'Követés'"
+                        [iconClass]="isFriendAdded ? 'fa-solid fa-user-check' : 'fa-solid fa-user-plus'"
+                        [isDisabled]="isFollowInProgress || isFriendAdded" [size]="'normal'" (click)="startFollowing()">
+                    </app-button>
+
+                    <app-button [btnLabel]="'Mentés'" [iconClass]="'fa-solid fa-camera'" [isDisabled]="isProfileSaved"
+                        [size]="'normal'" (click)="saveProfile()">
+                    </app-button>
                 </div>
             </div>
 
             <div id="profile-info">
-                <p><strong>Leírás:</strong> {{profile.description || 'Nincs megadott leírás'}}</p>
-                <p><strong>Egyetem:</strong> {{universityName || profile.usersData.universityName}}</p>
-                <p><strong>Kar:</strong> {{facultyName || profile.faculty}}</p>
-                <p><strong>Nem:</strong> {{genderDisplay}}</p>
+                <div class="info-section">
+                    <div class="info-row">
+                        <strong>Leírás:</strong>
+                        <p>{{profile.description || 'Nincs megadott leírás'}}</p>
+                    </div>
 
-                <div id="profile-stats">
-                    <span>{{ profile.usersData.followerCount }} Követő</span>
-                    <span>|</span>
-                    <span>{{ profile.usersData.followedCount }} Követés</span>
+                    <div class="info-row">
+                        <strong>Egyetem:</strong>
+                        <p>{{universityName || profile.usersData.universityName}}</p>
+                    </div>
+
+                    <div class="info-row">
+                        <strong>Kar:</strong>
+                        <p>{{facultyName || profile.faculty}}</p>
+                    </div>
+
+                    <div class="info-row">
+                        <strong>Nem:</strong>
+                        <p>{{genderDisplay}}</p>
+                    </div>
                 </div>
 
-                <p>{{ profile.contacts.length ? '' : 'Nincsenek elérhetőségek' }}</p>
-
-                @if(profile.interests.length){
-                <div id="interests">
-                    <h3>Érdeklődési körök</h3>
+                @if (profile.contacts && profile.contacts.length) {
+                <div id="contacts">
+                    <h3 class="section-title">Elérhetőségek</h3>
                     <div class="tags">
-                        @for(interest of profile.interests; track interest){
+                        @for (contact of profile.contacts; track contact) {
+                        <span class="tag">{{contact}}</span>
+                        }
+                    </div>
+                </div>
+                } @else {
+                <div id="contacts">
+                    <h3 class="section-title">Elérhetőségek</h3>
+                    <p class="empty-message">Nincsenek elérhetőségek</p>
+                </div>
+                }
+
+                @if (profile.interests && profile.interests.length) {
+                <div id="interests">
+                    <h3 class="section-title">Érdeklődési körök</h3>
+                    <div class="tags">
+                        @for (interest of profile.interests; track interest) {
                         <span class="tag">{{interest}}</span>
                         }
                     </div>
                 </div>
                 } @else {
-                <p>Nem adott meg érdeklődési kört</p>
+                <div id="interests">
+                    <h3 class="section-title">Érdeklődési körök</h3>
+                    <p class="empty-message">Nem adott meg érdeklődési kört</p>
+                </div>
                 }
 
-                @if(profile.roles.length){
+                @if (profile.roles && profile.roles.length) {
                 <div id="roles">
-                    <h3>Szerepkörök</h3>
+                    <h3 class="section-title">Szerepkörök</h3>
                     <div class="tags">
-                        @for(role of profile.roles; track role){
+                        @for (role of profile.roles; track role) {
                         <span class="tag">{{role}}</span>
                         }
                     </div>
                 </div>
                 } @else {
-                <p>Jelenleg nincs szerepköre</p>
+                <div id="roles">
+                    <h3 class="section-title">Szerepkörök</h3>
+                    <p class="empty-message">Jelenleg nincs szerepköre</p>
+                </div>
                 }
             </div>
         </div>

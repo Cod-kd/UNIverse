@@ -12,11 +12,16 @@ export class ButtonComponent {
   @Input() btnLabel: string = "";
   @Input() iconClass: string = "";
   @Input() isDisabled: boolean = false;
-  @Input() size: 'small' | 'normal' = 'normal';
+  @Input() size: 'small' | 'normal' | 'big' = 'normal';
   @Input() shape: 'circle' | 'rounded' | 'rectangle' = 'rounded';
-  
+
   get sizeClass() {
-    return this.size === 'small' ? 'button-small' : 'button-normal';
+    switch (this.size) {
+      case 'small': return 'button-small';
+      case 'normal': return 'button-normal';
+      case 'big': return 'button-big';
+      default: return 'button-normal';
+    }
   }
 
   get shapeClass() {

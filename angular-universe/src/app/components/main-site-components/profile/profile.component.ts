@@ -1,9 +1,11 @@
-import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Profile } from '../../../models/profile/profile.model';
 import { SearchService } from '../../../services/search/search.service';
 import { CommonModule } from '@angular/common';
 import { UniversityService } from '../../../services/university/university.service';
 import { FollowService } from '../../../services/follow/follow.service';
+import { ButtonComponent } from '../../general-components/button/button.component';
 import html2canvas from 'html2canvas';
 import { catchError, tap, finalize, takeUntil } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
@@ -12,7 +14,7 @@ import { PopupService } from '../../../services/popup-message/popup-message.serv
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
@@ -24,6 +26,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isFollowInProgress = false;
 
   private destroy$ = new Subject<void>();
+  private isBrowser: boolean;
 
   searchedUsername: string = '';
 
@@ -37,15 +40,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private searchService: SearchService,
     private universityService: UniversityService,
     private followService: FollowService,
-    private popupService: PopupService
+    private popupService: PopupService,
+    @Inject(PLATFORM_ID) platformId: Object
   ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+
     this.searchService.searchResults$
       .pipe(takeUntil(this.destroy$))
       .subscribe(result => {
         if (result && !Array.isArray(result)) {
           this.profile = result as Profile;
           this.updateUniversityAndFaculty();
-        //  this.checkFollowStatus();
+          this.isFriendAdded = false;
+          this.isProfileSaved = false;
         }
       });
 
@@ -54,9 +61,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
       .subscribe(username => {
         if (username) {
           this.searchedUsername = username;
-          this.profile = null;
-          if (this.profile) {
-          //  this.checkFollowStatus();
+          if (!this.profile) {
+            this.profile = null;
           }
         }
       });
@@ -65,11 +71,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.universityService.getUniversities()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(universities => {
-        universities.forEach(uni => {
-          this.universityMap.set(uni.value, uni.label);
-        });
-        this.updateUniversityAndFaculty();
+      .subscribe({
+        next: (universities) => {
+          universities.forEach(uni => {
+            this.universityMap.set(uni.value, uni.label);
+          });
+          this.updateUniversityAndFaculty();
+        },
+        error: (error) => this.popupService.show('Hiba:', error)
       });
   }
 
@@ -93,28 +102,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
       });
   }
 
+  getProfileImageSrc(): string {
+    if (!this.profile) return '';
+
+    return this.profile.usersData.profilePictureExtension === 'jpg'
+      ? '/images/cat-pfp.jpg'
+      : `images/${this.profile.usersData.userId}${this.profile.usersData.profilePictureExtension}`;
+  }
+
   get genderDisplay(): string {
     return this.profile?.usersData.gender ? 'Férfi' : 'Nő';
   }
-
-  /*
-  private checkFollowStatus(): void {
-    if (!this.searchedUsername) return;
-
-    this.followService.checkFollowStatus(this.searchedUsername)
-      .pipe(
-        catchError(error => {
-          // Log error but don't show popup for follow status check
-          this.popupService.show(`Follow status check failed: ${error}`);
-          return of(false);
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe(isFollowing => {
-        this.isFriendAdded = isFollowing;
-      });
-  }
-      */
 
   startFollowing(): void {
     if (!this.searchedUsername || this.isFollowInProgress || this.isFriendAdded) return;
@@ -129,8 +127,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           }
         }),
         catchError(error => {
-          console.log((`Follow failed: ${error.message || 'Unknown error'}`));
-          this.popupService.show(`Follow failed: ${error.message || 'Unknown error'}`);
+          this.popupService.show(`Sikertelen követés: ${error.message || 'ismeretlen hiba'}`);
           return of(null);
         }),
         finalize(() => this.isFollowInProgress = false),
@@ -144,7 +141,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   async saveProfile() {
-    if (!this.profileCard) return;
+    if (!this.profileCard || !this.isBrowser) return;
 
     const card = this.profileCard.nativeElement;
     card.classList.add('capture-animation');
@@ -152,23 +149,32 @@ export class ProfileComponent implements OnInit, OnDestroy {
     try {
       await new Promise(resolve => setTimeout(resolve, 600));
 
-      const canvas = await html2canvas(card);
+      const canvas = await html2canvas(card, {
+        scale: 2,
+        logging: false,
+        useCORS: true,
+        backgroundColor: null
+      });
+
       const link = document.createElement('a');
       link.download = `${this.profile?.usersData.name || 'profile'}.png`;
-      link.href = canvas.toDataURL();
+      link.href = canvas.toDataURL('image/png');
       link.click();
 
       this.isProfileSaved = true;
     } catch (error) {
-      this.popupService.show('Failed to save profile image');
+      this.popupService.show('Nem sikerült menteni a profilt');
     } finally {
       card.classList.remove('capture-animation');
     }
   }
 
   spinProfilePicture(event: Event) {
+    if (!this.isBrowser) return;
+
     const image = event.target as HTMLElement;
     image.classList.remove('spin');
+
     requestAnimationFrame(() => {
       image.classList.add('spin');
     });

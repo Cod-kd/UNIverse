@@ -1,18 +1,13 @@
 .button {
-    width: min(16em, 90vw);
-    height: clamp(3em, 7vh, 4em);
     background-color: var(--main);
     color: var(--dark2);
-    border-radius: clamp(1em, 4vw, 2em);
     font-weight: bold;
-    font-size: clamp(0.9em, 2.5vw, 1.1em);
     font-family: 'Saira', sans-serif;
     border: none;
     transition: all 0.5s;
     position: relative;
     z-index: 1;
     overflow: hidden;
-    padding: 0 clamp(1em, 3vw, 2em);
     white-space: nowrap;
     text-overflow: ellipsis;
     opacity: 1;
@@ -68,12 +63,24 @@
     width: min(12em, 80vw);
     height: 2.5em;
     font-size: 0.8em;
+    padding: 0 0.8em;
+    border-radius: 1em;
 }
 
 .button-normal {
+    width: min(14em, 85vw);
+    height: 3em;
+    font-size: 0.95em;
+    padding: 0 1.2em;
+    border-radius: 1.2em;
+}
+
+.button-big {
     width: min(16em, 90vw);
     height: clamp(3em, 7vh, 4em);
     font-size: clamp(0.9em, 2.5vw, 1.1em);
+    padding: 0 clamp(1em, 3vw, 2em);
+    border-radius: clamp(1em, 4vw, 2em);
 }
 
 .button-circle {
@@ -90,17 +97,26 @@
     border-radius: 0;
 }
 
-.button-rounded {
-    border-radius: clamp(1em, 4vw, 2em);
-}
-
-
 @media screen and (max-width: 480px) {
-    .button {
+    .button-big {
         width: min(15em, 70vw);
         height: 2.7em;
         font-size: 1.2em;
         border-radius: 1.5em;
+    }
+
+    .button-normal {
+        width: min(13em, 65vw);
+        height: 2.5em;
+        font-size: 1.1em;
+        border-radius: 1.2em;
+    }
+
+    .button-small {
+        width: min(10em, 60vw);
+        height: 2.2em;
+        font-size: 0.9em;
+        border-radius: 1em;
     }
 
     .button:hover {
