@@ -11,10 +11,23 @@
     background-color: var(--main);
     border-radius: 25px;
     padding: 8px 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#searchIconDiv:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+#searchIconDiv:focus-within {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
 }
 
 #searchIconDiv i {
     color: var(--main);
+    transition: transform 0.2s ease;
 }
 
 #search {
@@ -23,6 +36,16 @@
     width: 35px;
     height: 35px;
     border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+#search:hover {
+    transform: scale(1.05);
+}
+
+#search:active {
+    transform: scale(0.95);
 }
 
 #search-bar {
@@ -33,10 +56,60 @@
     width: 180px;
     padding-left: 5%;
     padding-right: 5%;
+    transition: width 0.3s ease;
+}
+
+#search-bar:focus {
+    width: 220px;
 }
 
 #search-bar::placeholder {
     color: var(--dark2);
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+#search-bar:focus::placeholder {
+    opacity: 0.5;
+}
+
+.ripple {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+#search.searching {
+    background-color: var(--dark2);
+    opacity: 0.9;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+#searchIconDiv.searching {
+    animation: pulse 1.5s infinite ease-in-out;
 }
 
 @media screen and (max-width: 468px) {
@@ -52,5 +125,9 @@
 
     .mobile-menu #search-bar {
         width: 80%;
+    }
+
+    .mobile-menu #search-bar:focus {
+        width: 90%;
     }
 }

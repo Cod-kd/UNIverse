@@ -1,9 +1,11 @@
 <div id="search-section" class="desktop-search">
-    <div id="searchIconDiv">
+    <div id="searchIconDiv" [@searchState]="searchState">
         <form autocomplete="off" (submit)="search($event, searchInput.value)">
-            <input type="search" id="search-bar" placeholder="Keresés..." #searchInput>
-            <button id="search" type="submit">
-                <i class="fa-solid fa-search"></i>
+            <input type="search" id="search-bar" placeholder="Keresés..." #searchInput (focus)="onFocus()"
+                (blur)="onBlur()">
+            <button id="search" type="submit" [class.searching]="isSearching">
+                <i class="fa-solid" [class.fa-search]="!isSearching" [class.fa-spinner]="isSearching"
+                    [class.fa-spin]="isSearching"></i>
             </button>
         </form>
     </div>
