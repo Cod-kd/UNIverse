@@ -2,8 +2,57 @@
     @if (isExactMainSitePath()) {
     <div class="welcome-container">
         <h1>Üdv {{currentUser}}!</h1>
-
         <div class="card-container">
+            <div class="quick-card quick-access">
+                <h3>Gyors Elérés</h3>
+                <hr class="main-hr">
+                <div class="shortcuts-container">
+                    @for (shortcut of shortcuts; track shortcut.id) {
+                    <div class="shortcut-item"
+                        [class.fade-out]="shortcut.type === 'uninote' && shortcut.completed && isItemFading(shortcut.id)">
+                        @if (shortcut.type === 'website') {
+                        <div class="shortcut-content" (click)="openWebsite(shortcut.url)">
+                            <i class="fa-solid fa-globe"></i>
+                            <span>{{shortcut.name}}</span>
+                        </div>
+                        } @else if (shortcut.type === 'uninote') {
+                        <div class="shortcut-content">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" [checked]="shortcut.completed"
+                                    (change)="toggleNoteComplete(shortcut.id)">
+                                <span class="checkmark"></span>
+                            </label>
+                            <span class="note-title" (click)="openNoteDetailModal(shortcut)">{{shortcut.name}}</span>
+                            <span class="note-time">{{shortcut.startTime | date:'MMM d, y':'hu-HU'}}</span>
+                        </div>
+                        }
+                        <button class="delete-shortcut" (click)="deleteShortcut(shortcut.id)">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                    }
+                    @if (shortcuts.length === 0) {
+                    <div class="no-shortcuts">
+                        Nincsenek parancsikonok. Kattints a + gombra új hozzáadásához.
+                    </div>
+                    }
+                </div>
+                <div class="shortcuts-counter">
+                    <div class="counter-item">
+                        <i class="fa-solid fa-globe"></i>
+                        <span>{{getWebsiteCount()}}</span>
+                    </div>
+                    <div class="counter-item">
+                        <i class="fa-solid fa-note-sticky"></i>
+                        <span>{{getNoteCount()}}</span>
+                    </div>
+                </div>
+                <div class="add-shortcut-btn">
+                    <app-button iconClass="fa-solid fa-plus" size="small" shape="circle"
+                        (click)="openShortcutModal()"></app-button>
+                </div>
+            </div>
+
             <div class="quick-card">
                 <h3>Összefoglaló</h3>
                 <hr class="main-hr">
@@ -44,12 +93,8 @@
                     <a (click)="navigateTo('/main-site/settings')">Beállítások</a>
                     <a (click)="navigateTo('/main-site/help')">Help Center</a>
                 </div>
-                <app-button id="addLinkBtn" iconClass="fa-solid fa-plus"></app-button>
             </div>
         </div>
-
-        <iframe loading="lazy"
-            src="https://lottie.host/embed/a7367aee-80b4-4eae-b7e3-248b1bd7e160/7cEuf6GBYd.lottie"></iframe>
     </div>
     }
     @if(shouldShowSearchBar()){
@@ -60,5 +105,72 @@
     }
     <div id="router">
         <router-outlet></router-outlet>
+    </div>
+</div>
+
+<div class="modal" *ngIf="showShortcutModal">
+    <div class="modal-content">
+        <h3>Új parancsikon létrehozása</h3>
+        <div class="modal-body">
+            <div class="type-selector">
+                <label>
+                    <input type="radio" name="shortcutType" [(ngModel)]="newShortcut.type" value="website">
+                    Weboldal
+                </label>
+                <label>
+                    <input type="radio" name="shortcutType" [(ngModel)]="newShortcut.type" value="uninote">
+                    UNInote
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>Név</label>
+                <input type="text" [(ngModel)]="newShortcut.name" placeholder="Parancsikon neve">
+            </div>
+
+            @if (newShortcut.type === 'website') {
+            <div class="form-group">
+                <label>URL</label>
+                <input type="text" [(ngModel)]="newShortcut.url" placeholder="https://...">
+            </div>
+            } @else if (newShortcut.type === 'uninote') {
+            <div class="form-group">
+                <label>Leírás</label>
+                <textarea [(ngModel)]="newShortcut.description" placeholder="Jegyzet leírása"></textarea>
+            </div>
+            }
+        </div>
+        <div class="modal-actions">
+            <button (click)="closeShortcutModal()">Mégse</button>
+            <button (click)="saveShortcut()" [disabled]="!isValidShortcut()">Mentés</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" *ngIf="showNoteDetailModal">
+    <div class="modal-content">
+        <h3>UNInote Részletek</h3>
+        <div class="modal-body">
+            @if (selectedNote) {
+            <div class="form-group">
+                <label>Név</label>
+                <div class="note-detail-field">{{selectedNote.name}}</div>
+            </div>
+            <div class="form-group">
+                <label>Dátum</label>
+                <div class="note-detail-field">{{selectedNote.startTime | date:'fullDate':'hu-HU'}}</div>
+            </div>
+            <div class="form-group">
+                <label>Leírás</label>
+                <div class="note-detail-field note-description-detail">{{selectedNote.description}}</div>
+            </div>
+            }
+        </div>
+        <div class="modal-actions">
+            <button (click)="closeNoteDetailModal()">Bezár</button>
+            @if (selectedNote && !selectedNote.completed) {
+            <button (click)="toggleNoteComplete(selectedNote.id); closeNoteDetailModal()">Befejeztem</button>
+            }
+        </div>
     </div>
 </div>
