@@ -8,9 +8,22 @@ import { RouterModule } from '@angular/router';
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss'
 })
-
 export class ButtonComponent {
   @Input() btnLabel: string = "";
   @Input() iconClass: string = "";
   @Input() isDisabled: boolean = false;
+  @Input() size: 'small' | 'normal' = 'normal';
+  @Input() shape: 'circle' | 'rounded' | 'rectangle' = 'rounded';
+  
+  get sizeClass() {
+    return this.size === 'small' ? 'button-small' : 'button-normal';
+  }
+
+  get shapeClass() {
+    switch (this.shape) {
+      case 'circle': return 'button-circle';
+      case 'rectangle': return 'button-rectangle';
+      default: return 'button-rounded';
+    }
+  }
 }
