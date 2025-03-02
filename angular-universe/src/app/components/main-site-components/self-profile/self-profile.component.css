@@ -17,10 +17,15 @@
     padding-bottom: 0.75rem;
 }
 
-.profile-header > div {
-    display: grid;
+.profile-header > div p{
+    display: flex;
+    gap: 0.5rem;
     width: 100%;
-    margin-top: 0.5rem;
+    margin: 0;
+}
+
+.profile-header > div span{
+    color: var(--main);
 }
 
 .profile-picture {
