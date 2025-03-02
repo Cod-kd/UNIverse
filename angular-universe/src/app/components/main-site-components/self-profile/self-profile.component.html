@@ -9,11 +9,6 @@
     </div>
 
     <div class="profile-field">
-        <span class="field-label">Kar</span>
-        <div class="field-value">{{ profile.faculty }}</div>
-    </div>
-
-    <div class="profile-field">
         <span class="field-label">Leírás <i class="fa-solid fa-pen-to-square"></i></span>
         @if (editingDescription) {
         <textarea class="edit-textarea" [(ngModel)]="tempDescription" (blur)="saveDescription()"
@@ -27,17 +22,22 @@
     </div>
 
     <div class="profile-field">
-        <span class="field-label">Egyetem</span>
-        <div class="field-value">{{ profile.usersData.universityName }}</div>
-    </div>
-
-    <div class="profile-field">
         <span class="field-label">Általános információk</span>
         <div class="field-value">
             {{ profile.usersData.gender === true ? 'Male' :
             profile.usersData.gender === false ? 'Female' : 'PNTS' }} |
             Born: {{ profile.usersData.birthDate | date:'mediumDate' }}
         </div>
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Egyetem</span>
+        <div class="field-value">{{ profile.usersData.universityName }}</div>
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Kar</span>
+        <div class="field-value">{{ profile.faculty }}</div>
     </div>
 
     <div class="profile-field">
@@ -93,6 +93,6 @@
             }
         </select>
     </div>
-        <app-button [btnLabel]="'Mentés'" (click)="saveChanges()"></app-button>
+    <app-button [btnLabel]="'Mentés'" (click)="saveChanges()"></app-button>
 </div>
 }
