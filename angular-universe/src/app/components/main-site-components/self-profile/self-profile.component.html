@@ -2,6 +2,8 @@
 <div class="profile-container">
     <div class="profile-header">
         <h2>{{ profile.usersData.name }}</h2>
+        <img [src]="getProfileImageSrc()" [alt]="profile.usersData.name + '\'s profile picture'"
+            class="profile-picture">
         <div>
             <span>Követők: {{ profile.usersData.followerCount }}</span>
             <span>Követés: {{ profile.usersData.followedCount }}</span>
@@ -13,7 +15,7 @@
         @if (editingDescription) {
         <textarea class="edit-textarea" [(ngModel)]="tempDescription" (blur)="saveDescription()"
             (keydown.enter)="$event.preventDefault(); saveDescription()">
-          </textarea>
+              </textarea>
         } @else {
         <div class="field-value" (click)="editDescription()">
             {{ profile.description || 'Kattints a hozzáadáshoz!' }}
@@ -50,12 +52,23 @@
             </div>
             }
         </div>
-        <select class="dropdown" [(ngModel)]="newContact" (change)="addContact()">
-            <option value="" disabled selected>Elérhetőség hozzáadása...</option>
-            @for (option of contactOptions; track option) {
-            <option [value]="option">{{ option }}</option>
+
+        <div class="contact-form">
+            <select class="dropdown" [(ngModel)]="contactInput.type" (change)="updateContactPlaceholder()">
+                <option value="" disabled selected>Válassz típust...</option>
+                @for (option of contactOptions; track option) {
+                <option [value]="option">{{ option }}</option>
+                }
+            </select>
+
+            @if (contactInput.type) {
+            <input type="text" class="tag-input" [(ngModel)]="contactInput.value" [placeholder]="contactPlaceholder"
+                (keydown.enter)="addContact()">
+            <button class="add-btn" (click)="addContact()">
+                <i class="fa-solid fa-plus"></i>
+            </button>
             }
-        </select>
+        </div>
     </div>
 
     <div class="profile-field">

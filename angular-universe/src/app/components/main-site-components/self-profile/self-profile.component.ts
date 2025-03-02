@@ -4,8 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { SearchService, SearchResult } from '../../../services/search/search.service';
 import { interests } from '../../../constants/interest';
 import { roles } from '../../../constants/roles';
-import { contacts } from '../../../constants/contacts';
 import { ButtonComponent } from "../../general-components/button/button.component";
+import { PopupService } from '../../../services/popup-message/popup-message.service';
+
+interface ContactInput {
+  type: string;
+  value: string;
+}
 
 @Component({
   selector: 'app-self-profile',
@@ -21,15 +26,24 @@ export class SelfProfileComponent implements OnInit {
   editingDescription = false;
   tempDescription = '';
 
+  contactInput: ContactInput = { type: '', value: '' };
+  contactPlaceholder = '';
   newContact = '';
   newRole = '';
   newInterest = '';
 
-  contactOptions = contacts;
+  contactOptions = ['Email', 'Link', 'Phone Number'];
   roleOptions = roles;
   interestOptions = interests;
 
-  constructor(private searchService: SearchService) { }
+  emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  linkPattern = /^(https:\/\/|www\.)[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+(\/[a-zA-Z0-9-_.~:/?#[\]@!$&'()*+,;=]*)?$/;
+  phonePattern = /^\+?[0-9]{10,15}$/;
+
+  constructor(
+    private searchService: SearchService,
+    private popupService: PopupService
+  ) { }
 
   ngOnInit(): void {
     this.searchService.searchResults$.subscribe((result: SearchResult) => {
@@ -49,6 +63,10 @@ export class SelfProfileComponent implements OnInit {
     }
   }
 
+  getProfileImageSrc(): string {
+    return 'images/cat-pfp.jpg';
+  }
+
   editDescription(): void {
     this.editingDescription = true;
     this.tempDescription = this.profile.description || '';
@@ -59,10 +77,68 @@ export class SelfProfileComponent implements OnInit {
     this.editingDescription = false;
   }
 
+  updateContactPlaceholder(): void {
+    this.contactInput.value = '';
+    this.contactPlaceholder = this.getContactPlaceholder();
+  }
+
+  getContactPlaceholder(): string {
+    switch (this.contactInput.type) {
+      case 'Email': return 'example@domain.com';
+      case 'Link': return 'https://example.com';
+      case 'Phone Number': return '+36201234567';
+      default: return '';
+    }
+  }
+
+  validateContact(): boolean {
+    if (!this.contactInput.value) {
+      this.popupService.show('Kérjük, add meg az elérhetőség értékét.');
+      return false;
+    }
+
+    switch (this.contactInput.type) {
+      case 'Email':
+        if (!this.emailPattern.test(this.contactInput.value)) {
+          this.popupService.show('Hibás e-mail formátum. Kérjük, add meg a helyes e-mail címet.');
+          return false;
+        }
+        break;
+      case 'Link':
+        if (!this.linkPattern.test(this.contactInput.value)) {
+          this.popupService.show('Hibás link formátum. A linknek https:// vagy www. kezdettel kell rendelkeznie.');
+          return false;
+        }
+        break;
+      case 'Phone Number':
+        if (!this.phonePattern.test(this.contactInput.value)) {
+          this.popupService.show('Hibás telefonszám formátum. Kérjük, használj 10-15 számjegyet.');
+          return false;
+        }
+        break;
+      default:
+        this.popupService.show('Kérjük, válassz elérhetőség típust.');
+        return false;
+    }
+    return true;
+  }
+
   addContact(): void {
-    if (this.newContact && !this.profile.contacts.includes(this.newContact)) {
-      this.profile.contacts.push(this.newContact);
-      this.newContact = '';
+    if (!this.contactInput.type) {
+      this.popupService.show('Kérjük, válassz elérhetőség típust.');
+      return;
+    }
+
+    if (!this.validateContact()) return;
+    
+    const formattedContact = `${this.contactInput.type}: ${this.contactInput.value}`;
+
+    if (!this.profile.contacts.includes(formattedContact)) {
+      this.profile.contacts.push(formattedContact);
+      this.contactInput = { type: '', value: '' };
+      this.contactPlaceholder = '';
+    } else {
+      this.popupService.show('Ez az elérhetőség már létezik.');
     }
   }
 
@@ -93,7 +169,6 @@ export class SelfProfileComponent implements OnInit {
   }
 
   saveChanges(): void {
-    console.log('Saving profile:', this.profile);
     this.originalProfile = JSON.parse(JSON.stringify(this.profile));
   }
 }
