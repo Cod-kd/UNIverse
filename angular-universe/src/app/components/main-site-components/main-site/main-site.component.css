@@ -67,6 +67,10 @@ hr {
     position: relative;
 }
 
+.quick-card:nth-child(1){
+    max-height: 495px;
+}
+
 .quick-card:hover {
     transform: translateY(-5px);
 }
@@ -131,7 +135,22 @@ hr {
 
 .quick-access {
     grid-column: 1;
-    grid-row: span 2;
+    grid-row: span 3;
+    overflow-y: auto;
+    
+}
+
+.quick-access::-webkit-scrollbar {
+    width: 8px;
+}
+
+.quick-access::-webkit-scrollbar-track {
+    background: var(--dark2);
+}
+
+.quick-access::-webkit-scrollbar-thumb {
+    background-color: var(--main);
+    border-radius: 20px;
 }
 
 input[type="radio"] {
@@ -163,7 +182,7 @@ input[type="radio"]:checked::before {
 }
 
 .shortcuts-container {
-    max-height: 300px;
+    max-height: 350px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
