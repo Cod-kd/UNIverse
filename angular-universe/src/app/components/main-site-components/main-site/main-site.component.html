@@ -158,8 +158,8 @@
             }
         </div>
         <div class="modal-actions">
-            <button (click)="closeShortcutModal()">Mégse</button>
-            <button (click)="saveShortcut()" [disabled]="!isValidShortcut()">Mentés</button>
+            <app-button iconClass="fa-solid fa-x" [size]="'small'" [shape]="'rectangle'" (click)="closeShortcutModal()"></app-button>
+            <app-button iconClass="fa-solid fa-check" [size]="'small'" [shape]="'rectangle'" (click)="saveShortcut()" [isDisabled]="!isValidShortcut()"></app-button>
         </div>
     </div>
 </div>
@@ -184,9 +184,9 @@
             }
         </div>
         <div class="modal-actions">
-            <button (click)="closeNoteDetailModal()">Bezár</button>
+            <app-button [btnLabel]="'Bezár'" [size]="'small'" (click)="closeNoteDetailModal()"></app-button>
             @if (selectedNote && !selectedNote.completed) {
-            <button (click)="toggleNoteComplete(selectedNote.id); closeNoteDetailModal()">Befejeztem</button>
+            <app-button [btnLabel]="'Befejeztem'" [size]="'small'"  (click)="toggleNoteComplete(selectedNote.id); closeNoteDetailModal()">Befejeztem</app-button>
             }
         </div>
     </div>
