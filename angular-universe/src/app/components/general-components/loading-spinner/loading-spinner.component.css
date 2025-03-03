@@ -11,21 +11,48 @@
     z-index: 9999;
 }
 
-.spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #3498db;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+.custom-loader {
+    width: 140px;
+    height: 140px;
+    background: var(--main);
+    border-radius: 100px;
+
+    mask: radial-gradient(circle 62px at 50% calc(100% + 26px), #000 95%, #0000) top 8px left 50%,
+        radial-gradient(circle 62px, #000 95%, #0000) center,
+        radial-gradient(circle 62px at 50% -26px, #000 95%, #0000) bottom 8px left 50%,
+        linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    mask-repeat: no-repeat;
+
+    animation: open-close 1.5s infinite;
 }
 
-@keyframes spin {
+@keyframes open-close {
     0% {
-        transform: rotate(0deg);
+        mask-size: 0 36px, 0 36px, 0 36px, auto;
+    }
+
+    16.67% {
+        mask-size: 100% 36px, 0 36px, 0 36px, auto;
+    }
+
+    33.33% {
+        mask-size: 100% 36px, 100% 36px, 0 36px, auto;
+    }
+
+    50% {
+        mask-size: 100% 36px, 100% 36px, 100% 36px, auto;
+    }
+
+    66.67% {
+        mask-size: 0 36px, 100% 36px, 100% 36px, auto;
+    }
+
+    83.33% {
+        mask-size: 0 36px, 0 36px, 100% 36px, auto;
     }
 
     100% {
-        transform: rotate(360deg);
+        mask-size: 0 36px, 0 36px, 0 36px, auto;
     }
 }
