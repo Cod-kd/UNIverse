@@ -70,6 +70,14 @@
                     <span class="stat-label">Nap:</span>
                     <span class="stat-value">{{ currentDay }}</span>
                 </div>
+                <div class="item">
+                    <span class="stat-label">Követőid:</span>
+                    <span class="stat-value">{{ followerCount }}</span>
+                </div>
+                <div class="item">
+                    <span class="stat-label">Posztjaid:</span>
+                    <span class="stat-value">{{ postCount }}</span>
+                </div>
             </div>
 
             <div class="quick-card">
@@ -91,7 +99,6 @@
                 <div class="quick-links">
                     <a (click)="navigateTo('/main-site/you')">Saját profil</a>
                     <a (click)="navigateTo('/main-site/settings')">Beállítások</a>
-                    <a (click)="navigateTo('/main-site/help')">Segítség központ</a>
                 </div>
             </div>
         </div>

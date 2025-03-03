@@ -52,6 +52,8 @@ export class MainSiteComponent implements OnInit {
   currentDate: string = '';
   currentDay: string = '';
   currentTime: string = '';
+  followerCount: number = 0;
+  postCount: number = 0;
 
   shortcuts: Shortcut[] = [];
   fadingItems: Set<string> = new Set();
