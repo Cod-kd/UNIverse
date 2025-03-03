@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, Router } from '@angular/router';
-import { SearchBarComponent } from '../../general-components/search-bar/search-bar.component';
+import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { AuthService } from '../../../services/auth/auth.service';
 import { DatePipe, NgIf } from '@angular/common';
 import { ButtonComponent } from "../../general-components/button/button.component";
