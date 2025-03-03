@@ -6,11 +6,7 @@ import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { fromEvent } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
-
-interface NavItem {
-  path: string;
-  label: string;
-}
+import { NavItem } from '../../../models/nav/nav.model';
 
 @Component({
   selector: 'app-header',
