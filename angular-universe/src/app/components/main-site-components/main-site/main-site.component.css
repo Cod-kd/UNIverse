@@ -237,6 +237,10 @@ input[type="radio"]:checked::before {
     overflow: hidden;
 }
 
+.shortcut-item:hover, .shortcut-item>*:hover{
+    cursor: pointer;
+}
+
 .shortcut-item.fade-out {
     opacity: 0;
     transform: translateX(-20px);
