@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FooterComponent } from './components/general-components/footer/footer.component';
 import { MainComponent } from "./components/general-components/main/main.component";
 import { HeaderComponent } from './components/general-components/header/header.component';
@@ -13,8 +13,7 @@ import { filter } from 'rxjs/operators';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements AfterViewInit {
-  isLoading = true;
+export class AppComponent {
   private titleService = inject(Title);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
@@ -30,12 +29,6 @@ export class AppComponent implements AfterViewInit {
       let title = route?.snapshot.data['title'] || route?.snapshot.routeConfig?.path || 'Home';
       title = this.capitalizeTitle(title);
       this.titleService.setTitle(`UNIverse - ${title}`);
-    });
-  }
-
-  ngAfterViewInit() {
-    document.addEventListener('DOMContentLoaded', () => {
-      this.isLoading = false;
     });
   }
 
