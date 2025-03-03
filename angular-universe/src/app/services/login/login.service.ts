@@ -17,12 +17,9 @@ export class LoginService implements OnDestroy {
     private popupService: PopupService,
     private authService: AuthService
   ) {
-    // Initial login
     this.tryAutoLogin();
     
-    // Monitor for auth changes (including manual localStorage edits)
     this.authSubscription = this.authService.isLoggedIn$.subscribe(() => {
-      // Validate stored credentials on ANY auth-related change
       this.validateStoredCredentials();
     });
   }
@@ -37,8 +34,8 @@ export class LoginService implements OnDestroy {
     
     if (credentials) {
       this.fetchLogin(credentials.username, credentials.password, false).subscribe({
-        next: () => {/* Valid credentials */},
-        error: () => this.authService.logout() // Invalid credentials - logout
+        next: () => {},
+        error: () => this.authService.logout()
       });
     }
   }
@@ -74,13 +71,11 @@ export class LoginService implements OnDestroy {
   }
 
   async handleLoginResponse(credentials: any) {
-    // Set auth info
     this.authService.login(credentials.username, credentials.password);
     
-    // Get userId
     this.fetchUserId(credentials.username).subscribe({
       next: (userId) => localStorage.setItem("userId", userId),
-      error: () => {} // Silent fail
+      error: () => {}
     });
 
     this.router.navigate(["/main-site"], { state: { credentials } });
