@@ -38,14 +38,16 @@ export class PopupService {
   private positionPopup(domElem: HTMLElement): void {
     Object.assign(domElem.style, {
       position: 'fixed',
-      zIndex: '1',
-      left: '50%',
-      transform: 'translateX(-50%)',
-      ...(window.innerWidth <= 480
-        ? { bottom: '20px' }
-        : { top: '20px' }
-      )
+      zIndex: '100',
+      right: '20px',
+      bottom: '20px',
+      transform: 'none'
     });
+
+    const offset = this.activePopups.length * 110;
+    if (offset > 0) {
+      domElem.style.bottom = `${20 + offset}px`;
+    }
   }
 
   private destroyOldestPopup(): void {
