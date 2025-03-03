@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, finalize } from 'rxjs/operators';
 import { PopupService } from '../popup-message/popup-message.service';
 import { environment } from '../../../environments/environment';
+import { LoadingService } from '../loading/loading.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class RegisterService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private popupService: PopupService
+    private popupService: PopupService,
+    private loadingService: LoadingService
   ) { }
 
   fetchRegister(
@@ -40,22 +42,21 @@ export class RegisterService {
       profilePictureExtensionIn: 'jpg',
     };
 
+    this.loadingService.show();
+
     return this.http
       .post(`${this.baseUrl}/user/registration`, body, {
         responseType: 'text',
       })
       .pipe(
-        tap(() => {
-          localStorage.removeItem('registrationFormData');
-        }),
+        tap(() => localStorage.removeItem('registrationFormData')),
         catchError((err) => {
           let errorMessage = 'Szerveroldali hiba';
-          if (err.status === 409) {
-            errorMessage = 'Foglalt felhasználónév vagy e-mail!';
-          }
+          if (err.status === 409) errorMessage = 'Foglalt felhasználónév vagy e-mail!';
           this.popupService.show(errorMessage);
           return throwError(() => new Error(errorMessage));
-        })
+        }),
+        finalize(() => this.loadingService.hide())
       );
   }
 
@@ -66,6 +67,7 @@ export class RegisterService {
   }
 
   handleError(err: any) {
+    this.loadingService.hide();
     this.popupService.show(err.message);
   }
 }

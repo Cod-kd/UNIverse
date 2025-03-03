@@ -5,11 +5,12 @@ import { HeaderComponent } from './components/general-components/header/header.c
 import { Title } from '@angular/platform-browser';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { LoadingSpinnerComponent } from './components/general-components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FooterComponent, MainComponent, HeaderComponent],
+  imports: [FooterComponent, MainComponent, HeaderComponent, LoadingSpinnerComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
