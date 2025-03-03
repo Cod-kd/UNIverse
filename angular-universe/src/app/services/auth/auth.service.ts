@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, interval } from 'rxjs';
+import { BehaviorSubject, interval, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { takeWhile } from 'rxjs/operators';
 
@@ -12,7 +12,9 @@ export class AuthService {
 
   private cachedValues = new Map<string, string>();
   private authKeys = ['isLoggedIn', 'username', 'password'];
-  private pollingActive = true;
+  private pollingActive = false;
+  private pollingSubscription?: Subscription;
+  private storageEventHandler = (event: StorageEvent) => this.handleStorageEvent(event);
 
   constructor(private router: Router) {
     this.isLoggedIn.subscribe(isLoggedIn => {
@@ -24,28 +26,25 @@ export class AuthService {
       }
     });
 
-    // Only update cache on service creation, but don't start polling yet
     this.updateValueCache();
   }
 
   private startPolling(): void {
-    if (!this.pollingActive) {
-      this.pollingActive = true;
+    if (this.pollingActive) return;
 
-      // Listen for storage changes across tabs
-      window.addEventListener('storage', (event) => this.handleStorageEvent(event));
+    this.pollingActive = true;
 
-      // Poll for local changes (e.g., devtools modifications)
-      interval(500)
-        .pipe(takeWhile(() => this.pollingActive))
-        .subscribe(() => this.checkStorageChanges());
-    }
+    window.addEventListener('storage', this.storageEventHandler);
+
+    this.pollingSubscription = interval(500)
+      .pipe(takeWhile(() => this.pollingActive))
+      .subscribe(() => this.checkStorageChanges());
   }
-
 
   stopPolling(): void {
     this.pollingActive = false;
-    window.removeEventListener('storage', (event) => this.handleStorageEvent(event));
+    window.removeEventListener('storage', this.storageEventHandler);
+    this.pollingSubscription?.unsubscribe();
   }
 
   private updateValueCache(): void {
@@ -55,7 +54,7 @@ export class AuthService {
   }
 
   private handleStorageEvent(event: StorageEvent): void {
-    if (this.authKeys.includes(event.key!)) {
+    if (event.key && this.authKeys.includes(event.key)) {
       this.logoutAndRedirect();
     }
   }
@@ -73,14 +72,11 @@ export class AuthService {
     }
   }
 
-
   private logoutAndRedirect(): void {
     this.stopPolling();
     this.isLoggedIn.next(false);
     this.router.navigate(['/UNIcard-login']);
   }
-
-
 
   private getStoredLoginStatus(): boolean {
     return localStorage.getItem('isLoggedIn') === 'true' &&
@@ -103,11 +99,11 @@ export class AuthService {
     this.isLoggedIn.next(true);
     this.updateValueCache();
 
-    // Delay polling start to avoid false detections
-    setTimeout(() => this.startPolling(), 5000);
+    setTimeout(() => this.startPolling(), 500);
   }
 
   logout(): void {
+    this.stopPolling();
     localStorage.setItem('isLoggedIn', 'false');
     this.clearUserData();
     this.isLoggedIn.next(false);
