@@ -55,6 +55,10 @@ hr {
     gap: 1.5rem;
     margin: 2rem auto;
     max-width: 1000px;
+    /* Add defined grid template */
+    grid-template-areas:
+        "quick-access content1 activity"
+        "quick-access content2 activity";
 }
 
 .quick-card {
@@ -69,11 +73,26 @@ hr {
     flex-direction: column;
 }
 
-.quick-card:nth-child(1) {
-    max-height: 33.7em;
+/* Target specific cards by grid area */
+.quick-card.quick-access {
+    grid-area: quick-access;
+    max-height: 100%;
+    height: 100%;
+    min-height: 500px;
 }
 
 .quick-card:nth-child(2) {
+    grid-area: content1;
+    height: fit-content;
+}
+
+.quick-card:nth-child(3) {
+    grid-area: activity;
+    height: 100%;
+}
+
+.quick-card:nth-child(4) {
+    grid-area: content2;
     height: fit-content;
 }
 
@@ -102,6 +121,8 @@ hr {
 .activity-list {
     min-height: 220px;
     flex-grow: 1;
+    overflow-y: auto;
+    max-height: 400px;
 }
 
 .activity-list::-webkit-scrollbar {
@@ -158,7 +179,6 @@ hr {
     grid-column: 1;
     grid-row: span 3;
     overflow-y: auto;
-
 }
 
 .quick-access::-webkit-scrollbar {
@@ -227,14 +247,31 @@ input[type="radio"]:checked::before {
 
 .shortcut-item {
     display: flex;
+    flex-direction: column;
     padding: 0.8rem;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 4px;
-    align-items: center;
-    justify-content: space-between;
     transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease;
     max-height: 300px;
     overflow: hidden;
+}
+
+.shortcut-item.website-shortcut {
+    padding: 0.5rem 0.8rem;
+}
+
+.website-shortcut .shortcut-actions {
+    margin-top: 0;
+}
+
+.website-shortcut .shortcut-content {
+    justify-content: space-between;
+}
+
+.website-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .shortcut-item:hover,
@@ -258,9 +295,34 @@ input[type="radio"]:checked::before {
     width: 100%;
 }
 
+.shortcut-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+}
+
+.shortcut-actions button {
+    background: none;
+    border: none;
+    color: #ff5555;
+    cursor: pointer;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    transition: background-color 0.2s;
+}
+
+.uninote-shortcut .shortcut-actions {
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.shortcut-actions button:hover {
+    background-color: rgba(255, 85, 85, 0.2);
+}
+
 .shortcut-content i {
     margin-right: 0.5rem;
-    color: var(--main);
 }
 
 .note-header {

@@ -8,12 +8,20 @@
                 <hr class="main-hr">
                 <div class="shortcuts-container">
                     @for (shortcut of shortcuts; track shortcut.id) {
-                    <div class="shortcut-item"
+                    <div class="shortcut-item" [class.website-shortcut]="shortcut.type === 'website'"
+                        [class.uninote-shortcut]="shortcut.type === 'uninote'"
                         [class.fade-out]="shortcut.type === 'uninote' && shortcut.completed && isItemFading(shortcut.id)">
                         @if (shortcut.type === 'website') {
-                        <div class="shortcut-content" (click)="openWebsite(shortcut.url)">
-                            <i class="fa-solid fa-globe"></i>
-                            <span>{{shortcut.name}}</span>
+                        <div class="shortcut-content">
+                            <div class="website-info" (click)="openWebsite(shortcut.url)">
+                                <i class="fa-solid fa-globe"></i>
+                                <span>{{shortcut.name}}</span>
+                            </div>
+                            <div class="shortcut-actions">
+                                <button (click)="deleteShortcut(shortcut.id)">
+                                    <i class="fa-solid fa-trash"></i> Törlés
+                                </button>
+                            </div>
                         </div>
                         } @else if (shortcut.type === 'uninote') {
                         <div class="shortcut-content">
@@ -23,12 +31,14 @@
                                 <span class="checkmark"></span>
                             </label>
                             <span class="note-title" (click)="openNoteDetailModal(shortcut)">{{shortcut.name}}</span>
-                            <span class="note-time">{{shortcut.startTime | date:'MMM d.':'hu-HU'}}</span>
+                            <span class="note-time">{{shortcut.startTime | date:'yyyy. MMM d.':'hu-HU'}}</span>
+                        </div>
+                        <div class="shortcut-actions">
+                            <button (click)="deleteShortcut(shortcut.id)">
+                                <i class="fa-solid fa-trash"></i> Törlés
+                            </button>
                         </div>
                         }
-                        <button class="delete-shortcut" (click)="deleteShortcut(shortcut.id)">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
                     </div>
                     }
                     @if (shortcuts.length === 0) {

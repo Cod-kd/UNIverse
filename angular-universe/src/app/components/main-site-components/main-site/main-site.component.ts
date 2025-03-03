@@ -71,7 +71,6 @@ export class MainSiteComponent implements OnInit {
 
   recentActivities = [
     { date: new Date(Date.now() - 86400000), description: 'Profil frissítve' }, // Localized to Hungarian
-    { date: new Date(Date.now() - 172800000), description: 'Kártya egyenleg ellenőrizve' },
     { date: new Date(Date.now() - 259200000), description: 'Beállítások módosítva' }
   ];
 
