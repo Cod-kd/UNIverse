@@ -15,10 +15,10 @@ import { PopupService } from '../../../services/popup-message/popup-message.serv
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, ButtonComponent],
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  templateUrl: './user-profile.component.html',
+  styleUrl: './user-profile.component.css'
 })
-export class ProfileComponent implements OnInit, OnDestroy {
+export class UserProfileComponent implements OnInit, OnDestroy {
   @ViewChild('profileCard') profileCard!: ElementRef;
   profile: Profile | null = null;
   isFriendAdded = false;

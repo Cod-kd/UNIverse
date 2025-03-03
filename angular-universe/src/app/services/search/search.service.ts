@@ -37,7 +37,7 @@ export class SearchService {
 
   getEndpointByUrl(searchTerm: string | null = null): string {
     switch (this.router.url) {
-      case "/main-site/profile":
+      case "/main-site/user-profile":
       case "/main-site/you":
         return searchTerm ? `/user/name/${searchTerm}` : "/user/name/";
       case "/main-site/groups":
@@ -55,7 +55,6 @@ export class SearchService {
     try {
       const endpoint = this.getEndpointByUrl();
       
-      // For groups search, we need an empty name param
       const params = this.router.url === "/main-site/groups" ? { name: '' } : undefined;
       
       return this.fetchService.get<Group[]>(endpoint, {
@@ -73,18 +72,17 @@ export class SearchService {
   }
 
   search(searchTerm: string): Observable<SearchResult> {
-    if (this.router.url === "/main-site/profile" && !searchTerm.trim()) {
+    if (this.router.url === "/main-site/user-profile" && !searchTerm.trim()) {
       throw new Error("Adj meg egy felhasználónevet!");
     }
 
-    if (this.router.url === "/main-site/profile" || this.router.url === "/main-site/you") {
+    if (this.router.url === "/main-site/user-profile" || this.router.url === "/main-site/you") {
       this.searchedUsernameSubject.next(searchTerm.trim());
     }
 
     try {
       const endpoint = this.getEndpointByUrl(searchTerm);
       
-      // Handle different parameter formats based on URL
       let params: Record<string, string> | undefined;
       if (this.router.url === "/main-site/groups" || this.router.url === "/main-site/events") {
         params = { name: searchTerm };
