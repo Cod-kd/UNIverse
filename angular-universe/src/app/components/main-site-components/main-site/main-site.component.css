@@ -307,10 +307,8 @@ input[type="radio"]:checked::before {
 .note-time {
     color: #aaa;
     font-size: 0.9rem;
-    min-width: 85px;
-    text-align: right;
-    margin-left: 8px;
-    margin-right: 8px;
+    min-width: 80px;
+    text-align: start;
 }
 
 .delete-shortcut {
