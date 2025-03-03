@@ -68,9 +68,9 @@ export class MainSiteComponent implements OnInit {
   };
 
   recentActivities = [
-    { date: new Date(Date.now() - 86400000), description: 'Profile updated' },
-    { date: new Date(Date.now() - 172800000), description: 'Card balance checked' },
-    { date: new Date(Date.now() - 259200000), description: 'Settings changed' }
+    { date: new Date(Date.now() - 86400000), description: 'Profil frissítve' }, // Localized to Hungarian
+    { date: new Date(Date.now() - 172800000), description: 'Kártya egyenleg ellenőrizve' },
+    { date: new Date(Date.now() - 259200000), description: 'Beállítások módosítva' }
   ];
 
   constructor(
@@ -93,6 +93,7 @@ export class MainSiteComponent implements OnInit {
       this.router.navigate(['/UNIcard-login']);
     }
 
+    // Use Hungarian locale for date formatting
     this.currentDate = this.datePipe.transform(new Date(), 'yyyy. MMMM dd.', 'hu-HU') || '';
     this.currentDay = this.datePipe.transform(new Date(), 'EEEE', 'hu-HU') || '';
 
@@ -103,6 +104,7 @@ export class MainSiteComponent implements OnInit {
   }
 
   updateTime() {
+    // Use Hungarian time format
     this.currentTime = this.datePipe.transform(new Date(), 'HH:mm:ss', 'hu-HU') || '';
   }
 
@@ -121,6 +123,7 @@ export class MainSiteComponent implements OnInit {
     if (savedShortcuts) {
       try {
         this.shortcuts = JSON.parse(savedShortcuts);
+        // Convert string dates back to Date objects
         this.shortcuts = this.shortcuts.map(shortcut => {
           if (shortcut.type === 'uninote') {
             return {
@@ -131,6 +134,7 @@ export class MainSiteComponent implements OnInit {
           return shortcut;
         });
 
+        // Filter out completed notes
         this.shortcuts = this.shortcuts.filter(shortcut =>
           !(shortcut.type === 'uninote' && (shortcut as UNInoteShortcut).completed)
         );
