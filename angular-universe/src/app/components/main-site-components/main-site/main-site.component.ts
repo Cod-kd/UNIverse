@@ -5,32 +5,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { DatePipe, NgIf } from '@angular/common';
 import { ButtonComponent } from "../../general-components/button/button.component";
 import { FormsModule } from '@angular/forms';
-
-interface BaseShortcut {
-  id: string;
-  name: string;
-}
-
-interface WebsiteShortcut extends BaseShortcut {
-  type: 'website';
-  url: string;
-}
-
-interface UNInoteShortcut extends BaseShortcut {
-  type: 'uninote';
-  description: string;
-  startTime: Date;
-  completed: boolean;
-}
-
-type Shortcut = WebsiteShortcut | UNInoteShortcut;
-
-interface ShortcutFormData {
-  type: 'website' | 'uninote';
-  name: string;
-  url?: string;
-  description?: string;
-}
+import {WebsiteShortcut, UNInoteShortcut, Shortcut, ShortcutFormData} from '../../../models/shortcut/shortcut.model';
 
 @Component({
   selector: 'app-main-site',
