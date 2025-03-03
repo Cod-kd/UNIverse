@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { PopupService } from '../popup-message/popup-message.service';
 import { AuthService } from '../auth/auth.service';
 import { FetchService } from '../fetch/fetch.service';
@@ -8,22 +8,61 @@ import { FetchService } from '../fetch/fetch.service';
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class LoginService implements OnDestroy {
+  private authSubscription: Subscription;
+  
   constructor(
     private fetchService: FetchService,
     private router: Router,
     private popupService: PopupService,
     private authService: AuthService
-  ) { }
+  ) {
+    // Initial login
+    this.tryAutoLogin();
+    
+    // Monitor for auth changes (including manual localStorage edits)
+    this.authSubscription = this.authService.isLoggedIn$.subscribe(() => {
+      // Validate stored credentials on ANY auth-related change
+      this.validateStoredCredentials();
+    });
+  }
 
-  fetchLogin(loginUsername: string, loginPassword: string): Observable<string> {
+  ngOnDestroy() {
+    this.authSubscription?.unsubscribe();
+    this.authService.stopPolling();
+  }
+
+  private validateStoredCredentials(): void {
+    const credentials = this.authService.getStoredCredentials();
+    
+    if (credentials) {
+      this.fetchLogin(credentials.username, credentials.password, false).subscribe({
+        next: () => {/* Valid credentials */},
+        error: () => this.authService.logout() // Invalid credentials - logout
+      });
+    }
+  }
+
+  private tryAutoLogin(): void {
+    const credentials = this.authService.getStoredCredentials();
+    
+    if (credentials && localStorage.getItem('isLoggedIn') === 'true') {
+      this.fetchLogin(credentials.username, credentials.password, false).subscribe({
+        next: () => this.handleLoginResponse({ username: credentials.username }),
+        error: () => this.authService.logout()
+      });
+    }
+  }
+
+  fetchLogin(loginUsername: string, loginPassword: string, showErrors = true): Observable<string> {
     const body = {
       usernameIn: loginUsername,
       passwordIn: loginPassword,
     };
 
     return this.fetchService.post<string>('/user/login', body, {
-      responseType: 'text'
+      responseType: 'text',
+      showError: showErrors
     });
   }
 
@@ -35,18 +74,15 @@ export class LoginService {
   }
 
   async handleLoginResponse(credentials: any) {
-    localStorage.setItem("username", credentials.username);
-
+    // Set auth info
+    this.authService.login(credentials.username, credentials.password);
+    
+    // Get userId
     this.fetchUserId(credentials.username).subscribe({
-      next: (userId) => {
-        localStorage.setItem("userId", userId);
-      },
-      error: (err) => {
-        this.popupService.show("Error fetching user ID:", err);
-      }
+      next: (userId) => localStorage.setItem("userId", userId),
+      error: () => {} // Silent fail
     });
 
-    this.authService.login();
     this.router.navigate(["/main-site"], { state: { credentials } });
   }
 
