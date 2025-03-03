@@ -182,6 +182,7 @@ export class MainSiteComponent implements OnInit {
     if (!this.isValidShortcut()) return;
 
     const id = crypto.randomUUID();
+    this.newShortcut.name = this.newShortcut.name.charAt(0).toUpperCase() + this.newShortcut.name.slice(1);
 
     if (this.newShortcut.type === 'website') {
       const websiteShortcut: WebsiteShortcut = {
@@ -224,13 +225,15 @@ export class MainSiteComponent implements OnInit {
       note.completed = !note.completed;
 
       if (note.completed) {
-        this.fadingItems.add(id);
+        setTimeout(() => {
+          this.fadingItems.add(id);
+        }, 300);
 
         setTimeout(() => {
           this.shortcuts = this.shortcuts.filter(s => s.id !== id);
           this.fadingItems.delete(id);
           this.saveShortcutsToStorage();
-        }, 300);
+        }, 600);
       } else {
         this.saveShortcutsToStorage();
       }
