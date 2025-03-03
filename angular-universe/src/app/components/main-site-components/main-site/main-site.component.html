@@ -158,8 +158,10 @@
             }
         </div>
         <div class="modal-actions">
-            <app-button iconClass="fa-solid fa-x" [size]="'small'" [shape]="'rectangle'" (click)="closeShortcutModal()"></app-button>
-            <app-button iconClass="fa-solid fa-check" [size]="'small'" [shape]="'rectangle'" (click)="saveShortcut()" [isDisabled]="!isValidShortcut()"></app-button>
+            <app-button iconClass="fa-solid fa-x" [size]="'small'" [shape]="'rectangle'"
+                (click)="closeShortcutModal()"></app-button>
+            <app-button iconClass="fa-solid fa-check" [size]="'small'" [shape]="'rectangle'" (click)="saveShortcut()"
+                [isDisabled]="!isValidShortcut()"></app-button>
         </div>
     </div>
 </div>
@@ -175,7 +177,7 @@
             </div>
             <div class="form-group">
                 <label>Dátum</label>
-                <div class="note-detail-field">{{selectedNote.startTime | date:'yyyy. MMMM dd. EEEE':'hu-HU'}}</div>
+                <div class="note-detail-field">{{formatDateToHungarian(selectedNote.startTime)}}</div>
             </div>
             <div class="form-group">
                 <label>Leírás</label>
@@ -186,7 +188,8 @@
         <div class="modal-actions">
             <app-button [btnLabel]="'Bezár'" [size]="'small'" (click)="closeNoteDetailModal()"></app-button>
             @if (selectedNote && !selectedNote.completed) {
-            <app-button [btnLabel]="'Befejeztem'" [size]="'small'"  (click)="toggleNoteComplete(selectedNote.id); closeNoteDetailModal()">Befejeztem</app-button>
+            <app-button [btnLabel]="'Befejeztem'" [size]="'small'"
+                (click)="toggleNoteComplete(selectedNote.id); closeNoteDetailModal()">Befejeztem</app-button>
             }
         </div>
     </div>

@@ -5,7 +5,9 @@ import { AuthService } from '../../../services/auth/auth.service';
 import { DatePipe, NgIf } from '@angular/common';
 import { ButtonComponent } from "../../general-components/button/button.component";
 import { FormsModule } from '@angular/forms';
-import {WebsiteShortcut, UNInoteShortcut, Shortcut, ShortcutFormData} from '../../../models/shortcut/shortcut.model';
+import { registerLocaleData } from '@angular/common';
+import localeHu from '@angular/common/locales/hu';
+import { WebsiteShortcut, UNInoteShortcut, Shortcut, ShortcutFormData } from '../../../models/shortcut/shortcut.model';
 
 @Component({
   selector: 'app-main-site',
@@ -55,6 +57,7 @@ export class MainSiteComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    registerLocaleData(localeHu);
     if (!this.authService.getLoginStatus()) {
       this.router.navigate(['/UNIcard-login']);
       return;
@@ -75,6 +78,19 @@ export class MainSiteComponent implements OnInit {
     setInterval(() => this.updateTime(), 1000);
 
     this.loadShortcuts();
+  }
+
+  formatDateToHungarian(date: Date): string {
+    const months = [
+      'Január', 'Február', 'Március', 'Április', 'Május', 'Június',
+      'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'
+    ];
+
+    const days = [
+      'Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'
+    ];
+
+    return `${date.getFullYear()}. ${months[date.getMonth()]} ${date.getDate()}. ${days[date.getDay()]}`;
   }
 
   updateTime() {
