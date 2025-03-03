@@ -13,6 +13,7 @@ import { rootGuard } from './guards/root/root.guard';
 import { PageNotFoundComponent } from './components/main-site-components/page-not-found/page-not-found.component';
 import { SelfProfileComponent } from './components/main-site-components/self-profile/self-profile.component';
 import { UserProfileComponent } from './components/main-site-components/user-profile/user-profile.component';
+import { SettingsComponent } from './components/main-site-components/settings/settings.component';
 
 export const routes: Routes = [
     {
@@ -64,6 +65,10 @@ export const routes: Routes = [
             {
                 path: 'you',
                 component: SelfProfileComponent
+            },
+            {
+                path: 'settings',
+                component: SettingsComponent
             }
         ]
     },
