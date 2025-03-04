@@ -21,14 +21,12 @@ export class LoginService implements OnDestroy {
     private authService: AuthService,
     private loadingService: LoadingService,
   ) {
-    // Listen for route changes to main-site to trigger validation
     this.routerSubscription = this.router.events
       .pipe(
         filter(event => event instanceof NavigationStart && event.url === '/main-site')
       )
       .subscribe(() => this.validateServerAuthentication());
 
-    // Existing login status subscription
     this.authSubscription = this.authService.isLoggedIn$.subscribe(isLoggedIn => {
       if (isLoggedIn) {
         this.validateServerAuthentication();
@@ -42,7 +40,6 @@ export class LoginService implements OnDestroy {
     this.authService.stopPolling();
   }
 
-  // Comprehensive server-side authentication check
   private validateServerAuthentication(): void {
     const credentials = this.authService.getStoredCredentials();
     if (credentials) {
@@ -52,7 +49,6 @@ export class LoginService implements OnDestroy {
           switchMap(() => this.fetchUserId(credentials.username)),
           finalize(() => this.loadingService.hide()),
           catchError(() => {
-            // Force logout if server validation fails
             this.authService.logout();
             this.router.navigate(['/UNIcard-login']);
             return throwError(() => new Error('Server authentication failed'));
@@ -60,7 +56,6 @@ export class LoginService implements OnDestroy {
         )
         .subscribe({
           next: (userId) => {
-            // Update user ID if validation succeeds
             localStorage.setItem("userId", userId);
           }
         });
