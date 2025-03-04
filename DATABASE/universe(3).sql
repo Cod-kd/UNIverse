@@ -57,6 +57,28 @@ CREATE PROCEDURE `addFollowerCount` (IN `userIdIn` MEDIUMINT)   BEGIN
 	UPDATE `usersdata` SET `followerCount` = usersdata.followerCount + 1 WHERE usersdata.userId = userIdIn;
 END$$
 
+CREATE PROCEDURE `unfollowUser` (IN `followerIdIn` MEDIUMINT, IN `followedIdIn` MEDIUMINT)  
+BEGIN
+    DELETE FROM `followedusers` 
+    WHERE `followerId` = followerIdIn AND `followedId` = followedIdIn;
+    CALL reduceFollowerCount(followedIdIn);
+    CALL reduceFollowedCount(followerIdIn);
+END$$
+
+CREATE PROCEDURE `reduceFollowerCount` (IN `userIdIn` MEDIUMINT)  
+BEGIN
+    UPDATE `usersdata` 
+    SET `followerCount` = GREATEST(0, followerCount - 1) 
+    WHERE `userId` = userIdIn;
+END$$
+
+CREATE PROCEDURE `reduceFollowedCount` (IN `userIdIn` MEDIUMINT)  
+BEGIN
+    UPDATE `usersdata` 
+    SET `followedCount` = GREATEST(0, followedCount - 1) 
+    WHERE `userId` = userIdIn;
+END$$
+
 CREATE PROCEDURE `addGroupActualEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `actualEventCount` = actualEventCount + 1 WHERE groups.id = groupIdIn;
 END$$
