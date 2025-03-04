@@ -1,4 +1,14 @@
 -- Gép: localhost:8889
+/*
+todo:
+create procedure add: role, contact, interest, rank
+create procedure new: post (create post and link to group)
+create procedure getAll: role, contacttype, category (same as interest)
+create procedure: userFollowStatus, isGroupMember, followGroup, unfollowGroup handleGroupRank, unfollowUser, followUser (rename)
+update procedure: deleteProfile (via login)
+fill manual:
+(by CALL) createCategory, createContactType, createRank, createRole, createGroup, createEvent
+*/
 
 SET SQL_MODE = "";
 SET GLOBAL log_bin_trust_function_creators = 1;
@@ -26,7 +36,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `addfollowedCount` (IN `userIdIn` ME
 	UPDATE `usersdata` SET `followedCount` = usersdata.followedCount + 1 WHERE usersdata.userId = userIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addFollower` (IN `followerIdIn` MEDIUMINT, IN `followedIdIn` MEDIUMINT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `followUser` (IN `followerIdIn` MEDIUMINT, IN `followedIdIn` MEDIUMINT)   BEGIN
 	INSERT INTO `followedusers`(`followerId`, `followedId`) VALUES (followerIdIn, followedIdIn);
     CALL addFollowerCount(followedIdIn);
     CALL addfollowedCount(followerIdIn);
@@ -160,16 +170,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceGroupPostCount` (IN `groupIdI
 UPDATE `groups` SET `postCount` = postCount - 1 WHERE groups.id = groupIdIn;
 END$$
 
-/*
-todo:
-create procedure add: role, contact, interest, rank
-create procedure new: post (create post and link to group)
-create procedure getAll: role, contacttype, category (same as interest)
-create procedure: userFollowStatus, isGroupMember, followGroup, unfollowGroup handleGroupRank, unfollowUser, followUser (rename)  db=> complex key
-update procedure: deleteProfile (via login)
-fill manual:
-(by CALL) createCategory, createContactType, createRank, createRole, createGroup, createEvent
-*/
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserDesc` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `postCount` = postCount - 1 WHERE groups.id = groupIdIn;
 END$$
@@ -563,16 +563,14 @@ ALTER TABLE `eventsofgroups`
 --
 -- A tábla indexei `followedgroups`
 --
-ALTER TABLE `followedgroups`
-  ADD KEY `followerId` (`followerId`),
-  ADD KEY `followedGroupId` (`followedGroupId`);
+ALTER TABLE followedgroups ADD PRIMARY KEY (followerId, followedGroupId);
 
 --
 -- A tábla indexei `followedusers`
 --
-ALTER TABLE `followedusers`
-  ADD KEY `followerId` (`followerId`),
-  ADD KEY `followedId` (`followedId`);
+ALTER TABLE followedusers 
+ADD PRIMARY KEY (followerId, followedId), 
+ADD CONSTRAINT check_no_self_follow CHECK (followerId <> followedId);
 
 --
 -- A tábla indexei `groupcategories`
@@ -890,6 +888,8 @@ ALTER TABLE `userscontacts`
 --
 ALTER TABLE `usersdata`
   ADD CONSTRAINT `usersdata_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `userprofiles` (`id`);
+  
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
