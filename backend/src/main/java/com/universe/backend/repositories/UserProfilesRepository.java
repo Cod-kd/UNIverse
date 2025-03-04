@@ -32,4 +32,7 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
     
     @Procedure(name = "unfollowUser")
     void unfollowUser(@Param("followerIdIn") Integer followerId, @Param("followedIdIn") Integer followedId);
+    
+    @Query(value = "SELECT checkUserFollowed(:followerId, :followedId)", nativeQuery = true)
+    Boolean isUserFollowed(@Param("followerId") int followerId, @Param("followedId") int followedId);
 }

@@ -62,4 +62,8 @@ public class UserService {
     public void unfollowUser(Integer followerId, Integer followedId) {
         upRepo.unfollowUser(followerId, followedId);
     }
+    
+    public Boolean isUserFollowed(int followerId, int followedId) {
+        return upRepo.isUserFollowed(followerId, followedId);
+    }
 }

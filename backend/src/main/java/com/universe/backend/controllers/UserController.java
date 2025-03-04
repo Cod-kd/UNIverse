@@ -81,5 +81,13 @@ public class UserController {
         us.unfollowUser(followerId, followedId);
         return ResponseEntity.ok("Sikeres kikövetés!");
     }
+    
+    @PostMapping("/isFollowed")
+    public ResponseEntity<Boolean> isFollowed(@RequestBody Map<String, Integer> requestBody) {
+        int followerId = requestBody.get("followerId");
+        int followedId = requestBody.get("followedId");
+        Boolean isFollowed = us.isUserFollowed(followerId, followedId);
+        return ResponseEntity.ok(isFollowed);
+    }
 
 }
