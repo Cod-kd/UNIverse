@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable, Subscription, finalize } from 'rxjs';
+import { Router, NavigationStart } from '@angular/router';
+import { Observable, Subscription, throwError } from 'rxjs';
+import { catchError, filter, switchMap, finalize } from 'rxjs/operators';
 import { PopupService } from '../popup-message/popup-message.service';
 import { AuthService } from '../auth/auth.service';
 import { FetchService } from '../fetch/fetch.service';
@@ -11,6 +12,7 @@ import { LoadingService } from '../loading/loading.service';
 })
 export class LoginService implements OnDestroy {
   private authSubscription: Subscription;
+  private routerSubscription: Subscription;
 
   constructor(
     private fetchService: FetchService,
@@ -19,39 +21,48 @@ export class LoginService implements OnDestroy {
     private authService: AuthService,
     private loadingService: LoadingService,
   ) {
-    this.tryAutoLogin();
+    this.routerSubscription = this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationStart && event.url === '/main-site')
+      )
+      .subscribe(() => this.validateServerAuthentication());
+
     this.authSubscription = this.authService.isLoggedIn$.subscribe(isLoggedIn => {
       if (isLoggedIn) {
-        this.validateStoredCredentials();
+        this.validateServerAuthentication();
       }
     });
   }
 
   ngOnDestroy() {
     this.authSubscription?.unsubscribe();
+    this.routerSubscription?.unsubscribe();
     this.authService.stopPolling();
   }
 
-  private validateStoredCredentials(): void {
+  private validateServerAuthentication(): void {
     const credentials = this.authService.getStoredCredentials();
     if (credentials) {
-      this.fetchLogin(credentials.username, credentials.password, false).subscribe({
-        next: () => { },
-        error: () => this.authService.logout()
-      });
+      this.loadingService.show();
+      this.fetchLogin(credentials.username, credentials.password, false)
+        .pipe(
+          switchMap(() => this.fetchUserId(credentials.username)),
+          finalize(() => this.loadingService.hide()),
+          catchError(() => {
+            this.authService.logout();
+            this.router.navigate(['/UNIcard-login']);
+            return throwError(() => new Error('Server authentication failed'));
+          })
+        )
+        .subscribe({
+          next: (userId) => {
+            localStorage.setItem("userId", userId);
+          }
+        });
     }
   }
 
-  private tryAutoLogin(): void {
-    const credentials = this.authService.getStoredCredentials();
-    if (credentials && localStorage.getItem('isLoggedIn') === 'true') {
-      this.fetchLogin(credentials.username, credentials.password, false).subscribe({
-        next: () => this.handleLoginResponse({ username: credentials.username }),
-        error: () => this.authService.logout()
-      });
-    }
-  }
-
+  // Existing methods remain the same...
   fetchLogin(loginUsername: string, loginPassword: string, showErrors = true): Observable<string> {
     const body = {
       usernameIn: loginUsername,
