@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, finalize } from 'rxjs/operators';
 import { PopupService } from '../popup-message/popup-message.service';
+import { LoadingService } from '../loading/loading.service';
 import { Group } from '../../models/group/group.model';
 import { Router, NavigationEnd } from '@angular/router';
 import { Profile } from '../../models/profile/profile.model';
@@ -22,7 +23,8 @@ export class SearchService {
   constructor(
     private fetchService: FetchService,
     private popupService: PopupService,
-    private router: Router
+    private router: Router,
+    private loadingService: LoadingService,
   ) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd && event.url === '/main-site/you') {
@@ -54,16 +56,20 @@ export class SearchService {
   fetchAll(): Observable<Group[]> {
     try {
       const endpoint = this.getEndpointByUrl();
-      
+
       const params = this.router.url === "/main-site/groups" ? { name: '' } : undefined;
-      
+
+      this.loadingService.show();
+
       return this.fetchService.get<Group[]>(endpoint, {
         responseType: 'json',
         params
       }).pipe(
-        tap(results => this.searchResultsSubject.next(results))
+        tap(results => this.searchResultsSubject.next(results)),
+        finalize(() => this.loadingService.hide())
       );
     } catch (error) {
+      this.loadingService.hide();
       if (error instanceof Error) {
         this.popupService.show(error.message);
       }
@@ -72,6 +78,10 @@ export class SearchService {
   }
 
   search(searchTerm: string): Observable<SearchResult> {
+    if (this.router.url === "/main-site/you" || this.router.url === "/main-site/user-profile") {
+      this.loadingService.show();
+    }
+
     if (this.router.url === "/main-site/user-profile" && !searchTerm.trim()) {
       throw new Error("Adj meg egy felhasználónevet!");
     }
@@ -82,19 +92,21 @@ export class SearchService {
 
     try {
       const endpoint = this.getEndpointByUrl(searchTerm);
-      
+
       let params: Record<string, string> | undefined;
       if (this.router.url === "/main-site/groups" || this.router.url === "/main-site/events") {
         params = { name: searchTerm };
       }
-      
+
       return this.fetchService.get<SearchResult>(endpoint, {
         responseType: 'json',
         params
       }).pipe(
-        tap(results => this.searchResultsSubject.next(results))
+        tap(results => this.searchResultsSubject.next(results)),
+        finalize(() => this.loadingService.hide())
       );
     } catch (error) {
+      this.loadingService.hide();
       if (error instanceof Error) {
         this.popupService.show(error.message);
       }
