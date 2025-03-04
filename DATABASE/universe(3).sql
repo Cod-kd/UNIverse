@@ -1,13 +1,24 @@
 -- Gép: localhost:8889
 /*
 todo:
-create procedure add: role, contact, interest, rank
-create procedure new: post (create post and link to group)
-create procedure getAll: role, contacttype, category (same as interest)
-create procedure: userFollowStatus, isGroupMember, followGroup, unfollowGroup handleGroupRank, unfollowUser, followUser (rename)
+get this out: DEFINER=`root`@`localhost`
+
+create procedure create: role, contact, interest, rank, post (create post and link to group)
+create procedure getAll: roles, contacttypes, categories (same as interest)
+create procedure: followGroup, unfollowGroup handleGroupRank, unfollowUser
 update procedure: deleteProfile (via login)
 fill manual:
-(by CALL) createCategory, createContactType, createRank, createRole, createGroup, createEvent
+(by CALL) createCategory, createContactType, createRank, createRole
+
+
+back implement::
+
+procedures:
+getAllUsers
+
+functions:
+checkUserFollowed
+checkGroupFollowed
 */
 
 SET SQL_MODE = "";
@@ -32,149 +43,149 @@ DELIMITER $$
 --
 -- Eljárások
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addfollowedCount` (IN `userIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `addfollowedCount` (IN `userIdIn` MEDIUMINT)   BEGIN
 	UPDATE `usersdata` SET `followedCount` = usersdata.followedCount + 1 WHERE usersdata.userId = userIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `followUser` (IN `followerIdIn` MEDIUMINT, IN `followedIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `followUser` (IN `followerIdIn` MEDIUMINT, IN `followedIdIn` MEDIUMINT)   BEGIN
 	INSERT INTO `followedusers`(`followerId`, `followedId`) VALUES (followerIdIn, followedIdIn);
     CALL addFollowerCount(followedIdIn);
     CALL addfollowedCount(followerIdIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addFollowerCount` (IN `userIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `addFollowerCount` (IN `userIdIn` MEDIUMINT)   BEGIN
 	UPDATE `usersdata` SET `followerCount` = usersdata.followerCount + 1 WHERE usersdata.userId = userIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupActualEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `addGroupActualEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `actualEventCount` = actualEventCount + 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupAllEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `addGroupAllEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `allEventCount` = allEventCount + 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupMember` (IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `addGroupMember` (IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)   BEGIN
 INSERT INTO `membersofgroups`(`groupId`, `userId`) VALUES (groupIdIn, userIdIn);
 CALL addGroupMemberCount(groupIdIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupMemberCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `addGroupMemberCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `membersCount` = membersCount + 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupPostCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `addGroupPostCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `postCount` = postCount + 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addUserbio` (IN `userIdIn` MEDIUMINT, IN `facultyIn` VARCHAR(30))   BEGIN
+CREATE PROCEDURE `addUserbio` (IN `userIdIn` MEDIUMINT, IN `facultyIn` VARCHAR(30))   BEGIN
 INSERT INTO `usersbio`(`userId`, `faculty`) VALUES (userIdIn, facultyIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addUserData` (IN `userIdIn` MEDIUMINT, IN `nameIn` VARCHAR(80), IN `genderIn` BOOLEAN, IN `birthDateIn` DATE, IN `universityNameIn` VARCHAR(80), IN `profilePictureExtensionIn` VARCHAR(4))   BEGIN
+CREATE PROCEDURE `addUserData` (IN `userIdIn` MEDIUMINT, IN `nameIn` VARCHAR(80), IN `genderIn` BOOLEAN, IN `birthDateIn` DATE, IN `universityNameIn` VARCHAR(80), IN `profilePictureExtensionIn` VARCHAR(4))   BEGIN
     INSERT INTO `usersdata`(`userId`, `name`, `gender`, `birthDate`, `universityName`, `profilePictureExtension`) VALUES (userIdIn, nameIn, genderIn, birthDateIn, universityNameIn, profilePictureExtensionIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createCategory` (IN `nameIn` VARCHAR(40))   BEGIN
+CREATE PROCEDURE `createCategory` (IN `nameIn` VARCHAR(40))   BEGIN
 	INSERT INTO `categories`(`name`) VALUES (nameIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createContactType` (IN `nameIn` VARCHAR(20), IN `domainIn` VARCHAR(64), IN `protocolIn` VARCHAR(5))   BEGIN
+CREATE PROCEDURE `createContactType` (IN `nameIn` VARCHAR(20), IN `domainIn` VARCHAR(64), IN `protocolIn` VARCHAR(5))   BEGIN
 	INSERT INTO `contacttypes`(`name`, `domain`, `protocol`) VALUES (nameIn, domainIn, protocolIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createEvent` (IN `nameIn` VARCHAR(30), IN `creatorIdIn` MEDIUMINT, IN `startDateIn` TIMESTAMP, IN `endDateIn` TIMESTAMP, IN `placeIn` VARCHAR(255), IN `attachmentRelPathIn` VARCHAR(50), IN `descriptionIn` VARCHAR(180), IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `createEvent` (IN `nameIn` VARCHAR(30), IN `creatorIdIn` MEDIUMINT, IN `startDateIn` TIMESTAMP, IN `endDateIn` TIMESTAMP, IN `placeIn` VARCHAR(255), IN `attachmentRelPathIn` VARCHAR(50), IN `descriptionIn` VARCHAR(180), IN `groupIdIn` MEDIUMINT)   BEGIN
 INSERT INTO `events`(`name`, `creatorId`, `startDate`, `endDate`, `place`, `attachmentRelPath`, `description`) VALUES (`nameIn`, `creatorIdIn`, `startDateIn`, `endDateIn`, `placeIn`, `attachmentRelPathIn`, `descriptionIn`);
 SET @eventId = 0;  
 CALL idByEventName(nameIn, @eventId);
 CALL linkEventToGroup(groupIdIn, @eventId);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createGroup` (IN `nameIn` VARCHAR(60))   BEGIN
+CREATE PROCEDURE `createGroup` (IN `nameIn` VARCHAR(60))   BEGIN
 	INSERT INTO `groups`(`name`) VALUES (nameIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createRank` (IN `nameIn` VARCHAR(30), IN `isAdminIn` BOOLEAN, IN `canViewIn` BOOLEAN, IN `canCommentIn` BOOLEAN, IN `canPostIn` BOOLEAN, IN `canModifyIn` BOOLEAN)   BEGIN
+CREATE PROCEDURE `createRank` (IN `nameIn` VARCHAR(30), IN `isAdminIn` BOOLEAN, IN `canViewIn` BOOLEAN, IN `canCommentIn` BOOLEAN, IN `canPostIn` BOOLEAN, IN `canModifyIn` BOOLEAN)   BEGIN
 	INSERT INTO `ranks`(`name`, `isAdmin`, `canView`, `canComment`, `canPost`, `canModify`) VALUES (nameIn, isAdminIn, canViewIn, canCommentIn, canPostIn, canModifyIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createRole` (IN `nameIn` VARCHAR(20))   BEGIN
+CREATE PROCEDURE `createRole` (IN `nameIn` VARCHAR(20))   BEGIN
 	INSERT INTO `roles`(`name`) VALUES (nameIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createUserProfile` (IN `emailIn` VARCHAR(50), IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60))   BEGIN
+CREATE PROCEDURE `createUserProfile` (IN `emailIn` VARCHAR(50), IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60))   BEGIN
     INSERT INTO `userprofiles`(`email`, `username`, `password`) VALUES (emailIn, usernameIn, passwordIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUserprofile` (IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60))   BEGIN
+CREATE PROCEDURE `deleteUserprofile` (IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60))   BEGIN
 	UPDATE `userprofiles` SET `deletedAt`= NOW() WHERE userprofiles.username = usernameIn AND userprofiles.password = passwordIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getCategory` (IN `idIn` SMALLINT)   BEGIN
+CREATE PROCEDURE `getCategory` (IN `idIn` SMALLINT)   BEGIN
 	SELECT `name` FROM `categories` WHERE `id` = idIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getContactType` (IN `idIn` TINYINT)   BEGIN
+CREATE PROCEDURE `getContactType` (IN `idIn` TINYINT)   BEGIN
 	SELECT `name`, `domain`, `protocol` FROM `contacttypes` WHERE contacttypes.id = idIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getGroup` (IN `idIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `getGroup` (IN `idIn` MEDIUMINT)   BEGIN
 	SELECT `name`, `public`, `membersCount`, `postCount`, `actualEventCount`, `allEventCount` FROM `groups` WHERE groups.id = idIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getRank` (IN `idIn` TINYINT)   BEGIN
+CREATE PROCEDURE `getRank` (IN `idIn` TINYINT)   BEGIN
 	SELECT `name`, `isAdmin`, `canView`, `canComment`, `canPost`, `canModify` FROM `ranks` WHERE ranks.id = idIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getRole` (IN `idIn` TINYINT)   BEGIN
+CREATE PROCEDURE `getRole` (IN `idIn` TINYINT)   BEGIN
 	SELECT `name` FROM `roles` WHERE roles.id = idIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `idByEventName` (IN `nameIn` VARCHAR(30), OUT `eventIdOut` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `idByEventName` (IN `nameIn` VARCHAR(30), OUT `eventIdOut` MEDIUMINT)   BEGIN
 SELECT events.id INTO eventIdOut FROM events WHERE events.name = nameIn ORDER BY events.id DESC LIMIT 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `idByUsername` (IN `usernameIn` VARCHAR(12), OUT `userIdOut` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `idByUsername` (IN `usernameIn` VARCHAR(12), OUT `userIdOut` MEDIUMINT)   BEGIN
     SELECT userprofiles.id INTO userIdOut FROM userprofiles
     WHERE userprofiles.username = usernameIn LIMIT 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `linkEventToGroup` (IN `groupIdIn` MEDIUMINT, IN `eventIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `linkEventToGroup` (IN `groupIdIn` MEDIUMINT, IN `eventIdIn` MEDIUMINT)   BEGIN
 INSERT INTO `eventsofgroups`(`groupId`, `eventId`) VALUES (groupIdIn, eventIdIn);
 CALL addGroupActualEventCount(groupIdIn);
 CALL addGroupAllEventCount(groupIdIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `login` (IN `usernameIn` VARCHAR(12))   BEGIN
+CREATE PROCEDURE `login` (IN `usernameIn` VARCHAR(12))   BEGIN
 	SELECT * FROM `userprofiles` WHERE userprofiles.username = usernameIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceGroupActualEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `reduceGroupActualEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `actualEventCount` = actualEventCount - 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceGroupAllEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `reduceGroupAllEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `allEventCount` = allEventCount - 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceGroupMemberCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `reduceGroupMemberCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `membersCount` = membersCount - 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceGroupMembers` (IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `reduceGroupMembers` (IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)   BEGIN
 DELETE FROM `membersofgroups` WHERE membersofgroups.groupId = groupIdIn AND membersofgroups.userId = userIdIn;
 CALL reduceGroupMemberCount(groupIdIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceGroupPostCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `reduceGroupPostCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `postCount` = postCount - 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserDesc` (IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `updateUserDesc` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `postCount` = postCount - 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `registerUser` (IN `emailIn` VARCHAR(50), IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60), IN `nameIn` VARCHAR(80), IN `genderIn` BOOLEAN, IN `birthDateIn` DATE, IN `facultyIn` VARCHAR(30), IN `universityNameIn` VARCHAR(80), IN `profilePictureExtensionIn` VARCHAR(4))   BEGIN
+CREATE PROCEDURE `registerUser` (IN `emailIn` VARCHAR(50), IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60), IN `nameIn` VARCHAR(80), IN `genderIn` BOOLEAN, IN `birthDateIn` DATE, IN `facultyIn` VARCHAR(30), IN `universityNameIn` VARCHAR(80), IN `profilePictureExtensionIn` VARCHAR(4))   BEGIN
     CALL createUserProfile(emailIn, usernameIn, passwordIn);
     SET @userId = 0;  
     CALL idByUsername(usernameIn, @userId);
@@ -185,8 +196,31 @@ END$$
 --
 -- Függvények
 --
-CREATE DEFINER=`root`@`localhost` FUNCTION `isDeleted` (`deletedAtIn` TIMESTAMP) RETURNS TINYINT(1) DETERMINISTIC READS SQL DATA BEGIN
+CREATE FUNCTION `isDeleted` (`deletedAtIn` TIMESTAMP) RETURNS TINYINT(1) DETERMINISTIC READS SQL DATA BEGIN
 	RETURN IF(deletedAtIn IS NOT NULL, 1, 0);
+END$$
+
+CREATE FUNCTION `checkUserFollowed`(`follower` INT, `followed` INT) RETURNS BOOLEAN
+    DETERMINISTIC
+BEGIN
+    DECLARE userRelation BOOLEAN;
+    
+    SELECT COUNT(*) > 0 INTO userRelation 
+    FROM followedusers 
+    WHERE (followerId = follower AND followedId = followed);
+    RETURN userRelation;
+END$$
+
+CREATE FUNCTION `checkGroupFollowed`(follower INT, followedGroup INT) RETURNS BOOLEAN
+    DETERMINISTIC
+BEGIN
+    DECLARE isFollowing BOOLEAN;
+
+    SELECT COUNT(*) > 0 INTO isFollowing 
+    FROM followedgroups 
+    WHERE followerId = follower AND followedGroupId = followedGroup;
+
+    RETURN isFollowing;
 END$$
 
 DELIMITER ;
