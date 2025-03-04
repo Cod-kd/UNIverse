@@ -1,10 +1,26 @@
 #mainDiv {
     width: 100%;
     text-align: center;
+    position: relative;
+}
+
+.sticky-search {
+    position: sticky;
+    top: 60px;
+    z-index: 100;
+    background-color: transparent;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 0;
+}
+
+#sticky-search-container{
+    display: grid;
+    place-items: center;
 }
 
 #router {
-    padding-left: 0.7rem;
+    padding-top: 0.7rem;
     text-align: center;
     overflow-y: auto;
     scroll-behavior: smooth;

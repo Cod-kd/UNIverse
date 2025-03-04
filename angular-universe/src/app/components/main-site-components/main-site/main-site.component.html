@@ -1,4 +1,9 @@
 <div id="mainDiv">
+    <div id="sticky-search-container" class="sticky-search">
+        @if(shouldShowSearchBar()){
+        <app-search-bar></app-search-bar>
+        }
+    </div>
     @if (isExactMainSitePath()) {
     <div class="welcome-container">
         <h1>Üdv {{currentUser}}!</h1>
@@ -112,12 +117,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    }
-    @if(shouldShowSearchBar()){
-    <div id="searchBarDiv">
-        <app-search-bar></app-search-bar>
-        <hr>
     </div>
     }
     <div id="router">

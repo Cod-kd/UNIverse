@@ -1,8 +1,11 @@
 <div id="groupsContainer">
     @for(group of groups; track group.id) {
-    <app-single-group 
-        [group]="group" 
-        [isExpanded]="isGroupExpanded(group.id)" 
+    <app-single-group [group]="group" [isExpanded]="isGroupExpanded(group.id)"
+        (toggleRequest)="handleGroupToggle($event)">
+    </app-single-group>
+    }
+    @for(group of groups; track group.id) {
+    <app-single-group [group]="group" [isExpanded]="isGroupExpanded(group.id)"
         (toggleRequest)="handleGroupToggle($event)">
     </app-single-group>
     }
