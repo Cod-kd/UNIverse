@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.universe.backend.services.user.UserService;
 import jakarta.validation.Valid;
+import java.util.List;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 
@@ -47,6 +48,12 @@ public class UserController {
     public ResponseEntity<UsersBio> getUsersBioByUsername(@PathVariable String username) {
         UsersBio usersBio = us.getUsersBioByUsername(username);
         return ResponseEntity.ok(usersBio);
+    }
+    
+    @GetMapping("/all")
+    public ResponseEntity<List<UsersBio>> getAllUsersBio() {
+        List<UsersBio> usersBios = us.getAllUsersBio();
+        return ResponseEntity.ok(usersBios);
     }
 
     @PostMapping("name/{username}/follow")

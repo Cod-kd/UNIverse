@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.universe.backend.repositories.UserProfilesRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import static java.util.Objects.isNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -43,6 +44,16 @@ public class UserService {
         return upRepo.findUsersBioByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("UsersBio not found for username: " + username));
     }
+    
+    public List<UsersBio> getAllUsersBio() {
+    List<UsersBio> usersBios = upRepo.findAllUsersBio();
+    
+    if (usersBios.isEmpty()) {
+        throw new EntityNotFoundException("Váratlan hiba a felhasználók lekérésénél!");
+    }
+
+    return usersBios;
+}
     
     public void followUser(Integer followerId, Integer followedId) {
         upRepo.followUser(followerId, followedId);

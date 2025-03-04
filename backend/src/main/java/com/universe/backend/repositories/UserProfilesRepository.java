@@ -2,6 +2,7 @@ package com.universe.backend.repositories;
 
 import com.universe.backend.modules.UserProfiles;
 import com.universe.backend.modules.UsersBio;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,6 +23,9 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
            "JOIN d.userProfiles p " +
            "WHERE p.username = :username")
     Optional<UsersBio> findUsersBioByUsername(@Param("username") String username);
+    
+    @Query("SELECT b FROM UsersBio b ")
+    List<UsersBio> findAllUsersBio();
     
     @Procedure(name = "followUser")
     void followUser(@Param("followerIdIn") Integer followerId, @Param("followedIdIn") Integer followedId);

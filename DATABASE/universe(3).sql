@@ -4,7 +4,7 @@ todo:
 get this out: DEFINER=`root`@`localhost`
 groups only member not follow
 
-create procedure create: role, contact, interest, rank, post (create post and link to group)
+create procedure add: role, contact, interest, rank, post (create post and link to group)
 create procedure getAll: roles, contacttypes, categories (same as interest)
 create procedure: handleGroupRank
 update procedure: deleteProfile (via login)
@@ -15,8 +15,8 @@ fill manual:
 back implement::
 
 procedures:
-getAllUsers
-unfollowUser
+updateUserDesc
+
 addGroupMember, reduceGroupMember
 
 functions:
