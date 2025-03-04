@@ -2,10 +2,11 @@
 /*
 todo:
 get this out: DEFINER=`root`@`localhost`
+groups only member not follow
 
 create procedure create: role, contact, interest, rank, post (create post and link to group)
 create procedure getAll: roles, contacttypes, categories (same as interest)
-create procedure: followGroup, unfollowGroup handleGroupRank, unfollowUser
+create procedure: handleGroupRank
 update procedure: deleteProfile (via login)
 fill manual:
 (by CALL) createCategory, createContactType, createRank, createRole
@@ -15,10 +16,12 @@ back implement::
 
 procedures:
 getAllUsers
+unfollowUser
+addGroupMember, reduceGroupMember
 
 functions:
 checkUserFollowed
-checkGroupFollowed
+checkGroupMember
 */
 
 SET SQL_MODE = "";
@@ -94,6 +97,20 @@ END$$
 
 CREATE PROCEDURE `addGroupMemberCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `membersCount` = membersCount + 1 WHERE groups.id = groupIdIn;
+END$$
+
+CREATE PROCEDURE `reduceGroupMember` (IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)  
+BEGIN
+    DELETE FROM `membersofgroups` 
+    WHERE `userId` = userIdIn AND `groupId` = groupIdIn;
+    CALL reduceGroupMemberCount(groupIdIn);
+END$$
+
+CREATE PROCEDURE `reduceGroupMemberCount` (IN `groupIdIn` MEDIUMINT)  
+BEGIN
+    UPDATE `groups` 
+    SET `membersCount` = GREATEST(0, membersCount - 1) 
+    WHERE `id` = groupIdIn;
 END$$
 
 CREATE PROCEDURE `addGroupPostCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
@@ -233,16 +250,16 @@ BEGIN
     RETURN userRelation;
 END$$
 
-CREATE FUNCTION `checkGroupFollowed`(follower INT, followedGroup INT) RETURNS BOOLEAN
+CREATE FUNCTION `checkGroupMember`(memberIdIn INT, groupIdIn INT) RETURNS BOOLEAN
     DETERMINISTIC
 BEGIN
-    DECLARE isFollowing BOOLEAN;
+    DECLARE isMember BOOLEAN;
 
-    SELECT COUNT(*) > 0 INTO isFollowing 
-    FROM followedgroups 
-    WHERE followerId = follower AND followedGroupId = followedGroup;
+    SELECT COUNT(*) > 0 INTO isMember 
+    FROM membersofgroups 
+    WHERE userId = memberIdIn AND groupId = groupIdIn;
 
-    RETURN isFollowing;
+    RETURN isMember;
 END$$
 
 DELIMITER ;
