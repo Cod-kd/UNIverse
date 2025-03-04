@@ -2,8 +2,11 @@ package com.universe.backend.repositories;
 
 import com.universe.backend.modules.UserProfiles;
 import com.universe.backend.modules.UsersBio;
+import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
@@ -22,5 +25,20 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
            "JOIN d.userProfiles p " +
            "WHERE p.username = :username")
     Optional<UsersBio> findUsersBioByUsername(@Param("username") String username);
-        
+    
+    @Query("SELECT b FROM UsersBio b ")
+    List<UsersBio> findAllUsersBio();
+    
+    @Procedure(name = "followUser")
+    void followUser(@Param("followerIdIn") Integer followerId, @Param("followedIdIn") Integer followedId);
+    
+    @Procedure(name = "unfollowUser")
+    void unfollowUser(@Param("followerIdIn") Integer followerId, @Param("followedIdIn") Integer followedId);
+    
+    @Query(value = "SELECT checkUserFollowed(:followerId, :followedId)", nativeQuery = true)
+    Boolean isUserFollowed(@Param("followerId") int followerId, @Param("followedId") int followedId);
+    
+    @Procedure(name = "updateUserDesc")
+    void updateUserDesc(@Param("descriptionIn") String description, @Param("userIdIn") int userId);
+    
 }

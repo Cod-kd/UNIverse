@@ -24,7 +24,6 @@ public class UserRegistrationDTO {
     @Size(min = 1, message = "Add meg a neved")
     private String nameIn;
 
-    @NotNull(message = "Add meg a nemed")
     private Boolean genderIn;
 
     @NotNull(message = "Add meg a születésed")

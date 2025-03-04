@@ -24,6 +24,18 @@ public class UsersContact {
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
     private UsersBio usersBio;
+    
+    @ManyToOne
+    @JoinColumn(name = "contactTypeId", nullable = false)
+    private ContactTypes contacttypes;
+
+    public ContactTypes getContacttypes() {
+        return contacttypes;
+    }
+
+    public void setContacttypes(ContactTypes contacttypes) {
+        this.contacttypes = contacttypes;
+    }
 
     public Integer getUserId() {
         return userId;

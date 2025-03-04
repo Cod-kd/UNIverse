@@ -4,7 +4,7 @@ todo:
 get this out: DEFINER=`root`@`localhost`
 groups only member not follow
 
-create procedure create: role, contact, interest, rank, post (create post and link to group)
+create procedure add: role, contact, interest, rank, post (create post and link to group)
 create procedure getAll: roles, contacttypes, categories (same as interest)
 create procedure: handleGroupRank
 update procedure: deleteProfile (via login)
@@ -15,12 +15,9 @@ fill manual:
 back implement::
 
 procedures:
-getAllUsers
-unfollowUser
 addGroupMember, reduceGroupMember
 
 functions:
-checkUserFollowed
 checkGroupMember
 */
 
@@ -216,8 +213,8 @@ CREATE PROCEDURE `reduceGroupPostCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `postCount` = postCount - 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE PROCEDURE `updateUserDesc` (IN `groupIdIn` MEDIUMINT)   BEGIN
-UPDATE `groups` SET `postCount` = postCount - 1 WHERE groups.id = groupIdIn;
+CREATE PROCEDURE `updateUserDesc` (IN `descriptionIn` VARCHAR(85), IN `userIdIn` MEDIUMINT)   BEGIN
+UPDATE `usersbio` SET `description` = descriptionIn WHERE userId = userIdIn;
 END$$
 
 CREATE PROCEDURE `registerUser` (IN `emailIn` VARCHAR(50), IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60), IN `nameIn` VARCHAR(80), IN `genderIn` BOOLEAN, IN `birthDateIn` DATE, IN `facultyIn` VARCHAR(30), IN `universityNameIn` VARCHAR(80), IN `profilePictureExtensionIn` VARCHAR(4))   BEGIN
