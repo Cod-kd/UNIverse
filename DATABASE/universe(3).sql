@@ -207,10 +207,6 @@ CREATE PROCEDURE `reduceGroupAllEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `allEventCount` = allEventCount - 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE PROCEDURE `reduceGroupMemberCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
-UPDATE `groups` SET `membersCount` = membersCount - 1 WHERE groups.id = groupIdIn;
-END$$
-
 CREATE PROCEDURE `reduceGroupMembers` (IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)   BEGIN
 DELETE FROM `membersofgroups` WHERE membersofgroups.groupId = groupIdIn AND membersofgroups.userId = userIdIn;
 CALL reduceGroupMemberCount(groupIdIn);
@@ -789,13 +785,13 @@ ALTER TABLE `contacttypes`
 -- AUTO_INCREMENT a táblához `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT a táblához `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT a táblához `posts`
@@ -819,7 +815,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT a táblához `userprofiles`
 --
 ALTER TABLE `userprofiles`
-  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT;
 
 --
 -- Megkötések a kiírt táblákhoz
@@ -961,7 +957,9 @@ ALTER TABLE `userscontacts`
 --
 ALTER TABLE `usersdata`
   ADD CONSTRAINT `usersdata_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `userprofiles` (`id`);
-  
+
+COMMIT;
+
 -- FACTORY
 -- Generate 5 User entities
 -- password: Password123
@@ -1038,7 +1036,6 @@ CALL createEvent(
     'See the latest in student-designed robots and engineering projects.', 
     5
 );
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
