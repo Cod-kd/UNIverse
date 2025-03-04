@@ -90,4 +90,12 @@ public class UserController {
         return ResponseEntity.ok(isFollowed);
     }
 
+    @PostMapping("/update/desc")
+    public ResponseEntity<String> updateUserDesc(@RequestBody Map<String, Object> requestBody) {
+        String description = (String) requestBody.get("description");
+        Integer userId = (Integer) requestBody.get("userId");
+        us.updateUserDescription(description, userId);
+        return ResponseEntity.ok("A leírás frissítve!");
+    }
+    
 }

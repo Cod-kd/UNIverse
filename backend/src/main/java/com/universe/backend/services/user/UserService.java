@@ -66,4 +66,8 @@ public class UserService {
     public Boolean isUserFollowed(int followerId, int followedId) {
         return upRepo.isUserFollowed(followerId, followedId);
     }
+    
+    public void updateUserDescription(String description, int userId) {
+        upRepo.updateUserDesc(description, userId);
+    }
 }
