@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { registerLocaleData } from '@angular/common';
 import localeHu from '@angular/common/locales/hu';
 import { WebsiteShortcut, UNInoteShortcut, Shortcut, ShortcutFormData } from '../../../models/shortcut/shortcut.model';
+import { ThemeService } from '../../../services/theme/theme.service';
 
 @Component({
   selector: 'app-main-site',
@@ -53,10 +54,12 @@ export class MainSiteComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private themeService: ThemeService
   ) { }
 
   ngOnInit() {
+    this.themeService.loadTheme();
     registerLocaleData(localeHu);
     if (!this.authService.getLoginStatus()) {
       this.router.navigate(['/UNIcard-login']);

@@ -29,11 +29,6 @@ export class ThemeService {
     this.loadTheme();
   }
 
-  setUser(userId: string | null): void {
-    this.currentUserId = userId;
-    this.loadTheme();
-  }
-
   private getStorageKey(): string {
     return this.currentUserId
       ? `${this.STORAGE_KEY_PREFIX}_${this.currentUserId}`
@@ -89,10 +84,5 @@ export class ThemeService {
   resetToDefault(): void {
     this.applyTheme(this.defaultTheme);
     localStorage.removeItem(this.getStorageKey());
-  }
-
-  clearUserTheme(): void {
-    this.currentUserId = null;
-    this.loadTheme();
   }
 }

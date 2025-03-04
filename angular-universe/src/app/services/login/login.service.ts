@@ -5,7 +5,6 @@ import { PopupService } from '../popup-message/popup-message.service';
 import { AuthService } from '../auth/auth.service';
 import { FetchService } from '../fetch/fetch.service';
 import { LoadingService } from '../loading/loading.service';
-import { ThemeService } from '../theme/theme.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +18,6 @@ export class LoginService implements OnDestroy {
     private popupService: PopupService,
     private authService: AuthService,
     private loadingService: LoadingService,
-    private themeService: ThemeService
   ) {
     this.tryAutoLogin();
     this.authSubscription = this.authService.isLoggedIn$.subscribe(isLoggedIn => {
@@ -38,10 +36,7 @@ export class LoginService implements OnDestroy {
     const credentials = this.authService.getStoredCredentials();
     if (credentials) {
       this.fetchLogin(credentials.username, credentials.password, false).subscribe({
-        next: () => {
-          const userId = localStorage.getItem('userId');
-          if (userId) this.themeService.setUser(userId);
-        },
+        next: () => { },
         error: () => this.authService.logout()
       });
     }
@@ -88,11 +83,9 @@ export class LoginService implements OnDestroy {
     this.fetchUserId(credentials.username).subscribe({
       next: (userId) => {
         localStorage.setItem("userId", userId);
-        this.themeService.setUser(userId);
       },
       error: () => { }
     });
-
     this.router.navigate(["/main-site"], { state: { credentials } });
   }
 

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, interval, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { takeWhile } from 'rxjs/operators';
-import { ThemeService } from '../theme/theme.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +18,6 @@ export class AuthService {
 
   constructor(
     private router: Router,
-    private themeService: ThemeService
   ) {
     this.isLoggedIn.subscribe(isLoggedIn => {
       if (isLoggedIn) {
@@ -78,7 +76,6 @@ export class AuthService {
   private logoutAndRedirect(): void {
     this.stopPolling();
     this.isLoggedIn.next(false);
-    this.themeService.clearUserTheme();
     this.router.navigate(['/UNIcard-login']);
   }
 
@@ -92,7 +89,6 @@ export class AuthService {
     this.authKeys.forEach(key => localStorage.removeItem(key));
     localStorage.removeItem("userId");
     this.updateValueCache();
-    this.themeService.clearUserTheme();
   }
 
   login(username: string, password: string): void {
@@ -100,15 +96,8 @@ export class AuthService {
     localStorage.setItem('username', username);
     localStorage.setItem('password', password);
     localStorage.removeItem('registrationFormData');
-
-    const userId = localStorage.getItem('userId');
-    if (userId) {
-      this.themeService.setUser(userId);
-    }
-
     this.isLoggedIn.next(true);
     this.updateValueCache();
-
     setTimeout(() => this.startPolling(), 500);
   }
 
