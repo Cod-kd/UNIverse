@@ -7,7 +7,6 @@ import { MainSiteComponent } from './components/main-site-components/main-site/m
 import { UNIcardComponent } from './components/root-page-components/unicard/unicard.component';
 import { GroupsComponent } from './components/main-site-components/groups/groups.component';
 import { EventsComponent } from './components/main-site-components/events/events.component';
-import { CalendarComponent } from './components/main-site-components/calendar/calendar.component';
 import { authGuard } from './guards/auth/auth.guard';
 import { rootGuard } from './guards/root/root.guard';
 import { PageNotFoundComponent } from './components/main-site-components/page-not-found/page-not-found.component';
@@ -57,10 +56,6 @@ export const routes: Routes = [
             {
                 path: 'events',
                 component: EventsComponent
-            },
-            {
-                path: 'calendar',
-                component: CalendarComponent
             },
             {
                 path: 'you',

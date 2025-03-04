@@ -36,8 +36,8 @@
       <a [routerLink]="['/main-site/events']" class="link link--elara" (click)="onNavigate()">
         <span>Események</span>
       </a>
-      <a [routerLink]="['/main-site/calendar']" class="link link--elara" (click)="onNavigate()">
-        <span>Naptár</span>
+      <a [routerLink]="['/main-site/settings']" class="link link--elara" (click)="onNavigate()">
+        <span>Beállítások</span>
       </a>
       @if (isLoggedIn$ | async) {
       <a href="#" class="link link--elara" (click)="logout()">

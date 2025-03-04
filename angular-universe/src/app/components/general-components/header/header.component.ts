@@ -27,7 +27,7 @@ export class HeaderComponent implements OnInit {
     { path: '/main-site/user-profile', label: 'Profilok' },
     { path: '/main-site/groups', label: 'Csoportok' },
     { path: '/main-site/events', label: 'Események' },
-    { path: '/main-site/calendar', label: 'Naptár' }
+    { path: '/main-site/settings', label: 'Beállítások' }
   ];
 
   constructor(
