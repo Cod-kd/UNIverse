@@ -3,77 +3,51 @@ import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
 import { SearchService, SearchResult } from '../../../services/search/search.service';
 import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
-import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
   selector: 'app-search-bar',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './search-bar.component.html',
-  styleUrl: './search-bar.component.css',
-  animations: [
-    trigger('searchState', [
-      state('inactive', style({
-        opacity: 1,
-        transform: 'scale(1)'
-      })),
-      state('active', style({
-        opacity: 1,
-        transform: 'scale(1.02)'
-      })),
-      state('searching', style({
-        opacity: 1,
-        transform: 'scale(1.02)'
-      })),
-      transition('inactive => active', animate('200ms ease-in')),
-      transition('active => inactive', animate('200ms ease-out')),
-      transition('* => searching', animate('300ms ease-in')),
-      transition('searching => *', animate('200ms ease-out'))
-    ])
-  ]
+  styleUrl: './search-bar.component.css'
 })
 export class SearchBarComponent {
   @ViewChild('searchInput') searchInput!: ElementRef;
-  searchState = 'inactive';
+  isActive = false;
   isSearching = false;
 
   constructor(
     private searchService: SearchService,
     private router: Router
   ) {
+    // Reset search on navigation
     this.router.events.pipe(
       filter((event: RouterEvent): event is NavigationEnd => event instanceof NavigationEnd)
     ).subscribe(() => {
       if (this.searchInput) {
         this.searchInput.nativeElement.value = '';
-        this.searchState = 'inactive';
+        this.isActive = false;
         this.isSearching = false;
       }
     });
   }
 
   onFocus() {
-    this.searchState = 'active';
+    this.isActive = true;
   }
 
   onBlur() {
     if (!this.isSearching && !this.searchInput.nativeElement.value) {
-      this.searchState = 'inactive';
+      this.isActive = false;
     }
   }
 
   async search(event: SubmitEvent, value: string) {
     event?.preventDefault();
-
     const searchTerm = value.trim();
+    if (!searchTerm) return;
 
-    if (!searchTerm) {
-      return;
-    }
-
-    this.searchState = 'searching';
     this.isSearching = true;
-
     this.addRippleEffect();
 
     this.searchService.search(searchTerm).subscribe({
@@ -81,13 +55,13 @@ export class SearchBarComponent {
         this.searchService.handleSearchResponse(response);
         setTimeout(() => {
           this.isSearching = false;
-          this.searchState = this.searchInput.nativeElement.value ? 'active' : 'inactive';
+          this.isActive = !!this.searchInput.nativeElement.value;
         }, 300);
       },
       error: (err) => {
         this.searchService.handleError(err);
         this.isSearching = false;
-        this.searchState = this.searchInput.nativeElement.value ? 'active' : 'inactive';
+        this.isActive = !!this.searchInput.nativeElement.value;
       }
     });
   }

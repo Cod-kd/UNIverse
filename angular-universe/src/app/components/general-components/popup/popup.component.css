@@ -1,10 +1,10 @@
 .modal-content.active {
     display: flex;
-    animation: fadeIn 0.5s ease-out forwards;
+    animation: slideIn 0.5s ease-out forwards;
 }
 
 .modal-content.inactive {
-    animation: fadeOut 0.5s ease-out forwards;
+    animation: slideOut 0.5s ease-out forwards;
     display: flex;
 }
 
@@ -15,7 +15,7 @@
     height: 100px;
     overflow: hidden;
     position: relative;
-    box-shadow: 0 0.75em 1em var(--dark2);
+    box-shadow: 0 0.75em 1em rgba(0, 0, 0, 0.2);
     border-radius: 1em;
 }
 
@@ -38,14 +38,17 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     height: 100%;
     padding: 20px;
+    z-index: 1;
+    position: relative;
 }
 
 .icon {
     font-size: 30px;
     color: var(--main);
+    flex-shrink: 0;
 }
 
 .right-items {
@@ -63,29 +66,36 @@
     animation: time-progress 3s linear forwards;
 }
 
-@keyframes fadeIn {
+@keyframes slideIn {
     from {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateX(20px);
     }
+
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0);
     }
 }
 
-@keyframes fadeOut {
+@keyframes slideOut {
     from {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0);
     }
+
     to {
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translateX(20px);
     }
 }
 
 @keyframes time-progress {
-    from { width: 100%; }
-    to { width: 0%; }
+    from {
+        width: 100%;
+    }
+
+    to {
+        width: 0%;
+    }
 }

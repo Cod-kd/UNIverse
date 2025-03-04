@@ -1,36 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, Router } from '@angular/router';
-import { SearchBarComponent } from '../../general-components/search-bar/search-bar.component';
+import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { AuthService } from '../../../services/auth/auth.service';
 import { DatePipe, NgIf } from '@angular/common';
 import { ButtonComponent } from "../../general-components/button/button.component";
 import { FormsModule } from '@angular/forms';
-
-interface BaseShortcut {
-  id: string;
-  name: string;
-}
-
-interface WebsiteShortcut extends BaseShortcut {
-  type: 'website';
-  url: string;
-}
-
-interface UNInoteShortcut extends BaseShortcut {
-  type: 'uninote';
-  description: string;
-  startTime: Date;
-  completed: boolean;
-}
-
-type Shortcut = WebsiteShortcut | UNInoteShortcut;
-
-interface ShortcutFormData {
-  type: 'website' | 'uninote';
-  name: string;
-  url?: string;
-  description?: string;
-}
+import { registerLocaleData } from '@angular/common';
+import localeHu from '@angular/common/locales/hu';
+import { WebsiteShortcut, UNInoteShortcut, Shortcut, ShortcutFormData } from '../../../models/shortcut/shortcut.model';
 
 @Component({
   selector: 'app-main-site',
@@ -52,11 +29,12 @@ export class MainSiteComponent implements OnInit {
   currentDate: string = '';
   currentDay: string = '';
   currentTime: string = '';
+  followerCount: number = 0;
+  postCount: number = 0;
 
   shortcuts: Shortcut[] = [];
   fadingItems: Set<string> = new Set();
 
-  // Modal properties
   showShortcutModal = false;
   showNoteDetailModal = false;
   selectedNote: UNInoteShortcut | null = null;
@@ -68,9 +46,8 @@ export class MainSiteComponent implements OnInit {
   };
 
   recentActivities = [
-    { date: new Date(Date.now() - 86400000), description: 'Profile updated' },
-    { date: new Date(Date.now() - 172800000), description: 'Card balance checked' },
-    { date: new Date(Date.now() - 259200000), description: 'Settings changed' }
+    { date: new Date(Date.now() - 86400000), description: 'Profil frissítve' },
+    { date: new Date(Date.now() - 259200000), description: 'Beállítások módosítva' }
   ];
 
   constructor(
@@ -80,6 +57,7 @@ export class MainSiteComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    registerLocaleData(localeHu);
     if (!this.authService.getLoginStatus()) {
       this.router.navigate(['/UNIcard-login']);
       return;
@@ -100,6 +78,19 @@ export class MainSiteComponent implements OnInit {
     setInterval(() => this.updateTime(), 1000);
 
     this.loadShortcuts();
+  }
+
+  formatDateToHungarian(date: Date): string {
+    const months = [
+      'Január', 'Február', 'Március', 'Április', 'Május', 'Június',
+      'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'
+    ];
+
+    const days = [
+      'Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'
+    ];
+
+    return `${date.getFullYear()}. ${months[date.getMonth()]} ${date.getDate()}. ${days[date.getDay()]}`;
   }
 
   updateTime() {
@@ -182,6 +173,7 @@ export class MainSiteComponent implements OnInit {
     if (!this.isValidShortcut()) return;
 
     const id = crypto.randomUUID();
+    this.newShortcut.name = this.newShortcut.name.charAt(0).toUpperCase() + this.newShortcut.name.slice(1);
 
     if (this.newShortcut.type === 'website') {
       const websiteShortcut: WebsiteShortcut = {
@@ -224,13 +216,15 @@ export class MainSiteComponent implements OnInit {
       note.completed = !note.completed;
 
       if (note.completed) {
-        this.fadingItems.add(id);
+        setTimeout(() => {
+          this.fadingItems.add(id);
+        }, 300);
 
         setTimeout(() => {
           this.shortcuts = this.shortcuts.filter(s => s.id !== id);
           this.fadingItems.delete(id);
           this.saveShortcutsToStorage();
-        }, 300);
+        }, 600);
       } else {
         this.saveShortcutsToStorage();
       }

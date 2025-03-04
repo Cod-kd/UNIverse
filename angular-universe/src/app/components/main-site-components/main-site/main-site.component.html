@@ -8,12 +8,20 @@
                 <hr class="main-hr">
                 <div class="shortcuts-container">
                     @for (shortcut of shortcuts; track shortcut.id) {
-                    <div class="shortcut-item"
+                    <div class="shortcut-item" [class.website-shortcut]="shortcut.type === 'website'"
+                        [class.uninote-shortcut]="shortcut.type === 'uninote'"
                         [class.fade-out]="shortcut.type === 'uninote' && shortcut.completed && isItemFading(shortcut.id)">
                         @if (shortcut.type === 'website') {
-                        <div class="shortcut-content" (click)="openWebsite(shortcut.url)">
-                            <i class="fa-solid fa-globe"></i>
-                            <span>{{shortcut.name}}</span>
+                        <div class="shortcut-content">
+                            <div class="website-info" (click)="openWebsite(shortcut.url)">
+                                <i class="fa-solid fa-globe"></i>
+                                <span>{{shortcut.name}}</span>
+                            </div>
+                            <div class="shortcut-actions">
+                                <button (click)="deleteShortcut(shortcut.id)">
+                                    <i class="fa-solid fa-trash"></i> Törlés
+                                </button>
+                            </div>
                         </div>
                         } @else if (shortcut.type === 'uninote') {
                         <div class="shortcut-content">
@@ -23,12 +31,14 @@
                                 <span class="checkmark"></span>
                             </label>
                             <span class="note-title" (click)="openNoteDetailModal(shortcut)">{{shortcut.name}}</span>
-                            <span class="note-time">{{shortcut.startTime | date:'MMM d, y':'hu-HU'}}</span>
+                            <span class="note-time">{{shortcut.startTime | date:'yyyy. MMM d.':'hu-HU'}}</span>
+                        </div>
+                        <div class="shortcut-actions">
+                            <button (click)="deleteShortcut(shortcut.id)">
+                                <i class="fa-solid fa-trash"></i> Törlés
+                            </button>
                         </div>
                         }
-                        <button class="delete-shortcut" (click)="deleteShortcut(shortcut.id)">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
                     </div>
                     }
                     @if (shortcuts.length === 0) {
@@ -70,6 +80,14 @@
                     <span class="stat-label">Nap:</span>
                     <span class="stat-value">{{ currentDay }}</span>
                 </div>
+                <div class="item">
+                    <span class="stat-label">Követőid:</span>
+                    <span class="stat-value">{{ followerCount }}</span>
+                </div>
+                <div class="item">
+                    <span class="stat-label">Posztjaid:</span>
+                    <span class="stat-value">{{ postCount }}</span>
+                </div>
             </div>
 
             <div class="quick-card">
@@ -78,7 +96,7 @@
                 <div class="activity-list">
                     @for (activity of recentActivities; track activity.date) {
                     <div class="item">
-                        <span class="activity-date">{{activity.date | date:'shortDate'}}</span>
+                        <span class="activity-date">{{activity.date | date:'yyyy.MM.dd.':'hu-HU'}}</span>
                         <span class="activity-desc">{{activity.description}}</span>
                     </div>
                     }
@@ -91,7 +109,6 @@
                 <div class="quick-links">
                     <a (click)="navigateTo('/main-site/you')">Saját profil</a>
                     <a (click)="navigateTo('/main-site/settings')">Beállítások</a>
-                    <a (click)="navigateTo('/main-site/help')">Help Center</a>
                 </div>
             </div>
         </div>
@@ -141,8 +158,10 @@
             }
         </div>
         <div class="modal-actions">
-            <button (click)="closeShortcutModal()">Mégse</button>
-            <button (click)="saveShortcut()" [disabled]="!isValidShortcut()">Mentés</button>
+            <app-button iconClass="fa-solid fa-x" [size]="'small'" [shape]="'rectangle'"
+                (click)="closeShortcutModal()"></app-button>
+            <app-button iconClass="fa-solid fa-check" [size]="'small'" [shape]="'rectangle'" (click)="saveShortcut()"
+                [isDisabled]="!isValidShortcut()"></app-button>
         </div>
     </div>
 </div>
@@ -158,7 +177,7 @@
             </div>
             <div class="form-group">
                 <label>Dátum</label>
-                <div class="note-detail-field">{{selectedNote.startTime | date:'fullDate':'hu-HU'}}</div>
+                <div class="note-detail-field">{{formatDateToHungarian(selectedNote.startTime)}}</div>
             </div>
             <div class="form-group">
                 <label>Leírás</label>
@@ -167,9 +186,10 @@
             }
         </div>
         <div class="modal-actions">
-            <button (click)="closeNoteDetailModal()">Bezár</button>
+            <app-button [btnLabel]="'Bezár'" [size]="'small'" (click)="closeNoteDetailModal()"></app-button>
             @if (selectedNote && !selectedNote.completed) {
-            <button (click)="toggleNoteComplete(selectedNote.id); closeNoteDetailModal()">Befejeztem</button>
+            <app-button [btnLabel]="'Befejeztem'" [size]="'small'"
+                (click)="toggleNoteComplete(selectedNote.id); closeNoteDetailModal()">Befejeztem</app-button>
             }
         </div>
     </div>

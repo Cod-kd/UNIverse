@@ -1,18 +1,35 @@
+:root {
+  --header-height: 70px;
+  --transition-speed: 0.3s;
+}
+
 header {
   background-color: var(--dark2);
-  padding: 0.5rem 1.25rem;
+  height: var(--header-height);
+  padding: 0.6rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   position: fixed;
   z-index: 20;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: transform var(--transition-speed) ease;
+}
+
+header.header-hidden {
+  transform: translateY(-100%);
 }
 
 #logo {
   width: 9em;
   height: 2.5em;
   cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+#logo:hover {
+  transform: scale(1.05);
 }
 
 nav {
@@ -30,6 +47,11 @@ nav a {
 .fa-user {
   color: var(--main);
   font-size: 25px;
+  transition: transform 0.2s ease;
+}
+
+.fa-user:hover {
+  transform: translateY(-2px);
 }
 
 .link {

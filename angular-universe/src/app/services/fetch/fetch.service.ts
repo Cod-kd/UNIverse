@@ -16,9 +16,6 @@ export class FetchService {
     private popupService: PopupService
   ) { }
 
-  /**
-   * Generic GET request
-   */
   get<T>(endpoint: string, options: { 
     responseType?: 'json' | 'text', 
     showError?: boolean,
@@ -33,8 +30,7 @@ export class FetchService {
     } = options;
 
     let url = `${this.baseUrl}${endpoint}`;
-    
-    // Handle query params if provided
+
     if (params) {
       const queryParams = new URLSearchParams();
       Object.entries(params).forEach(([key, value]) => {
@@ -50,9 +46,6 @@ export class FetchService {
     );
   }
 
-  /**
-   * Generic POST request
-   */
   post<T>(endpoint: string, body: any, options: {
     responseType?: 'json' | 'text',
     showError?: boolean,
@@ -71,13 +64,9 @@ export class FetchService {
     );
   }
 
-  /**
-   * Centralized error handler
-   */
   private handleError(error: HttpErrorResponse, showError = true, customErrorMessage?: string): Observable<never> {
     let errorMessage = customErrorMessage || 'Szerveroldali hiba';
     
-    // Handle specific HTTP status codes
     if (error.status === 409) {
       if (error.url?.includes('/user/login')) {
         errorMessage = 'Hibás felhasználónév vagy jelszó!';

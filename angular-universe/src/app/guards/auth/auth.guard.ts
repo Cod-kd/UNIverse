@@ -6,9 +6,9 @@ export const authGuard = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (authService.getLoginStatus()) {
-    return true;
+  if (!authService.getLoginStatus()) {
+    return router.navigate(['/UNIcard-login']);
   }
 
-  return router.navigate(['/UNIcard-login']);
+  return true;
 };

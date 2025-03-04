@@ -15,10 +15,10 @@ import { PopupService } from '../../../services/popup-message/popup-message.serv
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, ButtonComponent],
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  templateUrl: './user-profile.component.html',
+  styleUrl: './user-profile.component.css'
 })
-export class ProfileComponent implements OnInit, OnDestroy {
+export class UserProfileComponent implements OnInit, OnDestroy {
   @ViewChild('profileCard') profileCard!: ElementRef;
   profile: Profile | null = null;
   isFriendAdded = false;
@@ -146,7 +146,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const card = this.profileCard.nativeElement;
     card.classList.add('capture-animation');
 
+    const originalBorderRadius = card.style.borderRadius;
+
     try {
+      card.style.borderRadius = '0';
+
       await new Promise(resolve => setTimeout(resolve, 600));
 
       const canvas = await html2canvas(card, {
@@ -157,7 +161,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
       });
 
       const link = document.createElement('a');
-      link.download = `${this.profile?.usersData.name || 'profile'}.png`;
+      const imageName = this.profile?.usersData.name?.replace(/\s+/g, '-');
+      link.download = `${imageName || 'profile'}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
 
@@ -165,6 +170,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     } catch (error) {
       this.popupService.show('Nem sikerült menteni a profilt');
     } finally {
+      card.style.borderRadius = originalBorderRadius;
       card.classList.remove('capture-animation');
     }
   }

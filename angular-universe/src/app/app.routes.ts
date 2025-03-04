@@ -5,7 +5,6 @@ import { LoginComponent } from './components/root-page-components/login/login.co
 import { UNIcardLoginComponent } from './components/root-page-components/unicard-login/unicard-login.component';
 import { MainSiteComponent } from './components/main-site-components/main-site/main-site.component';
 import { UNIcardComponent } from './components/root-page-components/unicard/unicard.component';
-import { ProfileComponent } from './components/main-site-components/profile/profile.component';
 import { GroupsComponent } from './components/main-site-components/groups/groups.component';
 import { EventsComponent } from './components/main-site-components/events/events.component';
 import { CalendarComponent } from './components/main-site-components/calendar/calendar.component';
@@ -13,6 +12,8 @@ import { authGuard } from './guards/auth/auth.guard';
 import { rootGuard } from './guards/root/root.guard';
 import { PageNotFoundComponent } from './components/main-site-components/page-not-found/page-not-found.component';
 import { SelfProfileComponent } from './components/main-site-components/self-profile/self-profile.component';
+import { UserProfileComponent } from './components/main-site-components/user-profile/user-profile.component';
+import { SettingsComponent } from './components/main-site-components/settings/settings.component';
 
 export const routes: Routes = [
     {
@@ -46,8 +47,8 @@ export const routes: Routes = [
         canActivate: [authGuard],
         children: [
             {
-                path: 'profile',
-                component: ProfileComponent
+                path: 'user-profile',
+                component: UserProfileComponent
             },
             {
                 path: 'groups',
@@ -64,6 +65,10 @@ export const routes: Routes = [
             {
                 path: 'you',
                 component: SelfProfileComponent
+            },
+            {
+                path: 'settings',
+                component: SettingsComponent
             }
         ]
     },

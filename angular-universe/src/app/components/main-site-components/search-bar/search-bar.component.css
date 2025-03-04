@@ -25,6 +25,11 @@
     transform: translateY(-2px);
 }
 
+#searchIconDiv.active {
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
 #searchIconDiv i {
     color: var(--main);
     transition: transform 0.2s ease;

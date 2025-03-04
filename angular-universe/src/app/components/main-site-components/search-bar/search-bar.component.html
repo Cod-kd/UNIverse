@@ -1,5 +1,5 @@
 <div id="search-section" class="desktop-search">
-    <div id="searchIconDiv" [@searchState]="searchState">
+    <div id="searchIconDiv" [class.active]="isActive" [class.searching]="isSearching">
         <form autocomplete="off" (submit)="search($event, searchInput.value)">
             <input type="search" id="search-bar" placeholder="Keresés..." #searchInput (focus)="onFocus()"
                 (blur)="onBlur()">
