@@ -125,7 +125,8 @@
     </div>
 </div>
 
-<div class="modal" *ngIf="showShortcutModal">
+@if(showShortcutModal){
+<div class="modal">
     <div class="modal-content">
         <h3>Új parancsikon létrehozása</h3>
         <div class="modal-body">
@@ -165,8 +166,10 @@
         </div>
     </div>
 </div>
+}
 
-<div class="modal" *ngIf="showNoteDetailModal">
+@if(showNoteDetailModal){
+<div class="modal">
     <div class="modal-content">
         <h3>UNInote Részletek</h3>
         <div class="modal-body">
@@ -194,3 +197,4 @@
         </div>
     </div>
 </div>
+}
