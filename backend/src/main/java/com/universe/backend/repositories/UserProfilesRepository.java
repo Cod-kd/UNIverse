@@ -24,5 +24,8 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
     Optional<UsersBio> findUsersBioByUsername(@Param("username") String username);
     
     @Procedure(name = "followUser")
-    void addFollower(@Param("followerIdIn") Integer followerId, @Param("followedIdIn") Integer followedId);
+    void followUser(@Param("followerIdIn") Integer followerId, @Param("followedIdIn") Integer followedId);
+    
+    @Procedure(name = "unfollowUser")
+    void unfollowUser(@Param("followerIdIn") Integer followerId, @Param("followedIdIn") Integer followedId);
 }

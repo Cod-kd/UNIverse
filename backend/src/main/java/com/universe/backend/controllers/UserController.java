@@ -61,5 +61,18 @@ public class UserController {
         us.followUser(followerId, followedId);
         return ResponseEntity.ok("Sikeres követés!");
     }
+    
+    @PostMapping("name/{username}/unfollow")
+    public ResponseEntity<String> unFollowUser(@PathVariable String username, @RequestBody Map<String, Integer> request) {
+        Integer followerId = request.get("followerId");
+        Integer followedId = us.userIdByName(username);
+
+        if (followedId == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("A felhasználó nem létezik!");
+        }
+        us.unfollowUser(followerId, followedId);
+        return ResponseEntity.ok("Sikeres kikövetés!");
+    }
 
 }

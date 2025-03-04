@@ -45,6 +45,10 @@ public class UserService {
     }
     
     public void followUser(Integer followerId, Integer followedId) {
-        upRepo.addFollower(followerId, followedId);
+        upRepo.followUser(followerId, followedId);
+    }
+    
+    public void unfollowUser(Integer followerId, Integer followedId) {
+        upRepo.unfollowUser(followerId, followedId);
     }
 }
