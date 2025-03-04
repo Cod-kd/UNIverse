@@ -53,10 +53,8 @@ export class SearchBarComponent {
     this.searchService.search(searchTerm).subscribe({
       next: (response: SearchResult) => {
         this.searchService.handleSearchResponse(response);
-        setTimeout(() => {
-          this.isSearching = false;
-          this.isActive = !!this.searchInput.nativeElement.value;
-        }, 300);
+        this.isSearching = false;
+        this.isActive = !!this.searchInput.nativeElement.value;
       },
       error: (err) => {
         this.searchService.handleError(err);
@@ -81,6 +79,6 @@ export class SearchBarComponent {
     ripple.style.left = `${rect.width / 2 - size / 2}px`;
     ripple.style.top = `${rect.height / 2 - size / 2}px`;
 
-    setTimeout(() => ripple.remove(), 600);
+    ripple.remove();
   }
 }
