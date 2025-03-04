@@ -41,6 +41,7 @@ h3 {
     font-family: 'Proza Libre';
     font-size: clamp(1.1rem, 3vw, 1.3rem);
     margin: 0;
+    color: var(--light1);
 }
 
 i {
