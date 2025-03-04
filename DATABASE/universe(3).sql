@@ -1,11 +1,28 @@
--- phpMyAdmin SQL Dump
--- version 5.1.2
--- https://www.phpmyadmin.net/
---
 -- Gép: localhost:8889
--- Létrehozás ideje: 2024. Dec 28. 18:18
--- Kiszolgáló verziója: 5.7.24
--- PHP verzió: 8.3.11
+/*
+todo:
+get this out: DEFINER=`root`@`localhost`
+groups only member not follow
+
+create procedure create: role, contact, interest, rank, post (create post and link to group)
+create procedure getAll: roles, contacttypes, categories (same as interest)
+create procedure: handleGroupRank
+update procedure: deleteProfile (via login)
+fill manual:
+(by CALL) createCategory, createContactType, createRank, createRole
+
+
+back implement::
+
+procedures:
+getAllUsers
+unfollowUser
+addGroupMember, reduceGroupMember
+
+functions:
+checkUserFollowed
+checkGroupMember
+*/
 
 SET SQL_MODE = "";
 SET GLOBAL log_bin_trust_function_creators = 1;
@@ -29,145 +46,181 @@ DELIMITER $$
 --
 -- Eljárások
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addfollowedCount` (IN `userIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `addfollowedCount` (IN `userIdIn` MEDIUMINT)   BEGIN
 	UPDATE `usersdata` SET `followedCount` = usersdata.followedCount + 1 WHERE usersdata.userId = userIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addFollower` (IN `followerIdIn` MEDIUMINT, IN `followedIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `followUser` (IN `followerIdIn` MEDIUMINT, IN `followedIdIn` MEDIUMINT)   BEGIN
 	INSERT INTO `followedusers`(`followerId`, `followedId`) VALUES (followerIdIn, followedIdIn);
     CALL addFollowerCount(followedIdIn);
     CALL addfollowedCount(followerIdIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addFollowerCount` (IN `userIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `addFollowerCount` (IN `userIdIn` MEDIUMINT)   BEGIN
 	UPDATE `usersdata` SET `followerCount` = usersdata.followerCount + 1 WHERE usersdata.userId = userIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupActualEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `unfollowUser` (IN `followerIdIn` MEDIUMINT, IN `followedIdIn` MEDIUMINT)  
+BEGIN
+    DELETE FROM `followedusers` 
+    WHERE `followerId` = followerIdIn AND `followedId` = followedIdIn;
+    CALL reduceFollowerCount(followedIdIn);
+    CALL reduceFollowedCount(followerIdIn);
+END$$
+
+CREATE PROCEDURE `reduceFollowerCount` (IN `userIdIn` MEDIUMINT)  
+BEGIN
+    UPDATE `usersdata` 
+    SET `followerCount` = GREATEST(0, followerCount - 1) 
+    WHERE `userId` = userIdIn;
+END$$
+
+CREATE PROCEDURE `reduceFollowedCount` (IN `userIdIn` MEDIUMINT)  
+BEGIN
+    UPDATE `usersdata` 
+    SET `followedCount` = GREATEST(0, followedCount - 1) 
+    WHERE `userId` = userIdIn;
+END$$
+
+CREATE PROCEDURE `addGroupActualEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `actualEventCount` = actualEventCount + 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupAllEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `addGroupAllEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `allEventCount` = allEventCount + 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupMember` (IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `addGroupMember` (IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)   BEGIN
 INSERT INTO `membersofgroups`(`groupId`, `userId`) VALUES (groupIdIn, userIdIn);
 CALL addGroupMemberCount(groupIdIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupMemberCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `addGroupMemberCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `membersCount` = membersCount + 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addGroupPostCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `reduceGroupMember` (IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)  
+BEGIN
+    DELETE FROM `membersofgroups` 
+    WHERE `userId` = userIdIn AND `groupId` = groupIdIn;
+    CALL reduceGroupMemberCount(groupIdIn);
+END$$
+
+CREATE PROCEDURE `reduceGroupMemberCount` (IN `groupIdIn` MEDIUMINT)  
+BEGIN
+    UPDATE `groups` 
+    SET `membersCount` = GREATEST(0, membersCount - 1) 
+    WHERE `id` = groupIdIn;
+END$$
+
+CREATE PROCEDURE `addGroupPostCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `postCount` = postCount + 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addUserbio` (IN `userIdIn` MEDIUMINT, IN `facultyIn` VARCHAR(30))   BEGIN
+CREATE PROCEDURE `addUserbio` (IN `userIdIn` MEDIUMINT, IN `facultyIn` VARCHAR(30))   BEGIN
 INSERT INTO `usersbio`(`userId`, `faculty`) VALUES (userIdIn, facultyIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addUserData` (IN `userIdIn` MEDIUMINT, IN `nameIn` VARCHAR(80), IN `genderIn` BOOLEAN, IN `birthDateIn` DATE, IN `universityNameIn` VARCHAR(80), IN `profilePictureExtensionIn` VARCHAR(4))   BEGIN
+CREATE PROCEDURE `addUserData` (IN `userIdIn` MEDIUMINT, IN `nameIn` VARCHAR(80), IN `genderIn` BOOLEAN, IN `birthDateIn` DATE, IN `universityNameIn` VARCHAR(80), IN `profilePictureExtensionIn` VARCHAR(4))   BEGIN
     INSERT INTO `usersdata`(`userId`, `name`, `gender`, `birthDate`, `universityName`, `profilePictureExtension`) VALUES (userIdIn, nameIn, genderIn, birthDateIn, universityNameIn, profilePictureExtensionIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createCategory` (IN `nameIn` VARCHAR(40))   BEGIN
+CREATE PROCEDURE `createCategory` (IN `nameIn` VARCHAR(40))   BEGIN
 	INSERT INTO `categories`(`name`) VALUES (nameIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createContactType` (IN `nameIn` VARCHAR(20), IN `domainIn` VARCHAR(64), IN `protocolIn` VARCHAR(5))   BEGIN
+CREATE PROCEDURE `createContactType` (IN `nameIn` VARCHAR(20), IN `domainIn` VARCHAR(64), IN `protocolIn` VARCHAR(5))   BEGIN
 	INSERT INTO `contacttypes`(`name`, `domain`, `protocol`) VALUES (nameIn, domainIn, protocolIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createEvent` (IN `nameIn` VARCHAR(30), IN `creatorIdIn` MEDIUMINT, IN `startDateIn` TIMESTAMP, IN `endDateIn` TIMESTAMP, IN `placeIn` VARCHAR(255), IN `attachmentRelPathIn` VARCHAR(50), IN `descriptionIn` VARCHAR(180), IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `createEvent` (IN `nameIn` VARCHAR(30), IN `creatorIdIn` MEDIUMINT, IN `startDateIn` TIMESTAMP, IN `endDateIn` TIMESTAMP, IN `placeIn` VARCHAR(255), IN `attachmentRelPathIn` VARCHAR(50), IN `descriptionIn` VARCHAR(180), IN `groupIdIn` MEDIUMINT)   BEGIN
 INSERT INTO `events`(`name`, `creatorId`, `startDate`, `endDate`, `place`, `attachmentRelPath`, `description`) VALUES (`nameIn`, `creatorIdIn`, `startDateIn`, `endDateIn`, `placeIn`, `attachmentRelPathIn`, `descriptionIn`);
 SET @eventId = 0;  
 CALL idByEventName(nameIn, @eventId);
 CALL linkEventToGroup(groupIdIn, @eventId);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createGroup` (IN `nameIn` VARCHAR(60))   BEGIN
+CREATE PROCEDURE `createGroup` (IN `nameIn` VARCHAR(60))   BEGIN
 	INSERT INTO `groups`(`name`) VALUES (nameIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createRank` (IN `nameIn` VARCHAR(30), IN `isAdminIn` BOOLEAN, IN `canViewIn` BOOLEAN, IN `canCommentIn` BOOLEAN, IN `canPostIn` BOOLEAN, IN `canModifyIn` BOOLEAN)   BEGIN
+CREATE PROCEDURE `createRank` (IN `nameIn` VARCHAR(30), IN `isAdminIn` BOOLEAN, IN `canViewIn` BOOLEAN, IN `canCommentIn` BOOLEAN, IN `canPostIn` BOOLEAN, IN `canModifyIn` BOOLEAN)   BEGIN
 	INSERT INTO `ranks`(`name`, `isAdmin`, `canView`, `canComment`, `canPost`, `canModify`) VALUES (nameIn, isAdminIn, canViewIn, canCommentIn, canPostIn, canModifyIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createRole` (IN `nameIn` VARCHAR(20))   BEGIN
+CREATE PROCEDURE `createRole` (IN `nameIn` VARCHAR(20))   BEGIN
 	INSERT INTO `roles`(`name`) VALUES (nameIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createUserProfile` (IN `emailIn` VARCHAR(50), IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60))   BEGIN
-    INSERT INTO `userprofiles`(`email`, `username`, `password`) VALUES (emailIn, usernameIn, passwordIn);  -- @todo: hash passwordIn
+CREATE PROCEDURE `createUserProfile` (IN `emailIn` VARCHAR(50), IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60))   BEGIN
+    INSERT INTO `userprofiles`(`email`, `username`, `password`) VALUES (emailIn, usernameIn, passwordIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUserprofile` (IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60))   BEGIN
+CREATE PROCEDURE `deleteUserprofile` (IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60))   BEGIN
 	UPDATE `userprofiles` SET `deletedAt`= NOW() WHERE userprofiles.username = usernameIn AND userprofiles.password = passwordIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getCategory` (IN `idIn` SMALLINT)   BEGIN
+CREATE PROCEDURE `getCategory` (IN `idIn` SMALLINT)   BEGIN
 	SELECT `name` FROM `categories` WHERE `id` = idIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getContactType` (IN `idIn` TINYINT)   BEGIN
+CREATE PROCEDURE `getContactType` (IN `idIn` TINYINT)   BEGIN
 	SELECT `name`, `domain`, `protocol` FROM `contacttypes` WHERE contacttypes.id = idIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getGroup` (IN `idIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `getGroup` (IN `idIn` MEDIUMINT)   BEGIN
 	SELECT `name`, `public`, `membersCount`, `postCount`, `actualEventCount`, `allEventCount` FROM `groups` WHERE groups.id = idIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getRank` (IN `idIn` TINYINT)   BEGIN
+CREATE PROCEDURE `getRank` (IN `idIn` TINYINT)   BEGIN
 	SELECT `name`, `isAdmin`, `canView`, `canComment`, `canPost`, `canModify` FROM `ranks` WHERE ranks.id = idIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getRole` (IN `idIn` TINYINT)   BEGIN
+CREATE PROCEDURE `getRole` (IN `idIn` TINYINT)   BEGIN
 	SELECT `name` FROM `roles` WHERE roles.id = idIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `idByEventName` (IN `nameIn` VARCHAR(30), OUT `eventIdOut` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `idByEventName` (IN `nameIn` VARCHAR(30), OUT `eventIdOut` MEDIUMINT)   BEGIN
 SELECT events.id INTO eventIdOut FROM events WHERE events.name = nameIn ORDER BY events.id DESC LIMIT 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `idByUsername` (IN `usernameIn` VARCHAR(12), OUT `userIdOut` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `idByUsername` (IN `usernameIn` VARCHAR(12), OUT `userIdOut` MEDIUMINT)   BEGIN
     SELECT userprofiles.id INTO userIdOut FROM userprofiles
     WHERE userprofiles.username = usernameIn LIMIT 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `linkEventToGroup` (IN `groupIdIn` MEDIUMINT, IN `eventIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `linkEventToGroup` (IN `groupIdIn` MEDIUMINT, IN `eventIdIn` MEDIUMINT)   BEGIN
 INSERT INTO `eventsofgroups`(`groupId`, `eventId`) VALUES (groupIdIn, eventIdIn);
 CALL addGroupActualEventCount(groupIdIn);
 CALL addGroupAllEventCount(groupIdIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `login` (IN `usernameIn` VARCHAR(12))   BEGIN
+CREATE PROCEDURE `login` (IN `usernameIn` VARCHAR(12))   BEGIN
 	SELECT * FROM `userprofiles` WHERE userprofiles.username = usernameIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceGroupActualEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `reduceGroupActualEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `actualEventCount` = actualEventCount - 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceGroupAllEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `reduceGroupAllEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `allEventCount` = allEventCount - 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceGroupMemberCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
-UPDATE `groups` SET `membersCount` = membersCount - 1 WHERE groups.id = groupIdIn;
-END$$
-
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceGroupMembers` (IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `reduceGroupMembers` (IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)   BEGIN
 DELETE FROM `membersofgroups` WHERE membersofgroups.groupId = groupIdIn AND membersofgroups.userId = userIdIn;
 CALL reduceGroupMemberCount(groupIdIn);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `reduceGroupPostCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `reduceGroupPostCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `postCount` = postCount - 1 WHERE groups.id = groupIdIn;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `registerUser` (IN `emailIn` VARCHAR(50), IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60), IN `nameIn` VARCHAR(80), IN `genderIn` BOOLEAN, IN `birthDateIn` DATE, IN `facultyIn` VARCHAR(30), IN `universityNameIn` VARCHAR(80), IN `profilePictureExtensionIn` VARCHAR(4))   BEGIN
+CREATE PROCEDURE `updateUserDesc` (IN `groupIdIn` MEDIUMINT)   BEGIN
+UPDATE `groups` SET `postCount` = postCount - 1 WHERE groups.id = groupIdIn;
+END$$
+
+CREATE PROCEDURE `registerUser` (IN `emailIn` VARCHAR(50), IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60), IN `nameIn` VARCHAR(80), IN `genderIn` BOOLEAN, IN `birthDateIn` DATE, IN `facultyIn` VARCHAR(30), IN `universityNameIn` VARCHAR(80), IN `profilePictureExtensionIn` VARCHAR(4))   BEGIN
     CALL createUserProfile(emailIn, usernameIn, passwordIn);
     SET @userId = 0;  
     CALL idByUsername(usernameIn, @userId);
@@ -178,8 +231,31 @@ END$$
 --
 -- Függvények
 --
-CREATE DEFINER=`root`@`localhost` FUNCTION `isDeleted` (`deletedAtIn` TIMESTAMP) RETURNS TINYINT(1) DETERMINISTIC READS SQL DATA BEGIN
+CREATE FUNCTION `isDeleted` (`deletedAtIn` TIMESTAMP) RETURNS TINYINT(1) DETERMINISTIC READS SQL DATA BEGIN
 	RETURN IF(deletedAtIn IS NOT NULL, 1, 0);
+END$$
+
+CREATE FUNCTION `checkUserFollowed`(`follower` INT, `followed` INT) RETURNS BOOLEAN
+    DETERMINISTIC
+BEGIN
+    DECLARE userRelation BOOLEAN;
+    
+    SELECT COUNT(*) > 0 INTO userRelation 
+    FROM followedusers 
+    WHERE (followerId = follower AND followedId = followed);
+    RETURN userRelation;
+END$$
+
+CREATE FUNCTION `checkGroupMember`(memberIdIn INT, groupIdIn INT) RETURNS BOOLEAN
+    DETERMINISTIC
+BEGIN
+    DECLARE isMember BOOLEAN;
+
+    SELECT COUNT(*) > 0 INTO isMember 
+    FROM membersofgroups 
+    WHERE userId = memberIdIn AND groupId = groupIdIn;
+
+    RETURN isMember;
 END$$
 
 DELIMITER ;
@@ -265,24 +341,6 @@ CREATE TABLE `events` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- A tábla adatainak kiíratása `events`
---
-
-INSERT INTO `events` (`id`, `name`, `creatorId`, `startDate`, `endDate`, `place`, `attachmentRelPath`, `description`, `participantsCount`, `interestedUsersCount`, `isActual`) VALUES
-(5, 'Hackathon 2024', 1, '2024-11-15 08:00:00', '2024-11-15 17:00:00', 'Tech Park Hall A', 'hackathon2024.jpg', 'An intense coding competition for students and professionals.', 0, 0, 1),
-(6, 'Pi Day Celebration', 2, '2024-03-14 09:00:00', '2024-03-14 13:00:00', 'Math Department, Room 101', 'piday2024.png', 'Join us for Pi-themed activities and a pie-eating contest!', 0, 0, 1),
-(7, 'Eco-Exploration Workshop', 3, '2024-04-22 06:30:00', '2024-04-22 15:00:00', 'University C Botanical Garden', 'ecoexploration.gif', 'Explore the local ecosystem with guided tours and hands-on activities.', 0, 0, 1),
-(8, 'Quantum Mechanics Lecture', 4, '2024-05-10 11:00:00', '2024-05-10 13:00:00', 'Physics Building, Room 302', 'quantumlecture.jpeg', 'A special guest lecture on the mysteries of quantum mechanics.', 0, 0, 1),
-(9, 'Robotics Showcase', 5, '2024-06-05 08:00:00', '2024-06-05 14:00:00', 'Engineering Lab, Main Hall', 'roboticshowcase.bmp', 'See the latest in student-designed robots and engineering projects.', 0, 0, 1),
-(10, 'Hackathon 2024', 1, '2024-11-15 08:00:00', '2024-11-15 17:00:00', 'Tech Park Hall A', 'hackathon2024.jpg', 'An intense coding competition for students and professionals.', 0, 0, 1),
-(11, 'Pi Day Celebration', 2, '2024-03-14 09:00:00', '2024-03-14 13:00:00', 'Math Department, Room 101', 'piday2024.png', 'Join us for Pi-themed activities and a pie-eating contest!', 0, 0, 1),
-(12, 'Eco-Exploration Workshop', 3, '2024-04-22 06:30:00', '2024-04-22 15:00:00', 'University C Botanical Garden', 'ecoexploration.gif', 'Explore the local ecosystem with guided tours and hands-on activities.', 0, 0, 1),
-(13, 'Quantum Mechanics Lecture', 4, '2024-05-10 11:00:00', '2024-05-10 13:00:00', 'Physics Building, Room 302', 'quantumlecture.jpeg', 'A special guest lecture on the mysteries of quantum mechanics.', 0, 0, 1),
-(14, 'Robotics Showcase', 5, '2024-06-05 08:00:00', '2024-06-05 14:00:00', 'Engineering Lab, Main Hall', 'roboticshowcase.bmp', 'See the latest in student-designed robots and engineering projects.', 0, 0, 1);
-
--- --------------------------------------------------------
-
---
 -- Tábla szerkezet ehhez a táblához `eventsofgroups`
 --
 
@@ -290,24 +348,6 @@ CREATE TABLE `eventsofgroups` (
   `groupId` mediumint(9) NOT NULL,
   `eventId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- A tábla adatainak kiíratása `eventsofgroups`
---
-
-INSERT INTO `eventsofgroups` (`groupId`, `eventId`) VALUES
-(1, 5),
-(2, 6),
-(3, 7),
-(4, 8),
-(5, 9),
-(1, 10),
-(2, 11),
-(3, 12),
-(4, 13),
-(5, 14);
-
--- --------------------------------------------------------
 
 --
 -- Tábla szerkezet ehhez a táblához `followedgroups`
@@ -369,19 +409,6 @@ CREATE TABLE `groups` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- A tábla adatainak kiíratása `groups`
---
-
-INSERT INTO `groups` (`id`, `name`, `public`, `membersCount`, `postCount`, `actualEventCount`, `allEventCount`) VALUES
-(1, 'Code Masters - Computer Science', 1, 0, 0, 2, 2),
-(2, 'Number Ninjas - Mathematics', 1, 0, 0, 2, 2),
-(3, 'BioWizards - Biology', 1, 0, 0, 2, 2),
-(4, 'Quantum Minds - Physics', 1, 0, 0, 2, 2),
-(5, 'Engineers United - Engineering', 1, 0, 0, 2, 2);
-
--- --------------------------------------------------------
-
---
 -- Tábla szerkezet ehhez a táblához `interestedusers`
 --
 
@@ -421,9 +448,9 @@ CREATE TABLE `participants` (
 CREATE TABLE `posts` (
   `id` int(11) NOT NULL,
   `creatorId` mediumint(9) NOT NULL,
-  `likesCount` mediumint(9) DEFAULT '0',
+  `creditCount` mediumint(9) DEFAULT '0',
   `description` text NOT NULL,
-  `attachmentsRelPath` json NOT NULL
+  `attachmentRelPath` VARCHAR(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -502,19 +529,6 @@ CREATE TABLE `userprofiles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- A tábla adatainak kiíratása `userprofiles`
---
-
-INSERT INTO `userprofiles` (`id`, `email`, `username`, `password`, `createdAt`, `deletedAt`) VALUES
-(1, 'user1@example.com', 'user1', 'password1', '2024-10-29 06:38:21', NULL),
-(2, 'user2@example.com', 'user2', 'password2', '2024-10-29 06:38:21', NULL),
-(3, 'user3@example.com', 'user3', 'password3', '2024-10-29 06:38:21', NULL),
-(4, 'user4@example.com', 'user4', 'password4', '2024-10-29 06:38:21', NULL),
-(5, 'user5@example.com', 'user5', 'password5', '2024-10-29 06:38:21', NULL);
-
--- --------------------------------------------------------
-
---
 -- Tábla szerkezet ehhez a táblához `userroles`
 --
 
@@ -534,19 +548,6 @@ CREATE TABLE `usersbio` (
   `faculty` varchar(30) NOT NULL,
   `description` varchar(85) DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- A tábla adatainak kiíratása `usersbio`
---
-
-INSERT INTO `usersbio` (`userId`, `faculty`, `description`) VALUES
-(1, 'Computer Science', ''),
-(2, 'Mathematics', ''),
-(3, 'Biology', ''),
-(4, 'Physics', ''),
-(5, 'Engineering', '');
-
--- --------------------------------------------------------
 
 --
 -- Tábla szerkezet ehhez a táblához `userscontacts`
@@ -574,17 +575,6 @@ CREATE TABLE `usersdata` (
   `followerCount` mediumint(9) NOT NULL DEFAULT '0',
   `followedCount` mediumint(9) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- A tábla adatainak kiíratása `usersdata`
---
-
-INSERT INTO `usersdata` (`userId`, `name`, `gender`, `birthDate`, `universityName`, `profilePictureExtension`, `followerCount`, `followedCount`) VALUES
-(1, 'John Doe', 1, '1990-01-01', 'University A', 'jpg', 0, 0),
-(2, 'Jane Smith', 0, '1992-02-02', 'University B', 'png', 0, 0),
-(3, 'Alice Johnson', 0, '1995-03-03', 'University C', 'gif', 0, 0),
-(4, 'Bob Brown', 1, '1988-04-04', 'University D', 'jpeg', 0, 0),
-(5, 'Charlie White', 1, '1991-05-05', 'University E', 'bmp', 0, 0);
 
 --
 -- Indexek a kiírt táblákhoz
@@ -642,16 +632,14 @@ ALTER TABLE `eventsofgroups`
 --
 -- A tábla indexei `followedgroups`
 --
-ALTER TABLE `followedgroups`
-  ADD KEY `followerId` (`followerId`),
-  ADD KEY `followedGroupId` (`followedGroupId`);
+ALTER TABLE followedgroups ADD PRIMARY KEY (followerId, followedGroupId);
 
 --
 -- A tábla indexei `followedusers`
 --
-ALTER TABLE `followedusers`
-  ADD KEY `followerId` (`followerId`),
-  ADD KEY `followedId` (`followedId`);
+ALTER TABLE followedusers 
+ADD PRIMARY KEY (followerId, followedId), 
+ADD CONSTRAINT check_no_self_follow CHECK (followerId <> followedId);
 
 --
 -- A tábla indexei `groupcategories`
@@ -797,13 +785,13 @@ ALTER TABLE `contacttypes`
 -- AUTO_INCREMENT a táblához `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT a táblához `groups`
 --
 ALTER TABLE `groups`
-  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT a táblához `posts`
@@ -827,7 +815,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT a táblához `userprofiles`
 --
 ALTER TABLE `userprofiles`
-  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT;
 
 --
 -- Megkötések a kiírt táblákhoz
@@ -969,7 +957,85 @@ ALTER TABLE `userscontacts`
 --
 ALTER TABLE `usersdata`
   ADD CONSTRAINT `usersdata_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `userprofiles` (`id`);
+
 COMMIT;
+
+-- FACTORY
+-- Generate 5 User entities
+-- password: Password123
+CALL registerUser('user1@example.com', 'user1', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'John Doe', TRUE, '1990-01-01', 'Computer Science', 'University A', 'jpg');
+CALL registerUser('user2@example.com', 'user2', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'Jane Smith', FALSE, '1992-02-02', 'Mathematics', 'University B', 'png');
+CALL registerUser('user3@example.com', 'user3', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'Alice Johnson', FALSE, '1995-03-03', 'Biology', 'University C', 'gif');
+CALL registerUser('user4@example.com', 'user4', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'Bob Brown', TRUE, '1988-04-04', 'Physics', 'University D', 'jpeg');
+CALL registerUser('user5@example.com', 'user5', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'Charlie White', TRUE, '1991-05-05', 'Engineering', 'University E', 'bmp');
+
+-- Generate 5 Group entities
+CALL createGroup('Code Masters - Computer Science');
+CALL createGroup('Number Ninjas - Mathematics');
+CALL createGroup('BioWizards - Biology');
+CALL createGroup('Quantum Minds - Physics');
+CALL createGroup('Engineers United - Engineering');
+
+-- events
+-- Esemény a Computer Science csoporthoz
+CALL createEvent(
+    'Hackathon 2024', 
+    1, 
+    '2024-11-15 09:00:00', 
+    '2024-11-15 18:00:00', 
+    'Tech Park Hall A', 
+    'hackathon2024.jpg', 
+    'An intense coding competition for students and professionals.', 
+    1
+);
+
+-- Esemény a Mathematics csoporthoz
+CALL createEvent(
+    'Pi Day Celebration', 
+    2, 
+    '2024-03-14 10:00:00', 
+    '2024-03-14 14:00:00', 
+    'Math Department, Room 101', 
+    'piday2024.png', 
+    'Join us for Pi-themed activities and a pie-eating contest!', 
+    2
+);
+
+-- Esemény a Biology csoporthoz
+CALL createEvent(
+    'Eco-Exploration Workshop', 
+    3, 
+    '2024-04-22 08:30:00', 
+    '2024-04-22 17:00:00', 
+    'University C Botanical Garden', 
+    'ecoexploration.gif', 
+    'Explore the local ecosystem with guided tours and hands-on activities.', 
+    3
+);
+
+-- Esemény a Physics csoporthoz
+CALL createEvent(
+    'Quantum Mechanics Lecture', 
+    4, 
+    '2024-05-10 13:00:00', 
+    '2024-05-10 15:00:00', 
+    'Physics Building, Room 302', 
+    'quantumlecture.jpeg', 
+    'A special guest lecture on the mysteries of quantum mechanics.', 
+    4
+);
+
+-- Esemény az Engineering csoporthoz
+CALL createEvent(
+    'Robotics Showcase', 
+    5, 
+    '2024-06-05 10:00:00', 
+    '2024-06-05 16:00:00', 
+    'Engineering Lab, Main Hall', 
+    'roboticshowcase.bmp', 
+    'See the latest in student-designed robots and engineering projects.', 
+    5
+);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
