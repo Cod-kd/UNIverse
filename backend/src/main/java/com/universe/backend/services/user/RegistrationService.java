@@ -32,7 +32,11 @@ public class RegistrationService {
                 callableStatement.setString(2, urDTO.getUsernameIn());
                 callableStatement.setString(3, urDTO.getPasswordIn());
                 callableStatement.setString(4, urDTO.getNameIn());
-                callableStatement.setBoolean(5, urDTO.getGenderIn());
+                if (urDTO.getGenderIn() != null) {
+                    callableStatement.setBoolean(5, urDTO.getGenderIn());
+                } else {
+                    callableStatement.setNull(5, java.sql.Types.BOOLEAN);
+                }
                 callableStatement.setDate(6, new java.sql.Date(urDTO.getBirthDateIn().getTime()));
                 callableStatement.setString(7, urDTO.getFacultyIn());
                 callableStatement.setString(8, urDTO.getUniversityNameIn());
