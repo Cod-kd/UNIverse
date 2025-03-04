@@ -23,6 +23,6 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
            "WHERE p.username = :username")
     Optional<UsersBio> findUsersBioByUsername(@Param("username") String username);
     
-    @Procedure(name = "addFollower")
+    @Procedure(name = "followUser")
     void addFollower(@Param("followerIdIn") Integer followerId, @Param("followedIdIn") Integer followedId);
 }
