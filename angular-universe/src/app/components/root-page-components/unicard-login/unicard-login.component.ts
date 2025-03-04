@@ -45,9 +45,6 @@ export class UNIcardLoginComponent {
           this.loginService.fetchLogin(username, password).subscribe({
             next: () => {
               this.loginService.handleLoginResponse(credentials);
-            },
-            error: (err) => {
-              this.loginService.handleError(err);
             }
           });
         }

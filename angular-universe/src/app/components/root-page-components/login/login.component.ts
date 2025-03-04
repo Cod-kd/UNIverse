@@ -65,9 +65,6 @@ export class LoginComponent {
       this.loginService.fetchLogin(username, password).subscribe({
         next: () => {
           this.loginService.handleLoginResponse(this.loginForm.value);
-        },
-        error: (err) => {
-          this.loginService.handleError(err);
         }
       });
     }

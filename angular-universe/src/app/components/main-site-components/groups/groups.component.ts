@@ -13,7 +13,7 @@ import { Group } from '../../../models/group/group.model';
 })
 export class GroupsComponent implements OnInit {
   groups: Group[] = [];
-  activeGroupId: number | null = null; // Changed to number type
+  activeGroupId: number | null = null;
 
   constructor(private searchService: SearchService) {
     this.searchService.searchResults$.subscribe((results) => {
@@ -29,8 +29,7 @@ export class GroupsComponent implements OnInit {
 
   private fetchAllGroups() {
     this.searchService.fetchAll().subscribe({
-      next: (response) => this.searchService.handleSearchResponse(response),
-      error: (err) => this.searchService.handleError(err)
+      next: (response) => this.searchService.handleSearchResponse(response)
     });
   }
 

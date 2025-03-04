@@ -65,9 +65,4 @@ export class RegisterService {
       state: { userData: registrationData },
     });
   }
-
-  handleError(err: any) {
-    this.loadingService.hide();
-    this.popupService.show(err.message);
-  }
 }

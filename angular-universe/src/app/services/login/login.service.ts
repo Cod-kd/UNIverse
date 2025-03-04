@@ -2,7 +2,6 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { Observable, Subscription, throwError } from 'rxjs';
 import { catchError, filter, switchMap, finalize } from 'rxjs/operators';
-import { PopupService } from '../popup-message/popup-message.service';
 import { AuthService } from '../auth/auth.service';
 import { FetchService } from '../fetch/fetch.service';
 import { LoadingService } from '../loading/loading.service';
@@ -17,7 +16,6 @@ export class LoginService implements OnDestroy {
   constructor(
     private fetchService: FetchService,
     private router: Router,
-    private popupService: PopupService,
     private authService: AuthService,
     private loadingService: LoadingService,
   ) {
@@ -62,7 +60,6 @@ export class LoginService implements OnDestroy {
     }
   }
 
-  // Existing methods remain the same...
   fetchLogin(loginUsername: string, loginPassword: string, showErrors = true): Observable<string> {
     const body = {
       usernameIn: loginUsername,
@@ -98,10 +95,5 @@ export class LoginService implements OnDestroy {
       error: () => { }
     });
     this.router.navigate(["/main-site"], { state: { credentials } });
-  }
-
-  handleError(err: any) {
-    this.loadingService.hide();
-    this.popupService.show(err.message);
   }
 }

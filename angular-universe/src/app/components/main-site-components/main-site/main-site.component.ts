@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, Router } from '@angular/router';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { AuthService } from '../../../services/auth/auth.service';
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ButtonComponent } from "../../general-components/button/button.component";
 import { FormsModule } from '@angular/forms';
 import { registerLocaleData } from '@angular/common';
@@ -18,7 +18,6 @@ import { ThemeService } from '../../../services/theme/theme.service';
     SearchBarComponent,
     DatePipe,
     ButtonComponent,
-    NgIf,
     FormsModule
   ],
   templateUrl: './main-site.component.html',

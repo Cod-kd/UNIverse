@@ -20,7 +20,6 @@ export class SearchBarComponent {
     private searchService: SearchService,
     private router: Router
   ) {
-    // Reset search on navigation
     this.router.events.pipe(
       filter((event: RouterEvent): event is NavigationEnd => event instanceof NavigationEnd)
     ).subscribe(() => {
@@ -56,8 +55,7 @@ export class SearchBarComponent {
         this.isSearching = false;
         this.isActive = !!this.searchInput.nativeElement.value;
       },
-      error: (err) => {
-        this.searchService.handleError(err);
+      error: () => {
         this.isSearching = false;
         this.isActive = !!this.searchInput.nativeElement.value;
       }

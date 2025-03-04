@@ -118,8 +118,4 @@ export class SearchService {
     this.searchResultsSubject.next(response);
     return response;
   }
-
-  handleError(err: Error) {
-    this.popupService.show(err.message);
-  }
 }
