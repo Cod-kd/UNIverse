@@ -1,0 +1,41 @@
+<div id="unicardDiv">
+    <div id="userDataDiv">
+        <div class="profile-header">
+            <h2>UNIcard</h2>
+        </div>
+        <div class="profile-content">
+            <div class="profile-item">
+                <i class="fas fa-user"></i>
+                <span>{{ userData.username }}</span>
+            </div>
+            <div class="profile-item">
+                <i class="fa-solid fa-signature"></i>
+                <span>{{ userData.fullName }}</span>
+            </div>
+            <div class="profile-item">
+                <i class="fas fa-envelope"></i>
+                <span>{{ userData.email }}</span>
+            </div>
+            <div class="profile-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>{{ userData.birthDate }}</span>
+            </div>
+            <div class="profile-item">
+                <i class="fas fa-university"></i>
+                <span>{{ userData.university }}</span>
+            </div>
+            <div class="profile-item">
+                <i class="fas fa-school"></i>
+                <span>{{ userData.faculty }}</span>
+            </div>
+            <div class="profile-item">
+                <i class="fas fa-venus-mars"></i>
+                <span>{{
+                    userData.gender === '1' ? 'Férfi' :
+                    userData.gender === '0' ? 'Nő' : 'PNTS'
+                    }}</span>
+            </div>
+        </div>
+    </div>
+    <app-button [btnLabel]="'Kérem a kártyám!'" iconClass="fa-solid fa-download" [size]="'big'" (click)="saveUniCard()"></app-button>
+</div>

@@ -1,0 +1,54 @@
+<form autocomplete="off" [formGroup]="registrationForm">
+  <input id="emailInput" class="input" type="email" formControlName="email" placeholder="E-mail..."
+    (blur)="onEmailChange()">
+
+  <input id="usernameInput" class="input" type="text" formControlName="username" placeholder="Felhasználónév..."
+    (blur)="onUsernameChange()">
+
+  <input id="fullNameInput" class="input" type="text" formControlName="fullName" placeholder="Teljes név..."
+    (blur)="onFullNameChange()">
+
+  <div class="gender-select">
+    <label>
+      <input id="maleRadioInput" type="radio" formControlName="gender" value="1" class="radio-input"> Férfi
+    </label>
+    <label>
+      <input id="femaleRadioInput" type="radio" formControlName="gender" value="0" class="radio-input"> Nő
+    </label>
+    <label>
+      <input id="pntsRadioInput" type="radio" formControlName="gender" value="null" class="radio-input"> PNTS
+    </label>
+  </div>
+
+  <app-toggle-input></app-toggle-input>
+
+  <input id="birthDateInput" class="input" type="text" formControlName="birthDate" placeholder="ÉÉÉÉ-HH-NN"
+    maxlength="10" (input)="formatBirthDate($event)" (blur)="onBirthDateChange()">
+
+  <div id="universityDiv">
+    <select id="universityName" formControlName="university" (change)="onUniversityChange()">
+      <option value="">Válassz egyetemet</option>
+      @for (uni of universities(); track uni) {
+      <option [value]="uni.value">{{ uni.label }}</option>
+      }
+    </select>
+  </div>
+
+  <div id="facultyDiv">
+    <select id="facultySelect" formControlName="faculty" (change)="onFacultyChange()">
+      <option value="">Válassz kart</option>
+      @for (faculty of faculties(); track faculty) {
+      <option [value]="faculty.value">{{ faculty.label }}</option>
+      }
+    </select>
+  </div>
+
+  <div id="btnDiv">
+    <app-button [btnLabel]="'Regisztráció'" iconClass="fa-solid fa-address-card" [size]="'big'"
+      (click)="registerNewUser()">
+    </app-button>
+    <app-button [btnLabel]="'Van már fiókom'" iconClass="fa-solid fa-id-card-clip" [size]="'big'"
+      (click)="returnToLogin()">
+    </app-button>
+  </div>
+</form>

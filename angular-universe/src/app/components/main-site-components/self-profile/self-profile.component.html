@@ -1,0 +1,111 @@
+@if (profile) {
+<div class="profile-container">
+    <div class="profile-header">
+        <h2>{{ profile.usersData.name }}</h2>
+        <img [src]="getProfileImageSrc()" [alt]="profile.usersData.name + '\'s profile picture'"
+            class="profile-picture">
+        <div>
+            <p><span>Követők:</span> {{ profile.usersData.followerCount }}</p>
+            <p><span>Követés:</span> {{ profile.usersData.followedCount }}</p>
+        </div>
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Leírás <i class="fa-solid fa-pen-to-square"></i></span>
+        @if (editingDescription) {
+        <textarea class="edit-textarea" [(ngModel)]="tempDescription" (blur)="saveDescription()"
+            (keydown.enter)="$event.preventDefault(); saveDescription()">
+              </textarea>
+        } @else {
+        <div class="field-value" (click)="editDescription()">
+            {{ profile.description || 'Kattints a hozzáadáshoz!' }}
+        </div>
+        }
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Általános információk</span>
+        <div class="field-value">
+            {{ profile.usersData.gender === true ? 'Male' :
+            profile.usersData.gender === false ? 'Female' : 'PNTS' }} |
+            Born: {{ profile.usersData.birthDate | date:'mediumDate' }}
+        </div>
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Egyetem</span>
+        <div class="field-value">{{ profile.usersData.universityName }}</div>
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Kar</span>
+        <div class="field-value">{{ profile.faculty }}</div>
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Elérhetőségek <i class="fa-solid fa-pen-to-square"></i></span>
+        <div class="tags-container">
+            @for (contact of profile.contacts; track contact) {
+            <div class="tag">
+                {{ contact }}
+                <span class="tag-close" (click)="removeContact(contact)">×</span>
+            </div>
+            }
+        </div>
+
+        <div class="contact-form">
+            <select class="dropdown" [(ngModel)]="contactInput.type" (change)="updateContactPlaceholder()">
+                <option value="" disabled selected>Válassz típust...</option>
+                @for (option of contactOptions; track option) {
+                <option [value]="option">{{ option }}</option>
+                }
+            </select>
+
+            @if (contactInput.type) {
+            <input type="text" class="tag-input" [(ngModel)]="contactInput.value" [placeholder]="contactPlaceholder"
+                (keydown.enter)="addContact()">
+            <button class="add-btn" (click)="addContact()">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+            }
+        </div>
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Szerepkörök <i class="fa-solid fa-pen-to-square"></i></span>
+        <div class="tags-container">
+            @for (role of profile.roles; track role) {
+            <div class="tag">
+                {{ role }}
+                <span class="tag-close" (click)="removeRole(role)">×</span>
+            </div>
+            }
+        </div>
+        <select class="dropdown" [(ngModel)]="newRole" (change)="addRole()">
+            <option value="" disabled selected>Szerepkör hozzáadása...</option>
+            @for (option of roleOptions; track option) {
+            <option [value]="option">{{ option }}</option>
+            }
+        </select>
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Érdeklődések <i class="fa-solid fa-pen-to-square"></i></span>
+        <div class="tags-container">
+            @for (interest of profile.interests; track interest) {
+            <div class="tag">
+                {{ interest }}
+                <span class="tag-close" (click)="removeInterest(interest)">×</span>
+            </div>
+            }
+        </div>
+        <select class="dropdown" [(ngModel)]="newInterest" (change)="addInterest()">
+            <option value="" disabled selected>Érdeklődés hozzáadása...</option>
+            @for (option of interestOptions; track option) {
+            <option [value]="option">{{ option }}</option>
+            }
+        </select>
+    </div>
+    <app-button [btnLabel]="'Mentés'" (click)="saveChanges()"></app-button>
+</div>
+}

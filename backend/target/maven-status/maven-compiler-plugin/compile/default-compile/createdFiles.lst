@@ -1,0 +1,5 @@
+com\universe\backend\UnIverseBackendApplication.class
+com\universe\backend\services\UserService.class
+com\universe\backend\modules\UserProfiles.class
+com\universe\backend\repositories\UserProfilesRepository.class
+com\universe\backend\controllers\UserController.class

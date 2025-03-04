@@ -1,0 +1,6 @@
+<button [disabled]="isDisabled" class="button {{ sizeClass }} {{ shapeClass }}" type="button">
+    @if(iconClass){
+    <i [class]="iconClass"></i>
+    }
+    {{btnLabel}}
+</button>

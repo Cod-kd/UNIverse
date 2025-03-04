@@ -1,0 +1,196 @@
+<div id="mainDiv">
+    @if (isExactMainSitePath()) {
+    <div class="welcome-container">
+        <h1>Üdv {{currentUser}}!</h1>
+        <div class="card-container">
+            <div class="quick-card quick-access">
+                <h3>Gyors Elérés</h3>
+                <hr class="main-hr">
+                <div class="shortcuts-container">
+                    @for (shortcut of shortcuts; track shortcut.id) {
+                    <div class="shortcut-item" [class.website-shortcut]="shortcut.type === 'website'"
+                        [class.uninote-shortcut]="shortcut.type === 'uninote'"
+                        [class.fade-out]="shortcut.type === 'uninote' && shortcut.completed && isItemFading(shortcut.id)">
+                        @if (shortcut.type === 'website') {
+                        <div class="shortcut-content">
+                            <div class="website-info" (click)="openWebsite(shortcut.url)">
+                                <i class="fa-solid fa-globe"></i>
+                                <span>{{shortcut.name}}</span>
+                            </div>
+                            <div class="shortcut-actions">
+                                <button (click)="deleteShortcut(shortcut.id)">
+                                    <i class="fa-solid fa-trash"></i> Törlés
+                                </button>
+                            </div>
+                        </div>
+                        } @else if (shortcut.type === 'uninote') {
+                        <div class="shortcut-content">
+                            <label class="custom-checkbox">
+                                <input type="checkbox" [checked]="shortcut.completed"
+                                    (change)="toggleNoteComplete(shortcut.id)">
+                                <span class="checkmark"></span>
+                            </label>
+                            <span class="note-title" (click)="openNoteDetailModal(shortcut)">{{shortcut.name}}</span>
+                            <span class="note-time">{{shortcut.startTime | date:'yyyy. MMM d.':'hu-HU'}}</span>
+                        </div>
+                        <div class="shortcut-actions">
+                            <button (click)="deleteShortcut(shortcut.id)">
+                                <i class="fa-solid fa-trash"></i> Törlés
+                            </button>
+                        </div>
+                        }
+                    </div>
+                    }
+                    @if (shortcuts.length === 0) {
+                    <div class="no-shortcuts">
+                        Nincsenek parancsikonok. Kattints a + gombra új hozzáadásához.
+                    </div>
+                    }
+                </div>
+                <div class="shortcuts-counter">
+                    <div class="counter-item">
+                        <i class="fa-solid fa-globe"></i>
+                        <span>{{getWebsiteCount()}}</span>
+                    </div>
+                    <div class="counter-item">
+                        <i class="fa-solid fa-note-sticky"></i>
+                        <span>{{getNoteCount()}}</span>
+                    </div>
+                </div>
+                <div class="add-shortcut-btn">
+                    <app-button iconClass="fa-solid fa-plus" size="small" shape="circle"
+                        (click)="openShortcutModal()"></app-button>
+                </div>
+            </div>
+
+            <div class="quick-card">
+                <h3>Összefoglaló</h3>
+                <hr class="main-hr">
+                <div class="item">
+                    <span class="stat-label">Idő:</span>
+                    <span class="stat-value">{{ currentTime }}</span>
+                </div>
+
+                <div class="item">
+                    <span class="stat-label">Dátum:</span>
+                    <span class="stat-value">{{ currentDate }}</span>
+                </div>
+
+                <div class="item">
+                    <span class="stat-label">Nap:</span>
+                    <span class="stat-value">{{ currentDay }}</span>
+                </div>
+                <div class="item">
+                    <span class="stat-label">Követőid:</span>
+                    <span class="stat-value">{{ followerCount }}</span>
+                </div>
+                <div class="item">
+                    <span class="stat-label">Posztjaid:</span>
+                    <span class="stat-value">{{ postCount }}</span>
+                </div>
+            </div>
+
+            <div class="quick-card">
+                <h3>Aktivitás</h3>
+                <hr class="main-hr">
+                <div class="activity-list">
+                    @for (activity of recentActivities; track activity.date) {
+                    <div class="item">
+                        <span class="activity-date">{{activity.date | date:'yyyy.MM.dd.':'hu-HU'}}</span>
+                        <span class="activity-desc">{{activity.description}}</span>
+                    </div>
+                    }
+                </div>
+            </div>
+
+            <div class="quick-card">
+                <h3>Gyors linkek</h3>
+                <hr class="main-hr">
+                <div class="quick-links">
+                    <a (click)="navigateTo('/main-site/you')">Saját profil</a>
+                    <a (click)="navigateTo('/main-site/settings')">Beállítások</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+    @if(shouldShowSearchBar()){
+    <div id="searchBarDiv">
+        <app-search-bar></app-search-bar>
+        <hr>
+    </div>
+    }
+    <div id="router">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+
+<div class="modal" *ngIf="showShortcutModal">
+    <div class="modal-content">
+        <h3>Új parancsikon létrehozása</h3>
+        <div class="modal-body">
+            <div class="type-selector">
+                <label>
+                    <input type="radio" name="shortcutType" [(ngModel)]="newShortcut.type" value="website">
+                    Weboldal
+                </label>
+                <label>
+                    <input type="radio" name="shortcutType" [(ngModel)]="newShortcut.type" value="uninote">
+                    UNInote
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>Név</label>
+                <input type="text" [(ngModel)]="newShortcut.name" placeholder="Parancsikon neve">
+            </div>
+
+            @if (newShortcut.type === 'website') {
+            <div class="form-group">
+                <label>URL</label>
+                <input type="text" [(ngModel)]="newShortcut.url" placeholder="https://...">
+            </div>
+            } @else if (newShortcut.type === 'uninote') {
+            <div class="form-group">
+                <label>Leírás</label>
+                <textarea [(ngModel)]="newShortcut.description" placeholder="Jegyzet leírása"></textarea>
+            </div>
+            }
+        </div>
+        <div class="modal-actions">
+            <app-button iconClass="fa-solid fa-x" [size]="'small'" [shape]="'rectangle'"
+                (click)="closeShortcutModal()"></app-button>
+            <app-button iconClass="fa-solid fa-check" [size]="'small'" [shape]="'rectangle'" (click)="saveShortcut()"
+                [isDisabled]="!isValidShortcut()"></app-button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" *ngIf="showNoteDetailModal">
+    <div class="modal-content">
+        <h3>UNInote Részletek</h3>
+        <div class="modal-body">
+            @if (selectedNote) {
+            <div class="form-group">
+                <label>Név</label>
+                <div class="note-detail-field">{{selectedNote.name}}</div>
+            </div>
+            <div class="form-group">
+                <label>Dátum</label>
+                <div class="note-detail-field">{{formatDateToHungarian(selectedNote.startTime)}}</div>
+            </div>
+            <div class="form-group">
+                <label>Leírás</label>
+                <div class="note-detail-field note-description-detail">{{selectedNote.description}}</div>
+            </div>
+            }
+        </div>
+        <div class="modal-actions">
+            <app-button [btnLabel]="'Bezár'" [size]="'small'" (click)="closeNoteDetailModal()"></app-button>
+            @if (selectedNote && !selectedNote.completed) {
+            <app-button [btnLabel]="'Befejeztem'" [size]="'small'"
+                (click)="toggleNoteComplete(selectedNote.id); closeNoteDetailModal()">Befejeztem</app-button>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,84 @@
+#unicardDiv {
+  display: grid;
+  gap: 1em;
+  justify-items: center;
+}
+
+#userDataDiv {
+  width: 350px;
+  background-color: var(--dark2);
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  animation: float 3s infinite forwards ease-in-out;
+}
+
+iframe{
+  position: absolute;
+  width: 40em;
+  height: 40em;
+  top: 13%;
+  left: 35%;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100%{
+    transform: translateY(0);
+  }
+}
+
+.profile-header {
+  background: linear-gradient(45deg, var(--dark2), var(--main));
+  color: var(--light1);
+  text-align: center;
+  padding: 20px;
+}
+
+.profile-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.profile-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.profile-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.profile-item i {
+  font-size: 1.5rem;
+  color: var(--main);
+}
+
+.profile-item span {
+  flex-grow: 1;
+  color: var(--light1);
+}
+
+@media screen and (max-width: 480px) {
+  #userDataDiv {
+    width: 90%;
+  }
+
+  #userDataDiv p {
+    font-size: 16px;
+  }
+}

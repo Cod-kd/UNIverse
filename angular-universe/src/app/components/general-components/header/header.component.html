@@ -1,0 +1,49 @@
+<header [class.header-hidden]="headerHidden">
+  <a [routerLink]="['/']" (click)="onNavigate()">
+    <img src="images/simpleLogo.png" alt="simpleLogo" id="logo">
+  </a>
+
+  <nav class="desktop-nav">
+    @for (item of navItems; track item.path) {
+    <a [routerLink]="[item.path]" class="link link--elara" (click)="onNavigate()">
+      <span>{{ item.label }}</span>
+    </a>
+    }
+
+    @if (isLoggedIn$ | async) {
+    <a href="#" class="link link--elara" (click)="logout()">
+      <span>Kijelentkezés</span>
+    </a>
+    }
+  </nav>
+
+  <a [routerLink]="['/main-site/you']" (click)="onNavigate()">
+    <i class="fa-solid fa-user"></i>
+  </a>
+
+  <button class="hamburger-btn" (click)="toggleMenu($event)">
+    <i class="fa-solid" [class.fa-bars]="!isMenuOpen" [class.fa-xmark]="isMenuOpen"></i>
+  </button>
+
+  <div class="mobile-menu" [class.active]="isMenuOpen" [style.height]="(isLoggedIn$ | async) ? '35vh' : '30vh'">
+    <nav>
+      <a [routerLink]="['/main-site/user-profile']" class="link link--elara" (click)="onNavigate()">
+        <span>Profil</span>
+      </a>
+      <a [routerLink]="['/main-site/groups']" class="link link--elara" (click)="onNavigate()">
+        <span>Csoportok</span>
+      </a>
+      <a [routerLink]="['/main-site/events']" class="link link--elara" (click)="onNavigate()">
+        <span>Események</span>
+      </a>
+      <a [routerLink]="['/main-site/settings']" class="link link--elara" (click)="onNavigate()">
+        <span>Beállítások</span>
+      </a>
+      @if (isLoggedIn$ | async) {
+      <a href="#" class="link link--elara" (click)="logout()">
+        <span>Kijelentkezés</span>
+      </a>
+      }
+    </nav>
+  </div>
+</header>

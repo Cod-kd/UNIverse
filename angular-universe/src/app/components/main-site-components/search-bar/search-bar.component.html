@@ -1,0 +1,12 @@
+<div id="search-section" class="desktop-search">
+    <div id="searchIconDiv" [class.active]="isActive" [class.searching]="isSearching">
+        <form autocomplete="off" (submit)="search($event, searchInput.value)">
+            <input type="search" id="search-bar" placeholder="Keresés..." #searchInput (focus)="onFocus()"
+                (blur)="onBlur()">
+            <button id="search" type="submit" [class.searching]="isSearching">
+                <i class="fa-solid" [class.fa-search]="!isSearching" [class.fa-spinner]="isSearching"
+                    [class.fa-spin]="isSearching"></i>
+            </button>
+        </form>
+    </div>
+</div>

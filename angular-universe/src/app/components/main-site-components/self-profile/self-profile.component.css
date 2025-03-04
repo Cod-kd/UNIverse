@@ -1,0 +1,162 @@
+.profile-container {
+    background-color: var(--dark2);
+    color: var(--light1);
+    border-radius: 8px;
+    padding: 1.5rem;
+    min-width: 30vw;
+    margin: 0 auto;
+}
+
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+    border-bottom: 1px solid var(--dark1);
+    padding-bottom: 0.75rem;
+}
+
+.profile-header > div p{
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    margin: 0;
+}
+
+.profile-header > div span{
+    color: var(--main);
+}
+
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--main);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.profile-field {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.field-label {
+    font-weight: 600;
+    color: var(--main);
+    margin-bottom: 0.25rem;
+}
+
+.field-value {
+    padding: 0.5rem;
+    border-radius: 4px;
+    background-color: var(--dark1);
+    min-height: 1.5rem;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.field-value:hover {
+    background-color: var(--dark1);
+}
+
+.edit-textarea {
+    width: 100%;
+    background-color: var(--dark1);
+    color: var(--light1);
+    border: 1px solid var(--main);
+    border-radius: 4px;
+    padding: 0.5rem;
+    min-height: 100px;
+    resize: vertical;
+}
+
+.tags-container {
+    display: grid;
+    place-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.tag {
+    background-color: var(--dark1);
+    color: var(--light1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tag-close {
+    cursor: pointer;
+    font-weight: bold;
+    opacity: 0.7;
+}
+
+.tag-close:hover {
+    opacity: 1;
+}
+
+.tag-input {
+    background-color: var(--dark1);
+    color: var(--light1);
+    border: 1px solid var(--main);
+    border-radius: 4px;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    flex-grow: 1;
+}
+
+.dropdown {
+    background-color: var(--dark1);
+    color: var(--light1);
+    border: 1px solid var(--main);
+    border-radius: 4px;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    width: 100%;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+@media (min-width: 576px) {
+    .contact-form {
+        flex-direction: row;
+        align-items: flex-end;
+    }
+    
+    .dropdown {
+        width: auto;
+        min-width: 150px;
+        margin-top: 0;
+    }
+}
+
+.add-btn {
+    background-color: var(--dark1);
+    color: var(--light1);
+    border: 1px solid var(--main);
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 0.5rem;
+}
+
+.add-btn:hover {
+    background-color: var(--main);
+}
+
+@media (min-width: 576px) {
+    .add-btn {
+        margin-top: 0;
+    }
+}

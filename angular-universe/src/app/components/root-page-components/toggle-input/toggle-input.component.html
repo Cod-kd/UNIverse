@@ -1,0 +1,7 @@
+<div class="password-container">
+    <input autocomplete="off" id="passwordInput" (blur)="onPasswordChange()" [formControl]="passwordControl" [type]="showPassword ? 'text' : 'password'" placeholder="Jelszó..."
+        class="input" />
+    <button type="button" class="toggle-password" (click)="showPassword = !showPassword">
+        <i class="fa" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+    </button>
+</div>
