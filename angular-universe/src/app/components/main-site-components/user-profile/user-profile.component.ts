@@ -7,7 +7,7 @@ import { UniversityService } from '../../../services/university/university.servi
 import { FollowService } from '../../../services/follow/follow.service';
 import { ButtonComponent } from '../../general-components/button/button.component';
 import html2canvas from 'html2canvas';
-import { catchError, tap, finalize, takeUntil } from 'rxjs/operators';
+import { catchError, tap, takeUntil } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
 
@@ -24,6 +24,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   isFriendAdded = false;
   isProfileSaved = false;
   isFollowInProgress = false;
+  isFollowing = false;
 
   private destroy$ = new Subject<void>();
   private isBrowser: boolean;
@@ -115,28 +116,32 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   startFollowing(): void {
-    if (!this.searchedUsername || this.isFollowInProgress || this.isFriendAdded) return;
+    if (!this.profile || this.isFollowInProgress || !this.searchedUsername) return;
 
     this.isFollowInProgress = true;
 
-    this.followService.followUser(this.searchedUsername)
+    const followAction = this.isFollowing
+      ? this.followService.unfollowUser(this.searchedUsername)
+      : this.followService.followUser(this.searchedUsername);
+
+    followAction
       .pipe(
         tap(() => {
-          if (this.profile && !this.isFriendAdded) {
-            this.profile.usersData.followerCount++;
+          if (this.profile) {
+            this.profile.usersData.followerCount += this.isFollowing ? -1 : 1;
+            this.isFollowing = !this.isFollowing;
           }
         }),
         catchError(error => {
-          this.popupService.show(`Sikertelen követés: ${error.message || 'ismeretlen hiba'}`);
+          this.popupService.show(`Művelet sikertelen: ${error.message}`);
           return of(null);
         }),
-        finalize(() => this.isFollowInProgress = false),
         takeUntil(this.destroy$)
       )
-      .subscribe(response => {
-        if (response !== null) {
-          this.isFriendAdded = true;
-        }
+      .subscribe({
+        next: () => { },
+        error: () => { },
+        complete: () => this.isFollowInProgress = false
       });
   }
 

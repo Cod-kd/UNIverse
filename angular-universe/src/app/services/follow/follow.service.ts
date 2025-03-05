@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -11,6 +10,21 @@ export class FollowService {
   private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
+
+  // Fetch user ID by username
+  getUserId(username: string): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/user/id`, { 
+      params: { username } 
+    });
+  }
+
+  // Check follow status
+  checkFollowStatus(followerId: string, followedId: number): Observable<boolean> {
+    return this.http.post<boolean>(`${this.baseUrl}/user/isFollowed`, { 
+      followerId, 
+      followedId 
+    });
+  }
 
   followUser(targetUserName: string): Observable<any> {
     const followerId = localStorage.getItem('userId');
@@ -23,24 +37,20 @@ export class FollowService {
       `${this.baseUrl}/user/name/${targetUserName}/follow`,
       { followerId },
       { responseType: 'text' }
-    ).pipe(
-      catchError(err => throwError(() => err))
     );
   }
 
-  /* Future implementation awaits
-  checkFollowStatus(targetUserName: string): Observable<boolean> {
+  unfollowUser(targetUserName: string): Observable<any> {
     const followerId = localStorage.getItem('userId');
 
     if (!followerId) {
       return throwError(() => new Error('No logged in user found'));
     }
 
-    return this.http.get<boolean>(
-      `${this.baseUrl}/user/name/${targetUserName}/follow/status?followerId=${followerId}`
-    ).pipe(
-      catchError(err => throwError(() => err))
+    return this.http.post(
+      `${this.baseUrl}/user/name/${targetUserName}/unfollow`,
+      { followerId },
+      { responseType: 'text' }
     );
   }
-  */
 }
