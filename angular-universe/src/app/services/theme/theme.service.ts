@@ -10,7 +10,7 @@ export interface ThemeVariables {
   providedIn: 'root'
 })
 export class ThemeService {
-  private readonly STORAGE_KEY_PREFIX = 'appTheme';
+  private readonly STORAGE_KEY = 'appTheme';
   private defaultTheme: ThemeVariables = {
     '--main': '#FF5A1F',
     '--link': '#5D3FD3',
@@ -22,37 +22,33 @@ export class ThemeService {
 
   private themeSubject = new BehaviorSubject<ThemeVariables>(this.defaultTheme);
   currentTheme$ = this.themeSubject.asObservable();
+  private initialized = false;
 
-  private currentUserId: string | null = null;
+  constructor(private popupService: PopupService) { }
 
-  constructor(private popupService: PopupService) {
-    this.loadTheme();
-  }
-
-  private getStorageKey(): string {
-    return this.currentUserId
-      ? `${this.STORAGE_KEY_PREFIX}_${this.currentUserId}`
-      : this.STORAGE_KEY_PREFIX;
-  }
-
-  loadTheme(): void {
-    const storageKey = this.getStorageKey();
-    const savedTheme = localStorage.getItem(storageKey);
+  loadTheme(): ThemeVariables {
+    const savedTheme = localStorage.getItem(this.STORAGE_KEY);
 
     if (savedTheme) {
       try {
         const themeVars = JSON.parse(savedTheme);
         this.applyTheme(themeVars);
       } catch (e) {
-        this.popupService.showError('Sikertelen mentés!');
+        this.popupService.showError(`Theme loading failed ${e}`);
         this.applyTheme(this.defaultTheme);
       }
     } else {
       this.applyTheme(this.defaultTheme);
     }
+
+    this.initialized = true;
+    return this.themeSubject.value;
   }
 
   getCurrentTheme(): ThemeVariables {
+    if (!this.initialized) {
+      this.loadTheme();
+    }
     return this.themeSubject.getValue();
   }
 
@@ -66,7 +62,7 @@ export class ThemeService {
     const updatedTheme = { ...currentTheme, [variable]: value };
 
     this.themeSubject.next(updatedTheme);
-    localStorage.setItem(this.getStorageKey(), JSON.stringify(updatedTheme));
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updatedTheme));
   }
 
   applyTheme(theme: ThemeVariables): void {
@@ -77,12 +73,12 @@ export class ThemeService {
   }
 
   saveTheme(theme: ThemeVariables): void {
-    localStorage.setItem(this.getStorageKey(), JSON.stringify(theme));
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(theme));
     this.applyTheme(theme);
   }
 
   resetToDefault(): void {
     this.applyTheme(this.defaultTheme);
-    localStorage.removeItem(this.getStorageKey());
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.defaultTheme));
   }
 }

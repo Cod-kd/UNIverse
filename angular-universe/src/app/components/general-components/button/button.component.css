@@ -33,13 +33,13 @@
 
 .button:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 90, 31, 0.4);
+    box-shadow: 0 4px 12px var(--main);
     cursor: pointer;
 }
 
 .button:active {
     transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(255, 90, 31, 0.3);
+    box-shadow: 0 2px 6px var(--main);
 }
 
 .button::before {

@@ -88,6 +88,7 @@ export class AuthService {
   private clearUserData(): void {
     this.authKeys.forEach(key => localStorage.removeItem(key));
     localStorage.removeItem("userId");
+    localStorage.removeItem("registrationFormData");
     this.updateValueCache();
   }
 
