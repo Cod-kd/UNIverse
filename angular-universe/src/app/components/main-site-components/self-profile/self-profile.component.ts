@@ -178,32 +178,28 @@ export class SelfProfileComponent implements OnInit {
   }
 
   saveChanges(): void {
-    if (this.currentDescription === this.originalDescription) return;
+    if (this.profile.description === this.originalProfile?.description) return;
 
     const userId = localStorage.getItem('userId');
     if (!userId) return;
 
     this.isSaving = true;
 
-    const payload = {
-      description: this.currentDescription,
-      userId
+    const requestBody = {
+      description: this.profile.description,
+      userId: parseInt(userId)
     };
 
-    // Use fetchService to send the POST request
-    this.fetchService.post('/user/update/desc', JSON.stringify(payload)).subscribe({
+    this.fetchService.post('/user/update/desc', requestBody, {
+      responseType: 'text'
+    }).subscribe({
       next: () => {
-        this.originalDescription = this.currentDescription;
-
-        // Hide saving spinner after a delay
-        setTimeout(() => {
-          this.isSaving = false;
-        }, 3000);
+        this.originalProfile.description = this.profile.description;
+        this.isSaving = false;
       },
       error: () => {
         this.isSaving = false;
       }
     });
   }
-
 }
