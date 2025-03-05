@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 import { registerLocaleData } from '@angular/common';
 import localeHu from '@angular/common/locales/hu';
 import { WebsiteShortcut, UNInoteShortcut, Shortcut, ShortcutFormData } from '../../../models/shortcut/shortcut.model';
-import { ThemeService } from '../../../services/theme/theme.service';
 
 @Component({
   selector: 'app-main-site',
@@ -54,12 +53,11 @@ export class MainSiteComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private datePipe: DatePipe,
-    private themeService: ThemeService
   ) { }
 
   ngOnInit() {
-    this.themeService.loadTheme();
     registerLocaleData(localeHu);
+
     if (!this.authService.getLoginStatus()) {
       this.router.navigate(['/UNIcard-login']);
       return;
@@ -73,8 +71,9 @@ export class MainSiteComponent implements OnInit {
       this.router.navigate(['/UNIcard-login']);
     }
 
-    this.currentDate = this.datePipe.transform(new Date(), 'yyyy. MMMM dd.', 'hu-HU') || '';
-    this.currentDay = this.datePipe.transform(new Date(), 'EEEE', 'hu-HU') || '';
+    const now = new Date();
+    this.currentDate = this.formatDateToHungarian(now);
+    this.currentDay = this.getHungarianDayName(now.getDay());
 
     this.updateTime();
     setInterval(() => this.updateTime(), 1000);
@@ -88,11 +87,14 @@ export class MainSiteComponent implements OnInit {
       'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'
     ];
 
+    return `${date.getFullYear()}. ${months[date.getMonth()]} ${date.getDate()}.`;
+  }
+
+  getHungarianDayName(dayIndex: number): string {
     const days = [
       'Vasárnap', 'Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'
     ];
-
-    return `${date.getFullYear()}. ${months[date.getMonth()]} ${date.getDate()}. ${days[date.getDay()]}`;
+    return days[dayIndex];
   }
 
   updateTime() {
