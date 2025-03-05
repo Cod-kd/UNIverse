@@ -12,7 +12,7 @@ import { of, Subject } from 'rxjs';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'app-user-profile',
   standalone: true,
   imports: [CommonModule, ButtonComponent],
   templateUrl: './user-profile.component.html',
