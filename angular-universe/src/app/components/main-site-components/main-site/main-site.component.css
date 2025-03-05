@@ -527,4 +527,58 @@ input[type="radio"]:checked::before {
     .sticky-search {
         top: 70px;
     }
+
+    #mainDiv{
+        padding-left: 0.8em;
+    }
+
+    .card-container {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "quick-access"
+            "content1"
+            "content2"
+            "activity";
+        gap: 0.8rem;
+        margin: 1rem auto;
+    }
+
+    .quick-card.quick-access {
+        grid-column: auto;
+        grid-row: auto;
+        height: auto;
+        min-height: 320px;
+    }
+
+    .quick-card {
+        padding: 1rem;
+    }
+
+    .quick-card h3 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .shortcuts-container {
+        max-height: 170px;
+    }
+
+    .activity-list {
+        min-height: 250px;
+    }
+
+    .item {
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.3rem;
+        font-size: 0.9rem;
+    }
+
+    .shortcuts-counter {
+        font-size: 0.7rem;
+    }
+
+    .modal-content {
+        padding: 1rem;
+        width: 95%;
+    }
 }
