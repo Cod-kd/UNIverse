@@ -1,4 +1,10 @@
-#groupsContainer{
+#groupsContainer {
     display: grid;
     gap: 3rem;
+}
+
+@media (max-width: 480px) {
+    #groupsContainer {
+        gap: 1.5rem;
+    }
 }
