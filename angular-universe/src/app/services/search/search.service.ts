@@ -46,8 +46,6 @@ export class SearchService {
         return searchTerm ? `/groups/search` : "/groups/search";
       case "/main-site/events":
         return searchTerm ? `/events/search` : "/events/all";
-      case "/main-site/calendar":
-        return "/calendar/all";
       default:
         throw new Error("Unknown url");
     }
@@ -89,6 +87,15 @@ export class SearchService {
     if (this.router.url === "/main-site/user-profile" || this.router.url === "/main-site/you") {
       this.searchedUsernameSubject.next(searchTerm.trim());
     }
+
+    if (this.router.url === "/main-site/user-profile" || this.router.url === "/main-site/you") {
+      this.searchedUsernameSubject.next(searchTerm.trim());
+    }
+
+    if (this.router.url === "/main-site/user-profile" && searchTerm.trim() === localStorage.getItem("username")) {
+      this.router.navigate(["/main-site/you"]);
+    }
+
 
     try {
       const endpoint = this.getEndpointByUrl(searchTerm);
