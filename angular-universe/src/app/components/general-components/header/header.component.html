@@ -1,6 +1,8 @@
 <header [class.header-hidden]="headerHidden">
   <a [routerLink]="['/']" (click)="onNavigate()">
-    <img src="images/simpleLogo.png" alt="simpleLogo" id="logo">
+    <div class="logo-container">
+      <img src="images/logo.png" alt="logo" class="logo">
+    </div>
   </a>
 
   <nav class="desktop-nav">

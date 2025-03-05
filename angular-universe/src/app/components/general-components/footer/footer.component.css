@@ -6,16 +6,16 @@ footer {
     height: 7em;
 }
 
+h1{
+    color: var(--main);
+    margin: 0;
+}
+
 #footer-row-1 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     place-items: center;
     width: 100%;
-}
-
-#footer-row-1 img:first-child {
-    width: 9em;
-    height: 2.5em;
 }
 
 #footer-row-1 #contacts {
@@ -55,11 +55,6 @@ footer hr {
 
     #footer-row-1 {
         row-gap: 1em;
-    }
-
-    #footer-row-1 img:first-child {
-        width: 7em;
-        height: auto;
     }
 
     #footer-row-1 #contacts {
