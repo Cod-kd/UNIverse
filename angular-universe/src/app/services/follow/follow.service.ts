@@ -1,26 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { FetchService } from '../fetch/fetch.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FollowService {
-  private baseUrl = environment.apiUrl;
-
-  constructor(private http: HttpClient) { }
+  constructor(private fetchService: FetchService) { }
 
   getUserId(username: string): Observable<number> {
-    return this.http.get<number>(`${this.baseUrl}/user/id`, { 
-      params: { username } 
+    return this.fetchService.get('/user/id', {
+      params: { username }
     });
   }
 
   checkFollowStatus(followerId: string, followedId: number): Observable<boolean> {
-    return this.http.post<boolean>(`${this.baseUrl}/user/isFollowed`, { 
-      followerId, 
-      followedId 
+    return this.fetchService.post('/user/isFollowed', {
+      followerId,
+      followedId
     });
   }
 
@@ -31,8 +28,8 @@ export class FollowService {
       return throwError(() => new Error('No logged in user found'));
     }
 
-    return this.http.post(
-      `${this.baseUrl}/user/name/${targetUserName}/follow`,
+    return this.fetchService.post(
+      `/user/name/${targetUserName}/follow`,
       { followerId },
       { responseType: 'text' }
     );
@@ -45,8 +42,8 @@ export class FollowService {
       return throwError(() => new Error('No logged in user found'));
     }
 
-    return this.http.post(
-      `${this.baseUrl}/user/name/${targetUserName}/unfollow`,
+    return this.fetchService.post(
+      `/user/name/${targetUserName}/unfollow`,
       { followerId },
       { responseType: 'text' }
     );

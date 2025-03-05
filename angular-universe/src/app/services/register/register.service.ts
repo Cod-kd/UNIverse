@@ -1,22 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, throwError } from 'rxjs';
-import { catchError, tap, finalize } from 'rxjs/operators';
-import { PopupService } from '../popup-message/popup-message.service';
-import { environment } from '../../../environments/environment';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { LoadingService } from '../loading/loading.service';
+import { FetchService } from '../fetch/fetch.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RegisterService {
-  private baseUrl = environment.apiUrl;
-
   constructor(
-    private http: HttpClient,
+    private fetchService: FetchService,
     private router: Router,
-    private popupService: PopupService,
     private loadingService: LoadingService
   ) { }
 
@@ -44,20 +39,14 @@ export class RegisterService {
 
     this.loadingService.show();
 
-    return this.http
-      .post(`${this.baseUrl}/user/registration`, body, {
-        responseType: 'text',
-      })
-      .pipe(
-        tap(() => localStorage.removeItem('registrationFormData')),
-        catchError((err) => {
-          let errorMessage = 'Szerveroldali hiba';
-          if (err.status === 409) errorMessage = 'Foglalt felhasználónév vagy e-mail!';
-          this.popupService.show(errorMessage);
-          return throwError(() => new Error(errorMessage));
-        }),
-        finalize(() => this.loadingService.hide())
-      );
+    return this.fetchService.post('/user/registration', body, {
+      responseType: 'text',
+      showError: true,
+      customErrorMessage: 'Szerveroldali hiba'
+    }).pipe(
+      tap(() => localStorage.removeItem('registrationFormData')),
+      tap({ finalize: () => this.loadingService.hide() })
+    );
   }
 
   async handleRegisterResponse(registrationData: any) {
