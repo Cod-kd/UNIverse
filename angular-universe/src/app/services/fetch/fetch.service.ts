@@ -16,13 +16,13 @@ export class FetchService {
     private popupService: PopupService
   ) { }
 
-  get<T>(endpoint: string, options: { 
-    responseType?: 'json' | 'text', 
+  get<T>(endpoint: string, options: {
+    responseType?: 'json' | 'text',
     showError?: boolean,
     customErrorMessage?: string,
     params?: Record<string, string>
   } = {}): Observable<T> {
-    const { 
+    const {
       responseType = 'json',
       showError = true,
       customErrorMessage,
@@ -51,7 +51,7 @@ export class FetchService {
     showError?: boolean,
     customErrorMessage?: string
   } = {}): Observable<T> {
-    const { 
+    const {
       responseType = 'json',
       showError = true,
       customErrorMessage
@@ -66,7 +66,7 @@ export class FetchService {
 
   private handleError(error: HttpErrorResponse, showError = true, customErrorMessage?: string): Observable<never> {
     let errorMessage = customErrorMessage || 'Szerveroldali hiba';
-    
+
     if (error.status === 409) {
       if (error.url?.includes('/user/login')) {
         errorMessage = 'Hibás felhasználónév vagy jelszó!';
@@ -75,10 +75,16 @@ export class FetchService {
       }
     }
 
+    if (error.status === 404) {
+      if (error.url?.includes("/user/name")) {
+        errorMessage = 'Nem létező felhasználó!';
+      }
+    }
+
     if (showError) {
       this.popupService.show(errorMessage);
     }
-    
+
     return throwError(() => new Error(errorMessage));
   }
 }
