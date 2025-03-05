@@ -54,7 +54,7 @@
         </div>
 
         <div class="contact-form">
-            <select class="dropdown" [(ngModel)]="contactInput.type" (change)="updateContactPlaceholder()">
+            <select id="contactSelect" class="dropdown" [(ngModel)]="contactInput.type" (change)="updateContactPlaceholder()">
                 <option value="" disabled selected>Válassz típust...</option>
                 @for (option of contactOptions; track option) {
                 <option [value]="option">{{ option }}</option>
@@ -62,7 +62,7 @@
             </select>
 
             @if (contactInput.type) {
-            <input type="text" class="tag-input" [(ngModel)]="contactInput.value" [placeholder]="contactPlaceholder"
+            <input id="newContactInput" type="text" class="tag-input" [(ngModel)]="contactInput.value" [placeholder]="contactPlaceholder"
                 (keydown.enter)="addContact()">
             <button class="add-btn" (click)="addContact()">
                 <i class="fa-solid fa-plus"></i>
@@ -81,7 +81,7 @@
             </div>
             }
         </div>
-        <select class="dropdown" [(ngModel)]="newRole" (change)="addRole()">
+        <select id="roleSelect" class="dropdown" [(ngModel)]="newRole" (change)="addRole()">
             <option value="" disabled selected>Szerepkör hozzáadása...</option>
             @for (option of roleOptions; track option) {
             <option [value]="option">{{ option }}</option>
@@ -99,13 +99,14 @@
             </div>
             }
         </div>
-        <select class="dropdown" [(ngModel)]="newInterest" (change)="addInterest()">
+        <select id="interestSelect" class="dropdown" [(ngModel)]="newInterest" (change)="addInterest()">
             <option value="" disabled selected>Érdeklődés hozzáadása...</option>
             @for (option of interestOptions; track option) {
             <option [value]="option">{{ option }}</option>
             }
         </select>
     </div>
-    <app-button [btnLabel]="'Mentés'" (click)="saveChanges()"></app-button>
+    <app-button [btnLabel]="isSaving ? 'Mentve' : 'Mentés'" [iconClass]="isSaving ? 'fa-solid fa-check' : ''"
+        [isDisabled]="isSaving" (click)="saveChanges()"></app-button>
 </div>
 }

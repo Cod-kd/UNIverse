@@ -6,6 +6,7 @@ import { interests } from '../../../constants/interest';
 import { roles } from '../../../constants/roles';
 import { ButtonComponent } from "../../general-components/button/button.component";
 import { PopupService } from '../../../services/popup-message/popup-message.service';
+import { FetchService } from '../../../services/fetch/fetch.service';
 
 interface ContactInput {
   type: string;
@@ -23,8 +24,13 @@ export class SelfProfileComponent implements OnInit {
   profile: any = null;
   originalProfile: any = null;
 
+  isSaving: boolean = false;
+
   editingDescription = false;
   tempDescription = '';
+
+  originalDescription: string = '';
+  currentDescription: string = '';
 
   contactInput: ContactInput = { type: '', value: '' };
   contactPlaceholder = '';
@@ -42,7 +48,8 @@ export class SelfProfileComponent implements OnInit {
 
   constructor(
     private searchService: SearchService,
-    private popupService: PopupService
+    private popupService: PopupService,
+    private fetchService: FetchService
   ) { }
 
   ngOnInit(): void {
@@ -52,6 +59,7 @@ export class SelfProfileComponent implements OnInit {
         result.roles = result.roles || [];
         result.interests = result.interests || [];
 
+        this.originalDescription = this.currentDescription;
         this.profile = result;
         this.originalProfile = JSON.parse(JSON.stringify(this.profile));
       }
@@ -74,6 +82,7 @@ export class SelfProfileComponent implements OnInit {
 
   saveDescription(): void {
     this.profile.description = this.tempDescription;
+    this.currentDescription = this.tempDescription;
     this.editingDescription = false;
   }
 
@@ -130,7 +139,7 @@ export class SelfProfileComponent implements OnInit {
     }
 
     if (!this.validateContact()) return;
-    
+
     const formattedContact = `${this.contactInput.type}: ${this.contactInput.value}`;
 
     if (!this.profile.contacts.includes(formattedContact)) {
@@ -169,6 +178,32 @@ export class SelfProfileComponent implements OnInit {
   }
 
   saveChanges(): void {
-    this.originalProfile = JSON.parse(JSON.stringify(this.profile));
+    if (this.currentDescription === this.originalDescription) return;
+
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
+
+    this.isSaving = true;
+
+    const payload = {
+      description: this.currentDescription,
+      userId
+    };
+
+    // Use fetchService to send the POST request
+    this.fetchService.post('/user/update/desc', JSON.stringify(payload)).subscribe({
+      next: () => {
+        this.originalDescription = this.currentDescription;
+
+        // Hide saving spinner after a delay
+        setTimeout(() => {
+          this.isSaving = false;
+        }, 3000);
+      },
+      error: () => {
+        this.isSaving = false;
+      }
+    });
   }
+
 }
