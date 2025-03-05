@@ -102,31 +102,31 @@ export class SelfProfileComponent implements OnInit {
 
   validateContact(): boolean {
     if (!this.contactInput.value) {
-      this.popupService.show('Kérjük, add meg az elérhetőség értékét.');
+      this.popupService.showError('Kérjük, add meg az elérhetőség értékét!');
       return false;
     }
 
     switch (this.contactInput.type) {
       case 'Email':
         if (!this.emailPattern.test(this.contactInput.value)) {
-          this.popupService.show('Hibás e-mail formátum. Kérjük, add meg a helyes e-mail címet.');
+          this.popupService.showError('Hibás e-mail formátum!');
           return false;
         }
         break;
       case 'Link':
         if (!this.linkPattern.test(this.contactInput.value)) {
-          this.popupService.show('Hibás link formátum. A linknek https:// vagy www. kezdettel kell rendelkeznie.');
+          this.popupService.showError('Hibás link formátum!');
           return false;
         }
         break;
       case 'Phone Number':
         if (!this.phonePattern.test(this.contactInput.value)) {
-          this.popupService.show('Hibás telefonszám formátum. Kérjük, használj 10-15 számjegyet.');
+          this.popupService.showError('Hibás telefonszám formátum!');
           return false;
         }
         break;
       default:
-        this.popupService.show('Kérjük, válassz elérhetőség típust.');
+        this.popupService.showError('Kérjük, válassz elérhetőség típust!');
         return false;
     }
     return true;
@@ -134,7 +134,7 @@ export class SelfProfileComponent implements OnInit {
 
   addContact(): void {
     if (!this.contactInput.type) {
-      this.popupService.show('Kérjük, válassz elérhetőség típust.');
+      this.popupService.showError('Kérjük, válassz elérhetőség típust!');
       return;
     }
 
@@ -147,7 +147,7 @@ export class SelfProfileComponent implements OnInit {
       this.contactInput = { type: '', value: '' };
       this.contactPlaceholder = '';
     } else {
-      this.popupService.show('Ez az elérhetőség már létezik.');
+      this.popupService.showError('Ez az elérhetőség már létezik.');
     }
   }
 
