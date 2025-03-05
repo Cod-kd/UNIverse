@@ -14,21 +14,23 @@ import { PopupService } from '../../../services/popup-message/popup-message.serv
   styleUrls: ['./unicard-login.component.css'],
 })
 export class UNIcardLoginComponent {
-  selectedFile: File | null = null;
-  isLoginDisabled = true;
+  selectedFile: File | null = null; // Stores selected UNIcard file
+  isLoginDisabled = true; // Disables login button until a file is selected
   private loginService = inject(LoginService);
   private cardMetadataService = inject(CardMetadataService);
 
   constructor(private router: Router, private popupService: PopupService) { }
 
+  // Handles file selection for login
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
-      this.isLoginDisabled = false;
+      this.isLoginDisabled = false; // Enable login button
     }
   }
 
+  // Attempts login using the selected UNIcard file
   async loginWithCard(event: Event) {
     event.preventDefault();
     if (!this.selectedFile) {
@@ -37,11 +39,13 @@ export class UNIcardLoginComponent {
     }
 
     try {
+      // Read credentials from UNIcard metadata
       const credentials = await this.cardMetadataService.readCardMetadata(this.selectedFile);
 
       if (credentials) {
         const { username, password } = credentials;
         if (username && password) {
+          // Authenticate using fetched credentials
           this.loginService.fetchLogin(username, password).subscribe({
             next: () => {
               this.loginService.handleLoginResponse(credentials);
@@ -56,11 +60,12 @@ export class UNIcardLoginComponent {
     }
   }
 
-
+  // Navigate back to traditional credential login page
   backToCredentialLogin() {
     this.router.navigate(['/login']);
   }
 
+  // Navigate back to registration page
   backToRegistration() {
     this.router.navigate(['/registration']);
   }

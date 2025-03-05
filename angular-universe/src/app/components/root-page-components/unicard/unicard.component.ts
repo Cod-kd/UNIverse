@@ -4,17 +4,7 @@ import { Router } from '@angular/router';
 import { CardMetadataService } from '../../../services/card-meta-data/card-meta-data.service';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
 import { UniversityService } from '../../../services/university/university.service';
-
-interface UserData {
-  email: string;
-  username: string;
-  fullName: string;
-  gender: string;
-  birthDate: string;
-  university: string; // Stores university code (e.g., "BME")
-  faculty: string;    // Stores faculty name or code
-  password: string;
-}
+import { UserData } from '../../../models/unicard/unicard.model';
 
 @Component({
   selector: 'app-unicard',
@@ -24,41 +14,43 @@ interface UserData {
   styleUrls: ['./unicard.component.css'],
 })
 export class UNIcardComponent implements OnInit {
+  // User data retrieved from navigation state or initialized as empty
   userData: UserData = history.state.userData || {} as UserData;
   private cardMetadataService = inject(CardMetadataService);
-  
+
   // Display names for UI
   universityName: string = '';
   facultyName: string = '';
 
   constructor(
-    private router: Router, 
+    private router: Router,
     private popupService: PopupService,
     private universityService: UniversityService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    // Clear any stored registration data
     localStorage.removeItem('registrationFormData');
-    
+
+    // Redirect if user data is missing
     if (!this.userData?.username) {
       this.router.navigate(['/UNIcard-login']);
       return;
     }
-    
-    // Get display names for university and faculty
+
+    // Retrieve university display name
     this.universityName = this.universityService.getUniversityName(this.userData.university);
-    
-    // Check if faculty is a valid name for this university, otherwise show as-is
+
+    // Check if faculty is valid for the university, otherwise use default name
     if (this.universityService.isFacultyValid(this.userData.university, this.userData.faculty)) {
-      this.facultyName = this.userData.faculty; // It's already the full name
+      this.facultyName = this.userData.faculty;
     } else {
-      // Try to find faculty by matching with the faculties for this university
-      const faculties = this.universityService.getFacultyList(this.userData.university);
-      // Default to original value if no match found
+      // If faculty isn't found, use original value
       this.facultyName = this.userData.faculty;
     }
   }
 
+  // Save user UNIcard data
   saveUniCard = async () => {
     if (!this.userData?.username) {
       this.popupService.show('Invalid user data');
@@ -73,6 +65,7 @@ export class UNIcardComponent implements OnInit {
     }
 
     try {
+      // Save user data and navigate back to login
       await this.cardMetadataService.saveCardData(this.userData, userDataDiv);
       this.router.navigate(['/UNIcard-login']);
     } catch (error) {

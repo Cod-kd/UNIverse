@@ -28,9 +28,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
   showCard = false;
 
+  // Retrieve list of universities and faculties as reactive signals
   universities = toSignal(this.universityService.getUniversities());
   faculties = toSignal(this.universityService.faculties$);
 
+  // Define registration form with required fields and validators
   registrationForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     username: ['', Validators.required],
@@ -46,6 +48,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     this.onUniversityChange();
     this.restoreFormData();
 
+    // Save form data to local storage after 500ms debounce on changes
     this.registrationForm.valueChanges
       .pipe(
         debounceTime(500)
@@ -57,6 +60,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     this.saveFormData();
   }
 
+  // Validate email input
   onEmailChange() {
     const email = this.registrationForm.get('email')?.value;
     if (typeof email === 'string') {
@@ -64,6 +68,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Validate username input
   onUsernameChange() {
     const username = this.registrationForm.get('username')?.value;
     if (typeof username === 'string') {
@@ -71,13 +76,15 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFullNameChange(){
+  // Validate full name input
+  onFullNameChange() {
     const fullName = this.registrationForm.get('fullName')?.value;
-    if(typeof fullName === 'string'){
+    if (typeof fullName === 'string') {
       this.validationService.validateFullName(fullName);
     }
   }
 
+  // Validate birth date input
   onBirthDateChange() {
     const birthDate = this.registrationForm.get('birthDate')?.value;
     if (typeof birthDate === 'string') {
@@ -85,11 +92,13 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Save form data to local storage (excluding university and faculty for dynamic loading)
   private saveFormData() {
     const { university, faculty, ...formData } = this.registrationForm.value;
     localStorage.setItem(this.formStorageKey, JSON.stringify(formData));
   }
 
+  // Restore form data from local storage if available
   private restoreFormData() {
     const savedData = localStorage.getItem(this.formStorageKey);
     if (savedData) {
@@ -98,10 +107,12 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Clear saved form data from local storage
   private clearSavedFormData() {
     localStorage.removeItem(this.formStorageKey);
   }
 
+  // Format birth date input to YYYY-MM-DD
   formatBirthDate(event: any) {
     const input = event.target;
     const value = input.value.replace(/\D/g, '');
@@ -123,6 +134,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Update faculties list based on selected university
   onUniversityChange() {
     const universityId = this.registrationForm.get('university')?.value;
 
@@ -136,6 +148,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Scroll to bottom when faculty selection changes
   onFacultyChange() {
     const registrationDiv = document.querySelector("form");
     if (registrationDiv) {
@@ -143,6 +156,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Register new user after validating inputs
   registerNewUser() {
     this.registrationForm.patchValue({
       password: this.passwordInput.passwordControl.value
@@ -157,6 +171,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     const university = this.registrationForm.get('university')?.value ?? '';
     const faculty = this.registrationForm.get('faculty')?.value ?? '';
 
+    // Validate all inputs before sending the registration request
     this.validationService.validateEmail(email);
     this.validationService.validateUsername(username);
     this.validationService.validateFullName(fullName);
@@ -174,6 +189,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       });
   }
 
+  // Navigate back to login page
   returnToLogin() {
     this.router.navigate(["/login"]);
   }

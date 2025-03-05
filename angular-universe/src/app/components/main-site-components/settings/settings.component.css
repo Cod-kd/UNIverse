@@ -112,3 +112,9 @@
     background-color: var(--main);
     filter: brightness(0.9);
 }
+
+@media screen and (max-width: 480px) {
+    .row{
+        gap: 2rem;
+    }
+}

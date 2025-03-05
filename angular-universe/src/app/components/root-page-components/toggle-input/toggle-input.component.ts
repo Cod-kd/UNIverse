@@ -18,16 +18,19 @@ import { ValidationService } from '../../../services/validation/validation.servi
 })
 export class ToggleInputComponent implements ControlValueAccessor {
   constructor(private validationService: ValidationService) { }
+
   showPassword = false;
   passwordControl = new FormControl('');
-  
-  onChange: any = () => {};
-  onTouched: any = () => {};
 
+  onChange: (value: string) => void = () => { };
+  onTouched: () => void = () => { };
+
+  // Toggle password visibility
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
 
+  // Validate password input and propagate changes
   onPasswordChange() {
     const password = this.passwordControl.value;
     if (typeof password === 'string') {
@@ -36,21 +39,27 @@ export class ToggleInputComponent implements ControlValueAccessor {
     }
   }
 
+  // Implement ControlValueAccessor methods
   writeValue(value: string): void {
     if (value !== undefined) {
       this.passwordControl.setValue(value);
     }
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: string) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
+  // Enable or disable the input field
   setDisabledState?(isDisabled: boolean): void {
-    isDisabled ? this.passwordControl.disable() : this.passwordControl.enable();
+    if (isDisabled) {
+      this.passwordControl.disable();
+    } else {
+      this.passwordControl.enable();
+    }
   }
 }
