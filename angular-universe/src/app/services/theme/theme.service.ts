@@ -44,7 +44,7 @@ export class ThemeService {
         const themeVars = JSON.parse(savedTheme);
         this.applyTheme(themeVars);
       } catch (e) {
-        this.popupService.show('Failed to parse saved theme.');
+        this.popupService.showError('Sikertelen mentés!');
         this.applyTheme(this.defaultTheme);
       }
     } else {

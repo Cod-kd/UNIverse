@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { ApplicationRef, ComponentRef, createComponent, EnvironmentInjector, } from '@angular/core';
 import { PopupComponent } from '../../components/general-components/popup/popup.component';
 
+export type PopupMessageType = 'error' | 'success';
+
 @Injectable({ providedIn: 'root' })
 export class PopupService {
   private activePopups: ComponentRef<PopupComponent>[] = [];
@@ -11,7 +13,7 @@ export class PopupService {
     private injector: EnvironmentInjector
   ) { }
 
-  show(message: string, duration = 3000): void {
+  private show(message: string, type: PopupMessageType = 'success', duration = 3000): void {
     if (this.activePopups.length >= 3) {
       this.destroyOldestPopup();
     }
@@ -21,6 +23,8 @@ export class PopupService {
     });
 
     popupComponent.instance.popupMessage = message;
+    popupComponent.instance.isErrorMessage = type === 'error';
+
     this.appRef.attachView(popupComponent.hostView);
 
     const domElem = popupComponent.location.nativeElement;
@@ -33,6 +37,14 @@ export class PopupService {
     this.activePopups.push(popupComponent);
 
     setTimeout(() => this.fadeOutAndDestroy(popupComponent), duration);
+  }
+
+  showError(message: string, duration = 3000): void {
+    this.show(message, 'error', duration);
+  }
+
+  showSuccess(message: string, duration = 3000): void {
+    this.show(message, 'success', duration);
   }
 
   private positionPopup(domElem: HTMLElement): void {

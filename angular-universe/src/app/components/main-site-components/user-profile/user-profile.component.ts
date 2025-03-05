@@ -108,7 +108,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
           });
           this.updateUniversityAndFaculty();
         },
-        error: (error) => this.popupService.show('Hiba:', error)
+        error: (error) => this.popupService.showError(`Hiba: ${error}`)
       });
   }
 
@@ -162,7 +162,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
           }
         }),
         catchError(error => {
-          this.popupService.show(`Művelet sikertelen: ${error.message}`);
+          this.popupService.showError(`Művelet sikertelen: ${error.message}`);
           return of(null);
         }),
         takeUntil(this.destroy$)
@@ -202,7 +202,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
       this.isProfileSaved = true;
     } catch (error) {
-      this.popupService.show('Nem sikerült menteni a profilt');
+      this.popupService.showError('Nem sikerült menteni a profilt');
     } finally {
       card.style.borderRadius = originalBorderRadius;
       card.classList.remove('capture-animation');

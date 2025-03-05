@@ -8,7 +8,7 @@ import { PopupService } from '../popup-message/popup-message.service';
 })
 export class CardMetadataService {
 
-  constructor(private popupService: PopupService){}
+  constructor(private popupService: PopupService) { }
 
   async readCardMetadata(file: File): Promise<{ username: string; password: string } | null> {
     return new Promise((resolve, reject) => {
@@ -36,22 +36,19 @@ export class CardMetadataService {
               };
               resolve(result);
             } else {
-              this.popupService.show('No credential pattern found in comment');
               resolve(null);
             }
           } else {
-            this.popupService.show('No UserComment metadata found');
             resolve(null);
           }
         } catch (error: any) {
-          this.popupService.show('Error in metadata processing: ' + error.message);
           reject(error);
         }
       };
 
       reader.onerror = (error) => {
-        this.popupService.show('Error reading file: ' + error);
-        reject(new Error('Failed to read file'));
+        this.popupService.showError('Sikertelen beolvasás: ' + error);
+        reject(new Error('Sikertelen beolvasás!'));
       };
 
       reader.readAsDataURL(file);
@@ -92,12 +89,12 @@ export class CardMetadataService {
         document.body.removeChild(link);
 
       } catch (err: any) {
-        this.popupService.show('Error while adding EXIF data: ' + err.message);
-        throw new Error('Error while adding EXIF data');
+        this.popupService.showError('Hiba adatkiolvasás közben: ' + err.message);
+        throw new Error('Hiba adatkiolvasás közben!');
       }
     } catch (err: any) {
-      this.popupService.show('Error while capturing user data: ' + err.message);
-      throw new Error('Error while capturing user data');
+      this.popupService.showError('Hiba adatkezelés közben: ' + err.message);
+      throw new Error('Hiba adatkezelés közben!');
     }
   }
 

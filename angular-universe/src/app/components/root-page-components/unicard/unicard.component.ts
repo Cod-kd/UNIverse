@@ -53,14 +53,14 @@ export class UNIcardComponent implements OnInit {
   // Save user UNIcard data
   saveUniCard = async () => {
     if (!this.userData?.username) {
-      this.popupService.show('Invalid user data');
+      this.popupService.showError('Érvénytelen adatok!');
       this.router.navigate(['/UNIcard-login']);
       return;
     }
 
     const userDataDiv = document.getElementById('userDataDiv');
     if (!userDataDiv) {
-      this.popupService.show('UNIcard not found.');
+      this.popupService.showError('UNIcard nem található!');
       return;
     }
 
@@ -69,7 +69,7 @@ export class UNIcardComponent implements OnInit {
       await this.cardMetadataService.saveCardData(this.userData, userDataDiv);
       this.router.navigate(['/UNIcard-login']);
     } catch (error) {
-      this.popupService.show(`UNIcard save failed: ${error}`);
+      this.popupService.showError(`UNIcard mentése sikertelen: ${error}`);
     }
   };
 }

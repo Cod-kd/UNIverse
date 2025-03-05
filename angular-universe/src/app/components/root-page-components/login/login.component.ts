@@ -61,7 +61,7 @@ export class LoginComponent {
 
     // Show error if both fields are empty
     if (!username.trim() && !password.trim()) {
-      this.popupService.show("Hiányzó adatok");
+      this.popupService.showError("Hiányzó adatok");
       return;
     }
 

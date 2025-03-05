@@ -1,9 +1,11 @@
 <div class="modal-content">
-    <div class="modal-body">
-      <span class="icon"><i class="fa-solid fa-exclamation-triangle"></i></span>
-      <div class="right-items">
-        <p>{{popupMessage}}</p>
-      </div>
+  <div class="modal-body">
+    <span class="icon">
+      <i [ngClass]="isErrorMessage ? 'fa-solid fa-exclamation-triangle' : 'fa-solid fa-check'"></i>
+    </span>
+    <div class="right-items">
+      <p>{{popupMessage}}</p>
     </div>
-    <div class="time-remaining-line"></div>
   </div>
+  <div class="time-remaining-line"></div>
+</div>

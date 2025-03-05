@@ -30,7 +30,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadCurrentThemeValues();
 
-    // Subscribe to theme changes to keep local colors in sync
     this.themeSubscription = this.themeService.currentTheme$.subscribe(theme => {
       this.updateLocalThemeColors(theme);
     });
@@ -56,16 +55,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   onColorChange(color: ThemeColor): void {
-    // Update and save the theme variable
     this.themeService.updateVariable(color.cssVar, color.value);
 
-    // Generate a complete theme object with all current values
     const fullTheme = this.themeColors.reduce((theme, colorItem) => {
       theme[colorItem.cssVar] = colorItem.value;
       return theme;
     }, {} as { [key: string]: string });
 
-    // Save the complete theme to localStorage
     this.themeService.saveTheme(fullTheme);
   }
 

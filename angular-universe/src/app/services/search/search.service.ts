@@ -69,7 +69,7 @@ export class SearchService {
     } catch (error) {
       this.loadingService.hide();
       if (error instanceof Error) {
-        this.popupService.show(error.message);
+        this.popupService.showError(error.message);
       }
       throw error;
     }
@@ -115,7 +115,7 @@ export class SearchService {
     } catch (error) {
       this.loadingService.hide();
       if (error instanceof Error) {
-        this.popupService.show(error.message);
+        this.popupService.showError(error.message);
       }
       throw error;
     }

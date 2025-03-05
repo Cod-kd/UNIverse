@@ -82,7 +82,7 @@ export class FetchService {
     }
 
     if (showError) {
-      this.popupService.show(errorMessage);
+      this.popupService.showError(errorMessage);
     }
 
     return throwError(() => new Error(errorMessage));

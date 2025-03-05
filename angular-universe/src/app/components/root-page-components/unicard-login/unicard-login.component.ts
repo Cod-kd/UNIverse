@@ -34,7 +34,7 @@ export class UNIcardLoginComponent {
   async loginWithCard(event: Event) {
     event.preventDefault();
     if (!this.selectedFile) {
-      this.popupService.show('Kérlek, válassz ki egy UNIcard képet.');
+      this.popupService.showError('Kérlek, válassz ki egy UNIcard képet.');
       return;
     }
 
@@ -53,10 +53,10 @@ export class UNIcardLoginComponent {
           });
         }
       } else {
-        this.popupService.show('Nem található bejelentkezési adat a kártyán.');
+        this.popupService.showError('Nem található bejelentkezési adat a kártyán.');
       }
     } catch (error) {
-      this.popupService.show('Hiba történt a kártya beolvasása közben. Kérlek, próbáld újra.');
+      this.popupService.showError('Hiba történt a kártya beolvasása közben.');
     }
   }
 

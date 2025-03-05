@@ -196,6 +196,7 @@ export class SelfProfileComponent implements OnInit {
       next: () => {
         this.originalProfile.description = this.profile.description;
         this.isSaving = false;
+        this.popupService.showSuccess("Sikeres módosítás!");
       },
       error: () => {
         this.isSaving = false;
