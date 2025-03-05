@@ -7,7 +7,7 @@ import { UniversityService } from '../../../services/university/university.servi
 import { FollowService } from '../../../services/follow/follow.service';
 import { ButtonComponent } from '../../general-components/button/button.component';
 import html2canvas from 'html2canvas';
-import { catchError, tap, takeUntil } from 'rxjs/operators';
+import { catchError, tap, takeUntil, switchMap } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
 
@@ -30,12 +30,23 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   private isBrowser: boolean;
 
   searchedUsername: string = '';
+  currentUserId: string | null = null;
 
   universityMap: Map<string, string> = new Map();
   facultyMap: Map<string, string[]> = new Map();
 
   universityName: string = '';
   facultyName: string = '';
+
+  get followButtonLabel(): string {
+    return this.isFollowing ? 'Követés leállítása' : 'Követés';
+  }
+
+  get followButtonIcon(): string {
+    return this.isFollowing
+      ? 'fa-solid fa-user-times'
+      : 'fa-solid fa-user-plus';
+  }
 
   constructor(
     private searchService: SearchService,
@@ -45,15 +56,33 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+    this.currentUserId = localStorage.getItem('userId');
 
     this.searchService.searchResults$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(result => {
-        if (result && !Array.isArray(result)) {
-          this.profile = result as Profile;
-          this.updateUniversityAndFaculty();
-          this.isFriendAdded = false;
-          this.isProfileSaved = false;
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(result => {
+          if (result && !Array.isArray(result)) {
+            this.profile = result as Profile;
+            this.updateUniversityAndFaculty();
+            this.isProfileSaved = false;
+
+            if (this.currentUserId && this.profile) {
+              return this.followService.checkFollowStatus(
+                this.currentUserId,
+                this.profile.usersData.userId
+              ).pipe(
+                catchError(() => of(false))
+              );
+            }
+            return of(false);
+          }
+          return of(false);
+        })
+      )
+      .subscribe({
+        next: (isFollowing) => {
+          this.isFollowing = isFollowing;
         }
       });
 

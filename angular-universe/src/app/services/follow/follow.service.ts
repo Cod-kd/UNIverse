@@ -11,14 +11,12 @@ export class FollowService {
 
   constructor(private http: HttpClient) { }
 
-  // Fetch user ID by username
   getUserId(username: string): Observable<number> {
     return this.http.get<number>(`${this.baseUrl}/user/id`, { 
       params: { username } 
     });
   }
 
-  // Check follow status
   checkFollowStatus(followerId: string, followedId: number): Observable<boolean> {
     return this.http.post<boolean>(`${this.baseUrl}/user/isFollowed`, { 
       followerId, 

@@ -25,12 +25,11 @@
                 </div>
 
                 <div id="action-buttons-container">
-                    <app-button [btnLabel]="'Követés'"
-                        [iconClass]="isFriendAdded ? 'fa-solid fa-user-check' : 'fa-solid fa-user-plus'"
-                        [isDisabled]="isFollowInProgress || isFriendAdded" [size]="'normal'" (click)="startFollowing()">
+                    <app-button [btnLabel]="followButtonLabel" [iconClass]="followButtonIcon"
+                        [isDisabled]="isFollowInProgress" [size]="'normal'" (click)="startFollowing()">
                     </app-button>
 
-                    <app-button [btnLabel]="'Mentés'" [iconClass]="'fa-solid fa-camera'" [isDisabled]="isProfileSaved"
+                    <app-button [btnLabel]="'Mentés'" [iconClass]="'fa-solid fa-camera'" [isDisabled]="false"
                         [size]="'normal'" (click)="saveProfile()">
                     </app-button>
                 </div>
