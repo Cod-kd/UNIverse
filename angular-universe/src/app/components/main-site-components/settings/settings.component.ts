@@ -15,12 +15,12 @@ import { Subscription } from 'rxjs';
 })
 export class SettingsComponent implements OnInit, OnDestroy {
   themeColors: ThemeColor[] = [
-    { name: 'Main', cssVar: '--main', value: '#FF5A1F', label: 'Primary Theme Color' },
-    { name: 'Link', cssVar: '--link', value: '#5D3FD3', label: 'Link Color' },
-    { name: 'Dark 1', cssVar: '--dark1', value: '#343434', label: 'Dark Shade 1' },
-    { name: 'Dark 2', cssVar: '--dark2', value: '#141414', label: 'Dark Shade 2' },
-    { name: 'Light 1', cssVar: '--light1', value: '#FFF0EB', label: 'Light Shade 1' },
-    { name: 'Light 2', cssVar: '--light2', value: '#FFD2C2', label: 'Light Shade 2' },
+    { name: 'Main', cssVar: '--main', value: '#FF5A1F', label: 'Oldal fő színe' },
+    { name: 'Link', cssVar: '--link', value: '#5D3FD3', label: 'Linkek színe' },
+    { name: 'Dark 1', cssVar: '--dark1', value: '#343434', label: 'Sötét árnyalat 1' },
+    { name: 'Dark 2', cssVar: '--dark2', value: '#141414', label: 'Sötét árnyalat 2' },
+    { name: 'Light 1', cssVar: '--light1', value: '#FFF0EB', label: 'Világos árnyalat 1' },
+    { name: 'Light 2', cssVar: '--light2', value: '#FFD2C2', label: 'Világos árnyalat 2' },
   ];
 
   private themeSubscription?: Subscription;

@@ -1,10 +1,10 @@
 <div class="theme-settings-container">
-    <h2>Theme Settings</h2>
+    <h2>Téma beállítás</h2>
 
     <div class="row">
         <div class="col-md-6">
             <div class="color-settings">
-                <h3>Color Theme</h3>
+                <h3>Szín téma</h3>
 
                 <div class="color-inputs">
                     @for (color of themeColors; track color.cssVar) {
@@ -20,7 +20,7 @@
                     }
                 </div>
                 <div class="d-flex gap-2">
-                    <app-button [btnLabel]="'Reset to Default'" iconClass="fa-solid fa-rotate-left"
+                    <app-button [btnLabel]="'Alapértelmezett'" iconClass="fa-solid fa-rotate-left"
                         (click)="resetChanges()"></app-button>
                 </div>
             </div>
@@ -28,21 +28,21 @@
 
         <div class="col-md-6">
             <div class="preview-section">
-                <h3>Preview</h3>
+                <h3>Előnézet</h3>
 
                 <div class="preview-container">
                     <div class="card sample-card">
                         <div class="card-body">
-                            <h5 class="card-title">Sample Card</h5>
-                            <p class="card-text">This is a preview of your theme. The text, background, and elements
-                                will change based on your color selections.</p>
-                            <a href="javascript:void(0)" class="sample-link">Sample Link</a>
+                            <h5 class="card-title">Példa kártya</h5>
+                            <p class="card-text">Ez egy előnézete a beállított témádnak. A szöveg, a háttér és az elemek
+                                megváltoznak a beállításaidnak megfelelően.</p>
+                            <a href="javascript:void(0)" class="sample-link">Példa link</a>
                             <app-button [btnLabel]="'Példa gomb'"></app-button>
                         </div>
                     </div>
 
                     <div class="color-swatches">
-                        <h5>Color Palette</h5>
+                        <h5>Szín paletta</h5>
                         <div class="swatch-container">
                             @for (color of themeColors; track color.cssVar) {
                             <div class="color-swatch">
