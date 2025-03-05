@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
-import { Observable, Subscription, from, throwError } from 'rxjs';
+import { Observable, Subscription, throwError } from 'rxjs';
 import { catchError, filter, switchMap, finalize } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { FetchService } from '../fetch/fetch.service';
@@ -25,9 +25,9 @@ export class LoginService implements OnDestroy {
       )
       .subscribe(() => this.validateServerAuthentication());
 
-    this.authSubscription = this.authService.isLoggedIn$.subscribe(async (isLoggedIn) => {
+    this.authSubscription = this.authService.isLoggedIn$.subscribe(isLoggedIn => {
       if (isLoggedIn) {
-        await this.validateServerAuthentication();
+        this.validateServerAuthentication();
       }
     });
   }
@@ -38,12 +38,11 @@ export class LoginService implements OnDestroy {
     this.authService.stopPolling();
   }
 
-  private async validateServerAuthentication(): Promise<void> {
-    const credentials = await this.authService.getStoredCredentials();
+  private validateServerAuthentication(): void {
+    const credentials = this.authService.getStoredCredentials();
     if (credentials) {
       this.loadingService.show();
-
-      from(this.fetchLogin(credentials.username, credentials.password, false))
+      this.fetchLogin(credentials.username, credentials.password, false)
         .pipe(
           switchMap(() => this.fetchUserId(credentials.username)),
           finalize(() => this.loadingService.hide()),
@@ -86,8 +85,8 @@ export class LoginService implements OnDestroy {
     });
   }
 
-  async handleLoginResponse(credentials: any): Promise<void> {
-    await this.authService.login(credentials.username, credentials.password);
+  async handleLoginResponse(credentials: any) {
+    this.authService.login(credentials.username, credentials.password);
 
     this.fetchUserId(credentials.username).subscribe({
       next: (userId) => {
@@ -95,7 +94,6 @@ export class LoginService implements OnDestroy {
       },
       error: () => { }
     });
-
     this.router.navigate(["/main-site"], { state: { credentials } });
   }
 }

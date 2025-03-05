@@ -7,9 +7,7 @@ import { takeWhile } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private encryptionKey: CryptoKey | null = null;
-
-  private isLoggedIn = new BehaviorSubject<boolean>(false);
+  private isLoggedIn = new BehaviorSubject<boolean>(this.getStoredLoginStatus());
   isLoggedIn$ = this.isLoggedIn.asObservable();
 
   private cachedValues = new Map<string, string>();
@@ -18,113 +16,19 @@ export class AuthService {
   private pollingSubscription?: Subscription;
   private storageEventHandler = (event: StorageEvent) => this.handleStorageEvent(event);
 
-  constructor(private router: Router) {
-    this.initializeEncryptionKey().then(() => {
-      this.isLoggedIn.next(this.getStoredLoginStatus());
-
-      this.isLoggedIn.subscribe(isLoggedIn => {
-        if (isLoggedIn) {
-          this.startPolling();
-        } else {
-          this.stopPolling();
-          this.clearUserData();
-        }
-      });
+  constructor(
+    private router: Router,
+  ) {
+    this.isLoggedIn.subscribe(isLoggedIn => {
+      if (isLoggedIn) {
+        this.startPolling();
+      } else {
+        this.stopPolling();
+        this.clearUserData();
+      }
     });
-  }
 
-  private async initializeEncryptionKey(): Promise<void> {
-    // Check if key exists in localStorage
-    const storedKey = localStorage.getItem('encryptionKey');
-
-    if (storedKey) {
-      // Convert stored key back to CryptoKey
-      this.encryptionKey = await this.importKey(storedKey);
-    } else {
-      // Generate new key if not exists
-      this.encryptionKey = await this.generateKey();
-
-      // Store key securely (consider more advanced key management in production)
-      const exportedKey = await this.exportKey();
-      localStorage.setItem('encryptionKey', exportedKey);
-    }
-  }
-
-  private async generateKey(): Promise<CryptoKey> {
-    return await window.crypto.subtle.generateKey(
-      { name: 'AES-GCM', length: 256 },
-      true,
-      ['encrypt', 'decrypt']
-    );
-  }
-
-  private async exportKey(): Promise<string> {
-    if (!this.encryptionKey) throw new Error('Encryption key not initialized');
-
-    const exported = await window.crypto.subtle.exportKey('jwk', this.encryptionKey);
-    return JSON.stringify(exported);
-  }
-
-  // Import key from stored format
-  private async importKey(storedKey: string): Promise<CryptoKey> {
-    const keyData = JSON.parse(storedKey);
-    return await window.crypto.subtle.importKey(
-      'jwk',
-      keyData,
-      { name: 'AES-GCM', length: 256 },
-      true,
-      ['encrypt', 'decrypt']
-    );
-  }
-
-  private async encrypt(data: string): Promise<string> {
-    if (!this.encryptionKey) throw new Error('Encryption key not initialized');
-
-    const encoder = new TextEncoder();
-    const iv = window.crypto.getRandomValues(new Uint8Array(12));
-
-    const encrypted = await window.crypto.subtle.encrypt(
-      { name: 'AES-GCM', iv: iv },
-      this.encryptionKey,
-      encoder.encode(data)
-    );
-
-    // Combine IV and encrypted data
-    const combined = new Uint8Array([...iv, ...new Uint8Array(encrypted)]);
-    return btoa(String.fromCharCode.apply(null, Array.from(combined)));
-  }
-
-  // Decrypt data
-  private async decrypt(encryptedData: string): Promise<string> {
-    if (!this.encryptionKey) throw new Error('Encryption key not initialized');
-
-    const combined = new Uint8Array(
-      atob(encryptedData).split('').map(char => char.charCodeAt(0))
-    );
-
-    // Extract IV and encrypted data
-    const iv = combined.slice(0, 12);
-    const data = combined.slice(12);
-
-    const decrypted = await window.crypto.subtle.decrypt(
-      { name: 'AES-GCM', iv: iv },
-      this.encryptionKey,
-      data
-    );
-
-    const decoder = new TextDecoder();
-    return decoder.decode(decrypted);
-  }
-
-  private async setEncryptedItem(key: string, value: string): Promise<void> {
-    const encryptedValue = await this.encrypt(value);
-    localStorage.setItem(key, encryptedValue);
-  }
-
-  // Securely get decrypted item from localStorage
-  private async getDecryptedItem(key: string): Promise<string | null> {
-    const encryptedValue = localStorage.getItem(key);
-    return encryptedValue ? await this.decrypt(encryptedValue) : null;
+    this.updateValueCache();
   }
 
   private startPolling(): void {
@@ -187,35 +91,30 @@ export class AuthService {
     this.updateValueCache();
   }
 
-  async login(username: string, password: string): Promise<void> {
-    await this.setEncryptedItem('isLoggedIn', 'true');
-    await this.setEncryptedItem('username', username);
-    await this.setEncryptedItem('password', password);
-
+  login(username: string, password: string): void {
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('username', username);
+    localStorage.setItem('password', password);
     localStorage.removeItem('registrationFormData');
     this.isLoggedIn.next(true);
-
+    this.updateValueCache();
     setTimeout(() => this.startPolling(), 500);
   }
 
-  // Modified logout to clear encrypted data
   logout(): void {
     this.stopPolling();
+    localStorage.setItem('isLoggedIn', 'false');
     this.clearUserData();
     this.isLoggedIn.next(false);
   }
 
-  async getLoginStatus(): Promise<boolean> {
-    const isLoggedIn = await this.getDecryptedItem('isLoggedIn');
-    const username = await this.getDecryptedItem('username');
-    const password = await this.getDecryptedItem('password');
-
-    return isLoggedIn === 'true' && !!username && !!password;
+  getLoginStatus(): boolean {
+    return this.getStoredLoginStatus();
   }
 
-  async getStoredCredentials(): Promise<{ username: string, password: string } | null> {
-    const username = await this.getDecryptedItem('username');
-    const password = await this.getDecryptedItem('password');
+  getStoredCredentials(): { username: string, password: string } | null {
+    const username = localStorage.getItem('username');
+    const password = localStorage.getItem('password');
     return (username && password) ? { username, password } : null;
   }
 }
