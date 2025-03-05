@@ -11,10 +11,14 @@ import { AuthService } from '../../../services/auth/auth.service';
   styleUrl: './page-not-found.component.css'
 })
 export class PageNotFoundComponent {
-  isLoggedIn: boolean;
+  isLoggedIn: boolean = false; // Initialize with a default value
 
   constructor(private router: Router, private authService: AuthService) {
-    this.isLoggedIn = this.authService.getLoginStatus();
+    this.checkLoginStatus();
+  }
+
+  async checkLoginStatus() {
+    this.isLoggedIn = await this.authService.getLoginStatus();
 
     if (this.isLoggedIn && !this.router.url.includes('/main-site/page-not-found')) {
       this.router.navigate(['/main-site/page-not-found']);
@@ -25,3 +29,4 @@ export class PageNotFoundComponent {
     this.isLoggedIn ? this.router.navigate(['/main-site']) : this.router.navigate(['/']);
   }
 }
+
