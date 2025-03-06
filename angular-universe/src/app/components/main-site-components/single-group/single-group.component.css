@@ -96,6 +96,12 @@
     color: var(--light1);
 }
 
+.buttons-container {
+    display: flex;
+    gap: 5em;
+    justify-content: center;
+}
+
 @media (max-width: 480px) {
     .group-card {
         width: 100%;
@@ -122,5 +128,11 @@
 
     .stat-value {
         font-size: 1rem;
+    }
+
+    .buttons-container {
+        display: grid;
+        gap: 1em;
+        place-items: center;
     }
 }

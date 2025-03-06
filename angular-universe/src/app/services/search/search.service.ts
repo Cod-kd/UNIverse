@@ -7,6 +7,7 @@ import { Group } from '../../models/group/group.model';
 import { Router, NavigationEnd } from '@angular/router';
 import { Profile } from '../../models/profile/profile.model';
 import { FetchService } from '../fetch/fetch.service';
+import { GroupService } from '../group/group.service';
 
 export type SearchResult = Group[] | Profile | null;
 
@@ -22,6 +23,7 @@ export class SearchService {
 
   constructor(
     private fetchService: FetchService,
+    private groupService: GroupService,
     private popupService: PopupService,
     private router: Router,
     private loadingService: LoadingService,
@@ -43,7 +45,7 @@ export class SearchService {
       case "/main-site/you":
         return searchTerm ? `/user/name/${searchTerm}` : "/user/name/";
       case "/main-site/groups":
-        return searchTerm ? `/groups/search` : "/groups/search";
+        return `/groups/search`;
       case "/main-site/events":
         return searchTerm ? `/events/search` : "/events/all";
       default:
@@ -51,57 +53,33 @@ export class SearchService {
     }
   }
 
-  fetchAll(): Observable<Group[]> {
-    try {
-      const endpoint = this.getEndpointByUrl();
-
-      const params = this.router.url === "/main-site/groups" ? { name: '' } : undefined;
-
-      this.loadingService.show();
-
-      return this.fetchService.get<Group[]>(endpoint, {
-        responseType: 'json',
-        params
-      }).pipe(
-        tap(results => this.searchResultsSubject.next(results)),
-        finalize(() => this.loadingService.hide())
-      );
-    } catch (error) {
-      this.loadingService.hide();
-      if (error instanceof Error) {
-        this.popupService.showError(error.message);
-      }
-      throw error;
-    }
-  }
-
   search(searchTerm: string): Observable<SearchResult> {
-    if (this.router.url === "/main-site/you" || this.router.url === "/main-site/user-profile") {
-      this.loadingService.show();
-    }
+    this.loadingService.show();
 
     if (this.router.url === "/main-site/user-profile" && !searchTerm.trim()) {
+      this.loadingService.hide();
       throw new Error("Adj meg egy felhasználónevet!");
-    }
-
-    if (this.router.url === "/main-site/user-profile" || this.router.url === "/main-site/you") {
-      this.searchedUsernameSubject.next(searchTerm.trim());
-    }
-
-    if (this.router.url === "/main-site/user-profile" || this.router.url === "/main-site/you") {
-      this.searchedUsernameSubject.next(searchTerm.trim());
     }
 
     if (this.router.url === "/main-site/user-profile" && searchTerm.trim() === localStorage.getItem("username")) {
       this.router.navigate(["/main-site/you"]);
     }
 
+    if (this.router.url === "/main-site/user-profile" || this.router.url === "/main-site/you") {
+      this.searchedUsernameSubject.next(searchTerm.trim());
+    }
 
     try {
+      if (this.router.url === "/main-site/groups") {
+        return this.groupService.searchGroups(searchTerm).pipe(
+          tap(groups => this.searchResultsSubject.next(groups)),
+          finalize(() => this.loadingService.hide())
+        );
+      }
       const endpoint = this.getEndpointByUrl(searchTerm);
-
       let params: Record<string, string> | undefined;
-      if (this.router.url === "/main-site/groups" || this.router.url === "/main-site/events") {
+
+      if (this.router.url === "/main-site/events") {
         params = { name: searchTerm };
       }
 

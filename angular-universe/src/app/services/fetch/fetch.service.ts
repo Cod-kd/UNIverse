@@ -65,6 +65,10 @@ export class FetchService {
   }
 
   private handleError(error: HttpErrorResponse, showError = true, customErrorMessage?: string): Observable<never> {
+    if (!(error instanceof HttpErrorResponse) || error.status >= 200 && error.status < 300) {
+      return throwError(() => error);
+    }
+
     let errorMessage = customErrorMessage || 'Szerveroldali hiba';
 
     if (error.status === 409) {

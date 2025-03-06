@@ -6,4 +6,5 @@ export interface Group {
   postCount: number;
   actualEventCount: number;
   allEventCount: number;
+  isMember: boolean
 }

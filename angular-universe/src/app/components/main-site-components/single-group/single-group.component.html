@@ -30,6 +30,14 @@
             </div>
         </div>
 
-        <app-button (click)="joinGroup($event)" [btnLabel]="'Belépés'" iconClass="fa fa-sign-in" [size]="'big'"></app-button>
+        <div class="buttons-container">
+            <app-button *ngIf="group.isMember && isExpanded" (click)="leaveGroup($event)" btnLabel="Kilépés"
+                iconClass="fa fa-sign-out" [size]="'big'" class="leave-btn">
+            </app-button>
+
+            <app-button (click)="joinGroup($event)" [btnLabel]="getButtonLabel()" [iconClass]="'fa ' + getButtonIcon()"
+                [size]="'big'">
+            </app-button>
+        </div>
     </div>
 </div>

@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Group } from '../../../models/group/group.model';
 import { ButtonComponent } from '../../general-components/button/button.component';
+import { GroupService } from '../../../services/group/group.service';
 
 @Component({
   selector: 'app-single-group',
@@ -15,6 +16,8 @@ export class SingleGroupComponent {
   @Input() isExpanded: boolean = false;
   @Output() toggleRequest = new EventEmitter<number>();
 
+  constructor(private groupService: GroupService) { }
+
   toggleExpand(event: Event) {
     event.stopPropagation();
     this.toggleRequest.emit(this.group.id);
@@ -22,6 +25,25 @@ export class SingleGroupComponent {
 
   joinGroup(event: Event) {
     event.stopPropagation();
-    alert("Joined group!");
+
+    if (this.group.isMember) {
+      alert("Open group details!");
+    } else {
+      this.groupService.joinGroup(this.group).subscribe();
+    }
+  }
+
+  leaveGroup(event: Event) {
+    event.stopPropagation();
+    this.groupService.leaveGroup(this.group).subscribe({
+    });
+  }
+
+  getButtonLabel(): string {
+    return this.group.isMember ? 'Megnyitás' : 'Belépés';
+  }
+
+  getButtonIcon(): string {
+    return this.group.isMember ? 'fa-arrow-right' : 'fa-sign-in';
   }
 }

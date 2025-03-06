@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SearchService } from '../../../services/search/search.service';
 import { SingleGroupComponent } from '../single-group/single-group.component';
 import { Group } from '../../../models/group/group.model';
+import { GroupService } from '../../../services/group/group.service';
 
 @Component({
   selector: 'app-groups',
@@ -15,11 +15,9 @@ export class GroupsComponent implements OnInit {
   groups: Group[] = [];
   activeGroupId: number | null = null;
 
-  constructor(private searchService: SearchService) {
-    this.searchService.searchResults$.subscribe((results) => {
-      if (Array.isArray(results)) {
-        this.groups = results;
-      }
+  constructor(private groupService: GroupService) {
+    this.groupService.groups$.subscribe(groups => {
+      this.groups = groups;
     });
   }
 
@@ -28,9 +26,7 @@ export class GroupsComponent implements OnInit {
   }
 
   private fetchAllGroups() {
-    this.searchService.fetchAll().subscribe({
-      next: (response) => this.searchService.handleSearchResponse(response)
-    });
+    this.groupService.fetchAllGroups().subscribe();
   }
 
   handleGroupToggle(groupId: number) {
