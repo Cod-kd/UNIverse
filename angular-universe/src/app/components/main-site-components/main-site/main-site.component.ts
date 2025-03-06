@@ -109,6 +109,10 @@ export class MainSiteComponent implements OnInit {
       this.router.url !== '/main-site/you';
   }
 
+  shouldShowProfessionalSearch(): boolean {
+    return !this.isExactMainSitePath() && this.router.url === '/main-site/user-profile';
+  }
+
 
   navigateTo(path: string): void {
     this.router.navigate([path]);

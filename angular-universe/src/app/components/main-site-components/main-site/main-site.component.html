@@ -3,6 +3,12 @@
         @if(shouldShowSearchBar()){
         <app-search-bar></app-search-bar>
         }
+        @if(shouldShowProfessionalSearch()){
+            <label for="profSearch">
+                Professzionális keresés
+                <input type="checkbox">
+            </label>
+        }
     </div>
     @if (isExactMainSitePath()) {
     <div class="welcome-container">

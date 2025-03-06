@@ -31,9 +31,11 @@
         </div>
 
         <div class="buttons-container">
-            <app-button *ngIf="group.isMember && isExpanded" (click)="leaveGroup($event)" btnLabel="Kilépés"
-                iconClass="fa fa-sign-out" [size]="'big'" class="leave-btn">
+            @if(group.isMember && isExpanded){
+            <app-button (click)="leaveGroup($event)" btnLabel="Kilépés" iconClass="fa fa-sign-out" [size]="'big'"
+                class="leave-btn">
             </app-button>
+            }
 
             <app-button (click)="joinGroup($event)" [btnLabel]="getButtonLabel()" [iconClass]="'fa ' + getButtonIcon()"
                 [size]="'big'">
