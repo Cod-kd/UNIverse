@@ -178,7 +178,13 @@ export class SelfProfileComponent implements OnInit {
   }
 
   saveChanges(): void {
-    if (this.profile.description === this.originalProfile?.description) return;
+    if (JSON.stringify(this.profile.description) === JSON.stringify(this.originalProfile?.description) &&
+      JSON.stringify(this.profile.contacts) === JSON.stringify(this.originalProfile?.contacts) &&
+      JSON.stringify(this.profile.roles) === JSON.stringify(this.originalProfile?.roles) &&
+      JSON.stringify(this.profile.interests) === JSON.stringify(this.originalProfile?.interests)) {
+      this.popupService.showError("Nincs új menthető adat!");
+      return;
+    }
 
     const userId = localStorage.getItem('userId');
     if (!userId) return;
@@ -194,7 +200,7 @@ export class SelfProfileComponent implements OnInit {
       responseType: 'text'
     }).subscribe({
       next: () => {
-        this.originalProfile.description = this.profile.description;
+        this.originalProfile = JSON.parse(JSON.stringify(this.profile));
         this.isSaving = false;
         this.popupService.showSuccess("Sikeres módosítás!");
       },
@@ -202,5 +208,13 @@ export class SelfProfileComponent implements OnInit {
         this.isSaving = false;
       }
     });
+  }
+
+  // Future implementation awaits
+  confirmDeleteProfile() {
+    if (confirm("Biztosan törlöd a fiókodat?")) {
+      this.popupService.showSuccess("Sikeres fiók törlés!");
+      // logout after confirmation
+    }
   }
 }

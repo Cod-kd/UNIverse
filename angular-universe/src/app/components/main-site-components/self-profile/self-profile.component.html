@@ -54,7 +54,8 @@
         </div>
 
         <div class="contact-form">
-            <select id="contactSelect" class="dropdown" [(ngModel)]="contactInput.type" (change)="updateContactPlaceholder()">
+            <select id="contactSelect" class="dropdown" [(ngModel)]="contactInput.type"
+                (change)="updateContactPlaceholder()">
                 <option value="" disabled selected>Válassz típust...</option>
                 @for (option of contactOptions; track option) {
                 <option [value]="option">{{ option }}</option>
@@ -62,8 +63,8 @@
             </select>
 
             @if (contactInput.type) {
-            <input id="newContactInput" type="text" class="tag-input" [(ngModel)]="contactInput.value" [placeholder]="contactPlaceholder"
-                (keydown.enter)="addContact()">
+            <input id="newContactInput" type="text" class="tag-input" [(ngModel)]="contactInput.value"
+                [placeholder]="contactPlaceholder" (keydown.enter)="addContact()">
             <button class="add-btn" (click)="addContact()">
                 <i class="fa-solid fa-plus"></i>
             </button>
@@ -106,7 +107,13 @@
             }
         </select>
     </div>
-    <app-button [btnLabel]="isSaving ? 'Mentve' : 'Mentés'" [iconClass]="isSaving ? 'fa-solid fa-check' : ''"
-        [isDisabled]="isSaving" (click)="saveChanges()"></app-button>
+    <div class="button-container">
+        <app-button [btnLabel]="'Profil törlése'" [iconClass]="'fa-solid fa-user-slash'"
+            (click)="confirmDeleteProfile()">
+        </app-button>
+        <app-button [btnLabel]="isSaving ? 'Mentve' : 'Mentés'" [iconClass]="isSaving ? 'fa-solid fa-check' : ''"
+            [isDisabled]="isSaving" (click)="saveChanges()">
+        </app-button>
+    </div>
 </div>
 }

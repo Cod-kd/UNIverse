@@ -17,14 +17,14 @@
     padding-bottom: 0.75rem;
 }
 
-.profile-header > div p{
+.profile-header>div p {
     display: flex;
     gap: 0.5rem;
     width: 100%;
     margin: 0;
 }
 
-.profile-header > div span{
+.profile-header>div span {
     color: var(--main);
 }
 
@@ -132,12 +132,19 @@
         flex-direction: row;
         align-items: flex-end;
     }
-    
+
     .dropdown {
         width: auto;
         min-width: 150px;
         margin-top: 0;
     }
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
 }
 
 .add-btn {
