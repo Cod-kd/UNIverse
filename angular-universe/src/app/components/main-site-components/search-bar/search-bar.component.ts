@@ -15,6 +15,15 @@ export class SearchBarComponent {
   @ViewChild('searchInput') searchInput!: ElementRef;
   isActive = false;
   isSearching = false;
+  isProfessionalSearch = false;
+
+  isProfSearch(event: Event): void {
+    this.isProfessionalSearch = (event.target as HTMLInputElement).checked;
+  }
+
+  showProfessionalSearch(): boolean {
+    return this.router.url === "/main-site/user-profile";
+  }
 
   constructor(
     private searchService: SearchService,
@@ -27,6 +36,7 @@ export class SearchBarComponent {
         this.searchInput.nativeElement.value = '';
         this.isActive = false;
         this.isSearching = false;
+        this.isProfessionalSearch = false;
       }
     });
   }
@@ -44,14 +54,15 @@ export class SearchBarComponent {
   async search(event: SubmitEvent, value: string) {
     event?.preventDefault();
     const searchTerm = value.trim();
-    if (!searchTerm) return;
+
+    if (!searchTerm && !this.isProfessionalSearch) return;
 
     this.isSearching = true;
     this.addRippleEffect();
 
-    this.searchService.search(searchTerm).subscribe({
+    this.searchService.search(searchTerm, this.isProfessionalSearch).subscribe({
       next: (response: SearchResult) => {
-        this.searchService.handleSearchResponse(response);
+        this.searchService.handleSearchResponse(response, searchTerm, this.isProfessionalSearch);
         this.isSearching = false;
         this.isActive = !!this.searchInput.nativeElement.value;
       },

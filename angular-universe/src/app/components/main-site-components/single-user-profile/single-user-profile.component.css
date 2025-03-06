@@ -1,0 +1,26 @@
+.profile-card {
+    border: 1px solid var(--main);
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: var(--dark1);
+    width: 12em;
+    height: 10em;
+    color: var(--light1);
+    display: grid;
+    place-items: center;
+}
+
+.profile-card:hover {
+    transform: translateY(-2px);
+    background-color: var(--main);
+    border-color: var(--dark2);
+}
+
+.profile-picture {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}

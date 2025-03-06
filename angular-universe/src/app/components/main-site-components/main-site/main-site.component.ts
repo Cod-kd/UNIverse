@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterOutlet, Router } from '@angular/router';
+import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { AuthService } from '../../../services/auth/auth.service';
 import { DatePipe } from '@angular/common';
@@ -53,10 +53,23 @@ export class MainSiteComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private datePipe: DatePipe,
+    private renderer: Renderer2,
+    private el: ElementRef
   ) { }
 
   ngOnInit() {
     registerLocaleData(localeHu);
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        const searchContainer = this.el.nativeElement.querySelector('#sticky-search-container');
+        if (this.router.url === '/main-site/user-profile') {
+          this.renderer.removeClass(searchContainer, 'sticky-search');
+        } else {
+          this.renderer.addClass(searchContainer, 'sticky-search');
+        }
+      }
+    });
 
     if (!this.authService.getLoginStatus()) {
       this.router.navigate(['/UNIcard-login']);
@@ -108,11 +121,6 @@ export class MainSiteComponent implements OnInit {
       this.router.url !== '/main-site/settings' &&
       this.router.url !== '/main-site/you';
   }
-
-  shouldShowProfessionalSearch(): boolean {
-    return !this.isExactMainSitePath() && this.router.url === '/main-site/user-profile';
-  }
-
 
   navigateTo(path: string): void {
     this.router.navigate([path]);

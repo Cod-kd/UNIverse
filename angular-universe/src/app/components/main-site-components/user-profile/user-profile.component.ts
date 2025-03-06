@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { UniversityService } from '../../../services/university/university.service';
 import { FollowService } from '../../../services/follow/follow.service';
 import { ButtonComponent } from '../../general-components/button/button.component';
+import { SingleUserProfileComponent } from '../single-user-profile/single-user-profile.component';
 import html2canvas from 'html2canvas';
 import { catchError, tap, takeUntil, switchMap } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
@@ -14,7 +15,7 @@ import { PopupService } from '../../../services/popup-message/popup-message.serv
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [CommonModule, ButtonComponent],
+  imports: [CommonModule, ButtonComponent, SingleUserProfileComponent],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css'
 })
@@ -25,6 +26,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   isProfileSaved = false;
   isFollowInProgress = false;
   isFollowing = false;
+  matchedProfiles: Profile[] = [];
 
   private destroy$ = new Subject<void>();
   private isBrowser: boolean;
@@ -96,6 +98,12 @@ export class UserProfileComponent implements OnInit, OnDestroy {
           }
         }
       });
+
+    this.searchService.matchedProfiles$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(profiles => {
+        this.matchedProfiles = profiles;
+      });
   }
 
   ngOnInit(): void {
@@ -117,6 +125,23 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  selectProfile(profile: Profile): void {
+    this.profile = profile;
+    this.updateUniversityAndFaculty();
+
+    if (this.currentUserId && this.profile) {
+      this.followService.checkFollowStatus(
+        this.currentUserId,
+        this.profile.usersData.userId
+      ).pipe(
+        catchError(() => of(false)),
+        takeUntil(this.destroy$)
+      ).subscribe(isFollowing => {
+        this.isFollowing = isFollowing;
+      });
+    }
+  }
+
   private updateUniversityAndFaculty(): void {
     if (!this.profile) return;
 
@@ -135,9 +160,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   getProfileImageSrc(): string {
     if (!this.profile) return '';
 
-    return this.profile.usersData.profilePictureExtension === 'jpg'
-      ? '/images/cat-pfp.jpg'
-      : `images/${this.profile.usersData.userId}${this.profile.usersData.profilePictureExtension}`;
+    return '/images/cat-pfp.jpg';
   }
 
   get genderDisplay(): string {
@@ -201,9 +224,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       link.click();
 
       this.isProfileSaved = true;
-    } catch (error) {
-      this.popupService.showError('Nem sikerült menteni a profilt');
-    } finally {
+    }
+    finally {
       card.style.borderRadius = originalBorderRadius;
       card.classList.remove('capture-animation');
     }

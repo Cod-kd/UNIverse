@@ -9,7 +9,7 @@ import { Profile } from '../../models/profile/profile.model';
 import { FetchService } from '../fetch/fetch.service';
 import { GroupService } from '../group/group.service';
 
-export type SearchResult = Group[] | Profile | null;
+export type SearchResult = Group[] | Profile | Profile[] | null;
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,11 @@ export class SearchService {
 
   private searchResultsSubject = new BehaviorSubject<SearchResult>(null);
   searchResults$ = this.searchResultsSubject.asObservable();
+
+  private matchedProfilesSubject = new BehaviorSubject<Profile[]>([]);
+  matchedProfiles$ = this.matchedProfilesSubject.asObservable();
+
+  private errorShown = false;
 
   constructor(
     private fetchService: FetchService,
@@ -39,10 +44,13 @@ export class SearchService {
     });
   }
 
-  getEndpointByUrl(searchTerm: string | null = null): string {
+  getEndpointByUrl(searchTerm: string | null = null, isProfessionalSearch: boolean = false): string {
     switch (this.router.url) {
       case "/main-site/user-profile":
       case "/main-site/you":
+        if (isProfessionalSearch) {
+          return "/user/all";
+        }
         return searchTerm ? `/user/name/${searchTerm}` : "/user/name/";
       case "/main-site/groups":
         return `/groups/search`;
@@ -53,19 +61,22 @@ export class SearchService {
     }
   }
 
-  search(searchTerm: string): Observable<SearchResult> {
+  search(searchTerm: string, isProfessionalSearch: boolean = false): Observable<SearchResult> {
     this.loadingService.show();
+    this.errorShown = false;
 
-    if (this.router.url === "/main-site/user-profile" && !searchTerm.trim()) {
+    this.matchedProfilesSubject.next([]);
+
+    if (this.router.url === "/main-site/user-profile" && !searchTerm.trim() && !isProfessionalSearch) {
       this.loadingService.hide();
       throw new Error("Adj meg egy felhasználónevet!");
     }
 
-    if (this.router.url === "/main-site/user-profile" && searchTerm.trim() === localStorage.getItem("username")) {
+    if (this.router.url === "/main-site/user-profile" && searchTerm.trim() === localStorage.getItem("username") && !isProfessionalSearch) {
       this.router.navigate(["/main-site/you"]);
     }
 
-    if (this.router.url === "/main-site/user-profile" || this.router.url === "/main-site/you") {
+    if ((this.router.url === "/main-site/user-profile" || this.router.url === "/main-site/you") && !isProfessionalSearch) {
       this.searchedUsernameSubject.next(searchTerm.trim());
     }
 
@@ -76,7 +87,8 @@ export class SearchService {
           finalize(() => this.loadingService.hide())
         );
       }
-      const endpoint = this.getEndpointByUrl(searchTerm);
+
+      const endpoint = this.getEndpointByUrl(searchTerm, isProfessionalSearch);
       let params: Record<string, string> | undefined;
 
       if (this.router.url === "/main-site/events") {
@@ -87,7 +99,7 @@ export class SearchService {
         responseType: 'json',
         params
       }).pipe(
-        tap(results => this.searchResultsSubject.next(results)),
+        tap(results => this.handleSearchResponse(results, searchTerm, isProfessionalSearch)),
         finalize(() => this.loadingService.hide())
       );
     } catch (error) {
@@ -99,8 +111,66 @@ export class SearchService {
     }
   }
 
-  handleSearchResponse(response: SearchResult) {
+  handleSearchResponse(response: SearchResult, searchTerm?: string, isProfessionalSearch?: boolean): SearchResult {
+    if (isProfessionalSearch && Array.isArray(response) && this.router.url === "/main-site/user-profile") {
+      const filteredProfiles = searchTerm?.trim()
+        ? this.filterProfilesBySearchTerm(response as Profile[], searchTerm)
+        : response as Profile[];
+
+      this.matchedProfilesSubject.next(filteredProfiles);
+
+      if (filteredProfiles.length > 0) {
+        this.searchResultsSubject.next(filteredProfiles[0]);
+      } else {
+        this.searchResultsSubject.next(null);
+
+        if (!this.errorShown) {
+          this.popupService.showError("Nem található ilyen adat!");
+          this.errorShown = true;
+        }
+      }
+      return filteredProfiles;
+    }
+
     this.searchResultsSubject.next(response);
     return response;
+  }
+
+  private filterProfilesBySearchTerm(profiles: Profile[], searchTerm: string): Profile[] {
+    const lowerSearchTerm = searchTerm.toLowerCase();
+
+    return profiles.filter(profile => {
+      if (
+        profile.usersData.name.toLowerCase().includes(lowerSearchTerm) ||
+        profile.usersData.universityName.toLowerCase().includes(lowerSearchTerm) ||
+        profile.faculty?.toLowerCase().includes(lowerSearchTerm)
+      ) {
+        return true;
+      }
+
+      if (profile.description?.toLowerCase().includes(lowerSearchTerm)) {
+        return true;
+      }
+
+      if (profile.interests?.some(interest =>
+        interest.toLowerCase().includes(lowerSearchTerm)
+      )) {
+        return true;
+      }
+
+      if (profile.contacts?.some(contact =>
+        contact.toLowerCase().includes(lowerSearchTerm)
+      )) {
+        return true;
+      }
+
+      if (profile.roles?.some(role =>
+        role.toLowerCase().includes(lowerSearchTerm)
+      )) {
+        return true;
+      }
+
+      return false;
+    });
   }
 }

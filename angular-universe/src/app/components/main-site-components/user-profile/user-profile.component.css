@@ -1,7 +1,9 @@
 #profile-page {
   display: flex;
   justify-content: center;
+  align-items: center;
   padding: 1rem;
+  gap: 5em;
 }
 
 #profile-container {
@@ -18,13 +20,6 @@
   grid-template-columns: 1fr;
 }
 
-@media (min-width: 468px) {
-  #profile-card {
-    grid-template-columns: 280px 1fr;
-    min-height: 500px;
-  }
-}
-
 #profile-header {
   padding: 2rem 1.5rem;
   text-align: center;
@@ -35,13 +30,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-@media (min-width: 468px) {
-  #profile-header {
-    padding: 2.5rem 1.5rem;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-  }
 }
 
 @keyframes gradientAnimation {
@@ -153,7 +141,7 @@
   margin: 1rem 0;
 }
 
-#roles{
+#roles {
   margin-top: -0.7rem;
 }
 
@@ -233,7 +221,33 @@
   margin: 0.5rem 0;
 }
 
+#matched-profiles {
+  margin-bottom: 24px;
+  background-color: var(--dark1);
+  border-radius: 8px;
+  padding: 16px;
+  height: fit-content;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--light1);
+}
+
+.profiles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(200px, 1fr));
+  gap: 12px;
+}
+
 @media (max-width: 468px) {
+  #profile-card {
+    grid-template-columns: 280px 1fr;
+    min-height: 500px;
+  }
+
   #profile-info {
     padding: 1.5rem;
   }
