@@ -62,10 +62,19 @@ export class PopupService {
     }
   }
 
+  private repositionAllPopups(): void {
+    this.activePopups.forEach((popup, index) => {
+      const domElem = popup.location.nativeElement;
+      const bottom = index === 0 ? 20 : 20 + (index * 110);
+      domElem.style.bottom = `${bottom}px`;
+    });
+  }
+
   private destroyOldestPopup(): void {
     const oldestPopup = this.activePopups.shift();
     if (oldestPopup) {
       this.destroyPopup(oldestPopup);
+      this.repositionAllPopups();
     }
   }
 
@@ -80,8 +89,13 @@ export class PopupService {
   }
 
   private destroyPopup(popupComponent: ComponentRef<PopupComponent>): void {
-    this.activePopups = this.activePopups.filter(p => p !== popupComponent);
-    this.appRef.detachView(popupComponent.hostView);
-    popupComponent.destroy();
+    const index = this.activePopups.indexOf(popupComponent);
+    if (index !== -1) {
+      this.activePopups.splice(index, 1);
+      this.appRef.detachView(popupComponent.hostView);
+      popupComponent.destroy();
+
+      this.repositionAllPopups();
+    }
   }
 }
