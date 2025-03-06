@@ -30,6 +30,10 @@ export class GroupsComponent implements OnInit {
   }
 
   handleGroupToggle(groupId: number) {
+    if (this.activeGroupId !== groupId) {
+      this.groupService.checkGroupMembership(groupId).subscribe();
+    }
+
     this.activeGroupId = this.activeGroupId === groupId ? null : groupId;
   }
 

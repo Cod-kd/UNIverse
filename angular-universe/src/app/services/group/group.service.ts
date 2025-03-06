@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, forkJoin, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap, map } from 'rxjs';
 import { FetchService } from '../fetch/fetch.service';
 import { Group } from '../../models/group/group.model';
 import { PopupService } from '../popup-message/popup-message.service';
@@ -31,41 +31,29 @@ export class GroupService {
       responseType: 'json'
     }).pipe(
       tap(groups => {
-        if (this.currentUserId) {
-          this.checkGroupMemberships(groups);
-        } else {
-          this.groupsSubject.next(groups.map(group => ({ ...group, isMember: false })));
-        }
+        this.groupsSubject.next(groups.map(group => ({ ...group, isMember: false })));
       }),
       tap(() => this.loadingService.hide()),
       map(() => this.groupsSubject.value)
     );
   }
 
-  private checkGroupMemberships(groups: Group[]): void {
-    if (!this.currentUserId) return;
+  checkGroupMembership(groupId: number): Observable<void> {
+    if (!this.currentUserId) return of(void 0);
 
-    const membershipChecks = groups.map(group =>
-      this.isGroupMember(group.id).pipe(
-        map(isMember => ({ ...group, isMember }))
-      )
+    return this.isGroupMember(groupId).pipe(
+      tap(isMember => {
+        const updatedGroups = this.groupsSubject.value.map(group =>
+          group.id === groupId ? { ...group, isMember } : group
+        );
+        this.groupsSubject.next(updatedGroups);
+      }),
+      map(() => void 0)
     );
-
-    forkJoin(membershipChecks).subscribe({
-      next: (groupsWithMembership) => {
-        this.groupsSubject.next(groupsWithMembership);
-      },
-      error: () => {
-        this.groupsSubject.next(groups.map(group => ({ ...group, isMember: false })));
-      }
-    });
   }
 
   isGroupMember(groupId: number): Observable<boolean> {
-    if (!this.currentUserId) return new Observable<boolean>(observer => {
-      observer.next(false);
-      observer.complete();
-    });
+    if (!this.currentUserId) return of(false);
 
     return this.fetchService.post<boolean>(`${this.baseEndpoint}/isGroupFollowed`, {
       userId: this.currentUserId,
@@ -139,11 +127,7 @@ export class GroupService {
       responseType: 'json'
     }).pipe(
       tap(groups => {
-        if (this.currentUserId) {
-          this.checkGroupMemberships(groups);
-        } else {
-          this.groupsSubject.next(groups.map(group => ({ ...group, isMember: false })));
-        }
+        this.groupsSubject.next(groups.map(group => ({ ...group, isMember: false })));
       }),
       tap(() => this.loadingService.hide()),
       map(() => this.groupsSubject.value)
