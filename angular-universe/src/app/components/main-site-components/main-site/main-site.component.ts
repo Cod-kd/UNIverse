@@ -63,10 +63,12 @@ export class MainSiteComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const searchContainer = this.el.nativeElement.querySelector('#sticky-search-container');
-        if (this.router.url === '/main-site/user-profile') {
-          this.renderer.removeClass(searchContainer, 'sticky-search');
-        } else {
+        if (this.router.url !== '/main-site/user-profile') {
+          this.renderer.removeClass(searchContainer, 'relative-search');
           this.renderer.addClass(searchContainer, 'sticky-search');
+        } else {
+          this.renderer.removeClass(searchContainer, 'sticky-search');
+          this.renderer.addClass(searchContainer, 'relative-search');
         }
       }
     });
