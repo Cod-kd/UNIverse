@@ -242,6 +242,45 @@
   gap: 12px;
 }
 
+@media (max-width: 468px) {
+  #profile-page {
+    flex-direction: column;
+    gap: 2em;
+  }
+
+  #matched-profiles {
+    width: 100%;
+  }
+
+  .profiles-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  #profile-card {
+    grid-template-columns: 1fr;
+  }
+
+  .info-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .info-row strong {
+    margin-bottom: 0.25rem;
+    min-width: unset;
+  }
+
+  .info-row p {
+    text-align: center;
+  }
+
+  #profile-info {
+    padding: 1.5rem;
+    align-items: center;
+  }
+}
+
 @media (min-width: 468px) {
   #profile-card {
     grid-template-columns: 280px 1fr;

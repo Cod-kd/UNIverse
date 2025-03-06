@@ -24,3 +24,20 @@
     border-radius: 50%;
     object-fit: cover;
 }
+
+@media (max-width: 468px) {
+    .profile-card {
+        width: 100%;
+        max-width: 200px;
+        margin: 0 auto;
+    }
+
+    .profile-card h4,
+    .profile-card p {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: center;
+    }
+}

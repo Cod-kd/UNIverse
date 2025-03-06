@@ -184,8 +184,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
             this.isFollowing = !this.isFollowing;
           }
         }),
-        catchError(error => {
-          this.popupService.showError(`Művelet sikertelen: ${error.message}`);
+        catchError(() => {
           return of(null);
         }),
         takeUntil(this.destroy$)
