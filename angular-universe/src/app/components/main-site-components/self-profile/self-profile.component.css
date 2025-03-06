@@ -127,19 +127,6 @@
     margin-top: 0.5rem;
 }
 
-@media (min-width: 576px) {
-    .contact-form {
-        flex-direction: row;
-        align-items: flex-end;
-    }
-
-    .dropdown {
-        width: auto;
-        min-width: 150px;
-        margin-top: 0;
-    }
-}
-
 .button-container {
     display: flex;
     justify-content: space-between;
@@ -162,8 +149,29 @@
     background-color: var(--main);
 }
 
-@media (min-width: 576px) {
-    .add-btn {
-        margin-top: 0;
+@media (max-width: 468px) {
+    .profile-container {
+        width: 100%;
+        min-width: unset;
+        padding: 1rem;
+    }
+
+    .profile-picture {
+        width: 120px;
+        height: 120px;
+    }
+
+    .button-container {
+        flex-direction: column;
+    }
+
+    .tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .field-value {
+        word-break: break-word;
     }
 }
