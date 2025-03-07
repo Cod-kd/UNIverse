@@ -17,6 +17,9 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
     @Procedure(procedureName = "idByUsername")
     Integer idByUsername(@Param("usernameIn") String username);
     
+    @Procedure(procedureName = "usernameById")
+    String usernameById(@Param("userIdIn") Integer id);
+    
     @Procedure(procedureName = "login")
     UserProfiles login(@Param("usernameIn") String usernameIn);
     

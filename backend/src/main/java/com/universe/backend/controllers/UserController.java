@@ -29,6 +29,12 @@ public class UserController {
         return ResponseEntity.ok(id);
     }
 
+    @GetMapping("/username")
+    public ResponseEntity<String> getUsername(@RequestParam Integer id) {
+        String username = us.usernameById(id);
+        return ResponseEntity.ok(username);
+    }
+    
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody @Valid UserLoginDTO ulDTO) {
         us.login(ulDTO);

@@ -24,6 +24,10 @@ public class UserService {
         return upRepo.idByUsername(username);
     }
     
+    public String usernameById(Integer id){
+        return upRepo.usernameById(id);
+    }
+    
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
     
     @Transactional

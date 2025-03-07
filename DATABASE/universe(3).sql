@@ -7,6 +7,7 @@ get this out: DEFINER=`root`@`localhost`
 
 create procedure add: role, contact, interest, rank, post (create post and link to group)
 create procedure getAll: roles, contacttypes, categories (same as interest)
+
 create procedure: (NNN: handleGroupRank)
 
 fill manual:
@@ -184,6 +185,11 @@ END$$
 CREATE PROCEDURE `idByUsername` (IN `usernameIn` VARCHAR(12), OUT `userIdOut` MEDIUMINT)   BEGIN
     SELECT userprofiles.id INTO userIdOut FROM userprofiles
     WHERE userprofiles.username = usernameIn LIMIT 1;
+END$$
+
+CREATE PROCEDURE `usernameById` (IN `userIdIn` MEDIUMINT, OUT `usernameOut` VARCHAR(12))   BEGIN
+    SELECT userprofiles.username INTO usernameOut FROM userprofiles
+    WHERE userprofiles.id = userIdIn LIMIT 1;
 END$$
 
 CREATE PROCEDURE `idByGroupName` (IN `groupNameIn` VARCHAR(12), OUT `groupIdOut` MEDIUMINT)   BEGIN
