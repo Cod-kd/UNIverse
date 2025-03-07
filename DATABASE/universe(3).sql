@@ -8,7 +8,6 @@ get this out: DEFINER=`root`@`localhost`
 create procedure add: role, contact, interest, rank, post (create post and link to group)
 create procedure getAll: roles, contacttypes, categories (same as interest)
 create procedure: (NNN: handleGroupRank)
-update procedure: deleteProfile (via login)
 
 fill manual:
 (by CALL) (NNN: createRank)
@@ -154,8 +153,8 @@ CREATE PROCEDURE `createUserProfile` (IN `emailIn` VARCHAR(50), IN `usernameIn` 
     INSERT INTO `userprofiles`(`email`, `username`, `password`) VALUES (emailIn, usernameIn, passwordIn);
 END$$
 
-CREATE PROCEDURE `deleteUserprofile` (IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60))   BEGIN
-	UPDATE `userprofiles` SET `deletedAt`= NOW() WHERE userprofiles.username = usernameIn AND userprofiles.password = passwordIn;
+CREATE PROCEDURE `deleteUserProfile` (IN `usernameIn` VARCHAR(12))   BEGIN
+	UPDATE `userprofiles` SET `deletedAt`= NOW() WHERE userprofiles.username = usernameIn;
 END$$
 
 CREATE PROCEDURE `getCategory` (IN `idIn` SMALLINT)   BEGIN

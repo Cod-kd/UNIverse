@@ -20,6 +20,9 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
     @Procedure(procedureName = "login")
     UserProfiles login(@Param("usernameIn") String usernameIn);
     
+    @Procedure(procedureName = "deleteUserProfile")
+    void deleteUserProfile(@Param("usernameIn") String usernameIn);
+    
     @Query("SELECT b FROM UsersBio b " +
            "JOIN b.usersData d " +
            "JOIN d.userProfiles p " +

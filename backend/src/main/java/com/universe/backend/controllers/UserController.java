@@ -34,6 +34,12 @@ public class UserController {
         us.login(ulDTO);
         return ResponseEntity.ok("Üdv, " + ulDTO.getUsernameIn() + "!");
     }
+    
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteUserProfile(@RequestBody @Valid UserLoginDTO ulDTO) {
+        us.deleteUserProfile(ulDTO);
+        return ResponseEntity.ok("Sikeres törlés: " + ulDTO.getUsernameIn());
+    }
 
     @Autowired
     private RegistrationService rs;

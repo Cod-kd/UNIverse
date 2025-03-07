@@ -40,6 +40,13 @@ public class UserService {
         return up;
     }
     
+    @Transactional
+    public UserProfiles deleteUserProfile(UserLoginDTO ulDTO) {
+        UserProfiles up = login(ulDTO);
+        upRepo.deleteUserProfile(ulDTO.getUsernameIn());
+        return up;
+    }
+    
     public UsersBio getUsersBioByUsername(String username) {
         return upRepo.findUsersBioByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("A felhasználó nem létezik: " + username));
