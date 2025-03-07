@@ -42,7 +42,7 @@ public class UserService {
     
     public UsersBio getUsersBioByUsername(String username) {
         return upRepo.findUsersBioByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("UsersBio not found for username: " + username));
+                .orElseThrow(() -> new EntityNotFoundException("A felhasználó bioja nem létezik: " + username));
     }
     
     public List<UsersBio> getAllUsersBio() {

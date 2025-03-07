@@ -13,8 +13,10 @@ fill manual:
 
 
 back implement::
+404 to user search not exists
 
 procedures:
+
 addGroupMember, reduceGroupMember
 
 functions:
@@ -186,6 +188,11 @@ CREATE PROCEDURE `idByUsername` (IN `usernameIn` VARCHAR(12), OUT `userIdOut` ME
     WHERE userprofiles.username = usernameIn LIMIT 1;
 END$$
 
+CREATE PROCEDURE `idByGroupName` (IN `groupNameIn` VARCHAR(12), OUT `groupIdOut` MEDIUMINT)   BEGIN
+    SELECT `groups`.id INTO groupIdOut FROM `groups`
+    WHERE `groups`.`name` = groupNameIn LIMIT 1;
+END$$
+
 CREATE PROCEDURE `linkEventToGroup` (IN `groupIdIn` MEDIUMINT, IN `eventIdIn` MEDIUMINT)   BEGIN
 INSERT INTO `eventsofgroups`(`groupId`, `eventId`) VALUES (groupIdIn, eventIdIn);
 CALL addGroupActualEventCount(groupIdIn);
@@ -243,7 +250,7 @@ BEGIN
     RETURN userRelation;
 END$$
 
-CREATE FUNCTION `checkGroupMember`(memberIdIn INT, groupIdIn INT) RETURNS BOOLEAN
+CREATE FUNCTION `checkGroupMember`(groupIdIn INT, memberIdIn INT) RETURNS BOOLEAN
     DETERMINISTIC
 BEGIN
     DECLARE isMember BOOLEAN;
@@ -627,9 +634,9 @@ ALTER TABLE `eventsofgroups`
   ADD KEY `eventId` (`eventId`);
 
 --
--- A tábla indexei `followedgroups`
+-- A tábla indexei `membersofgroups`
 --
-ALTER TABLE followedgroups ADD PRIMARY KEY (followerId, followedGroupId);
+ALTER TABLE membersofgroups ADD PRIMARY KEY (groupId, userId);
 
 --
 -- A tábla indexei `followedusers`
@@ -967,7 +974,7 @@ CALL registerUser('user4@example.com', 'user4', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUT
 CALL registerUser('user5@example.com', 'user5', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'Charlie White', TRUE, '1991-05-05', 'Engineering', 'University E', 'bmp');
 
 -- Generate 5 Group entities
-CALL createGroup('Code Masters - Computer Science');
+CALL createGroup('CodeMasters');
 CALL createGroup('Number Ninjas - Mathematics');
 CALL createGroup('BioWizards - Biology');
 CALL createGroup('Quantum Minds - Physics');
