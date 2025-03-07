@@ -11,6 +11,8 @@ import html2canvas from 'html2canvas';
 import { catchError, tap, takeUntil, switchMap } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-profile',
@@ -55,10 +57,22 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     private universityService: UniversityService,
     private followService: FollowService,
     private popupService: PopupService,
+    private router: Router,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
     this.currentUserId = localStorage.getItem('userId');
+
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      takeUntil(this.destroy$)
+    ).subscribe((event: any) => {
+      if (event.url === '/main-site/user-profile') {
+        this.profile = null;
+        this.matchedProfiles = [];
+        this.searchedUsername = '';
+      }
+    });
 
     this.searchService.searchResults$
       .pipe(
@@ -93,9 +107,6 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       .subscribe(username => {
         if (username) {
           this.searchedUsername = username;
-          if (!this.profile) {
-            this.profile = null;
-          }
         }
       });
 
@@ -107,6 +118,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.profile = null;
+    this.matchedProfiles = [];
+
     this.universityService.getUniversities()
       .pipe(takeUntil(this.destroy$))
       .subscribe({

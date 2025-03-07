@@ -34,11 +34,19 @@ export class SearchService {
     private loadingService: LoadingService,
   ) {
     this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd && event.url === '/main-site/you') {
-        const username = localStorage.getItem('username');
-        if (username) {
-          this.search(username).subscribe();
-          this.searchedUsernameSubject.next(username);
+      if (event instanceof NavigationEnd) {
+        if (event.url === '/main-site/user-profile') {
+          this.searchResultsSubject.next(null);
+          this.matchedProfilesSubject.next([]);
+          this.searchedUsernameSubject.next('');
+        }
+
+        if (event.url === '/main-site/you') {
+          const username = localStorage.getItem('username');
+          if (username) {
+            this.search(username).subscribe();
+            this.searchedUsernameSubject.next(username);
+          }
         }
       }
     });
@@ -74,6 +82,10 @@ export class SearchService {
 
     if (this.router.url === "/main-site/user-profile" && searchTerm.trim() === localStorage.getItem("username") && !isProfessionalSearch) {
       this.router.navigate(["/main-site/you"]);
+      return new Observable<SearchResult>(observer => {
+        observer.next(null);
+        observer.complete();
+      });
     }
 
     if ((this.router.url === "/main-site/user-profile" || this.router.url === "/main-site/you") && !isProfessionalSearch) {
@@ -112,7 +124,10 @@ export class SearchService {
   }
 
   handleSearchResponse(response: SearchResult, searchTerm?: string, isProfessionalSearch?: boolean): SearchResult {
-    if (isProfessionalSearch && Array.isArray(response) && this.router.url === "/main-site/user-profile") {
+    const currentRoute = this.router.url;
+    const isProfileRoute = currentRoute === '/main-site/user-profile' || currentRoute === '/main-site/you';
+
+    if (isProfessionalSearch && Array.isArray(response) && currentRoute === "/main-site/user-profile") {
       const filteredProfiles = searchTerm?.trim()
         ? this.filterProfilesBySearchTerm(response as Profile[], searchTerm)
         : response as Profile[];
@@ -132,7 +147,11 @@ export class SearchService {
       return filteredProfiles;
     }
 
-    this.searchResultsSubject.next(response);
+    if ((isProfileRoute && (currentRoute === '/main-site/user-profile' || currentRoute === '/main-site/you')) ||
+      (!isProfileRoute && currentRoute.includes(currentRoute))) {
+      this.searchResultsSubject.next(response);
+    }
+
     return response;
   }
 
