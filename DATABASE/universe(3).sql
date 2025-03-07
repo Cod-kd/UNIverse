@@ -13,14 +13,11 @@ fill manual:
 
 
 back implement::
-404 to user search not exists
 
 procedures:
 
-addGroupMember, reduceGroupMember
-
 functions:
-checkGroupMember
+
 */
 
 SET SQL_MODE = "";
