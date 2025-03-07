@@ -1,15 +1,17 @@
 -- Gép: localhost:8889
 /*
+NNN:= NotNessaryNow
+
 todo:
 get this out: DEFINER=`root`@`localhost`
-groups only member not follow
 
 create procedure add: role, contact, interest, rank, post (create post and link to group)
 create procedure getAll: roles, contacttypes, categories (same as interest)
-create procedure: handleGroupRank
+create procedure: (NNN: handleGroupRank)
 update procedure: deleteProfile (via login)
+
 fill manual:
-(by CALL) createCategory, createContactType, createRank, createRole
+(by CALL) (NNN: createRank)
 
 
 back implement::
@@ -350,7 +352,7 @@ CREATE TABLE `eventsofgroups` (
   `eventId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
+/*--
 -- Tábla szerkezet ehhez a táblához `followedgroups`
 --
 
@@ -358,7 +360,7 @@ CREATE TABLE `followedgroups` (
   `followerId` mediumint(9) NOT NULL,
   `followedGroupId` mediumint(9) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+*/
 -- --------------------------------------------------------
 
 --
@@ -856,13 +858,13 @@ ALTER TABLE `eventsofgroups`
   ADD CONSTRAINT `eventsofgroups_ibfk_1` FOREIGN KEY (`groupId`) REFERENCES `groups` (`id`),
   ADD CONSTRAINT `eventsofgroups_ibfk_2` FOREIGN KEY (`eventId`) REFERENCES `events` (`id`);
 
---
+/*--
 -- Megkötések a táblához `followedgroups`
 --
 ALTER TABLE `followedgroups`
   ADD CONSTRAINT `followedgroups_ibfk_1` FOREIGN KEY (`followerId`) REFERENCES `userprofiles` (`id`),
   ADD CONSTRAINT `followedgroups_ibfk_2` FOREIGN KEY (`followedGroupId`) REFERENCES `groups` (`id`);
-
+*/
 --
 -- Megkötések a táblához `followedusers`
 --
@@ -962,6 +964,29 @@ ALTER TABLE `usersdata`
 COMMIT;
 
 -- FACTORY
+-- kategóriák generálása
+CALL createCategory('Programozás');
+CALL createCategory('Matematika');
+CALL createCategory('Biológia');
+CALL createCategory('Fizika');
+CALL createCategory('Műszaki');
+
+-- beállítható elérhetőségek típusának generálása
+CALL createContactType('Facebook', 'www.facebook.com', 'https'); -- +/username
+CALL createContactType('Twitter', 'www.youtube.com', 'https'); -- +/@username
+CALL createContactType('LinkedIn', 'www.linkedin.com/in', 'https'); -- +/username
+CALL createContactType('GitHub', 'www.github.com', 'https'); -- +/username
+CALL createContactType('Tiktok', 'www.tiktok.com', 'https');  -- +/@username
+
+-- role-ok generálása
+CALL createRole('hallgató');
+CALL createRole('professzor');
+CALL createRole('korepetítor');
+CALL createRole('adminisztrátor');
+CALL createRole('kutató');
+CALL createRole('magántanár');
+
+
 -- Generate 5 User entities
 -- password: Password123
 CALL registerUser('user1@example.com', 'user1', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'John Doe', TRUE, '1990-01-01', 'Computer Science', 'University A', 'jpg');
@@ -972,10 +997,10 @@ CALL registerUser('user5@example.com', 'user5', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUT
 
 -- Generate 5 Group entities
 CALL createGroup('CodeMasters');
-CALL createGroup('Number Ninjas - Mathematics');
-CALL createGroup('BioWizards - Biology');
-CALL createGroup('Quantum Minds - Physics');
-CALL createGroup('Engineers United - Engineering');
+CALL createGroup('NumberNinjas');
+CALL createGroup('BioWizards');
+CALL createGroup('QuantumMinds');
+CALL createGroup('EngineersUnited');
 
 -- events
 -- Esemény a Computer Science csoporthoz
