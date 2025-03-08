@@ -3,29 +3,29 @@
         <h2 class="group-title">{{ group.name }}</h2>
         <span class="visibility-badge" [class]="group.isPublic ? 'public' : 'private'">
             <i class="fa" [class]="group.isPublic ? 'fa-globe' : 'fa-lock'"></i>
-            {{ group.isPublic ? 'Public' : 'Private' }}
+            {{ group.isPublic ? 'Nyilvános' : 'Privát' }}
         </span>
     </div>
 
     <div class="group-details" [class.expanded]="isExpanded">
         <div class="group-stats">
             <div class="stat-item">
-                <span class="stat-label">Members</span>
+                <span class="stat-label">Tagok</span>
                 <span class="stat-value">{{ group.membersCount }}</span>
             </div>
 
             <div class="stat-item">
-                <span class="stat-label">Posts</span>
+                <span class="stat-label">Posztok</span>
                 <span class="stat-value">{{ group.postCount }}</span>
             </div>
 
             <div class="stat-item">
-                <span class="stat-label">Current Events</span>
+                <span class="stat-label">Aktuális események</span>
                 <span class="stat-value">{{ group.actualEventCount }}</span>
             </div>
 
             <div class="stat-item">
-                <span class="stat-label">Total Events</span>
+                <span class="stat-label">Összes esemény</span>
                 <span class="stat-value">{{ group.allEventCount }}</span>
             </div>
         </div>

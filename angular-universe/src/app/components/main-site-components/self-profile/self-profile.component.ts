@@ -29,6 +29,8 @@ export class SelfProfileComponent implements OnInit {
   editingDescription = false;
   tempDescription = '';
 
+  userBirthDate = '';
+
   originalDescription: string = '';
   currentDescription: string = '';
 
@@ -62,6 +64,7 @@ export class SelfProfileComponent implements OnInit {
         this.originalDescription = this.currentDescription;
         this.profile = result;
         this.originalProfile = JSON.parse(JSON.stringify(this.profile));
+        this.userBirthDate = this.profile.usersData.birthDate.replaceAll('-', '.');
       }
     });
 

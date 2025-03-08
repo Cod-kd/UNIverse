@@ -178,7 +178,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   get genderDisplay(): string {
-    return this.profile?.usersData.gender ? 'Férfi' : 'Nő';
+    return this.profile?.usersData.gender === true ? 'Férfi' : 
+    this.profile?.usersData.gender === false ? 'Nő' : 'Egyéb';
   }
 
   startFollowing(): void {

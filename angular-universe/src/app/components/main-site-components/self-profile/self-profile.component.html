@@ -24,11 +24,17 @@
     </div>
 
     <div class="profile-field">
-        <span class="field-label">Általános információk</span>
+        <span class="field-label">Születési dátum</span>
         <div class="field-value">
-            {{ profile.usersData.gender === true ? 'Male' :
-            profile.usersData.gender === false ? 'Female' : 'PNTS' }} |
-            Born: {{ profile.usersData.birthDate | date:'mediumDate' }}
+            {{ userBirthDate }}
+        </div>
+    </div>
+
+    <div class="profile-field">
+        <span class="field-label">Nem</span>
+        <div class="field-value">
+            {{ profile.usersData.gender === true ? 'Férfi' :
+            profile.usersData.gender === false ? 'Nő' : 'Egyéb' }}
         </div>
     </div>
 
