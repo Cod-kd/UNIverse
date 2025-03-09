@@ -2,6 +2,7 @@ package com.universe.backend.controllers;
 
 import com.universe.backend.dto.UserLoginDTO;
 import com.universe.backend.dto.UserRegistrationDTO;
+import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
 import com.universe.backend.modules.UsersBio;
 import com.universe.backend.services.user.RegistrationService;
@@ -39,6 +40,11 @@ public class UserController {
     @GetMapping("/contacttypes")
     public ResponseEntity<List<ContactTypes>> getContactTypes() {
         return ResponseEntity.ok(us.getContactTypes());
+    }
+    
+    @GetMapping("/categories")
+    public ResponseEntity<List<Category>> getCategories() {
+        return ResponseEntity.ok(us.getCategories());
     }
     
     @PostMapping("/login")

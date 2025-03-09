@@ -4,6 +4,7 @@ import com.universe.backend.dto.UserLoginDTO;
 import com.universe.backend.exceptions.UserIsDeletedExistsException;
 import com.universe.backend.exceptions.UserNonExistsException;
 import com.universe.backend.exceptions.UserWrongPasswordException;
+import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
 import com.universe.backend.modules.UserProfiles;
 import com.universe.backend.modules.UsersBio;
@@ -32,6 +33,11 @@ public class UserService {
     @Transactional
     public List<ContactTypes> getContactTypes(){
         return upRepo.getContactTypes();
+    }
+
+    @Transactional
+    public List<Category> getCategories(){
+        return upRepo.getCategories();
     }
     
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);

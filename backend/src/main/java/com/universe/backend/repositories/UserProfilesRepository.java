@@ -1,5 +1,6 @@
 package com.universe.backend.repositories;
 
+import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
 import com.universe.backend.modules.UserProfiles;
 import com.universe.backend.modules.UsersBio;
@@ -10,7 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface UserProfilesRepository extends JpaRepository<UserProfiles, Integer>{
@@ -22,6 +22,9 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
     
     @Query(value = "SELECT * FROM contacttypes", nativeQuery = true)
     List<ContactTypes> getContactTypes();
+    
+    @Query(value = "SELECT * FROM categories", nativeQuery = true)
+    List<Category> getCategories();
     
     @Procedure(procedureName = "login")
     UserProfiles login(@Param("usernameIn") String usernameIn);
