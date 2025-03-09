@@ -1,26 +1,27 @@
 -- Gép: localhost:8889
 /*
+NNN:= NotNessaryNow
+
 todo:
 get this out: DEFINER=`root`@`localhost`
-groups only member not follow
 
-create procedure add: role, contact, interest, rank, post (create post and link to group)
-create procedure getAll: roles, contacttypes, categories (same as interest)
-create procedure: handleGroupRank
-update procedure: deleteProfile (via login)
-fill manual:
-(by CALL) createCategory, createContactType, createRank, createRole
+create procedure add: {touser} role, contact, interest, {togroup} category, post (create post and link to group)
+
+create procedure: (NNN: handleGroupRank)
+
+fill manual: (NNN addRank)
+(by CALL) (NNN: createRank)
 
 
 back implement::
-404 to user search not exists
 
 procedures:
-
-addGroupMember, reduceGroupMember
+addUserContact
+addUserRole
+addUserInterest
 
 functions:
-checkGroupMember
+
 */
 
 SET SQL_MODE = "";
@@ -45,6 +46,19 @@ DELIMITER $$
 --
 -- Eljárások
 --
+
+CREATE PROCEDURE `addUserContact` (IN contactTypeIdIn TINYINT, IN pathIn VARCHAR(60), IN userIdIn MEDIUMINT)   BEGIN
+	INSERT INTO `userscontacts`(`contactTypeId`,`path`,`userId`) VALUES (contactTypeIdIn, pathIn, userIdIn);
+END$$
+
+CREATE PROCEDURE `addUserRole` (IN userIdIn MEDIUMINT,IN roleIdIn TINYINT)		BEGIN
+    INSERT INTO userroles (userId, roleId) VALUES (userIdIn, roleIdIn);
+END $$
+
+CREATE PROCEDURE `addUserInterest` (IN userIdIn MEDIUMINT,IN categoryIdIn SMALLINT)		BEGIN
+    INSERT INTO userinterests (userId, categoryId) VALUES (userIdIn, categoryIdIn);
+END $$
+
 CREATE PROCEDURE `addfollowedCount` (IN `userIdIn` MEDIUMINT)   BEGIN
 	UPDATE `usersdata` SET `followedCount` = usersdata.followedCount + 1 WHERE usersdata.userId = userIdIn;
 END$$
@@ -155,8 +169,8 @@ CREATE PROCEDURE `createUserProfile` (IN `emailIn` VARCHAR(50), IN `usernameIn` 
     INSERT INTO `userprofiles`(`email`, `username`, `password`) VALUES (emailIn, usernameIn, passwordIn);
 END$$
 
-CREATE PROCEDURE `deleteUserprofile` (IN `usernameIn` VARCHAR(12), IN `passwordIn` VARCHAR(60))   BEGIN
-	UPDATE `userprofiles` SET `deletedAt`= NOW() WHERE userprofiles.username = usernameIn AND userprofiles.password = passwordIn;
+CREATE PROCEDURE `deleteUserProfile` (IN `usernameIn` VARCHAR(12))   BEGIN
+	UPDATE `userprofiles` SET `deletedAt`= NOW() WHERE userprofiles.username = usernameIn;
 END$$
 
 CREATE PROCEDURE `getCategory` (IN `idIn` SMALLINT)   BEGIN
@@ -186,6 +200,11 @@ END$$
 CREATE PROCEDURE `idByUsername` (IN `usernameIn` VARCHAR(12), OUT `userIdOut` MEDIUMINT)   BEGIN
     SELECT userprofiles.id INTO userIdOut FROM userprofiles
     WHERE userprofiles.username = usernameIn LIMIT 1;
+END$$
+
+CREATE PROCEDURE `usernameById` (IN `userIdIn` MEDIUMINT, OUT `usernameOut` VARCHAR(12))   BEGIN
+    SELECT userprofiles.username INTO usernameOut FROM userprofiles
+    WHERE userprofiles.id = userIdIn LIMIT 1;
 END$$
 
 CREATE PROCEDURE `idByGroupName` (IN `groupNameIn` VARCHAR(12), OUT `groupIdOut` MEDIUMINT)   BEGIN
@@ -353,7 +372,7 @@ CREATE TABLE `eventsofgroups` (
   `eventId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
+/*--
 -- Tábla szerkezet ehhez a táblához `followedgroups`
 --
 
@@ -361,7 +380,7 @@ CREATE TABLE `followedgroups` (
   `followerId` mediumint(9) NOT NULL,
   `followedGroupId` mediumint(9) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+*/
 -- --------------------------------------------------------
 
 --
@@ -859,13 +878,13 @@ ALTER TABLE `eventsofgroups`
   ADD CONSTRAINT `eventsofgroups_ibfk_1` FOREIGN KEY (`groupId`) REFERENCES `groups` (`id`),
   ADD CONSTRAINT `eventsofgroups_ibfk_2` FOREIGN KEY (`eventId`) REFERENCES `events` (`id`);
 
---
+/*--
 -- Megkötések a táblához `followedgroups`
 --
 ALTER TABLE `followedgroups`
   ADD CONSTRAINT `followedgroups_ibfk_1` FOREIGN KEY (`followerId`) REFERENCES `userprofiles` (`id`),
   ADD CONSTRAINT `followedgroups_ibfk_2` FOREIGN KEY (`followedGroupId`) REFERENCES `groups` (`id`);
-
+*/
 --
 -- Megkötések a táblához `followedusers`
 --
@@ -965,6 +984,29 @@ ALTER TABLE `usersdata`
 COMMIT;
 
 -- FACTORY
+-- kategóriák generálása
+CALL createCategory('Programozás');
+CALL createCategory('Matematika');
+CALL createCategory('Biológia');
+CALL createCategory('Fizika');
+CALL createCategory('Műszaki');
+
+-- beállítható elérhetőségek típusának generálása
+CALL createContactType('Facebook', 'www.facebook.com', 'https'); -- +/username
+CALL createContactType('YouTube', 'www.youtube.com', 'https'); -- +/@username
+CALL createContactType('LinkedIn', 'www.linkedin.com/in', 'https'); -- +/username
+CALL createContactType('GitHub', 'www.github.com', 'https'); -- +/username
+CALL createContactType('Tiktok', 'www.tiktok.com', 'https');  -- +/@username
+
+-- role-ok generálása
+CALL createRole('hallgató');
+CALL createRole('professzor');
+CALL createRole('korepetítor');
+CALL createRole('adminisztrátor');
+CALL createRole('kutató');
+CALL createRole('magántanár');
+
+
 -- Generate 5 User entities
 -- password: Password123
 CALL registerUser('user1@example.com', 'user1', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'John Doe', TRUE, '1990-01-01', 'Computer Science', 'University A', 'jpg');
@@ -973,12 +1015,24 @@ CALL registerUser('user3@example.com', 'user3', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUT
 CALL registerUser('user4@example.com', 'user4', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'Bob Brown', TRUE, '1988-04-04', 'Physics', 'University D', 'jpeg');
 CALL registerUser('user5@example.com', 'user5', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'Charlie White', TRUE, '1991-05-05', 'Engineering', 'University E', 'bmp');
 
+-- usercontact generálása
+CALL addUserContact(1, 'johndoe', 1);
+CALL addUserContact(2, 'johndoe', 1);
+
+-- userrole generálása
+CALL addUserRole(1, 1);
+CALL addUserRole(1, 3);
+
+-- userinterest generálása
+CALL addUserInterest(1, 1);
+CALL addUserInterest(1, 2);
+
 -- Generate 5 Group entities
 CALL createGroup('CodeMasters');
-CALL createGroup('Number Ninjas - Mathematics');
-CALL createGroup('BioWizards - Biology');
-CALL createGroup('Quantum Minds - Physics');
-CALL createGroup('Engineers United - Engineering');
+CALL createGroup('NumberNinjas');
+CALL createGroup('BioWizards');
+CALL createGroup('QuantumMinds');
+CALL createGroup('EngineersUnited');
 
 -- events
 -- Esemény a Computer Science csoporthoz

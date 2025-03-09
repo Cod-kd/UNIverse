@@ -1,12 +1,13 @@
 package com.universe.backend.repositories;
 
+import com.universe.backend.modules.Category;
+import com.universe.backend.modules.ContactTypes;
+import com.universe.backend.modules.Role;
 import com.universe.backend.modules.UserProfiles;
 import com.universe.backend.modules.UsersBio;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
@@ -17,9 +18,24 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
     @Procedure(procedureName = "idByUsername")
     Integer idByUsername(@Param("usernameIn") String username);
     
+    @Procedure(procedureName = "usernameById")
+    String usernameById(@Param("userIdIn") Integer id);
+    
+    @Query(value = "SELECT * FROM contacttypes", nativeQuery = true)
+    List<ContactTypes> getContactTypes();
+    
+    @Query(value = "SELECT * FROM categories", nativeQuery = true)
+    List<Category> getCategories();
+    
+    @Query(value = "SELECT * FROM roles", nativeQuery = true)
+    List<Role> getRoles();
+    
     @Procedure(procedureName = "login")
     UserProfiles login(@Param("usernameIn") String usernameIn);
     
+    @Procedure(procedureName = "deleteUserProfile")
+    void deleteUserProfile(@Param("usernameIn") String usernameIn);
+
     @Query("SELECT b FROM UsersBio b " +
            "JOIN b.usersData d " +
            "JOIN d.userProfiles p " +

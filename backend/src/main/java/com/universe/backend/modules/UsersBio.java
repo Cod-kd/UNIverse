@@ -1,6 +1,5 @@
 package com.universe.backend.modules;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -24,12 +23,15 @@ public class UsersBio {
     private UsersData usersData;
     
     @OneToMany(mappedBy = "usersBio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<UsersContact> contacts = new ArrayList<>();
 
     @OneToMany(mappedBy = "usersBio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<UserRole> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "usersBio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<UserInterest> interests = new ArrayList<>();
 
     public void setContacts(List<UsersContact> contacts) {
