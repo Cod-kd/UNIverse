@@ -1,5 +1,6 @@
 package com.universe.backend.modules;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -20,6 +21,7 @@ public class UserRole {
     
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
+    @JsonBackReference
     private UsersBio usersBio;
 
     public Integer getUserId() {

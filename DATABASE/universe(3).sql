@@ -5,18 +5,20 @@ NNN:= NotNessaryNow
 todo:
 get this out: DEFINER=`root`@`localhost`
 
-create procedure add: role, contact, interest, rank, post (create post and link to group)
-create procedure getAll: roles
+create procedure add: {touser} role, contact, interest, {togroup} category, post (create post and link to group)
 
 create procedure: (NNN: handleGroupRank)
 
-fill manual:
+fill manual: (NNN addRank)
 (by CALL) (NNN: createRank)
 
 
 back implement::
 
 procedures:
+addUserContact
+addUserRole
+addUserInterest
 
 functions:
 
@@ -44,13 +46,18 @@ DELIMITER $$
 --
 -- Eljárások
 --
-CREATE PROCEDURE `getRoles` ()   BEGIN
-	SELECT * FROM roles;
-END$$
 
 CREATE PROCEDURE `addUserContact` (IN contactTypeIdIn TINYINT, IN pathIn VARCHAR(60), IN userIdIn MEDIUMINT)   BEGIN
 	INSERT INTO `userscontacts`(`contactTypeId`,`path`,`userId`) VALUES (contactTypeIdIn, pathIn, userIdIn);
 END$$
+
+CREATE PROCEDURE `addUserRole` (IN userIdIn MEDIUMINT,IN roleIdIn TINYINT)		BEGIN
+    INSERT INTO userroles (userId, roleId) VALUES (userIdIn, roleIdIn);
+END $$
+
+CREATE PROCEDURE `addUserInterest` (IN userIdIn MEDIUMINT,IN categoryIdIn SMALLINT)		BEGIN
+    INSERT INTO userinterests (userId, categoryId) VALUES (userIdIn, categoryIdIn);
+END $$
 
 CREATE PROCEDURE `addfollowedCount` (IN `userIdIn` MEDIUMINT)   BEGIN
 	UPDATE `usersdata` SET `followedCount` = usersdata.followedCount + 1 WHERE usersdata.userId = userIdIn;
@@ -1011,6 +1018,14 @@ CALL registerUser('user5@example.com', 'user5', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUT
 -- usercontact generálása
 CALL addUserContact(1, 'johndoe', 1);
 CALL addUserContact(2, 'johndoe', 1);
+
+-- userrole generálása
+CALL addUserRole(1, 1);
+CALL addUserRole(1, 3);
+
+-- userinterest generálása
+CALL addUserInterest(1, 1);
+CALL addUserInterest(1, 2);
 
 -- Generate 5 Group entities
 CALL createGroup('CodeMasters');
