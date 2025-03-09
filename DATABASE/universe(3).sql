@@ -6,7 +6,7 @@ todo:
 get this out: DEFINER=`root`@`localhost`
 
 create procedure add: role, contact, interest, rank, post (create post and link to group)
-create procedure getAll: roles, contacttypes, categories (same as interest)
+create procedure getAll: roles
 
 create procedure: (NNN: handleGroupRank)
 
@@ -46,10 +46,6 @@ DELIMITER $$
 --
 CREATE PROCEDURE `getRoles` ()   BEGIN
 	SELECT * FROM roles;
-END$$
-
-CREATE PROCEDURE `getCategories` ()   BEGIN
-	SELECT * FROM categories;
 END$$
 
 CREATE PROCEDURE `addUserContact` (IN contactTypeIdIn TINYINT, IN pathIn VARCHAR(60), IN userIdIn MEDIUMINT)   BEGIN

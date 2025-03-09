@@ -2,6 +2,7 @@ package com.universe.backend.repositories;
 
 import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
+import com.universe.backend.modules.Role;
 import com.universe.backend.modules.UserProfiles;
 import com.universe.backend.modules.UsersBio;
 import java.util.List;
@@ -25,6 +26,9 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
     
     @Query(value = "SELECT * FROM categories", nativeQuery = true)
     List<Category> getCategories();
+    
+    @Query(value = "SELECT * FROM roles", nativeQuery = true)
+    List<Role> getRoles();
     
     @Procedure(procedureName = "login")
     UserProfiles login(@Param("usernameIn") String usernameIn);

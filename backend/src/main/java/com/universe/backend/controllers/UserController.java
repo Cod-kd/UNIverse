@@ -4,6 +4,7 @@ import com.universe.backend.dto.UserLoginDTO;
 import com.universe.backend.dto.UserRegistrationDTO;
 import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
+import com.universe.backend.modules.Role;
 import com.universe.backend.modules.UsersBio;
 import com.universe.backend.services.user.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,11 @@ public class UserController {
     @GetMapping("/categories")
     public ResponseEntity<List<Category>> getCategories() {
         return ResponseEntity.ok(us.getCategories());
+    }
+    
+    @GetMapping("/roles")
+    public ResponseEntity<List<Role>> getRoles() {
+        return ResponseEntity.ok(us.getRoles());
     }
     
     @PostMapping("/login")

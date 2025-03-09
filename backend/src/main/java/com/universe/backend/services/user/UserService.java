@@ -6,6 +6,7 @@ import com.universe.backend.exceptions.UserNonExistsException;
 import com.universe.backend.exceptions.UserWrongPasswordException;
 import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
+import com.universe.backend.modules.Role;
 import com.universe.backend.modules.UserProfiles;
 import com.universe.backend.modules.UsersBio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,11 @@ public class UserService {
     @Transactional
     public List<Category> getCategories(){
         return upRepo.getCategories();
+    }
+    
+    @Transactional
+    public List<Role> getRoles(){
+        return upRepo.getRoles();
     }
     
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
