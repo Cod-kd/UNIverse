@@ -24,6 +24,7 @@ public class UsersBio {
     private UsersData usersData;
     
     @OneToMany(mappedBy = "usersBio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<UsersContact> contacts = new ArrayList<>();
 
     @OneToMany(mappedBy = "usersBio", cascade = CascadeType.ALL, orphanRemoval = true)

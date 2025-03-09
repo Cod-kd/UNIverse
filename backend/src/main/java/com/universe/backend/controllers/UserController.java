@@ -2,6 +2,7 @@ package com.universe.backend.controllers;
 
 import com.universe.backend.dto.UserLoginDTO;
 import com.universe.backend.dto.UserRegistrationDTO;
+import com.universe.backend.modules.ContactTypes;
 import com.universe.backend.modules.UsersBio;
 import com.universe.backend.services.user.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,11 @@ public class UserController {
     public ResponseEntity<String> getUsername(@RequestParam Integer id) {
         String username = us.usernameById(id);
         return ResponseEntity.ok(username);
+    }
+    
+    @GetMapping("/contacttypes")
+    public ResponseEntity<List<ContactTypes>> getContactTypes() {
+        return ResponseEntity.ok(us.getContactTypes());
     }
     
     @PostMapping("/login")

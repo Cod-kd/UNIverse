@@ -1,5 +1,6 @@
 package com.universe.backend.modules;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -23,19 +24,8 @@ public class UsersContact {
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
+    @JsonBackReference
     private UsersBio usersBio;
-    
-    @ManyToOne
-    @JoinColumn(name = "contactTypeId", nullable = false)
-    private ContactTypes contacttypes;
-
-    public ContactTypes getContacttypes() {
-        return contacttypes;
-    }
-
-    public void setContacttypes(ContactTypes contacttypes) {
-        this.contacttypes = contacttypes;
-    }
 
     public Integer getUserId() {
         return userId;

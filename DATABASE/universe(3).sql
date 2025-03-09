@@ -44,6 +44,18 @@ DELIMITER $$
 --
 -- Eljárások
 --
+CREATE PROCEDURE `getRoles` ()   BEGIN
+	SELECT * FROM roles;
+END$$
+
+CREATE PROCEDURE `getCategories` ()   BEGIN
+	SELECT * FROM categories;
+END$$
+
+CREATE PROCEDURE `addUserContact` (IN contactTypeIdIn TINYINT, IN pathIn VARCHAR(60), IN userIdIn MEDIUMINT)   BEGIN
+	INSERT INTO `userscontacts`(`contactTypeId`,`path`,`userId`) VALUES (contactTypeIdIn, pathIn, userIdIn);
+END$$
+
 CREATE PROCEDURE `addfollowedCount` (IN `userIdIn` MEDIUMINT)   BEGIN
 	UPDATE `usersdata` SET `followedCount` = usersdata.followedCount + 1 WHERE usersdata.userId = userIdIn;
 END$$
@@ -978,7 +990,7 @@ CALL createCategory('Műszaki');
 
 -- beállítható elérhetőségek típusának generálása
 CALL createContactType('Facebook', 'www.facebook.com', 'https'); -- +/username
-CALL createContactType('Twitter', 'www.youtube.com', 'https'); -- +/@username
+CALL createContactType('YouTube', 'www.youtube.com', 'https'); -- +/@username
 CALL createContactType('LinkedIn', 'www.linkedin.com/in', 'https'); -- +/username
 CALL createContactType('GitHub', 'www.github.com', 'https'); -- +/username
 CALL createContactType('Tiktok', 'www.tiktok.com', 'https');  -- +/@username
@@ -999,6 +1011,10 @@ CALL registerUser('user2@example.com', 'user2', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUT
 CALL registerUser('user3@example.com', 'user3', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'Alice Johnson', FALSE, '1995-03-03', 'Biology', 'University C', 'gif');
 CALL registerUser('user4@example.com', 'user4', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'Bob Brown', TRUE, '1988-04-04', 'Physics', 'University D', 'jpeg');
 CALL registerUser('user5@example.com', 'user5', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'Charlie White', TRUE, '1991-05-05', 'Engineering', 'University E', 'bmp');
+
+-- usercontact generálása
+CALL addUserContact(1, 'johndoe', 1);
+CALL addUserContact(2, 'johndoe', 1);
 
 -- Generate 5 Group entities
 CALL createGroup('CodeMasters');

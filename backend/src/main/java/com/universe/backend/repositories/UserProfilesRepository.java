@@ -1,16 +1,16 @@
 package com.universe.backend.repositories;
 
+import com.universe.backend.modules.ContactTypes;
 import com.universe.backend.modules.UserProfiles;
 import com.universe.backend.modules.UsersBio;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface UserProfilesRepository extends JpaRepository<UserProfiles, Integer>{
@@ -20,12 +20,15 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
     @Procedure(procedureName = "usernameById")
     String usernameById(@Param("userIdIn") Integer id);
     
+    @Query(value = "SELECT * FROM contacttypes", nativeQuery = true)
+    List<ContactTypes> getContactTypes();
+    
     @Procedure(procedureName = "login")
     UserProfiles login(@Param("usernameIn") String usernameIn);
     
     @Procedure(procedureName = "deleteUserProfile")
     void deleteUserProfile(@Param("usernameIn") String usernameIn);
-    
+
     @Query("SELECT b FROM UsersBio b " +
            "JOIN b.usersData d " +
            "JOIN d.userProfiles p " +
