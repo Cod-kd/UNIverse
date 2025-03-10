@@ -39,10 +39,13 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
     @Query("SELECT b FROM UsersBio b " +
            "JOIN b.usersData d " +
            "JOIN d.userProfiles p " +
-           "WHERE p.username = :username")
+           "WHERE p.username = :username AND p.deletedAt IS NULL")
     Optional<UsersBio> findUsersBioByUsername(@Param("username") String username);
     
-    @Query("SELECT b FROM UsersBio b ")
+    @Query("SELECT b FROM UsersBio b " +
+           "JOIN b.usersData d " +
+           "JOIN d.userProfiles p " +
+           "WHERE p.deletedAt IS NULL")
     List<UsersBio> findAllUsersBio();
     
     @Procedure(name = "followUser")
