@@ -7,6 +7,7 @@ import com.universe.backend.exceptions.UserWrongPasswordException;
 import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
 import com.universe.backend.modules.Role;
+import com.universe.backend.modules.UserInterest;
 import com.universe.backend.modules.UserProfiles;
 import com.universe.backend.modules.UserRole;
 import com.universe.backend.modules.UsersBio;
@@ -110,5 +111,10 @@ public class UserService {
     @Transactional
     public void addUserRole(UserRole ur){
         upRepo.addUserRole(ur.getUserId(), ur.getRoleId());
+    }
+    
+    @Transactional
+    public void addUserInterest(UserInterest ui){
+        upRepo.addUserInterest(ui.getUserId(), ui.getCategoryId());
     }
 }

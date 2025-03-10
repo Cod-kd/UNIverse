@@ -71,4 +71,9 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
         @Param("roleIdIn") Integer roleId
     );
     
+    @Procedure(procedureName = "addUserInterest")
+    void addUserInterest(
+        @Param("userIdIn") Integer userId, 
+        @Param("categoryIdIn") Integer categoryId
+    );
 }
