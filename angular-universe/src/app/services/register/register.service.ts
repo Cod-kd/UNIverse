@@ -52,11 +52,13 @@ export class RegisterService {
     );
   }
 
-  async handleRegisterResponse(response: string) {
+  async handleRegisterResponse(response: string, registrationData: any) {
     // Navigate to the next page after successful registration
     this.router.navigate(['/get-unicard'], {
       state: {
-        message: response // Pass the success message from the server
+        message: response,
+        userData: registrationData
+        // registration data passed here
       },
     });
   }

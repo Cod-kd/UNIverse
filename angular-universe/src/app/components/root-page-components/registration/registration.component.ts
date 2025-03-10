@@ -184,7 +184,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.clearSavedFormData();
-          this.registerService.handleRegisterResponse(response);
+          this.registerService.handleRegisterResponse(response, this.registrationForm.value);
         }
       });
   }
