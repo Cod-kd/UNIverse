@@ -170,25 +170,6 @@ export class SearchService {
       if (profile.description?.toLowerCase().includes(lowerSearchTerm)) {
         return true;
       }
-
-      if (profile.interests?.some(interest =>
-        interest.toLowerCase().includes(lowerSearchTerm)
-      )) {
-        return true;
-      }
-
-      if (profile.contacts?.some(contact =>
-        contact.toLowerCase().includes(lowerSearchTerm)
-      )) {
-        return true;
-      }
-
-      if (profile.roles?.some(role =>
-        role.toLowerCase().includes(lowerSearchTerm)
-      )) {
-        return true;
-      }
-
       return false;
     });
   }

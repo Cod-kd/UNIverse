@@ -75,7 +75,11 @@
                     <h3 class="section-title">Elérhetőségek</h3>
                     <div class="tags">
                         @for (contact of profile.contacts; track contact) {
-                        <span class="tag">{{contact}}</span>
+                        <span class="tag">{{contact.contactTypeId}}</span>
+                        <span class="tag">{{contact.path}}</span>
+                        <!-- contact type id refers to the base URL -->
+                        <!-- contact path refers to the uri added to the base URL -->
+                        <!-- example: id 5 = https://facebook.com, path = "johndoe", final = https://facebook.com/jodndoe -->
                         }
                     </div>
                 </div>
