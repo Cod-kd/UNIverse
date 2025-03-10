@@ -8,6 +8,7 @@ import { ButtonComponent } from "../../general-components/button/button.componen
 import { PopupService } from '../../../services/popup-message/popup-message.service';
 import { FetchService } from '../../../services/fetch/fetch.service';
 import { AuthService } from '../../../services/auth/auth.service';
+import { Router } from '@angular/router';
 
 interface ContactInput {
   type: string;
@@ -61,7 +62,8 @@ export class SelfProfileComponent implements OnInit {
     private searchService: SearchService,
     private popupService: PopupService,
     private fetchService: FetchService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -261,6 +263,7 @@ export class SelfProfileComponent implements OnInit {
         this.authService.logout();
         localStorage.removeItem("username");
         localStorage.removeItem("password");
+        this.router.navigate(['/']);
         this.isDeleting = false;
         this.showDeleteConfirm = false;
       },
