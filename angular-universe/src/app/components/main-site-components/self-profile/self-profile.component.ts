@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SearchService, SearchResult } from '../../../services/search/search.service';
-import { interests } from '../../../constants/interest';
-import { roles } from '../../../constants/roles';
 import { ButtonComponent } from "../../general-components/button/button.component";
 import { PopupService } from '../../../services/popup-message/popup-message.service';
 import { FetchService } from '../../../services/fetch/fetch.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { Router } from '@angular/router';
 import { ConstantsService } from '../../../services/constants/constants.service';
+import { Subscription } from 'rxjs';
+import { Role, ContactType, Category } from '../../../models/constants/constants.model';
 
 interface ContactInput {
   type: string;
@@ -28,7 +28,7 @@ interface DeleteProfileData {
   templateUrl: './self-profile.component.html',
   styleUrl: './self-profile.component.css'
 })
-export class SelfProfileComponent implements OnInit {
+export class SelfProfileComponent implements OnInit, OnDestroy {
   profile: any = null;
   originalProfile: any = null;
 
@@ -51,13 +51,21 @@ export class SelfProfileComponent implements OnInit {
   newRole = '';
   newInterest = '';
 
-  contactOptions = ['Email', 'Link', 'Phone Number'];
-  roleOptions = roles;
-  interestOptions = interests;
+  // Data from APIs
+  contactTypes: ContactType[] = [];
+  roles: Role[] = [];
+  categories: Category[] = [];
 
+  // Options for dropdowns
+  contactOptions: string[] = [];
+  roleOptions: string[] = [];
+  interestOptions: string[] = [];
+
+  // Validation patterns
   emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  linkPattern = /^(https:\/\/|www\.)[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+(\/[a-zA-Z0-9-_.~:/?#[\]@!$&'()*+,;=]*)?$/;
   phonePattern = /^\+?[0-9]{10,15}$/;
+
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private searchService: SearchService,
@@ -69,27 +77,54 @@ export class SelfProfileComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.searchService.searchResults$.subscribe((result: SearchResult) => {
-      if (result && 'usersData' in result) {
-        result.contacts = result.contacts || [];
-        result.roles = result.roles || [];
-        result.interests = result.interests || [];
+    // Load user profile
+    this.subscriptions.push(
+      this.searchService.searchResults$.subscribe((result: SearchResult) => {
+        if (result && 'usersData' in result) {
+          result.contacts = result.contacts || [];
+          result.roles = result.roles || [];
+          result.interests = result.interests || [];
 
-        this.originalDescription = this.currentDescription;
-        this.profile = result;
-        this.originalProfile = JSON.parse(JSON.stringify(this.profile));
-        this.userBirthDate = this.profile.usersData.birthDate.replaceAll('-', '.');
-      }
-      this.constantsService.getRoles();
-      this.constantsService.getContacts();
-      this.constantsService.getCategories();
-      // Fix error: 3 requests are launched
-    });
+          this.originalDescription = this.currentDescription;
+          this.profile = result;
+          this.originalProfile = JSON.parse(JSON.stringify(this.profile));
+          this.userBirthDate = this.profile.usersData.birthDate.replaceAll('-', '.');
+        }
+      })
+    );
 
+    // Load constants data
+    this.subscriptions.push(
+      this.constantsService.getContactTypes$().subscribe(contactTypes => {
+        this.contactTypes = contactTypes;
+        this.contactOptions = contactTypes.map(ct => ct.name);
+      })
+    );
+
+    this.subscriptions.push(
+      this.constantsService.getRoles$().subscribe(roles => {
+        this.roles = roles;
+        this.roleOptions = roles.map(r => r.name);
+      })
+    );
+
+    this.subscriptions.push(
+      this.constantsService.getCategories$().subscribe(categories => {
+        this.categories = categories;
+        this.interestOptions = categories.map(c => c.name);
+      })
+    );
+
+    // Fetch user data
     const username = localStorage.getItem('username');
     if (username) {
       this.searchService.search(username).subscribe();
     }
+  }
+
+  ngOnDestroy(): void {
+    // Clean up all subscriptions
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   getProfileImageSrc(): string {
@@ -113,12 +148,18 @@ export class SelfProfileComponent implements OnInit {
   }
 
   getContactPlaceholder(): string {
-    switch (this.contactInput.type) {
-      case 'Email': return 'example@domain.com';
-      case 'Link': return 'https://example.com';
-      case 'Phone Number': return '+36201234567';
-      default: return '';
+    // Find the selected contact type
+    const selectedContact = this.contactTypes.find(c => c.name === this.contactInput.type);
+
+    if (selectedContact) {
+      // Return a placeholder based on the contact type's domain
+      return `${selectedContact.protocol}://${selectedContact.domain}/username`;
+    } else if (this.contactInput.type === 'Email') {
+      return 'example@domain.com';
+    } else if (this.contactInput.type === 'Phone Number') {
+      return '+36201234567';
     }
+    return '';
   }
 
   validateContact(): boolean {
@@ -127,28 +168,28 @@ export class SelfProfileComponent implements OnInit {
       return false;
     }
 
-    switch (this.contactInput.type) {
-      case 'Email':
-        if (!this.emailPattern.test(this.contactInput.value)) {
-          this.popupService.showError('Hibás e-mail formátum!');
-          return false;
-        }
-        break;
-      case 'Link':
-        if (!this.linkPattern.test(this.contactInput.value)) {
-          this.popupService.showError('Hibás link formátum!');
-          return false;
-        }
-        break;
-      case 'Phone Number':
-        if (!this.phonePattern.test(this.contactInput.value)) {
-          this.popupService.showError('Hibás telefonszám formátum!');
-          return false;
-        }
-        break;
-      default:
-        this.popupService.showError('Kérjük, válassz elérhetőség típust!');
+    const selectedContact = this.contactTypes.find(c => c.name === this.contactInput.type);
+
+    if (selectedContact) {
+      // Validate against a social URL pattern
+      const linkPattern = new RegExp(`^${selectedContact.protocol}://${selectedContact.domain.replace('.', '\\.')}/[\\w-_.~/?#[\\]@!$&'()*+,;=]*$`);
+      if (!linkPattern.test(this.contactInput.value)) {
+        this.popupService.showError(`Hibás ${selectedContact.name} link formátum!`);
         return false;
+      }
+    } else if (this.contactInput.type === 'Email') {
+      if (!this.emailPattern.test(this.contactInput.value)) {
+        this.popupService.showError('Hibás e-mail formátum!');
+        return false;
+      }
+    } else if (this.contactInput.type === 'Phone Number') {
+      if (!this.phonePattern.test(this.contactInput.value)) {
+        this.popupService.showError('Hibás telefonszám formátum!');
+        return false;
+      }
+    } else {
+      this.popupService.showError('Kérjük, válassz elérhetőség típust!');
+      return false;
     }
     return true;
   }

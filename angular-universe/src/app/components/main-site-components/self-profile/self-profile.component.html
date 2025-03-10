@@ -15,7 +15,7 @@
         @if (editingDescription) {
         <textarea class="edit-textarea" [(ngModel)]="tempDescription" (blur)="saveDescription()"
             (keydown.enter)="$event.preventDefault(); saveDescription()">
-                  </textarea>
+                      </textarea>
         } @else {
         <div class="field-value" (click)="editDescription()">
             {{ profile.description || 'Kattints a hozzáadáshoz!' }}
