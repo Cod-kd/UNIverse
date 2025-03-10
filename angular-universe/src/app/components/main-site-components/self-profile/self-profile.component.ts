@@ -9,6 +9,7 @@ import { PopupService } from '../../../services/popup-message/popup-message.serv
 import { FetchService } from '../../../services/fetch/fetch.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { Router } from '@angular/router';
+import { ConstantsService } from '../../../services/constants/constants.service';
 
 interface ContactInput {
   type: string;
@@ -63,7 +64,8 @@ export class SelfProfileComponent implements OnInit {
     private popupService: PopupService,
     private fetchService: FetchService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private constantsService: ConstantsService
   ) { }
 
   ngOnInit(): void {
@@ -78,6 +80,10 @@ export class SelfProfileComponent implements OnInit {
         this.originalProfile = JSON.parse(JSON.stringify(this.profile));
         this.userBirthDate = this.profile.usersData.birthDate.replaceAll('-', '.');
       }
+      this.constantsService.getRoles();
+      this.constantsService.getContacts();
+      this.constantsService.getCategories();
+      // Fix error: 3 requests are launched
     });
 
     const username = localStorage.getItem('username');
