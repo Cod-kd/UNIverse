@@ -73,13 +73,12 @@
                 @if (profile.contacts && profile.contacts.length) {
                 <div id="contacts">
                     <h3 class="section-title">Elérhetőségek</h3>
-                    <div class="tags">
-                        @for (contact of profile.contacts; track contact) {
-                        <span class="tag">{{contact.contactTypeId}}</span>
-                        <span class="tag">{{contact.path}}</span>
-                        <!-- contact type id refers to the base URL -->
-                        <!-- contact path refers to the uri added to the base URL -->
-                        <!-- example: id 5 = https://facebook.com, path = "johndoe", final = https://facebook.com/jodndoe -->
+                    <div class="contact-icons">
+                        @for (contact of profile.contacts; track contact.userId) {
+                        <a [href]="getContactUrl(contact)" target="_blank" class="contact-icon"
+                            title="{{ getContactTypeById(contact.contactTypeId) }}">
+                            <i class="{{ getContactIcon(contact.contactTypeId) }}"></i>
+                        </a>
                         }
                     </div>
                 </div>
@@ -94,8 +93,8 @@
                 <div id="interests">
                     <h3 class="section-title">Érdeklődési körök</h3>
                     <div class="tags">
-                        @for (interest of profile.interests; track interest) {
-                        <span class="tag">{{interest}}</span>
+                        @for (interest of profile.interests; track interest.userId) {
+                        <span class="tag">{{ getCategoryById(interest.categoryId) }}</span>
                         }
                     </div>
                 </div>
@@ -110,8 +109,8 @@
                 <div id="roles">
                     <h3 class="section-title">Szerepkörök</h3>
                     <div class="tags">
-                        @for (role of profile.roles; track role) {
-                        <span class="tag">{{role}}</span>
+                        @for (role of profile.roles; track role.userId) {
+                        <span class="tag">{{ getRoleById(role.roleId) }}</span>
                         }
                     </div>
                 </div>

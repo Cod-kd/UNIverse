@@ -13,6 +13,7 @@ import { of, Subject } from 'rxjs';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { ConstantsService } from '../../../services/constants/constants.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -58,6 +59,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     private followService: FollowService,
     private popupService: PopupService,
     private router: Router,
+    private constantsService: ConstantsService,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -156,6 +158,54 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     }
   }
 
+  getContactIcon(contactTypeId: number): string {
+    const contactType = this.constantsService.getContactTypesSnapshot().find(ct => ct.id === contactTypeId);
+
+    // Map contact types to Font Awesome icons
+    const iconMap: { [key: string]: string } = {
+      'Facebook': 'fa-brands fa-facebook',
+      'Youtube': 'fa-brainds fa-youtube',
+      'LinkedIn': 'fa-brands fa-linkedin',
+      'GitHub': 'fa-brands fa-github',
+      'Tiktok': 'fa-brands fa-tiktok',
+    };
+
+    return iconMap[contactType?.name || ''] || 'fa-solid fa-link';
+  }
+
+  getContactUrl(contact: any): string {
+    if (!contact.path) return '#';
+
+    const contactType = this.constantsService.getContactTypesSnapshot().find(ct => ct.id === contact.contactTypeId);
+
+    // Return path directly if it already has a protocol
+    if (contact.path.startsWith('http')) {
+      return contact.path;
+    }
+
+    // Add protocol and domain if needed
+    if (contactType?.protocol && contactType?.domain) {
+      return `${contactType.protocol}://${contactType.domain}/${contact.path}`;
+    }
+
+    return contact.path;
+  }
+
+  getContactTypeById(id: number): string {
+    const contactType = this.constantsService.getContactTypesSnapshot().find(ct => ct.id === id);
+    return contactType?.name || 'Unknown';
+  }
+
+  getRoleById(id: number): string {
+    const role = this.constantsService.getRolesSnapshot().find(r => r.id === id);
+    return role?.name || 'Unknown';
+  }
+
+  getCategoryById(id: number): string {
+    const category = this.constantsService.getCategoriesSnapshot().find(c => c.id === id);
+    return category?.name || 'Unknown';
+  }
+
   private updateUniversityAndFaculty(): void {
     if (!this.profile) return;
 
@@ -178,8 +228,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   get genderDisplay(): string {
-    return this.profile?.usersData.gender === true ? 'Férfi' : 
-    this.profile?.usersData.gender === false ? 'Nő' : 'Egyéb';
+    return this.profile?.usersData.gender === true ? 'Férfi' :
+      this.profile?.usersData.gender === false ? 'Nő' : 'Egyéb';
   }
 
   startFollowing(): void {

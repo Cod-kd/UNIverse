@@ -281,6 +281,32 @@
   }
 }
 
+/* Add to user-profile.component.css */
+.contact-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.contact-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  color: #333;
+  font-size: 20px;
+  transition: all 0.2s ease;
+}
+
+.contact-icon:hover {
+  background-color: #e0e0e0;
+  transform: scale(1.1);
+}
+
 @media (min-width: 468px) {
   #profile-card {
     grid-template-columns: 280px 1fr;
