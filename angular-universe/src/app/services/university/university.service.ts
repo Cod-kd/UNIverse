@@ -6,7 +6,6 @@ import { University, FacultyOption, universities, faculties } from '../../models
   providedIn: 'root'
 })
 export class UniversityService {
-
   private facultiesSubject = new BehaviorSubject<FacultyOption[]>([]);
   faculties$ = this.facultiesSubject.asObservable();
 
@@ -28,11 +27,22 @@ export class UniversityService {
     return of(universities);
   }
 
+  // Generates abbreviation from faculty name
+  private generateAbbreviation(facultyName: string): string {
+    // Extract first letter of each meaningful word
+    return facultyName
+      .split(' ')
+      .map(word => word.match(/^[A-ZÁÉÍÓÖŐÚÜŰ]/)?.[0] || '')
+      .join('');
+  }
+
   loadFaculties(universityId: string): void {
+    // Map faculties to options with full labels but abbreviated values
     const facultyList = (faculties[universityId] || []).map(faculty => ({
-      label: faculty,
-      value: faculty
+      label: faculty, // Full name for display
+      value: this.generateAbbreviation(faculty) // Abbreviation for submission
     }));
+
     this.facultiesSubject.next(facultyList);
   }
 }

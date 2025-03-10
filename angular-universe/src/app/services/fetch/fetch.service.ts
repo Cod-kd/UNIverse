@@ -69,23 +69,10 @@ export class FetchService {
       return throwError(() => error);
     }
 
-    let errorMessage = customErrorMessage || 'Szerveroldali hiba';
+    // Use the actual error text from the server
+    let errorMessage = error.error;
 
-    if (error.status === 409) {
-      if (error.url?.includes('/user/login')) {
-        errorMessage = 'Hibás felhasználónév vagy jelszó!';
-      } else if (error.url?.includes('/user/registration')) {
-        errorMessage = 'Foglalt felhasználónév vagy e-mail!';
-      }
-    }
-
-    if (error.status === 404) {
-      if (error.url?.includes("/user/name")) {
-        errorMessage = 'Nem létező felhasználó!';
-      }
-    }
-
-    if (showError) {
+    if (showError && errorMessage) {
       this.popupService.showError(errorMessage);
     }
 

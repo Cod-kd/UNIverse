@@ -182,9 +182,9 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
     this.registerService.fetchRegister(email, username, fullName, password, gender, birthDate, university, faculty)
       .subscribe({
-        next: () => {
+        next: (response) => {
           this.clearSavedFormData();
-          this.registerService.handleRegisterResponse(this.registrationForm.value);
+          this.registerService.handleRegisterResponse(response);
         }
       });
   }

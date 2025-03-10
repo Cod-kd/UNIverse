@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LoadingService } from '../loading/loading.service';
 import { FetchService } from '../fetch/fetch.service';
+import { PopupService } from '../popup-message/popup-message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ export class RegisterService {
   constructor(
     private fetchService: FetchService,
     private router: Router,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private popupService: PopupService
   ) { }
 
   fetchRegister(
@@ -32,7 +34,7 @@ export class RegisterService {
       nameIn: fullName,
       genderIn: gender === '1' ? true : gender === '0' ? false : null,
       birthDateIn: birthDate,
-      facultyIn: faculty,
+      facultyIn: faculty, // This now contains the abbreviated faculty code
       universityNameIn: university,
       profilePictureExtensionIn: 'jpg',
     };
@@ -40,18 +42,22 @@ export class RegisterService {
     this.loadingService.show();
 
     return this.fetchService.post('/user/registration', body, {
-      responseType: 'text',
-      showError: true,
-      customErrorMessage: 'Szerveroldali hiba'
+      responseType: 'text'
     }).pipe(
+      tap(response => {
+        this.popupService.showSuccess(response as string);
+      }),
       tap(() => localStorage.removeItem('registrationFormData')),
       tap({ finalize: () => this.loadingService.hide() })
     );
   }
 
-  async handleRegisterResponse(registrationData: any) {
+  async handleRegisterResponse(response: string) {
+    // Navigate to the next page after successful registration
     this.router.navigate(['/get-unicard'], {
-      state: { userData: registrationData },
+      state: {
+        message: response // Pass the success message from the server
+      },
     });
   }
 }
