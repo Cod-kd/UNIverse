@@ -8,6 +8,7 @@ import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
 import com.universe.backend.modules.Role;
 import com.universe.backend.modules.UserProfiles;
+import com.universe.backend.modules.UserRole;
 import com.universe.backend.modules.UsersBio;
 import com.universe.backend.modules.UsersContact;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,5 +105,10 @@ public class UserService {
     @Transactional
     public void addUserContact(UsersContact uc){
         upRepo.addUserContact(uc.getContactTypeId(), uc.getPath(), uc.getUserId());
+    }
+    
+    @Transactional
+    public void addUserRole(UserRole ur){
+        upRepo.addUserRole(ur.getUserId(), ur.getRoleId());
     }
 }

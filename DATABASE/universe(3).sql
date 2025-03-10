@@ -16,8 +16,6 @@ fill manual: (NNN addRank)
 back implement::
 
 procedures:
-addUserContact
-addUserRole
 addUserInterest
 
 functions:
@@ -745,8 +743,7 @@ ALTER TABLE `roles`
 -- A tábla indexei `userinterests`
 --
 ALTER TABLE `userinterests`
-  ADD KEY `userId` (`userId`),
-  ADD KEY `categoryId` (`categoryId`);
+  ADD PRIMARY KEY (`userId`, `categoryId`);
 
 --
 -- A tábla indexei `userprofiles`
@@ -760,8 +757,7 @@ ALTER TABLE `userprofiles`
 -- A tábla indexei `userroles`
 --
 ALTER TABLE `userroles`
-  ADD KEY `userId` (`userId`),
-  ADD KEY `roleId` (`roleId`);
+  ADD PRIMARY KEY (`userId`, `roleId`);
 
 --
 -- A tábla indexei `usersbio`
@@ -773,8 +769,7 @@ ALTER TABLE `usersbio`
 -- A tábla indexei `userscontacts`
 --
 ALTER TABLE `userscontacts`
-  ADD KEY `userId` (`userId`),
-  ADD KEY `contactTypeId` (`contactTypeId`);
+  ADD PRIMARY KEY (`userId`, `contactTypeId`, `path`);
 
 --
 -- A tábla indexei `usersdata`

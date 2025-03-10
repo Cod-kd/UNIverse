@@ -5,6 +5,7 @@ import com.universe.backend.dto.UserRegistrationDTO;
 import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
 import com.universe.backend.modules.Role;
+import com.universe.backend.modules.UserRole;
 import com.universe.backend.modules.UsersBio;
 import com.universe.backend.modules.UsersContact;
 import com.universe.backend.services.user.RegistrationService;
@@ -134,6 +135,16 @@ public class UserController {
         try {
             us.addUserContact(uc);
             return ResponseEntity.ok("Kontakt hozzáadva!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Hiba történt: " + e.getMessage());
+        }
+    }
+    
+    @PostMapping(value = "/add/role", consumes = "application/json")
+    public ResponseEntity<String> addUserRole(@RequestBody UserRole ur) {
+        try {
+            us.addUserRole(ur);
+            return ResponseEntity.ok("Szerepkör hozzáadva!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Hiba történt: " + e.getMessage());
         }
