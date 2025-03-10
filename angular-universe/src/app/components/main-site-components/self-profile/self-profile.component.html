@@ -15,7 +15,7 @@
         @if (editingDescription) {
         <textarea class="edit-textarea" [(ngModel)]="tempDescription" (blur)="saveDescription()"
             (keydown.enter)="$event.preventDefault(); saveDescription()">
-              </textarea>
+                  </textarea>
         } @else {
         <div class="field-value" (click)="editDescription()">
             {{ profile.description || 'Kattints a hozzáadáshoz!' }}
@@ -122,4 +122,28 @@
         </app-button>
     </div>
 </div>
+
+@if (showDeleteConfirm) {
+<div class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3>Profil törlése</h3>
+        </div>
+        <div class="modal-body">
+            <p>Biztosan törlöd a fiókodat? A művelet nem visszafordítható.</p>
+            <p>A megerősítéshez add meg a jelszavad:</p>
+            <input type="password" class="password-input" [(ngModel)]="deletePassword" placeholder="Jelszó"
+                [disabled]="isDeleting">
+        </div>
+        <div class="modal-footer">
+            <app-button [btnLabel]="'Mégsem'" [isDisabled]="isDeleting" (click)="cancelDeleteProfile()">
+            </app-button>
+            <app-button [btnLabel]="isDeleting ? 'Törlés folyamatban...' : 'Törlés megerősítése'"
+                [iconClass]="isDeleting ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-trash'"
+                [isDisabled]="isDeleting || !deletePassword" (click)="proceedWithDeleteProfile()">
+            </app-button>
+        </div>
+    </div>
+</div>
+}
 }

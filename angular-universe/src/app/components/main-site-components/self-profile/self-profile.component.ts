@@ -7,10 +7,16 @@ import { roles } from '../../../constants/roles';
 import { ButtonComponent } from "../../general-components/button/button.component";
 import { PopupService } from '../../../services/popup-message/popup-message.service';
 import { FetchService } from '../../../services/fetch/fetch.service';
+import { AuthService } from '../../../services/auth/auth.service';
 
 interface ContactInput {
   type: string;
   value: string;
+}
+
+interface DeleteProfileData {
+  usernameIn: string;
+  passwordIn: string;
 }
 
 @Component({
@@ -25,6 +31,9 @@ export class SelfProfileComponent implements OnInit {
   originalProfile: any = null;
 
   isSaving: boolean = false;
+  isDeleting: boolean = false;
+  deletePassword: string = '';
+  showDeleteConfirm: boolean = false;
 
   editingDescription = false;
   tempDescription = '';
@@ -51,7 +60,8 @@ export class SelfProfileComponent implements OnInit {
   constructor(
     private searchService: SearchService,
     private popupService: PopupService,
-    private fetchService: FetchService
+    private fetchService: FetchService,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -213,11 +223,50 @@ export class SelfProfileComponent implements OnInit {
     });
   }
 
-  // Future implementation awaits
-  confirmDeleteProfile() {
-    if (confirm("Biztosan törlöd a fiókodat?")) {
-      this.popupService.showSuccess("Sikeres fiók törlés!");
-      // logout after confirmation
+  confirmDeleteProfile(): void {
+    this.showDeleteConfirm = true;
+    this.deletePassword = '';
+  }
+
+  cancelDeleteProfile(): void {
+    this.showDeleteConfirm = false;
+    this.deletePassword = '';
+  }
+
+  proceedWithDeleteProfile(): void {
+    const username = localStorage.getItem('username');
+
+    if (!username) {
+      this.popupService.showError("Felhasználó nem található!");
+      return;
     }
+
+    if (!this.deletePassword) {
+      this.popupService.showError("Kérjük, add meg a jelszavad!");
+      return;
+    }
+
+    this.isDeleting = true;
+
+    const deleteData: DeleteProfileData = {
+      usernameIn: username,
+      passwordIn: this.deletePassword
+    };
+
+    this.fetchService.post('/user/delete', deleteData, {
+      responseType: 'text'
+    }).subscribe({
+      next: () => {
+        this.popupService.showSuccess("Sikeres fiók törlés!");
+        this.authService.logout();
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+        this.isDeleting = false;
+        this.showDeleteConfirm = false;
+      },
+      error: () => {
+        this.isDeleting = false;
+      }
+    });
   }
 }
