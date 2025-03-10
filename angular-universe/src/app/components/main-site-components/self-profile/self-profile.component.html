@@ -15,7 +15,7 @@
         @if (editingDescription) {
         <textarea class="edit-textarea" [(ngModel)]="tempDescription" (blur)="saveDescription()"
             (keydown.enter)="$event.preventDefault(); saveDescription()">
-                      </textarea>
+                          </textarea>
         } @else {
         <div class="field-value" (click)="editDescription()">
             {{ profile.description || 'Kattints a hozzáadáshoz!' }}
@@ -51,7 +51,7 @@
     <div class="profile-field">
         <span class="field-label">Elérhetőségek <i class="fa-solid fa-pen-to-square"></i></span>
         <div class="tags-container">
-            @for (contact of profile.contacts; track contact) {
+            @for (contact of displayContacts; track contact) {
             <div class="tag">
                 {{ contact }}
                 <span class="tag-close" (click)="removeContact(contact)">×</span>
@@ -81,7 +81,7 @@
     <div class="profile-field">
         <span class="field-label">Szerepkörök <i class="fa-solid fa-pen-to-square"></i></span>
         <div class="tags-container">
-            @for (role of profile.roles; track role) {
+            @for (role of displayRoles; track role) {
             <div class="tag">
                 {{ role }}
                 <span class="tag-close" (click)="removeRole(role)">×</span>
@@ -99,7 +99,7 @@
     <div class="profile-field">
         <span class="field-label">Érdeklődések <i class="fa-solid fa-pen-to-square"></i></span>
         <div class="tags-container">
-            @for (interest of profile.interests; track interest) {
+            @for (interest of displayInterests; track interest) {
             <div class="tag">
                 {{ interest }}
                 <span class="tag-close" (click)="removeInterest(interest)">×</span>

@@ -32,6 +32,11 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
   profile: any = null;
   originalProfile: any = null;
 
+  // Display arrays for UI
+  displayContacts: string[] = [];
+  displayRoles: string[] = [];
+  displayInterests: string[] = [];
+
   isSaving: boolean = false;
   isDeleting: boolean = false;
   deletePassword: string = '';
@@ -77,22 +82,37 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    // Load user profile
+    // Load constants data first
+    this.loadConstants();
+
+    // Then fetch user data
+    const username = localStorage.getItem('username');
+    if (username) {
+      this.searchService.search(username).subscribe();
+    }
+
+    // Subscribe to search results
     this.subscriptions.push(
       this.searchService.searchResults$.subscribe((result: SearchResult) => {
         if (result && 'usersData' in result) {
-          result.contacts = result.contacts || [];
-          result.roles = result.roles || [];
-          result.interests = result.interests || [];
+          // Ensure arrays exist
+          if (!result.contacts) result.contacts = [];
+          if (!result.roles) result.roles = [];
+          if (!result.interests) result.interests = [];
 
-          this.originalDescription = this.currentDescription;
           this.profile = result;
           this.originalProfile = JSON.parse(JSON.stringify(this.profile));
+          this.originalDescription = this.currentDescription;
           this.userBirthDate = this.profile.usersData.birthDate.replaceAll('-', '.');
+
+          // Process arrays for display
+          this.updateDisplayArrays();
         }
       })
     );
+  }
 
+  private loadConstants(): void {
     // Load constants data
     this.subscriptions.push(
       this.constantsService.getContactTypes$().subscribe(contactTypes => {
@@ -114,12 +134,32 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
         this.interestOptions = categories.map(c => c.name);
       })
     );
+  }
 
-    // Fetch user data
-    const username = localStorage.getItem('username');
-    if (username) {
-      this.searchService.search(username).subscribe();
-    }
+  private updateDisplayArrays(): void {
+    // Convert contact objects to display strings
+    this.displayContacts = this.profile.contacts.map((contact: any) => {
+      if (typeof contact === 'string') return contact; // Handle already formatted contacts
+
+      const contactType = this.contactTypes.find(ct => ct.id === contact.contactTypeId);
+      return contactType ? `${contactType.name}: ${contact.path}` : `${contact.contactTypeId}: ${contact.path}`;
+    });
+
+    // Convert role objects to display strings
+    this.displayRoles = this.profile.roles.map((role: any) => {
+      if (typeof role === 'string') return role; // Handle already formatted roles
+
+      const roleObj = this.roles.find(r => r.id === role.roleId);
+      return roleObj ? roleObj.name : `${role.roleId}`;
+    });
+
+    // Convert interest objects to display strings
+    this.displayInterests = this.profile.interests.map((interest: any) => {
+      if (typeof interest === 'string') return interest; // Handle already formatted interests
+
+      const category = this.categories.find(c => c.id === interest.categoryId);
+      return category ? category.name : `${interest.categoryId}`;
+    });
   }
 
   ngOnDestroy(): void {
@@ -204,8 +244,25 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
 
     const formattedContact = `${this.contactInput.type}: ${this.contactInput.value}`;
 
-    if (!this.profile.contacts.includes(formattedContact)) {
-      this.profile.contacts.push(formattedContact);
+    // Don't add duplicate contacts
+    if (!this.displayContacts.includes(formattedContact)) {
+      // Update the display array
+      this.displayContacts.push(formattedContact);
+
+      // Also add to the profile.contacts for saving later
+      const contactType = this.contactTypes.find(ct => ct.name === this.contactInput.type);
+      if (contactType) {
+        // Add in object format for backend
+        this.profile.contacts.push({
+          userId: this.profile.userId,
+          contactTypeId: contactType.id,
+          path: this.contactInput.value
+        });
+      } else {
+        // Fallback for non-standard types
+        this.profile.contacts.push(formattedContact);
+      }
+
       this.contactInput = { type: '', value: '' };
       this.contactPlaceholder = '';
     } else {
@@ -214,29 +271,118 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
   }
 
   removeContact(contact: string): void {
-    this.profile.contacts = this.profile.contacts.filter((c: string) => c !== contact);
+    // Remove from display array
+    this.displayContacts = this.displayContacts.filter(c => c !== contact);
+
+    // Remove from profile data
+    const [typeName, path] = contact.split(': ');
+    const contactType = this.contactTypes.find(ct => ct.name === typeName);
+
+    if (contactType) {
+      this.profile.contacts = this.profile.contacts.filter((c: any) => {
+        // Handle string or object format
+        if (typeof c === 'string') return c !== contact;
+        return !(c.contactTypeId === contactType.id && c.path === path);
+      });
+    } else {
+      // Fallback for string format
+      this.profile.contacts = this.profile.contacts.filter((c: any) => {
+        if (typeof c === 'string') return c !== contact;
+        return true;
+      });
+    }
   }
 
   addRole(): void {
-    if (this.newRole && !this.profile.roles.includes(this.newRole)) {
-      this.profile.roles.push(this.newRole);
+    if (!this.newRole) return;
+
+    // Don't add duplicate roles
+    if (!this.displayRoles.includes(this.newRole)) {
+      // Update display array
+      this.displayRoles.push(this.newRole);
+
+      // Add to profile for saving
+      const role = this.roles.find(r => r.name === this.newRole);
+      if (role) {
+        this.profile.roles.push({
+          userId: this.profile.userId,
+          roleId: role.id
+        });
+      } else {
+        // Fallback for string format
+        this.profile.roles.push(this.newRole);
+      }
+
       this.newRole = '';
     }
   }
 
   removeRole(role: string): void {
-    this.profile.roles = this.profile.roles.filter((r: string) => r !== role);
+    // Remove from display array
+    this.displayRoles = this.displayRoles.filter(r => r !== role);
+
+    // Remove from profile data
+    const roleObj = this.roles.find(r => r.name === role);
+
+    if (roleObj) {
+      this.profile.roles = this.profile.roles.filter((r: any) => {
+        // Handle string or object format
+        if (typeof r === 'string') return r !== role;
+        return r.roleId !== roleObj.id;
+      });
+    } else {
+      // Fallback for string format
+      this.profile.roles = this.profile.roles.filter((r: any) => {
+        if (typeof r === 'string') return r !== role;
+        return true;
+      });
+    }
   }
 
   addInterest(): void {
-    if (this.newInterest && !this.profile.interests.includes(this.newInterest)) {
-      this.profile.interests.push(this.newInterest);
+    if (!this.newInterest) return;
+
+    // Don't add duplicate interests
+    if (!this.displayInterests.includes(this.newInterest)) {
+      // Update display array
+      this.displayInterests.push(this.newInterest);
+
+      // Add to profile for saving
+      const category = this.categories.find(c => c.name === this.newInterest);
+      if (category) {
+        this.profile.interests.push({
+          userId: this.profile.userId,
+          categoryId: category.id
+        });
+      } else {
+        // Fallback for string format
+        this.profile.interests.push(this.newInterest);
+      }
+
       this.newInterest = '';
     }
   }
 
   removeInterest(interest: string): void {
-    this.profile.interests = this.profile.interests.filter((i: string) => i !== interest);
+    // Remove from display array
+    this.displayInterests = this.displayInterests.filter(i => i !== interest);
+
+    // Remove from profile data
+    const category = this.categories.find(c => c.name === interest);
+
+    if (category) {
+      this.profile.interests = this.profile.interests.filter((i: any) => {
+        // Handle string or object format
+        if (typeof i === 'string') return i !== interest;
+        return i.categoryId !== category.id;
+      });
+    } else {
+      // Fallback for string format
+      this.profile.interests = this.profile.interests.filter((i: any) => {
+        if (typeof i === 'string') return i !== interest;
+        return true;
+      });
+    }
   }
 
   saveChanges(): void {
@@ -312,8 +458,8 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
 
   private updateContacts(userId: number): Promise<any> {
     // Compare original and current contacts to find new ones
-    const originalContactLabels = this.originalProfile?.contacts || [];
-    const currentContactLabels = this.profile.contacts || [];
+    const originalContactLabels = this.displayContacts || [];
+    const currentContactLabels = this.displayContacts || [];
 
     // Find new contacts that need to be added
     const newContacts = currentContactLabels.filter(
@@ -350,8 +496,8 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
   }
 
   private updateRoles(userId: number): Promise<any> {
-    const originalRoles = this.originalProfile?.roles || [];
-    const currentRoles = this.profile.roles || [];
+    const originalRoles = this.displayRoles || [];
+    const currentRoles = this.displayRoles || [];
 
     // Find new roles that need to be added
     const newRoles = currentRoles.filter(
@@ -384,8 +530,8 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
   }
 
   private updateInterests(userId: number): Promise<any> {
-    const originalInterests = this.originalProfile?.interests || [];
-    const currentInterests = this.profile.interests || [];
+    const originalInterests = this.displayInterests || [];
+    const currentInterests = this.displayInterests || [];
 
     // Find new interests that need to be added
     const newInterests = currentInterests.filter(
