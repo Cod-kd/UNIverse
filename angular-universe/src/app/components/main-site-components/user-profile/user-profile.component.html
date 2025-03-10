@@ -24,7 +24,9 @@
                 <img [src]="getProfileImageSrc()" [alt]="profile.usersData.name + '\'s profile picture'"
                     id="profile-picture" (click)="spinProfilePicture($event)">
                 <h2>{{profile.usersData.name}}</h2>
-
+                @if (username) {
+                <div class="username">{{'@'+username}}</div>
+                }
                 <div id="profile-stats">
                     <div class="stat-item">
                         <span class="stat-value">{{ profile.usersData.followerCount }}</span>

@@ -8,12 +8,13 @@ import { FollowService } from '../../../services/follow/follow.service';
 import { ButtonComponent } from '../../general-components/button/button.component';
 import { SingleUserProfileComponent } from '../single-user-profile/single-user-profile.component';
 import html2canvas from 'html2canvas';
-import { catchError, tap, takeUntil, switchMap } from 'rxjs/operators';
+import { catchError, tap, takeUntil, switchMap, finalize } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ConstantsService } from '../../../services/constants/constants.service';
+import { FetchService } from '../../../services/fetch/fetch.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -30,6 +31,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   isFollowInProgress = false;
   isFollowing = false;
   matchedProfiles: Profile[] = [];
+  username: string = ''; // Added username property
 
   private destroy$ = new Subject<void>();
   private isBrowser: boolean;
@@ -60,6 +62,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     private popupService: PopupService,
     private router: Router,
     private constantsService: ConstantsService,
+    private fetchService: FetchService, // Added FetchService
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -73,6 +76,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.profile = null;
         this.matchedProfiles = [];
         this.searchedUsername = '';
+        this.username = ''; // Reset username
       }
     });
 
@@ -84,6 +88,11 @@ export class UserProfileComponent implements OnInit, OnDestroy {
             this.profile = result as Profile;
             this.updateUniversityAndFaculty();
             this.isProfileSaved = false;
+
+            // Fetch username when profile is loaded (only for non-professional search)
+            if (this.profile && !this.searchService.isProfessionalSearchActive) {
+              this.fetchUsername(this.profile.usersData.userId);
+            }
 
             if (this.currentUserId && this.profile) {
               return this.followService.checkFollowStatus(
@@ -122,6 +131,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.profile = null;
     this.matchedProfiles = [];
+    this.username = '';
 
     this.universityService.getUniversities()
       .pipe(takeUntil(this.destroy$))
@@ -141,9 +151,40 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  // Add method to fetch username
+  fetchUsername(userId: number): void {
+    this.username = ''; // Reset username before fetching
+
+    this.fetchService.get<string>(`/user/username`, {
+      responseType: 'text',
+      params: { id: userId.toString() }
+    })
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => {
+          // Handle finalization if needed
+        })
+      )
+      .subscribe({
+        next: (username) => {
+          this.username = username;
+        },
+        error: (error) => {
+          console.error('Error fetching username:', error);
+          // Don't show error popup to user - username display is not critical
+        }
+      });
+  }
+
   selectProfile(profile: Profile): void {
     this.profile = profile;
+    this.username = ''; // Reset username when selecting a new profile
     this.updateUniversityAndFaculty();
+
+    // Fetch username for the selected profile if not in professional search
+    if (!this.searchService.isProfessionalSearchActive) {
+      this.fetchUsername(profile.usersData.userId);
+    }
 
     if (this.currentUserId && this.profile) {
       this.followService.checkFollowStatus(
