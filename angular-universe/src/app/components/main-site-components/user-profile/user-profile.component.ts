@@ -31,7 +31,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   isFollowInProgress = false;
   isFollowing = false;
   matchedProfiles: Profile[] = [];
-  username: string = ''; // Added username property
+  username: string = '';
 
   private destroy$ = new Subject<void>();
   private isBrowser: boolean;
@@ -62,7 +62,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     private popupService: PopupService,
     private router: Router,
     private constantsService: ConstantsService,
-    private fetchService: FetchService, // Added FetchService
+    private fetchService: FetchService,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -76,7 +76,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.profile = null;
         this.matchedProfiles = [];
         this.searchedUsername = '';
-        this.username = ''; // Reset username
+        this.username = '';
       }
     });
 
@@ -89,8 +89,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
             this.updateUniversityAndFaculty();
             this.isProfileSaved = false;
 
-            // Fetch username when profile is loaded (only for non-professional search)
-            if (this.profile && !this.searchService.isProfessionalSearchActive) {
+            // Always fetch username regardless of search type
+            if (this.profile) {
               this.fetchUsername(this.profile.usersData.userId);
             }
 
@@ -151,7 +151,6 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // Add method to fetch username
   fetchUsername(userId: number): void {
     this.username = ''; // Reset username before fetching
 
@@ -181,10 +180,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.username = ''; // Reset username when selecting a new profile
     this.updateUniversityAndFaculty();
 
-    // Fetch username for the selected profile if not in professional search
-    if (!this.searchService.isProfessionalSearchActive) {
-      this.fetchUsername(profile.usersData.userId);
-    }
+    // Always fetch username for the selected profile
+    this.fetchUsername(profile.usersData.userId);
 
     if (this.currentUserId && this.profile) {
       this.followService.checkFollowStatus(
@@ -199,13 +196,14 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Rest of the component remains the same...
   getContactIcon(contactTypeId: number): string {
     const contactType = this.constantsService.getContactTypesSnapshot().find(ct => ct.id === contactTypeId);
 
     // Map contact types to Font Awesome icons
     const iconMap: { [key: string]: string } = {
       'Facebook': 'fa-brands fa-facebook',
-      'Youtube': 'fa-brainds fa-youtube',
+      'Youtube': 'fa-brands fa-youtube',
       'LinkedIn': 'fa-brands fa-linkedin',
       'GitHub': 'fa-brands fa-github',
       'Tiktok': 'fa-brands fa-tiktok',
