@@ -6,6 +6,7 @@ import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
 import com.universe.backend.modules.Role;
 import com.universe.backend.modules.UsersBio;
+import com.universe.backend.modules.UsersContact;
 import com.universe.backend.services.user.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,17 +39,17 @@ public class UserController {
         return ResponseEntity.ok(username);
     }
     
-    @GetMapping("/contacttypes")
+    @GetMapping("common/contacttypes")
     public ResponseEntity<List<ContactTypes>> getContactTypes() {
         return ResponseEntity.ok(us.getContactTypes());
     }
     
-    @GetMapping("/categories")
+    @GetMapping("common/categories")
     public ResponseEntity<List<Category>> getCategories() {
         return ResponseEntity.ok(us.getCategories());
     }
     
-    @GetMapping("/roles")
+    @GetMapping("common/roles")
     public ResponseEntity<List<Role>> getRoles() {
         return ResponseEntity.ok(us.getRoles());
     }
@@ -128,4 +129,13 @@ public class UserController {
         return ResponseEntity.ok("A leírás frissítve!");
     }
     
+    @PostMapping(value = "/add/contact", consumes = "application/json")
+    public ResponseEntity<String> addUserContact(@RequestBody UsersContact uc) {
+        try {
+            us.addUserContact(uc);
+            return ResponseEntity.ok("Kontakt hozzáadva!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Hiba történt: " + e.getMessage());
+        }
+    }
 }

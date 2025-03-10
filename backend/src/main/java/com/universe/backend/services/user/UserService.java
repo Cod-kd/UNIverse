@@ -9,6 +9,7 @@ import com.universe.backend.modules.ContactTypes;
 import com.universe.backend.modules.Role;
 import com.universe.backend.modules.UserProfiles;
 import com.universe.backend.modules.UsersBio;
+import com.universe.backend.modules.UsersContact;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.universe.backend.repositories.UserProfilesRepository;
@@ -98,5 +99,10 @@ public class UserService {
     
     public void updateUserDescription(String description, int userId) {
         upRepo.updateUserDesc(description, userId);
+    }
+    
+    @Transactional
+    public void addUserContact(UsersContact uc){
+        upRepo.addUserContact(uc.getContactTypeId(), uc.getPath(), uc.getUserId());
     }
 }

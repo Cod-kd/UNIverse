@@ -57,4 +57,12 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
     @Procedure(name = "updateUserDesc")
     void updateUserDesc(@Param("descriptionIn") String description, @Param("userIdIn") int userId);
     
+    
+    @Procedure(procedureName = "addUserContact")
+    void addUserContact(
+        @Param("contactTypeIdIn") Integer contactTypeId, 
+        @Param("pathIn") String path, 
+        @Param("userIdIn") Integer userId
+    );
+    
 }
