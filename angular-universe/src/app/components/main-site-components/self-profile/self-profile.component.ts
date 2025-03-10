@@ -240,36 +240,181 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
   }
 
   saveChanges(): void {
-    if (JSON.stringify(this.profile.description) === JSON.stringify(this.originalProfile?.description) &&
-      JSON.stringify(this.profile.contacts) === JSON.stringify(this.originalProfile?.contacts) &&
-      JSON.stringify(this.profile.roles) === JSON.stringify(this.originalProfile?.roles) &&
-      JSON.stringify(this.profile.interests) === JSON.stringify(this.originalProfile?.interests)) {
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
+
+    // Check if there are any changes to save
+    const hasDescriptionChanges = this.profile.description !== this.originalProfile?.description;
+    const hasContactChanges = JSON.stringify(this.profile.contacts) !== JSON.stringify(this.originalProfile?.contacts);
+    const hasRoleChanges = JSON.stringify(this.profile.roles) !== JSON.stringify(this.originalProfile?.roles);
+    const hasInterestChanges = JSON.stringify(this.profile.interests) !== JSON.stringify(this.originalProfile?.interests);
+
+    if (!hasDescriptionChanges && !hasContactChanges && !hasRoleChanges && !hasInterestChanges) {
       this.popupService.showError("Nincs új menthető adat!");
       return;
     }
 
-    const userId = localStorage.getItem('userId');
-    if (!userId) return;
-
     this.isSaving = true;
+    const parsedUserId = parseInt(userId);
+    const promises: Promise<any>[] = [];
 
-    const requestBody = {
-      description: this.profile.description,
-      userId: parseInt(userId)
-    };
+    // Save description if changed
+    if (hasDescriptionChanges) {
+      const descPromise = this.updateDescription(parsedUserId);
+      promises.push(descPromise);
+    }
 
-    this.fetchService.post('/user/update/desc', requestBody, {
-      responseType: 'text'
-    }).subscribe({
-      next: () => {
+    // Process contacts if changed
+    if (hasContactChanges) {
+      const contactPromise = this.updateContacts(parsedUserId);
+      promises.push(contactPromise);
+    }
+
+    // Process roles if changed
+    if (hasRoleChanges) {
+      const rolePromise = this.updateRoles(parsedUserId);
+      promises.push(rolePromise);
+    }
+
+    // Process interests if changed
+    if (hasInterestChanges) {
+      const interestPromise = this.updateInterests(parsedUserId);
+      promises.push(interestPromise);
+    }
+
+    // Handle all promises
+    Promise.all(promises)
+      .then(() => {
         this.originalProfile = JSON.parse(JSON.stringify(this.profile));
         this.isSaving = false;
         this.popupService.showSuccess("Sikeres módosítás!");
-      },
-      error: () => {
+      })
+      .catch(() => {
         this.isSaving = false;
-      }
+      });
+  }
+
+  private updateDescription(userId: number): Promise<any> {
+    const requestBody = {
+      description: this.profile.description,
+      userId
+    };
+
+    return new Promise((resolve, reject) => {
+      this.fetchService.post('/user/update/desc', requestBody, {
+        responseType: 'text'
+      }).subscribe({
+        next: () => resolve(null),
+        error: (error) => reject(error)
+      });
     });
+  }
+
+  private updateContacts(userId: number): Promise<any> {
+    // Compare original and current contacts to find new ones
+    const originalContactLabels = this.originalProfile?.contacts || [];
+    const currentContactLabels = this.profile.contacts || [];
+
+    // Find new contacts that need to be added
+    const newContacts = currentContactLabels.filter(
+      (contact: string) => !originalContactLabels.includes(contact)
+    );
+
+    if (newContacts.length === 0) return Promise.resolve();
+
+    const contactPromises = newContacts.map((contactLabel: string) => {
+      // Parse contact label (e.g., "Facebook: johndoe")
+      const [typeName, path] = contactLabel.split(': ');
+
+      // Find the contact type ID
+      const contactType = this.contactTypes.find(ct => ct.name === typeName);
+      if (!contactType) return Promise.resolve(); // Skip if contact type not found
+
+      const contactData = {
+        userId,
+        contactTypeId: contactType.id,
+        path
+      };
+
+      return new Promise((resolve, reject) => {
+        this.fetchService.post('/user/add/contact', contactData, {
+          responseType: 'text'
+        }).subscribe({
+          next: () => resolve(null),
+          error: (error) => reject(error)
+        });
+      });
+    });
+
+    return Promise.all(contactPromises);
+  }
+
+  private updateRoles(userId: number): Promise<any> {
+    const originalRoles = this.originalProfile?.roles || [];
+    const currentRoles = this.profile.roles || [];
+
+    // Find new roles that need to be added
+    const newRoles = currentRoles.filter(
+      (role: string) => !originalRoles.includes(role)
+    );
+
+    if (newRoles.length === 0) return Promise.resolve();
+
+    const rolePromises = newRoles.map((roleName: string) => {
+      // Find the role ID
+      const role = this.roles.find(r => r.name === roleName);
+      if (!role) return Promise.resolve(); // Skip if role not found
+
+      const roleData = {
+        userId,
+        roleId: role.id
+      };
+
+      return new Promise((resolve, reject) => {
+        this.fetchService.post('/user/add/role', roleData, {
+          responseType: 'text'
+        }).subscribe({
+          next: () => resolve(null),
+          error: (error) => reject(error)
+        });
+      });
+    });
+
+    return Promise.all(rolePromises);
+  }
+
+  private updateInterests(userId: number): Promise<any> {
+    const originalInterests = this.originalProfile?.interests || [];
+    const currentInterests = this.profile.interests || [];
+
+    // Find new interests that need to be added
+    const newInterests = currentInterests.filter(
+      (interest: string) => !originalInterests.includes(interest)
+    );
+
+    if (newInterests.length === 0) return Promise.resolve();
+
+    const interestPromises = newInterests.map((interestName: string) => {
+      // Find the category ID
+      const category = this.categories.find(c => c.name === interestName);
+      if (!category) return Promise.resolve(); // Skip if category not found
+
+      const interestData = {
+        userId,
+        categoryId: category.id
+      };
+
+      return new Promise((resolve, reject) => {
+        this.fetchService.post('/user/add/interest', interestData, {
+          responseType: 'text'
+        }).subscribe({
+          next: () => resolve(null),
+          error: (error) => reject(error)
+        });
+      });
+    });
+
+    return Promise.all(interestPromises);
   }
 
   confirmDeleteProfile(): void {
