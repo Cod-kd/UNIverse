@@ -31,7 +31,7 @@
   <div class="mobile-menu" [class.active]="isMenuOpen" [style.height]="(isLoggedIn$ | async) ? '35vh' : '30vh'">
     <nav>
       <a [routerLink]="['/main-site/user-profile']" class="link link--elara" (click)="onNavigate()">
-        <span>Profil</span>
+        <span>Felhasználók</span>
       </a>
       <a [routerLink]="['/main-site/groups']" class="link link--elara" (click)="onNavigate()">
         <span>Csoportok</span>

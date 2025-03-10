@@ -24,7 +24,7 @@ export class HeaderComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
 
   navItems: NavItem[] = [
-    { path: '/main-site/user-profile', label: 'Profilok' },
+    { path: '/main-site/user-profile', label: 'Felhasználók' },
     { path: '/main-site/groups', label: 'Csoportok' },
     { path: '/main-site/events', label: 'Események' },
     { path: '/main-site/settings', label: 'Beállítások' }
