@@ -1,0 +1,78 @@
+root-page-components: (OK)
+-unicard-login (OK)
+-unicard (OK)
+-toggle-input (OK)
+-registration (OK)
+-login (OK)
+-info-card (OK)
+-center-container (OK)
+-----------------------------------------
+
+general-components: (OK)
+-button (OK)
+-footer (OK)
+-header (OK)
+-loading-spinner (OK)
+-main (OK)
+-popup (OK)
+
+-----------------------------------------
+
+main-site-components:
+-events
+-groups
+-main-site
+-page-not-found
+-search-bar
+-self-profile
+-settings
+-single-group
+-single-user-profile
+-user-profile
+-----------------------------------------
+
+services:
+-auth
+-card-meta-data
+-constants
+-fetch
+-follow
+-group
+-loading
+-login
+-popup-message
+-register
+-search
+-theme
+-university
+-validation
+
+-----------------------------------------
+
+guards:
+-root
+-auth
+
+-----------------------------------------
+
+interceptors:
+-auth
+
+-----------------------------------------
+
+models:
+-constants
+-group
+-nav
+-profile
+-shortcut
+-theme
+-uni-faculty
+-unicard
+
+-----------------------------------------
+
+environments:
+-environment
+
+-----------------------------------------
