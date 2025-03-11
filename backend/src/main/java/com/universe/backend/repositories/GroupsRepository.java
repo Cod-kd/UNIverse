@@ -1,5 +1,6 @@
 package com.universe.backend.repositories;
 
+import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Groups;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,4 +28,7 @@ public interface GroupsRepository extends JpaRepository<Groups, Integer>{
     
     @Query(value = "SELECT checkGroupMember(:groupIdIn, :userIdIn)", nativeQuery = true)
     Boolean isGroupFollowed(@Param("groupIdIn") int followerId, @Param("userIdIn") int followedId);
+    
+    @Query(value = "SELECT * FROM events", nativeQuery = true)
+    List<Event> getEvents(@Param("groupId") Integer groupId);
 }
