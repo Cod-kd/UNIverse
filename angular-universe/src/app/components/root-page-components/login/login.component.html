@@ -1,13 +1,24 @@
 <div id="loginDiv">
+
   <form autocomplete="off" id="loginForm" [formGroup]="loginForm">
+
+    <!-- Username -->
     <input (blur)="onUsernameChange()" id="usernameInput" type="text" placeholder="Felhasználónév..." class="input"
       formControlName="username">
+
+    <!-- Password -->
     <app-toggle-input formControlName="password"></app-toggle-input>
   </form>
-  <app-button [isDisabled]="isLoginDisabled" [btnLabel]="'Bejelentkezés'" iconClass="fa-solid fa-keyboard" [size]="'big'"
-    (click)="loginWithCredentials()"></app-button>
+
+  <!-- Login -->
+  <app-button [isDisabled]="isLoginDisabled" [btnLabel]="'Bejelentkezés'" iconClass="fa-solid fa-keyboard"
+    [size]="'big'" (click)="loginWithCredentials()"></app-button>
+
+  <!-- UNIcard login -->
   <app-button [btnLabel]="'UNIcard használata'" iconClass="fa-solid fa-id-card-clip" [size]="'big'"
     (click)="onUNIcardLoginClick()"></app-button>
+
+  <!-- Register -->
   <app-button [btnLabel]="'Vissza a regisztrációhoz'" iconClass="fa-solid fa-address-card" [size]="'big'"
     (click)="backToRegistration()"></app-button>
 </div>
