@@ -15,6 +15,7 @@ export class ButtonComponent {
   @Input() size: 'small' | 'normal' | 'big' = 'normal';
   @Input() shape: 'circle' | 'rounded' | 'rectangle' = 'rounded';
 
+  // Function that returns the class based on size value
   get sizeClass() {
     switch (this.size) {
       case 'small': return 'button-small';
@@ -24,6 +25,7 @@ export class ButtonComponent {
     }
   }
 
+  // Function that returns the class based on shape value
   get shapeClass() {
     switch (this.shape) {
       case 'circle': return 'button-circle';
