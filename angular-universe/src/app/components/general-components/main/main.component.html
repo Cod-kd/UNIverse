@@ -1,4 +1,5 @@
 <main>
+  <!-- (Left side cards) Loads if not on /main-site -->
   @if (!isMainSite) {
   <div class="cardDiv">
     <app-info-card [iconClass]="'fa-solid fa-people-group'" [title]="'Csoportok'"
@@ -8,10 +9,12 @@
   </div>
   }
 
+  <!-- Centered dynamic content  -->
   <div id="mainContent">
     <router-outlet></router-outlet>
   </div>
 
+  <!-- (Right side cards) Loads if not on /main-site -->
   @if (!isMainSite) {
   <div class="cardDiv">
     <app-info-card [iconClass]="'fa-solid fa-heart'" [title]="'Élménydús egyetemi élet'"

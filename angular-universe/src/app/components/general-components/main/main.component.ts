@@ -16,6 +16,7 @@ export class MainComponent implements OnInit {
     this.isMainSite = this.router.url.includes("/main-site");
   }
 
+  // Determines if the url is /main-site or not at initialization
   ngOnInit(): void {
     this.router.events.subscribe(() => {
       this.isMainSite = this.router.url.includes("/main-site");
