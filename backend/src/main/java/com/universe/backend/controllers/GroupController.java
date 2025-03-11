@@ -61,4 +61,11 @@ public class GroupController {
         Integer groupId = gs.groupIdByName(groupName);
         return ResponseEntity.ok(gs.getEvents(groupId));
     }
+    
+    @PostMapping("name/{groupName}/newevent")
+    public ResponseEntity<String> createEvent(@RequestBody Event event, @PathVariable String groupName) {
+        Integer groupId = gs.groupIdByName(groupName);
+        gs.createEvent(event,groupId);
+        return ResponseEntity.ok("Esemény sikeresen létrehozva!");
+    }
 }

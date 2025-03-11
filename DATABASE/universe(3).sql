@@ -16,6 +16,10 @@ fill manual: (NNN addRank)
 back implement::
 
 procedures:
+addInterestedUser
+reduceInterestedUser
+getInterestingEventsForUser
+getInterestedUsersForEvent
 
 functions:
 
@@ -249,6 +253,26 @@ CREATE PROCEDURE `registerUser` (IN `emailIn` VARCHAR(50), IN `usernameIn` VARCH
     CALL idByUsername(usernameIn, @userId);
     CALL addUserData(@userId, nameIn, genderIn, birthDateIn, universityNameIn, profilePictureExtensionIn);
     CALL addUserbio(@userId, facultyIn);
+END$$
+
+CREATE PROCEDURE `addInterestedUser` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
+BEGIN  
+    INSERT INTO `interestedusers` (`eventId`, `userId`) VALUES (eventIdIn, userIdIn);
+END$$
+
+CREATE PROCEDURE `reduceInterestedUser` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
+BEGIN  
+    DELETE FROM `interestedusers` WHERE `eventId` = eventIdIn AND `userId` = userIdIn;
+END$$
+
+CREATE PROCEDURE `getInterestingEventsForUser` (IN userIdIn MEDIUMINT)  
+BEGIN  
+    SELECT * FROM `interestedusers` WHERE userId = userIdIn;
+END$$
+
+CREATE PROCEDURE `getInterestedUsersForEvent` (IN eventIdIn INT)  
+BEGIN  
+    SELECT * FROM `interestedusers` WHERE eventId = eventIdIn;
 END$$
 
 --
@@ -691,8 +715,7 @@ ALTER TABLE `groups`
 -- A tábla indexei `interestedusers`
 --
 ALTER TABLE `interestedusers`
-  ADD KEY `eventId` (`eventId`),
-  ADD KEY `userId` (`userId`);
+  ADD PRIMARY KEY (`eventId`, `userId`);
 
 --
 -- A tábla indexei `membersofgroups`

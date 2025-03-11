@@ -45,4 +45,17 @@ public class GroupService {
     public List<Event> getEvents(Integer groupId) {
         return groupRepository.getEvents(groupId);
     }
+    
+    public void createEvent(Event event, Integer groupId) {
+        groupRepository.createEvent(
+            event.getName(),
+            event.getCreatorId(),
+            event.getStartDate(),
+            event.getEndDate(),
+            event.getPlace(),
+            event.getAttachmentRelPath(),
+            event.getDescription(),
+            groupId
+        );
+    }
 }
