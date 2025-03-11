@@ -10,9 +10,11 @@
         </form>
     </div>
     @if(showProfessionalSearch()){
-    <label for="profSearch">
-        Professzionális keresés
-        <input id="profSearch" type="checkbox" (change)="isProfSearch($event)">
-    </label>
+    <div id="profSearchDiv">
+        <label for="profSearch">
+            Professzionális keresés
+            <input id="profSearch" type="checkbox" (change)="isProfSearch($event)">
+        </label>
+    </div>
     }
 </div>
