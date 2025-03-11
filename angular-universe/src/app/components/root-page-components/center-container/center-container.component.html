@@ -3,14 +3,19 @@
         <h2>UNIverse közösségi oldal</h2>
         <hr>
         <p>Csatlakozz egy egyedi egyetemi közösséghez!
-            Ismerj meg új embereket, ossz meg élményeket, és légy naprakész az egyetemi életben. <br>Regisztrálj, lépj be,
+            Ismerj meg új embereket, ossz meg élményeket, és légy naprakész az egyetemi életben. <br>Regisztrálj, lépj
+            be,
             és fedezd fel az UNIverse-umot!
         </p>
     </div>
     <hr>
     <div id="registerLoginBtnDiv">
+
+        <!-- Login -->
         <app-button [btnLabel]="'Bejelentkezés'" iconClass="fa-solid fa-id-card-clip" [size]="'big'"
             (click)="onLoginClick()"></app-button>
+
+        <!-- Register -->
         <app-button [btnLabel]="'Regisztráció'" iconClass="fa-solid fa-address-card" [size]="'big'"
             (click)="onRegisterClick()"></app-button>
     </div>

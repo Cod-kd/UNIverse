@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CenterContainerComponent } from './center-container.component';
 
 describe('CenterContainerComponent', () => {
