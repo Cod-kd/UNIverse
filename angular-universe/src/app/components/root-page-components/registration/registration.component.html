@@ -1,30 +1,41 @@
 <form autocomplete="off" [formGroup]="registrationForm">
+  <!-- Email -->
   <input id="emailInput" class="input" type="email" formControlName="email" placeholder="E-mail..."
     (blur)="onEmailChange()">
 
+  <!-- Username -->
   <input id="usernameInput" class="input" type="text" formControlName="username" placeholder="Felhasználónév..."
     (blur)="onUsernameChange()">
 
+  <!-- Full name -->
   <input id="fullNameInput" class="input" type="text" formControlName="fullName" placeholder="Teljes név..."
     (blur)="onFullNameChange()">
 
+  <!-- Gender -->
   <div class="gender-select">
+    <!-- Male -->
     <label>
       <input id="maleRadioInput" type="radio" formControlName="gender" value="1" class="radio-input"> Férfi
     </label>
+
+    <!-- Female -->
     <label>
       <input id="femaleRadioInput" type="radio" formControlName="gender" value="0" class="radio-input"> Nő
     </label>
+    <!-- Other -->
     <label>
       <input id="pntsRadioInput" type="radio" formControlName="gender" value="null" class="radio-input"> PNTS
     </label>
   </div>
 
+  <!-- Password -->
   <app-toggle-input></app-toggle-input>
 
+  <!-- Birth date -->
   <input id="birthDateInput" class="input" type="text" formControlName="birthDate" placeholder="ÉÉÉÉ-HH-NN"
     maxlength="10" (input)="formatBirthDate($event)" (blur)="onBirthDateChange()">
 
+  <!-- University -->
   <div id="universityDiv">
     <select id="universityName" formControlName="university" (change)="onUniversityChange()">
       <option value="">Válassz egyetemet</option>
@@ -34,6 +45,7 @@
     </select>
   </div>
 
+  <!-- Faculty -->
   <div id="facultyDiv">
     <select id="facultySelect" formControlName="faculty" (change)="onFacultyChange()">
       <option value="">Válassz kart</option>
@@ -44,9 +56,12 @@
   </div>
 
   <div id="btnDiv">
+    <!-- Register -->
     <app-button [btnLabel]="'Regisztráció'" iconClass="fa-solid fa-address-card" [size]="'big'"
       (click)="registerNewUser()">
     </app-button>
+
+    <!-- Login -->
     <app-button [btnLabel]="'Van már fiókom'" iconClass="fa-solid fa-id-card-clip" [size]="'big'"
       (click)="returnToLogin()">
     </app-button>
