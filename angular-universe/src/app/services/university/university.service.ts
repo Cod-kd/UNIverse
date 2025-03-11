@@ -27,6 +27,14 @@ export class UniversityService {
     return of(universities);
   }
 
+  getFacultyNameByAbbreviation(universityCode: string, abbreviation: string): string {
+    const facultiesList = faculties[universityCode] || [];
+    // Find the faculty whose abbreviation matches
+    return facultiesList.find(faculty =>
+      this.generateAbbreviation(faculty) === abbreviation
+    ) || abbreviation; // Return abbreviation as fallback
+  }
+
   // Generates abbreviation from faculty name
   private generateAbbreviation(facultyName: string): string {
     // Extract first letter of each meaningful word

@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { ConstantsService } from '../../../services/constants/constants.service';
 import { Subscription } from 'rxjs';
 import { Role, ContactType, Category } from '../../../models/constants/constants.model';
+import { UniversityService } from '../../../services/university/university.service';
 
 interface ContactInput {
   type: string;
@@ -31,6 +32,9 @@ interface DeleteProfileData {
 export class SelfProfileComponent implements OnInit, OnDestroy {
   profile: any = null;
   originalProfile: any = null;
+
+  universityName: string = '';
+  facultyName: string = '';
 
   // Display arrays for UI
   displayContacts: string[] = [];
@@ -78,8 +82,27 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
     private fetchService: FetchService,
     private authService: AuthService,
     private router: Router,
-    private constantsService: ConstantsService
+    private constantsService: ConstantsService,
+    private universityService: UniversityService
   ) { }
+
+  private updateProfileDisplay(): void {
+    // Get full university name from code
+    this.universityName = this.universityService.getUniversityName(
+      this.profile.usersData.universityName
+    );
+
+    // Check if faculty is in code format and needs expansion
+    if (this.profile.faculty) {
+      // Try to get full faculty name if it's an abbreviation
+      this.facultyName = this.universityService.getFacultyNameByAbbreviation(
+        this.profile.usersData.universityName,
+        this.profile.faculty
+      );
+    } else {
+      this.facultyName = '';
+    }
+  }
 
   ngOnInit(): void {
     // Load constants data first
@@ -107,6 +130,9 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
 
           // Process arrays for display
           this.updateDisplayArrays();
+
+          // Move this call here to ensure profile is loaded first
+          this.updateProfileDisplay();
         }
       })
     );

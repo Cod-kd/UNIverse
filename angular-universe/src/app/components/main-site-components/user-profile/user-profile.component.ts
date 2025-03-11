@@ -251,13 +251,14 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     const uniValue = this.profile.usersData.universityName;
     this.universityName = this.universityMap.get(uniValue) || uniValue;
 
+    // Get the full faculty name using the abbreviation
+    this.facultyName = this.universityService.getFacultyNameByAbbreviation(
+      uniValue,
+      this.profile.faculty || ''
+    );
+
+    // Also load faculties in case needed elsewhere
     this.universityService.loadFaculties(uniValue);
-    this.universityService.faculties$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(faculties => {
-        const faculty = faculties.find(f => f.label === this.profile?.faculty);
-        this.facultyName = faculty?.label || this.profile?.faculty || '';
-      });
   }
 
   getProfileImageSrc(): string {
