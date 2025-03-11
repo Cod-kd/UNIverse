@@ -34,7 +34,7 @@ export class UNIcardLoginComponent {
   async loginWithCard(event: Event) {
     event.preventDefault();
     if (!this.selectedFile) {
-      this.popupService.showError('Kérlek, válassz ki egy UNIcard képet.');
+      this.popupService.showError('Kérlek, válaszd ki a UNIcard-od!');
       return;
     }
 
