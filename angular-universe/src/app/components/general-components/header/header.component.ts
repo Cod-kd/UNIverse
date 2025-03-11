@@ -18,11 +18,11 @@ import { NavItem } from '../../../models/nav/nav.model';
 export class HeaderComponent implements OnInit {
   isMenuOpen = false;
   isMobile = false;
-  headerHidden = false;
   isLoggedIn$;
   private lastScrollPosition = 0;
   private destroyRef = inject(DestroyRef);
 
+  // Navigation items for the header menu
   navItems: NavItem[] = [
     { path: '/main-site/user-profile', label: 'Felhasználók' },
     { path: '/main-site/groups', label: 'Csoportok' },
@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.checkScreenSize();
+    this.checkScreenSize(); // Determine if the screen is mobile on load
 
     fromEvent(window, 'scroll')
       .pipe(
@@ -52,31 +52,29 @@ export class HeaderComponent implements OnInit {
 
   @HostListener('window:resize')
   checkScreenSize() {
+    // Check if the screen width is small enough to be considered mobile
     this.isMobile = window.innerWidth <= 468;
-    if (!this.isMobile) this.isMenuOpen = false;
+    if (!this.isMobile) this.isMenuOpen = false; // Close the menu on larger screens
   }
 
   onWindowScroll() {
     const currentScroll = window.scrollY;
+    // Close the menu if the scroll distance is significant
     if (Math.abs(currentScroll - this.lastScrollPosition) > 10) {
       this.isMenuOpen = false;
       this.lastScrollPosition = currentScroll;
-    }
-
-    if (currentScroll > 100 && currentScroll > this.lastScrollPosition) {
-      this.headerHidden = true;
-    } else {
-      this.headerHidden = false;
     }
   }
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
+    // Close the menu if the user clicks outside of it
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.isMenuOpen = false;
     }
   }
 
+  // Toggle the menu open/close state
   toggleMenu(event: Event) {
     event.stopPropagation();
     this.isMenuOpen = !this.isMenuOpen;
@@ -84,13 +82,12 @@ export class HeaderComponent implements OnInit {
 
   onNavigate() {
     this.isMenuOpen = false;
-    this.viewportScroller.scrollToPosition([0, 0]);
+    this.viewportScroller.scrollToPosition([0, 0]); // Scroll to the top of the page
   }
 
   logout() {
     this.authService.logout();
-    localStorage.removeItem("username");
-    localStorage.removeItem("password");
+    this.isMenuOpen = false;
     this.router.navigate(['/']);
   }
 }

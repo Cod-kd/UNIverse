@@ -1,11 +1,6 @@
-:root {
-  --header-height: 70px;
-  --transition-speed: 0.3s;
-}
-
 header {
   background-color: var(--dark2);
-  height: var(--header-height);
+  height: 70px;
   padding: 0.6rem;
   display: flex;
   align-items: center;
@@ -14,25 +9,21 @@ header {
   position: fixed;
   z-index: 20;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  transition: transform var(--transition-speed) ease;
-  }
+  transition: transform 0.3s ease;
+}
 
-.logoDiv{
+.logoDiv {
   display: flex;
   text-decoration: none;
   color: var(--main);
   gap: 0;
 }
 
-.logoDiv h2{
+.logoDiv h2 {
   font-size: 30px;
   margin-top: 0;
   margin-left: -3px;
   font-weight: bold;
-}
-
-header.header-hidden {
-  transform: translateY(-100%);
 }
 
 .logo-container {
