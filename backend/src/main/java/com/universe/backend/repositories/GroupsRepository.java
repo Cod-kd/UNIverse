@@ -44,4 +44,10 @@ public interface GroupsRepository extends JpaRepository<Groups, Integer>{
         @Param("descriptionIn") String description,
         @Param("groupIdIn") Integer groupId
     );
+    
+    @Procedure(procedureName = "addInterestedUser")
+    void addInterestedUser(@Param("eventIdIn") Integer eventId, @Param("userIdIn") Integer userId);
+
+    @Procedure(procedureName = "reduceInterestedUser")
+    void reduceInterestedUser(@Param("eventIdIn") Integer eventId, @Param("userIdIn") Integer userId);
 }

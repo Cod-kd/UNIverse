@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,5 +68,21 @@ public class GroupController {
         Integer groupId = gs.groupIdByName(groupName);
         gs.createEvent(event,groupId);
         return ResponseEntity.ok("Esemény sikeresen létrehozva!");
+    }
+    
+    @PostMapping("event/addinterest")
+    public ResponseEntity<String> addInterestedUser(@RequestBody Map<String, Integer> requestBody) {
+        Integer eventId = requestBody.get("eventId");
+        Integer userId = requestBody.get("userId");
+        gs.addInterestedUser(eventId, userId);
+        return ResponseEntity.ok("Feliratkozás sikeres!");
+    }
+
+    @PostMapping("event/removeinterest")
+    public ResponseEntity<String> reduceInterestedUser(@RequestBody Map<String, Integer> requestBody) {
+        Integer eventId = requestBody.get("eventId");
+        Integer userId = requestBody.get("userId");
+        gs.reduceInterestedUser(eventId, userId);
+        return ResponseEntity.ok("Leiratkozás sikeres!");
     }
 }

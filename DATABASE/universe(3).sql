@@ -16,8 +16,6 @@ fill manual: (NNN addRank)
 back implement::
 
 procedures:
-addInterestedUser
-reduceInterestedUser
 getInterestingEventsForUser
 getInterestedUsersForEvent
 

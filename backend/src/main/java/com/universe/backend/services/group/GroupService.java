@@ -58,4 +58,12 @@ public class GroupService {
             groupId
         );
     }
+    
+    public void addInterestedUser(Integer eventId, Integer userId) {
+        groupRepository.addInterestedUser(eventId, userId);
+    }
+
+    public void reduceInterestedUser(Integer eventId, Integer userId) {
+        groupRepository.reduceInterestedUser(eventId, userId);
+    }
 }
