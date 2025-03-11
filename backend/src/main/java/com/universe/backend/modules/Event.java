@@ -1,5 +1,6 @@
 package com.universe.backend.modules;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -19,6 +20,9 @@ public class Event {
 
     @Column(nullable = false)
     private Integer creatorId;  // mediumint(9)
+    
+    @Column(nullable = false)
+    private Integer groupId;  // mediumint(9)
 
     @Column
     private LocalDateTime startDate;  // timestamp
@@ -135,5 +139,14 @@ public class Event {
 
     public void setIsActual(Boolean isActual) {
         this.isActual = isActual;
+    }
+    
+    @JsonIgnore
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
 }

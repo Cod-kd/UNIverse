@@ -27,8 +27,8 @@ public interface GroupsRepository extends JpaRepository<Groups, Integer>{
     void reduceGroupMember(@Param("groupIdIn") Integer groupId, @Param("userIdIn") Integer userId);
     
     @Query(value = "SELECT checkGroupMember(:groupIdIn, :userIdIn)", nativeQuery = true)
-    Boolean isGroupFollowed(@Param("groupIdIn") int followerId, @Param("userIdIn") int followedId);
+    Boolean isGroupFollowed(@Param("groupIdIn") Integer groupId, @Param("userIdIn") Integer userId);
     
-    @Query(value = "SELECT * FROM events", nativeQuery = true)
-    List<Event> getEvents(@Param("groupId") Integer groupId);
+    @Query(value = "SELECT * FROM events WHERE groupId = :groupIdIn", nativeQuery = true)
+    List<Event> getEvents(@Param("groupIdIn") Integer groupId);
 }
