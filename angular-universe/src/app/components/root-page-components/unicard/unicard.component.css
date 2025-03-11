@@ -14,14 +14,6 @@
   animation: float 3s infinite forwards ease-in-out;
 }
 
-iframe{
-  position: absolute;
-  width: 40em;
-  height: 40em;
-  top: 13%;
-  left: 35%;
-}
-
 @keyframes float {
   0% {
     transform: translateY(0);
@@ -76,9 +68,5 @@ iframe{
 @media screen and (max-width: 480px) {
   #userDataDiv {
     width: 90%;
-  }
-
-  #userDataDiv p {
-    font-size: 16px;
   }
 }
