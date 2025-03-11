@@ -23,12 +23,6 @@
     background-color: var(--dark1);
 }
 
-.infoCard div:first-child img {
-    width: clamp(2em, 5vw, 3em);
-    height: auto;
-    object-fit: contain;
-}
-
 p {
     font-family: 'Nunito';
     font-size: clamp(0.9rem, 2.5vw, 1rem);
@@ -61,9 +55,5 @@ i {
     .infoCard div:first-child {
         width: 3.5em;
         height: 3.5em;
-    }
-
-    .infoCard div:first-child img {
-        width: 2em;
     }
 }
