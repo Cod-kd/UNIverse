@@ -25,6 +25,7 @@ import { FetchService } from '../../../services/fetch/fetch.service';
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
   @ViewChild('profileCard') profileCard!: ElementRef;
+  @ViewChild('profileContainer') profileContainer!: ElementRef; // Added reference to container
   profile: Profile | null = null;
   isFriendAdded = false;
   isProfileSaved = false;
@@ -92,6 +93,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
             // Always fetch username regardless of search type
             if (this.profile) {
               this.fetchUsername(this.profile.usersData.userId);
+              // Scroll to profile view after a short delay to ensure DOM is updated
+              this.scrollToProfileView();
             }
 
             if (this.currentUserId && this.profile) {
@@ -194,9 +197,32 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         this.isFollowing = isFollowing;
       });
     }
+
+    // Scroll to profile view after profile selection
+    this.scrollToProfileView();
   }
 
-  // Rest of the component remains the same...
+  // New method to handle scrolling to profile view
+  private scrollToProfileView(offsetY: number = 120): void {
+    if (!this.isBrowser) return;
+
+    setTimeout(() => {
+      const profileContainer = document.getElementById('profile-container');
+      if (profileContainer) {
+        // Get position of element
+        const rect = profileContainer.getBoundingClientRect();
+        const absoluteTop = rect.top + window.scrollY;
+
+        // Scroll to element position minus the offset
+        window.scrollTo({
+          top: absoluteTop - offsetY,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
+  }
+
+  // Rest of the component methods remain unchanged
   getContactIcon(contactTypeId: number): string {
     const contactType = this.constantsService.getContactTypesSnapshot().find(ct => ct.id === contactTypeId);
 
