@@ -1,8 +1,11 @@
 package com.universe.backend.services.group;
 
+import com.universe.backend.exceptions.GroupNotFoundException;
+import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Groups;
 import com.universe.backend.repositories.GroupsRepository;
 import java.util.List;
+import static java.util.Objects.isNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +15,11 @@ public class GroupService {
     private GroupsRepository groupRepository;
     
     public Integer groupIdByName(String groupName){
-        return groupRepository.idByGroupName(groupName);
+        Integer gId = groupRepository.idByGroupName(groupName);
+        if(isNull(gId)){
+            throw new GroupNotFoundException("A csoport nem létezik!");
+        }
+        return gId;
     }
 
     public List<Groups> getAllGroups() {
@@ -33,5 +40,9 @@ public class GroupService {
     
     public Boolean isGroupFollowed(int groupId, int userId) {
         return groupRepository.isGroupFollowed(groupId, userId);
+    }
+    
+    public List<Event> getEvents(Integer groupId) {
+        return groupRepository.getEvents(groupId);
     }
 }

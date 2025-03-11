@@ -33,6 +33,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+    
+    @ExceptionHandler(GroupNotFoundException.class)
+    public ResponseEntity<String> handleGroupNotFoundException(GroupNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralException(Exception ex) {
