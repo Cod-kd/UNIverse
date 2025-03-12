@@ -86,7 +86,7 @@ def generate_url(base_url, username, password):
     encoded_username = encode_string(username)
     encoded_password = encode_string(password)
     
-    return f"{base_url}/login/?x1={encoded_username}&x2={encoded_password}"
+    return f"{base_url}/login?x1={encoded_username}&x2={encoded_password}"
 
 def decode_url(encoded_username, encoded_password):
     """Decode the URL to retrieve the original username and password."""
@@ -99,8 +99,8 @@ def decode_url(encoded_username, encoded_password):
 base_url = "https://example.com"
 
 # Generate valid username and password
-username = generate_valid_string(min_length=8)
-password = generate_valid_string(min_length=8)
+username = "VighTanarFerencTanar"#generate_valid_string(min_length=8)
+password = "*Vigh123*"#generate_valid_string(min_length=8)
 
 print(f"Original Username: {username}")
 print(f"Original Password: {password}")

@@ -4,6 +4,7 @@ import com.universe.backend.exceptions.GroupNotFoundException;
 import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Groups;
 import com.universe.backend.repositories.GroupsRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import static java.util.Objects.isNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,5 +66,10 @@ public class GroupService {
 
     public void reduceInterestedUser(Integer eventId, Integer userId) {
         groupRepository.reduceInterestedUser(eventId, userId);
+    }
+    
+    @Transactional
+    public List<Integer> getInterestedUsersForEvent(Integer eventId){
+        return groupRepository.getInterestedUsersForEvent(eventId);
     }
 }

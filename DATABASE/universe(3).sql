@@ -17,7 +17,6 @@ back implement::
 
 procedures:
 getInterestingEventsForUser
-getInterestedUsersForEvent
 
 functions:
 
@@ -265,12 +264,12 @@ END$$
 
 CREATE PROCEDURE `getInterestingEventsForUser` (IN userIdIn MEDIUMINT)  
 BEGIN  
-    SELECT * FROM `interestedusers` WHERE userId = userIdIn;
+    SELECT eventId FROM `interestedusers` WHERE userId = userIdIn;
 END$$
 
 CREATE PROCEDURE `getInterestedUsersForEvent` (IN eventIdIn INT)  
 BEGIN  
-    SELECT * FROM `interestedusers` WHERE eventId = eventIdIn;
+    SELECT userId FROM `interestedusers` WHERE eventId = eventIdIn;
 END$$
 
 --

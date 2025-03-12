@@ -85,4 +85,11 @@ public class GroupController {
         gs.reduceInterestedUser(eventId, userId);
         return ResponseEntity.ok("Leiratkozás sikeres!");
     }
+    
+    @PostMapping("event/interestedusers")
+    public ResponseEntity<List<Integer>> getInterestedUsersForEvent(@RequestBody Map<String, Integer> requestBody) {
+        Integer eventId = requestBody.get("eventId");
+        List<Integer> eventIdes = gs.getInterestedUsersForEvent(eventId);
+        return ResponseEntity.ok(eventIdes);
+    }
 }

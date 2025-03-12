@@ -50,4 +50,7 @@ public interface GroupsRepository extends JpaRepository<Groups, Integer>{
 
     @Procedure(procedureName = "reduceInterestedUser")
     void reduceInterestedUser(@Param("eventIdIn") Integer eventId, @Param("userIdIn") Integer userId);
+    
+    @Procedure(procedureName = "getInterestedUsersForEvent")
+    List<Integer> getInterestedUsersForEvent(@Param("eventIdIn") Integer eventId);
 }
