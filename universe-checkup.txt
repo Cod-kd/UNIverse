@@ -65,15 +65,16 @@ interceptors:
 -----------------------------------------
 
 models:
--constants
--event
--group
--nav
--profile
--shortcut
--theme
--uni-faculty
--unicard
+-constants (OK)
+-event (OK)
+-group (OK)
+-nav (OK)
+-profile (OK)
+-shortcut (OK)
+-self-profile (OK)
+-theme (OK)
+-uni-faculty (OK)
+-unicard (OK)
 
 -----------------------------------------
 
