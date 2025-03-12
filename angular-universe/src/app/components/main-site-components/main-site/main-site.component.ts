@@ -125,7 +125,7 @@ export class MainSiteComponent implements OnInit {
   }
 
   navigateTo(path: string): void {
-    this.router.navigate([path]);
+    this.router.navigateByUrl(path);
   }
 
   loadShortcuts(): void {
