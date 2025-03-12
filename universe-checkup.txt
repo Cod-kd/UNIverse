@@ -22,10 +22,12 @@ main-site-components:
 -events
 -groups
 -main-site
+-opened-group
 -page-not-found
 -search-bar
 -self-profile
 -settings
+-single-event
 -single-group
 -single-user-profile
 -user-profile
@@ -35,6 +37,7 @@ services:
 -auth
 -card-meta-data
 -constants
+-event
 -fetch
 -follow
 -group
@@ -45,6 +48,7 @@ services:
 -search
 -theme
 -university
+-user-event
 -validation
 
 -----------------------------------------
@@ -62,6 +66,7 @@ interceptors:
 
 models:
 -constants
+-event
 -group
 -nav
 -profile
