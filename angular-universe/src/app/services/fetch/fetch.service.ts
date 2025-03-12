@@ -62,11 +62,22 @@ export class FetchService {
   }
 
   private handleError(error: HttpErrorResponse, showError = true): Observable<never> {
-    if (!(error instanceof HttpErrorResponse) || error.status >= 200 && error.status < 300) {
+    if (!(error instanceof HttpErrorResponse)) {
       return throwError(() => error);
     }
 
-    let errorMessage = error.error;
+    if (error.status >= 200 && error.status < 300) {
+      return throwError(() => error);
+    }
+
+    let errorMessage: string;
+    if (typeof error.error === 'string') {
+      errorMessage = error.error;
+    } else if (error.error?.message) {
+      errorMessage = error.error.message;
+    } else {
+      errorMessage = error.message || 'Ismeretlen hiba';
+    }
 
     if (showError && errorMessage) {
       this.popupService.showError(errorMessage);

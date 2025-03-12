@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
-import { Observable, Subscription, throwError } from 'rxjs';
-import { catchError, filter, switchMap, finalize } from 'rxjs/operators';
+import { Observable, Subscription, throwError, of } from 'rxjs';
+import { catchError, filter, switchMap, finalize, timeout, retry } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { FetchService } from '../fetch/fetch.service';
 import { LoadingService } from '../loading/loading.service';
+import { PopupService } from '../popup-message/popup-message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class LoginService implements OnDestroy {
     private router: Router,
     private authService: AuthService,
     private loadingService: LoadingService,
+    private popupService: PopupService
   ) {
     this.routerSubscription = this.router.events
       .pipe(
@@ -44,12 +46,15 @@ export class LoginService implements OnDestroy {
       this.loadingService.show();
       this.fetchLogin(credentials.username, credentials.password, false)
         .pipe(
+          timeout(15000),
+          retry(1),
           switchMap(() => this.fetchUserId(credentials.username)),
           finalize(() => this.loadingService.hide()),
           catchError(() => {
             this.authService.logout();
             this.router.navigate(['/UNIcard-login']);
-            return throwError(() => new Error('Server authentication failed'));
+            this.popupService.showError('Sikertelen autentikáció!');
+            return throwError(() => new Error('Sikertelen szerver autentikáció!'));
           })
         )
         .subscribe({
@@ -86,14 +91,30 @@ export class LoginService implements OnDestroy {
   }
 
   async handleLoginResponse(credentials: any) {
-    this.authService.login(credentials.username, credentials.password);
+    try {
+      this.authService.login(credentials.username, credentials.password);
+      this.loadingService.show();
 
-    this.fetchUserId(credentials.username).subscribe({
-      next: (userId) => {
-        localStorage.setItem("userId", userId);
-      },
-      error: () => { }
-    });
-    this.router.navigate(["/main-site"], { state: { credentials } });
+      this.fetchUserId(credentials.username)
+        .pipe(
+          timeout(10000),
+          catchError(() => {
+            this.popupService.showError('Érvénytelen azonosító!');
+            return of('');
+          }),
+          finalize(() => this.loadingService.hide())
+        )
+        .subscribe({
+          next: (userId) => {
+            if (userId) {
+              localStorage.setItem("userId", userId);
+            }
+            this.router.navigate(["/main-site"], { state: { credentials } });
+          }
+        });
+    } catch {
+      this.popupService.showError('Sikertelen bejelentkezés!');
+      this.loadingService.hide();
+    }
   }
 }

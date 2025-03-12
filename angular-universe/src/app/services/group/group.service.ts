@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, tap, map } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { tap, map, catchError, timeout, retry, finalize } from 'rxjs/operators';
 import { FetchService } from '../fetch/fetch.service';
 import { Group } from '../../models/group/group.model';
 import { PopupService } from '../popup-message/popup-message.service';
@@ -30,10 +31,16 @@ export class GroupService {
       params: { name: '' },
       responseType: 'json'
     }).pipe(
+      timeout(12000),
+      retry(1),
       tap(groups => {
         this.groupsSubject.next(groups.map(group => ({ ...group, isMember: false })));
       }),
-      tap(() => this.loadingService.hide()),
+      catchError(() => {
+        this.popupService.showError('A csoportok betöltése sikertelen!');
+        return of([]);
+      }),
+      finalize(() => this.loadingService.hide()),
       map(() => this.groupsSubject.value)
     );
   }
@@ -48,6 +55,9 @@ export class GroupService {
         );
         this.groupsSubject.next(updatedGroups);
       }),
+      catchError(() => {
+        return of(void 0);
+      }),
       map(() => void 0)
     );
   }
@@ -61,13 +71,17 @@ export class GroupService {
     }, {
       responseType: 'json',
       showError: false
-    });
+    }).pipe(
+      catchError(() => {
+        return of(false);
+      })
+    );
   }
 
   joinGroup(group: Group): Observable<any> {
     if (!this.currentUserId) {
       this.popupService.showError('Jelentkezz be a csoporthoz való csatlakozáshoz!');
-      return new Observable(observer => observer.error('Not logged in'));
+      return throwError(() => new Error('Nem vagy bejelentkezve!'));
     }
 
     this.loadingService.show();
@@ -77,6 +91,7 @@ export class GroupService {
       { userId: this.currentUserId },
       { responseType: 'text' }
     ).pipe(
+      timeout(10000),
       tap({
         next: () => {
           const updatedGroups = this.groupsSubject.value.map(g =>
@@ -86,13 +101,18 @@ export class GroupService {
           this.popupService.showSuccess('Sikeresen csatlakoztál a csoporthoz!');
         }
       }),
-      tap(() => this.loadingService.hide())
+      catchError(error => {
+        this.popupService.showError('Sikertelen csatlakozás a csoporthoz!');
+        return throwError(() => error);
+      }),
+      finalize(() => this.loadingService.hide())
     );
   }
 
   leaveGroup(group: Group): Observable<any> {
     if (!this.currentUserId) {
-      return new Observable(observer => observer.error('Not logged in'));
+      this.popupService.showError('A csoportból való kilépéshez jelentkezz be!');
+      return throwError(() => new Error('Nem vagy bejelentkezve!'));
     }
 
     this.loadingService.show();
@@ -102,6 +122,7 @@ export class GroupService {
       { userId: this.currentUserId },
       { responseType: 'text' }
     ).pipe(
+      timeout(10000),
       tap({
         next: () => {
           const updatedGroups = this.groupsSubject.value.map(g =>
@@ -111,7 +132,11 @@ export class GroupService {
           this.popupService.showSuccess('Sikeresen kiléptél a csoportból!');
         }
       }),
-      tap(() => this.loadingService.hide())
+      catchError(error => {
+        this.popupService.showError('Sikertelen kilépés a csoportból!');
+        return throwError(() => error);
+      }),
+      finalize(() => this.loadingService.hide())
     );
   }
 
@@ -126,11 +151,19 @@ export class GroupService {
       params: { name: searchTerm },
       responseType: 'json'
     }).pipe(
+      timeout(10000),
       tap(groups => {
         this.groupsSubject.next(groups.map(group => ({ ...group, isMember: false })));
       }),
-      tap(() => this.loadingService.hide()),
+      catchError(() => {
+        return of([]);
+      }),
+      finalize(() => this.loadingService.hide()),
       map(() => this.groupsSubject.value)
     );
+  }
+
+  refreshUserId(): void {
+    this.currentUserId = localStorage.getItem('userId');
   }
 }

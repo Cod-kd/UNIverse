@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { tap, catchError, timeout, finalize } from 'rxjs/operators';
 import { LoadingService } from '../loading/loading.service';
 import { FetchService } from '../fetch/fetch.service';
 import { PopupService } from '../popup-message/popup-message.service';
@@ -44,20 +44,29 @@ export class RegisterService {
     return this.fetchService.post('/user/registration', body, {
       responseType: 'text'
     }).pipe(
+      timeout(20000),
       tap(response => {
         this.popupService.showSuccess(response as string);
       }),
+      catchError(error => {
+        return throwError(() => error);
+      }),
       tap(() => localStorage.removeItem('registrationFormData')),
-      tap({ finalize: () => this.loadingService.hide() })
+      finalize(() => this.loadingService.hide())
     );
   }
 
   async handleRegisterResponse(response: string, registrationData: any) {
-    this.router.navigate(['/get-unicard'], {
-      state: {
-        message: response,
-        userData: registrationData
-      },
-    });
+    try {
+      this.router.navigate(['/get-unicard'], {
+        state: {
+          message: response,
+          userData: registrationData
+        },
+      });
+    } catch (error) {
+      this.popupService.showError('Sikeres regisztráció, sikertelen átirányítás!');
+      this.router.navigate(['/UNIcard-login']);
+    }
   }
 }
