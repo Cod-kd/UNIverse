@@ -61,7 +61,7 @@ export class OpenedGroupComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.eventService.getGroupEvents(groupName).subscribe({
         next: (events) => {
-          this.events = events;
+          this.events = this.sortEvents(events);
           this.loading = false;
         },
         error: () => {
@@ -70,6 +70,26 @@ export class OpenedGroupComponent implements OnInit, OnDestroy {
         }
       })
     );
+  }
+
+  sortEvents(events: Event[]): Event[] {
+    return [...events].sort((a, b) => {
+      const aExpired = this.isEventExpired(a);
+      const bExpired = this.isEventExpired(b);
+
+      if (aExpired === bExpired) {
+        return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+      }
+
+      return aExpired ? 1 : -1;
+    });
+  }
+
+  isEventExpired(event: Event): boolean {
+    if (!event.endDate) {
+      return event.startDate ? new Date(event.startDate) < new Date() : false;
+    }
+    return new Date(event.endDate) < new Date();
   }
 
   createEvent(): void {

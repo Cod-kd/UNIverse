@@ -47,6 +47,8 @@
     <div class="button-container">
         @if(isLoading) {
         <div class="loading-spinner">Betöltés...</div>
+        } @else if(isEventPassed()) {
+        <div class="expired-event">Lejárt esemény</div>
         } @else {
         <app-button [size]="'small'" (click)="toggleParticipation()"
             [btnLabel]="isParticipating ? 'Nem veszek részt' : 'Részt veszek'"
@@ -73,7 +75,7 @@
             @if(loadingUsers) {
             <div class="loading-spinner">Felhasználók betöltése...</div>
             } @else if(userList.length === 0) {
-            <p class="no-users">Egy felhasználó sem</p>
+            <p class="no-users">Üres lista</p>
             } @else {
             <ul class="user-list">
                 @for(user of userList; track user.id) {

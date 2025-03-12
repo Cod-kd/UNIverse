@@ -48,6 +48,13 @@ export class SingleEventComponent implements OnInit {
       });
   }
 
+  isEventPassed(): boolean {
+    if (!this.event.endDate) {
+      return this.event.startDate ? new Date(this.event.startDate) < new Date() : false;
+    }
+    return new Date(this.event.endDate) < new Date();
+  }
+
   showUsers(type: 'interested' | 'participants'): void {
     this.userListType = type;
     this.showingUserList = true;

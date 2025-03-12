@@ -134,3 +134,12 @@ span:hover {
     text-align: center;
     color: var(--light2);
 }
+
+.expired-event {
+    color: var(--light2);
+    font-size: 14px;
+    padding: 8px 12px;
+    text-align: center;
+    width: 100%;
+    font-style: italic;
+}
