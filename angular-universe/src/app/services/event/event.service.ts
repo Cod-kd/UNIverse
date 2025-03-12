@@ -20,18 +20,11 @@ export class EventService {
     });
   }
 
-  // Add new method to get an event by ID
   getEventById(eventId: number): Observable<Event> {
     return this.fetchService.get<Event>(`/groups/event/${eventId}`);
   }
 
-  // Add method to fetch multiple events by IDs
   getEventsByIds(eventIds: number[]): Observable<Event[]> {
-    // If your API supports batch queries
-    return this.fetchService.post<Event[]>('/groups/events/batch', { eventIds });
-
-    // Alternative implementation if batch endpoint doesn't exist
-    /*
     if (eventIds.length === 0) {
       return of([]);
     }
@@ -46,6 +39,5 @@ export class EventService {
     return forkJoin(requests).pipe(
       map(events => events.filter(event => event !== null) as Event[])
     );
-    */
   }
 }

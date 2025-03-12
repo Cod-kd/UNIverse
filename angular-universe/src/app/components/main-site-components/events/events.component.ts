@@ -5,7 +5,7 @@ import { UserEventService } from '../../../services/user-event/user-event.servic
 import { SingleEventComponent } from '../single-event/single-event.component';
 import { Event } from '../../../models/event/event.model';
 import { forkJoin, Observable, of } from 'rxjs';
-import { catchError, finalize, switchMap } from 'rxjs/operators';
+import { catchError, finalize, switchMap, map } from 'rxjs/operators';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
 
 @Component({
@@ -27,13 +27,11 @@ export class EventsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Clear cache to ensure fresh data
     this.userEventService.clearCache();
     this.loadUserEvents();
   }
 
   private loadUserEvents(): void {
-    // Get both participating and interested event IDs in parallel
     forkJoin({
       participating: this.userEventService.getUserParticipatingEvents().pipe(
         catchError(error => {
@@ -50,9 +48,7 @@ export class EventsComponent implements OnInit {
         })
       )
     }).pipe(
-      // Once we have the IDs, fetch the event details
       switchMap(({ participating, interested }) => {
-        // Create observables for each set of events
         const getParticipatingEvents = this.getEventDetailsByIds(participating);
         const getInterestedEvents = this.getEventDetailsByIds(interested);
 
@@ -74,24 +70,12 @@ export class EventsComponent implements OnInit {
     });
   }
 
-  // Helper method to fetch event details by IDs
   private getEventDetailsByIds(eventIds: number[]): Observable<Event[]> {
     if (eventIds.length === 0) {
       return of([]);
     }
 
-    // This implementation depends on what your backend API supports
-    // Option 1: If your backend supports batch fetching by IDs
-    return this.eventService.getEventsByIds(eventIds).pipe(
-      catchError(error => {
-        console.error('Failed to fetch event details', error);
-        return of([]);
-      })
-    );
-
-    // Option 2: If you need to fetch events individually (uncomment if needed)
-    /*
-    const eventObservables = eventIds.map(id => 
+    const eventObservables = eventIds.map(id =>
       this.eventService.getEventById(id).pipe(
         catchError(error => {
           console.error(`Failed to fetch event ID ${id}`, error);
@@ -103,6 +87,6 @@ export class EventsComponent implements OnInit {
     return forkJoin(eventObservables).pipe(
       map(events => events.filter(event => event !== null) as Event[])
     );
-    */
+
   }
 }
