@@ -4,8 +4,12 @@ import com.universe.backend.dto.UserLoginDTO;
 import com.universe.backend.dto.UserRegistrationDTO;
 import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
+import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Role;
+import com.universe.backend.modules.UserInterest;
+import com.universe.backend.modules.UserRole;
 import com.universe.backend.modules.UsersBio;
+import com.universe.backend.modules.UsersContact;
 import com.universe.backend.services.user.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,17 +42,17 @@ public class UserController {
         return ResponseEntity.ok(username);
     }
     
-    @GetMapping("/contacttypes")
+    @GetMapping("common/contacttypes")
     public ResponseEntity<List<ContactTypes>> getContactTypes() {
         return ResponseEntity.ok(us.getContactTypes());
     }
     
-    @GetMapping("/categories")
+    @GetMapping("common/categories")
     public ResponseEntity<List<Category>> getCategories() {
         return ResponseEntity.ok(us.getCategories());
     }
     
-    @GetMapping("/roles")
+    @GetMapping("common/roles")
     public ResponseEntity<List<Role>> getRoles() {
         return ResponseEntity.ok(us.getRoles());
     }
@@ -128,4 +132,51 @@ public class UserController {
         return ResponseEntity.ok("A leírás frissítve!");
     }
     
+    @PostMapping(value = "/add/contact", consumes = "application/json")
+    public ResponseEntity<String> addUserContact(@RequestBody UsersContact uc) {
+        try {
+            us.addUserContact(uc);
+            return ResponseEntity.ok("Kontakt hozzáadva!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Hiba történt: " + e.getMessage());
+        }
+    }
+    
+    @PostMapping(value = "/add/role", consumes = "application/json")
+    public ResponseEntity<String> addUserRole(@RequestBody UserRole ur) {
+        try {
+            us.addUserRole(ur);
+            return ResponseEntity.ok("Szerepkör hozzáadva!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Hiba történt: " + e.getMessage());
+        }
+    }
+    
+    @PostMapping(value = "/add/interest", consumes = "application/json")
+    public ResponseEntity<String> addUserInterest(@RequestBody UserInterest ui) {
+        try {
+            us.addUserInterest(ui);
+            return ResponseEntity.ok("Érdeklődés hozzáadva!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Hiba történt: " + e.getMessage());
+        }
+    }
+    
+    @GetMapping("get/events_interested_in")
+    public ResponseEntity<List<Integer>> getInterestingEventsForUser(@RequestParam Integer userId) {
+        List<Integer> userIdes = us.getInterestingEventsForUser(userId);
+        return ResponseEntity.ok(userIdes);
+    }
+    
+    @GetMapping("get/events_scheduled")
+    public ResponseEntity<List<Integer>> getScheduledEventsForUser(@RequestParam Integer userId) {
+        List<Integer> userIdes = us.getScheduledEventsForUser(userId);
+        return ResponseEntity.ok(userIdes);
+    }
+    
+    @GetMapping("get/event")
+    public ResponseEntity<Event> getEvent(@RequestParam Integer eventId) {
+        Event event = us.getEvent(eventId);
+        return ResponseEntity.ok(event);
+    }
 }

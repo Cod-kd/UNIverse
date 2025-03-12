@@ -5,7 +5,7 @@ NNN:= NotNessaryNow
 todo:
 get this out: DEFINER=`root`@`localhost`
 
-create procedure add: {touser} role, contact, interest, {togroup} category, post (create post and link to group)
+create procedure add: {togroup} category, post (create post and link to group)
 
 create procedure: (NNN: handleGroupRank)
 
@@ -16,9 +16,6 @@ fill manual: (NNN addRank)
 back implement::
 
 procedures:
-addUserContact
-addUserRole
-addUserInterest
 
 functions:
 
@@ -147,10 +144,11 @@ CREATE PROCEDURE `createContactType` (IN `nameIn` VARCHAR(20), IN `domainIn` VAR
 END$$
 
 CREATE PROCEDURE `createEvent` (IN `nameIn` VARCHAR(30), IN `creatorIdIn` MEDIUMINT, IN `startDateIn` TIMESTAMP, IN `endDateIn` TIMESTAMP, IN `placeIn` VARCHAR(255), IN `attachmentRelPathIn` VARCHAR(50), IN `descriptionIn` VARCHAR(180), IN `groupIdIn` MEDIUMINT)   BEGIN
-INSERT INTO `events`(`name`, `creatorId`, `startDate`, `endDate`, `place`, `attachmentRelPath`, `description`) VALUES (`nameIn`, `creatorIdIn`, `startDateIn`, `endDateIn`, `placeIn`, `attachmentRelPathIn`, `descriptionIn`);
-SET @eventId = 0;  
+INSERT INTO `events`(`name`, `creatorId`, `startDate`, `endDate`, `place`, `attachmentRelPath`, `description`, `groupId`) VALUES (`nameIn`, `creatorIdIn`, `startDateIn`, `endDateIn`, `placeIn`, `attachmentRelPathIn`, `descriptionIn`, `groupIdIn`);
+/*SET @eventId = 0;  
 CALL idByEventName(nameIn, @eventId);
 CALL linkEventToGroup(groupIdIn, @eventId);
+*/
 END$$
 
 CREATE PROCEDURE `createGroup` (IN `nameIn` VARCHAR(60))   BEGIN
@@ -212,11 +210,13 @@ CREATE PROCEDURE `idByGroupName` (IN `groupNameIn` VARCHAR(12), OUT `groupIdOut`
     WHERE `groups`.`name` = groupNameIn LIMIT 1;
 END$$
 
+/*
 CREATE PROCEDURE `linkEventToGroup` (IN `groupIdIn` MEDIUMINT, IN `eventIdIn` MEDIUMINT)   BEGIN
 INSERT INTO `eventsofgroups`(`groupId`, `eventId`) VALUES (groupIdIn, eventIdIn);
 CALL addGroupActualEventCount(groupIdIn);
 CALL addGroupAllEventCount(groupIdIn);
 END$$
+*/
 
 CREATE PROCEDURE `login` (IN `usernameIn` VARCHAR(12))   BEGIN
 	SELECT * FROM `userprofiles` WHERE userprofiles.username = usernameIn;
@@ -251,6 +251,47 @@ CREATE PROCEDURE `registerUser` (IN `emailIn` VARCHAR(50), IN `usernameIn` VARCH
     CALL addUserbio(@userId, facultyIn);
 END$$
 
+-- handle interested users
+CREATE PROCEDURE `addInterestedUser` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
+BEGIN  
+    INSERT INTO `interestedusers` (`eventId`, `userId`) VALUES (eventIdIn, userIdIn);
+END$$
+
+CREATE PROCEDURE `reduceInterestedUser` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
+BEGIN  
+    DELETE FROM `interestedusers` WHERE `eventId` = eventIdIn AND `userId` = userIdIn;
+END$$
+
+CREATE PROCEDURE `getInterestingEventsForUser` (IN userIdIn MEDIUMINT)  
+BEGIN  
+    SELECT eventId FROM `interestedusers` WHERE userId = userIdIn;
+END$$
+
+CREATE PROCEDURE `getInterestedUsersForEvent` (IN eventIdIn INT)  
+BEGIN  
+    SELECT userId FROM `interestedusers` WHERE eventId = eventIdIn;
+END$$
+
+-- handle participants
+CREATE PROCEDURE `addParticipant` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
+BEGIN  
+    INSERT INTO `participants` (`eventId`, `userId`) VALUES (eventIdIn, userIdIn);
+END$$
+
+CREATE PROCEDURE `reduceParticipant` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
+BEGIN  
+    DELETE FROM `participants` WHERE `eventId` = eventIdIn AND `userId` = userIdIn;
+END$$
+
+CREATE PROCEDURE `getScheduledEventsForUser` (IN userIdIn MEDIUMINT)  
+BEGIN  
+    SELECT eventId FROM `participants` WHERE userId = userIdIn;
+END$$
+
+CREATE PROCEDURE `getUsersScheduleForEvent` (IN eventIdIn INT)  
+BEGIN  
+    SELECT userId FROM `participants` WHERE eventId = eventIdIn;
+END$$
 --
 -- Függvények
 --
@@ -353,6 +394,7 @@ CREATE TABLE `events` (
   `id` int(11) NOT NULL,
   `name` varchar(30) NOT NULL,
   `creatorId` mediumint(9) NOT NULL,
+  `groupId` mediumint(9) NOT NULL,
   `startDate` timestamp NULL DEFAULT NULL,
   `endDate` timestamp NULL DEFAULT NULL,
   `place` varchar(255) NOT NULL,
@@ -366,12 +408,12 @@ CREATE TABLE `events` (
 --
 -- Tábla szerkezet ehhez a táblához `eventsofgroups`
 --
-
+/*
 CREATE TABLE `eventsofgroups` (
   `groupId` mediumint(9) NOT NULL,
   `eventId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+*/
 /*--
 -- Tábla szerkezet ehhez a táblához `followedgroups`
 --
@@ -648,10 +690,11 @@ ALTER TABLE `events`
 --
 -- A tábla indexei `eventsofgroups`
 --
+/*
 ALTER TABLE `eventsofgroups`
   ADD KEY `groupId` (`groupId`),
   ADD KEY `eventId` (`eventId`);
-
+*/
 --
 -- A tábla indexei `membersofgroups`
 --
@@ -689,8 +732,7 @@ ALTER TABLE `groups`
 -- A tábla indexei `interestedusers`
 --
 ALTER TABLE `interestedusers`
-  ADD KEY `eventId` (`eventId`),
-  ADD KEY `userId` (`userId`);
+  ADD PRIMARY KEY (`eventId`, `userId`);
 
 --
 -- A tábla indexei `membersofgroups`
@@ -703,8 +745,7 @@ ALTER TABLE `membersofgroups`
 -- A tábla indexei `participants`
 --
 ALTER TABLE `participants`
-  ADD KEY `eventId` (`eventId`),
-  ADD KEY `userId` (`userId`);
+  ADD PRIMARY KEY (`eventId`, `userId`);
 
 --
 -- A tábla indexei `posts`
@@ -745,8 +786,7 @@ ALTER TABLE `roles`
 -- A tábla indexei `userinterests`
 --
 ALTER TABLE `userinterests`
-  ADD KEY `userId` (`userId`),
-  ADD KEY `categoryId` (`categoryId`);
+  ADD PRIMARY KEY (`userId`, `categoryId`);
 
 --
 -- A tábla indexei `userprofiles`
@@ -760,8 +800,7 @@ ALTER TABLE `userprofiles`
 -- A tábla indexei `userroles`
 --
 ALTER TABLE `userroles`
-  ADD KEY `userId` (`userId`),
-  ADD KEY `roleId` (`roleId`);
+  ADD PRIMARY KEY (`userId`, `roleId`);
 
 --
 -- A tábla indexei `usersbio`
@@ -773,8 +812,7 @@ ALTER TABLE `usersbio`
 -- A tábla indexei `userscontacts`
 --
 ALTER TABLE `userscontacts`
-  ADD KEY `userId` (`userId`),
-  ADD KEY `contactTypeId` (`contactTypeId`);
+  ADD PRIMARY KEY (`userId`, `contactTypeId`, `path`);
 
 --
 -- A tábla indexei `usersdata`
@@ -869,15 +907,18 @@ ALTER TABLE `eventcategories`
 -- Megkötések a táblához `events`
 --
 ALTER TABLE `events`
-  ADD CONSTRAINT `events_ibfk_1` FOREIGN KEY (`creatorId`) REFERENCES `userprofiles` (`id`);
+  ADD CONSTRAINT `events_ibfk_1` FOREIGN KEY (`groupId`) REFERENCES `groups` (`id`),
+  ADD CONSTRAINT `events_ibfk_2` FOREIGN KEY (`creatorId`) REFERENCES `userprofiles` (`id`);
+  
 
 --
 -- Megkötések a táblához `eventsofgroups`
 --
+/*
 ALTER TABLE `eventsofgroups`
   ADD CONSTRAINT `eventsofgroups_ibfk_1` FOREIGN KEY (`groupId`) REFERENCES `groups` (`id`),
   ADD CONSTRAINT `eventsofgroups_ibfk_2` FOREIGN KEY (`eventId`) REFERENCES `events` (`id`);
-
+*/
 /*--
 -- Megkötések a táblához `followedgroups`
 --

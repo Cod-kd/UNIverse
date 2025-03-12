@@ -2,6 +2,7 @@ package com.universe.backend.repositories;
 
 import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
+import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Role;
 import com.universe.backend.modules.UserProfiles;
 import com.universe.backend.modules.UsersBio;
@@ -39,10 +40,13 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
     @Query("SELECT b FROM UsersBio b " +
            "JOIN b.usersData d " +
            "JOIN d.userProfiles p " +
-           "WHERE p.username = :username")
+           "WHERE p.username = :username AND p.deletedAt IS NULL")
     Optional<UsersBio> findUsersBioByUsername(@Param("username") String username);
     
-    @Query("SELECT b FROM UsersBio b ")
+    @Query("SELECT b FROM UsersBio b " +
+           "JOIN b.usersData d " +
+           "JOIN d.userProfiles p " +
+           "WHERE p.deletedAt IS NULL")
     List<UsersBio> findAllUsersBio();
     
     @Procedure(name = "followUser")
@@ -57,4 +61,32 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
     @Procedure(name = "updateUserDesc")
     void updateUserDesc(@Param("descriptionIn") String description, @Param("userIdIn") int userId);
     
+    
+    @Procedure(procedureName = "addUserContact")
+    void addUserContact(
+        @Param("contactTypeIdIn") Integer contactTypeId, 
+        @Param("pathIn") String path, 
+        @Param("userIdIn") Integer userId
+    );
+    
+    @Procedure(procedureName = "addUserRole")
+    void addUserRole(
+        @Param("userIdIn") Integer userId, 
+        @Param("roleIdIn") Integer roleId
+    );
+    
+    @Procedure(procedureName = "addUserInterest")
+    void addUserInterest(
+        @Param("userIdIn") Integer userId, 
+        @Param("categoryIdIn") Integer categoryId
+    );
+    
+    @Procedure(procedureName = "getInterestingEventsForUser")
+    List<Integer> getInterestingEventsForUser(@Param("userIdIn") Integer userIdIn);
+    
+    @Procedure(procedureName = "getScheduledEventsForUser")
+    List<Integer> getScheduledEventsForUser(@Param("userIdIn") Integer userIdIn);
+    
+    @Query(value = "SELECT * FROM events WHERE id = :eventIdIn", nativeQuery = true)
+    Event getEvent(@Param("eventIdIn") Integer eventId);
 }

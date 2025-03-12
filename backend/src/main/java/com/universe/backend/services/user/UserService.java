@@ -6,9 +6,13 @@ import com.universe.backend.exceptions.UserNonExistsException;
 import com.universe.backend.exceptions.UserWrongPasswordException;
 import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
+import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Role;
+import com.universe.backend.modules.UserInterest;
 import com.universe.backend.modules.UserProfiles;
+import com.universe.backend.modules.UserRole;
 import com.universe.backend.modules.UsersBio;
+import com.universe.backend.modules.UsersContact;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.universe.backend.repositories.UserProfilesRepository;
@@ -98,5 +102,34 @@ public class UserService {
     
     public void updateUserDescription(String description, int userId) {
         upRepo.updateUserDesc(description, userId);
+    }
+    
+    @Transactional
+    public void addUserContact(UsersContact uc){
+        upRepo.addUserContact(uc.getContactTypeId(), uc.getPath(), uc.getUserId());
+    }
+    
+    @Transactional
+    public void addUserRole(UserRole ur){
+        upRepo.addUserRole(ur.getUserId(), ur.getRoleId());
+    }
+    
+    @Transactional
+    public void addUserInterest(UserInterest ui){
+        upRepo.addUserInterest(ui.getUserId(), ui.getCategoryId());
+    }
+    
+    @Transactional
+    public List<Integer> getInterestingEventsForUser(Integer userId){
+        return upRepo.getInterestingEventsForUser(userId);
+    }
+    
+    @Transactional
+    public List<Integer> getScheduledEventsForUser(Integer userId){
+        return upRepo.getScheduledEventsForUser(userId);
+    }
+    
+    public Event getEvent(Integer eventId){
+        return upRepo.getEvent(eventId);
     }
 }

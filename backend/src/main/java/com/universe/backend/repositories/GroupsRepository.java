@@ -1,6 +1,8 @@
 package com.universe.backend.repositories;
 
+import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Groups;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,5 +28,38 @@ public interface GroupsRepository extends JpaRepository<Groups, Integer>{
     void reduceGroupMember(@Param("groupIdIn") Integer groupId, @Param("userIdIn") Integer userId);
     
     @Query(value = "SELECT checkGroupMember(:groupIdIn, :userIdIn)", nativeQuery = true)
-    Boolean isGroupFollowed(@Param("groupIdIn") int followerId, @Param("userIdIn") int followedId);
+    Boolean isGroupFollowed(@Param("groupIdIn") Integer groupId, @Param("userIdIn") Integer userId);
+    
+    @Query(value = "SELECT * FROM events WHERE groupId = :groupIdIn", nativeQuery = true)
+    List<Event> getEvents(@Param("groupIdIn") Integer groupId);
+    
+    @Procedure(procedureName = "createEvent")
+    void createEvent(
+        @Param("nameIn") String name,
+        @Param("creatorIdIn") Integer creatorId,
+        @Param("startDateIn") LocalDateTime startDate,
+        @Param("endDateIn") LocalDateTime endDate,
+        @Param("placeIn") String place,
+        @Param("attachmentRelPathIn") String attachmentRelPath,
+        @Param("descriptionIn") String description,
+        @Param("groupIdIn") Integer groupId
+    );
+    
+    @Procedure(procedureName = "addInterestedUser")
+    void addInterestedUser(@Param("eventIdIn") Integer eventId, @Param("userIdIn") Integer userId);
+
+    @Procedure(procedureName = "reduceInterestedUser")
+    void reduceInterestedUser(@Param("eventIdIn") Integer eventId, @Param("userIdIn") Integer userId);
+    
+    @Procedure(procedureName = "getInterestedUsersForEvent")
+    List<Integer> getInterestedUsersForEvent(@Param("eventIdIn") Integer eventId);
+    
+    @Procedure(procedureName = "addParticipant")
+    void addParticipant(@Param("eventIdIn") Integer eventId, @Param("userIdIn") Integer userId);
+
+    @Procedure(procedureName = "reduceParticipant")
+    void reduceParticipant(@Param("eventIdIn") Integer eventId, @Param("userIdIn") Integer userId);
+    
+    @Procedure(procedureName = "getUsersScheduleForEvent")
+    List<Integer> getUsersScheduleForEvent(@Param("eventIdIn") Integer eventId);
 }
