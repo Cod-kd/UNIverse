@@ -1,0 +1,52 @@
+<div class="popup-overlay" (click)="onCancel()">
+    <div class="popup-content" (click)="$event.stopPropagation()">
+        <h2>Esemény létrehozása</h2>
+
+        <form [formGroup]="eventForm">
+            <div class="form-group">
+                <label for="name">Név</label>
+                <input type="text" id="name" formControlName="name">
+                @if(eventForm.get('name')?.invalid && eventForm.get('name')?.touched) {
+                <div class="error-message">Név megadása kötelező</div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="startDate">Kezdő dátum</label>
+                <input type="datetime-local" id="startDate" formControlName="startDate">
+                @if(eventForm.get('startDate')?.invalid && eventForm.get('startDate')?.touched) {
+                <div class="error-message">Kezdő dátum megadása kötelező</div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="endDate">Befejező dátum</label>
+                <input type="datetime-local" id="endDate" formControlName="endDate">
+                @if(eventForm.get('endDate')?.invalid && eventForm.get('endDate')?.touched) {
+                <div class="error-message">Befejező dátum megadása kötelező</div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="place">Helyszín</label>
+                <input type="text" id="place" formControlName="place">
+                @if(eventForm.get('place')?.invalid && eventForm.get('place')?.touched) {
+                <div class="error-message">Helyszín megadása kötelező</div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="description">Leírás</label>
+                <textarea id="description" formControlName="description" rows="4"></textarea>
+                @if(eventForm.get('description')?.invalid && eventForm.get('description')?.touched) {
+                <div class="error-message">Leírás megadása kötelező</div>
+                }
+            </div>
+
+            <div class="button-container">
+                <app-button [btnLabel]="'Mégsem'" (click)="onCancel()"></app-button>
+                <app-button [btnLabel]="'Létrehozás'" [isDisabled]="eventForm.invalid" (click)="onSubmit()"></app-button>
+            </div>
+        </form>
+    </div>
+</div>

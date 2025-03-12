@@ -9,11 +9,13 @@ import { Event } from '../../../models/event/event.model';
 import { SingleEventComponent } from '../single-event/single-event.component';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
 import { Subscription } from 'rxjs';
+import { ButtonComponent } from "../../general-components/button/button.component";
+import { CreateEventPopupComponent } from '../create-event-popup/create-event-popup.component';
 
 @Component({
   selector: 'app-opened-group',
   standalone: true,
-  imports: [CommonModule, SingleEventComponent],
+  imports: [CommonModule, SingleEventComponent, ButtonComponent, CreateEventPopupComponent],
   templateUrl: './opened-group.component.html',
   styleUrl: './opened-group.component.css'
 })
@@ -22,6 +24,7 @@ export class OpenedGroupComponent implements OnInit, OnDestroy {
   events: Event[] = [];
   loading = false;
   error = '';
+  showEventCreationPopup = false;
   private subscriptions = new Subscription();
 
   constructor(
@@ -65,6 +68,39 @@ export class OpenedGroupComponent implements OnInit, OnDestroy {
         error: () => {
           this.loading = false;
           this.error = 'Hiba az események betöltésekor';
+        }
+      })
+    );
+  }
+
+  // Method to show the event creation popup
+  createEvent(): void {
+    this.showEventCreationPopup = true;
+  }
+
+  // Handle event creation cancel
+  onCancelEventCreation(): void {
+    this.showEventCreationPopup = false;
+  }
+
+  // Handle event creation submission
+  onSubmitEventCreation(eventData: any): void {
+    if (!this.group) {
+      this.popupService.showError('Csoport nem található');
+      return;
+    }
+
+    this.subscriptions.add(
+      this.eventService.createEvent(this.group.name, eventData).subscribe({
+        next: () => {
+          this.popupService.showSuccess('Esemény sikeresen létrehozva');
+          this.showEventCreationPopup = false;
+          // Reload events to show the newly created one
+          this.loadGroupEvents(this.group!.name);
+        },
+        error: (err) => {
+          // Error handling is already done in the FetchService
+          console.error('Failed to create event:', err);
         }
       })
     );

@@ -5,6 +5,7 @@
     padding: 16px;
     margin-bottom: 16px;
     transition: transform 0.2s;
+    width: 25em;
 }
 
 .event-card:hover {

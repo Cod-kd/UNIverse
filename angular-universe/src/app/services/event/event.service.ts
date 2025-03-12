@@ -12,4 +12,10 @@ export class EventService {
   getGroupEvents(groupName: string): Observable<Event[]> {
     return this.fetchService.post<Event[]>(`/groups/name/${groupName}/events`, {});
   }
+
+  createEvent(groupName: string, eventData: any): Observable<string> {
+    return this.fetchService.post<string>(`/groups/name/${groupName}/newevent`, eventData, {
+      responseType: 'text'
+    });
+  }
 }
