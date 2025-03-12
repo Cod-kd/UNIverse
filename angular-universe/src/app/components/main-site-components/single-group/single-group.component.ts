@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Group } from '../../../models/group/group.model';
 import { ButtonComponent } from '../../general-components/button/button.component';
 import { GroupService } from '../../../services/group/group.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-single-group',
@@ -16,7 +17,7 @@ export class SingleGroupComponent {
   @Input() isExpanded: boolean = false;
   @Output() toggleRequest = new EventEmitter<number>();
 
-  constructor(private groupService: GroupService) { }
+  constructor(private groupService: GroupService, private router: Router) { }
 
   toggleExpand(event: Event) {
     event.stopPropagation();
@@ -27,7 +28,7 @@ export class SingleGroupComponent {
     event.stopPropagation();
 
     if (this.group.isMember) {
-      alert("Open group details!");
+      this.router.navigate(['/main-site/groups', this.group.id]);
     } else {
       this.groupService.joinGroup(this.group).subscribe();
     }

@@ -13,6 +13,7 @@ import { PageNotFoundComponent } from './components/main-site-components/page-no
 import { SelfProfileComponent } from './components/main-site-components/self-profile/self-profile.component';
 import { UserProfileComponent } from './components/main-site-components/user-profile/user-profile.component';
 import { SettingsComponent } from './components/main-site-components/settings/settings.component';
+import { OpenedGroupComponent } from './components/main-site-components/opened-group/opened-group.component';
 
 export const routes: Routes = [
     {
@@ -54,6 +55,10 @@ export const routes: Routes = [
                 component: GroupsComponent
             },
             {
+                path: 'groups/:id',
+                component: OpenedGroupComponent
+            },
+            {
                 path: 'events',
                 component: EventsComponent
             },
@@ -64,7 +69,7 @@ export const routes: Routes = [
             {
                 path: 'settings',
                 component: SettingsComponent
-            }
+            },
         ]
     },
     {

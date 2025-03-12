@@ -1,0 +1,28 @@
+<!-- opened-group.component.html -->
+<div class="opened-group-container" *ngIf="group">
+    <h1 class="group-name">{{ group.name }}</h1>
+    <div class="group-info">
+        <span class="visibility-badge" [class]="group.isPublic ? 'public' : 'private'">
+            <i class="fa" [class]="group.isPublic ? 'fa-globe' : 'fa-lock'"></i>
+            {{ group.isPublic ? 'Nyilvános' : 'Privát' }}
+        </span>
+
+        <div class="group-stats">
+            <div class="stat-item">
+                <span class="stat-label">Tagok</span>
+                <span class="stat-value">{{ group.membersCount }}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Posztok</span>
+                <span class="stat-value">{{ group.postCount }}</span>
+            </div>
+            <!-- Other stats -->
+        </div>
+    </div>
+
+    <!-- Group content goes here -->
+</div>
+
+<div class="error-message" *ngIf="!group">
+    Csoport nem található
+</div>
