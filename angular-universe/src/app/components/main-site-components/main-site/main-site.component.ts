@@ -120,8 +120,8 @@ export class MainSiteComponent implements OnInit {
 
   shouldShowSearchBar(): boolean {
     return !this.isExactMainSitePath() &&
-      this.router.url !== '/main-site/settings' &&
-      this.router.url !== '/main-site/you';
+      !this.router.url.startsWith('/main-site/groups/') &&
+      !['/main-site/settings', '/main-site/you', '/main-site/events'].includes(this.router.url);
   }
 
   navigateTo(path: string): void {

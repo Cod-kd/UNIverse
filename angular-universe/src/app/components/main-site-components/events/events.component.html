@@ -1,3 +1,31 @@
-<div id="eventsDiv">
-    <h1>Events here</h1>
+<div class="events-container">
+    @if (isLoading) {
+    <div class="loading-spinner">Események betöltése...</div>
+    } @else {
+    <section class="events-section">
+        <h2>Részt veszel</h2>
+        @if (participatingEvents.length === 0) {
+        <p class="empty-list">Még nem veszel részt egy eseményen sem.</p>
+        } @else {
+        <div class="events-grid">
+            @for (event of participatingEvents; track event.id) {
+            <app-single-event [event]="event"></app-single-event>
+            }
+        </div>
+        }
+    </section>
+
+    <section class="events-section">
+        <h2>Érdeklődsz</h2>
+        @if (interestedEvents.length === 0) {
+        <p class="empty-list">Még nem érdeklődtél egy esemény után sem.</p>
+        } @else {
+        <div class="events-grid">
+            @for (event of interestedEvents; track event.id) {
+            <app-single-event [event]="event"></app-single-event>
+            }
+        </div>
+        }
+    </section>
+    }
 </div>
