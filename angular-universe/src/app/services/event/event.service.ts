@@ -21,7 +21,9 @@ export class EventService {
   }
 
   getEventById(eventId: number): Observable<Event> {
-    return this.fetchService.get<Event>(`/groups/event/${eventId}`);
+    return this.fetchService.get<Event>(`/user/get/event`, {
+      params: { eventId: eventId.toString() }
+    });
   }
 
   getEventsByIds(eventIds: number[]): Observable<Event[]> {
