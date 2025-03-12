@@ -160,4 +160,13 @@ public class UserController {
             return ResponseEntity.badRequest().body("Hiba történt: " + e.getMessage());
         }
     }
+    
+    @PostMapping("get/eventsinterestedin")
+    public ResponseEntity<List<Integer>> getInterestingEventsForUser(@RequestBody Map<String, Integer> requestBody) {
+        Integer userId = requestBody.get("userId");
+        List<Integer> userIdes = us.getInterestingEventsForUser(userId);
+        return ResponseEntity.ok(userIdes);
+    }
+    
+    
 }

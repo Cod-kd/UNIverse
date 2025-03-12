@@ -4,7 +4,7 @@ import com.universe.backend.exceptions.GroupNotFoundException;
 import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Groups;
 import com.universe.backend.repositories.GroupsRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import static java.util.Objects.isNull;
 import org.springframework.beans.factory.annotation.Autowired;

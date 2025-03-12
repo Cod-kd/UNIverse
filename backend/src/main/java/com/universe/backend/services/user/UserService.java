@@ -117,4 +117,9 @@ public class UserService {
     public void addUserInterest(UserInterest ui){
         upRepo.addUserInterest(ui.getUserId(), ui.getCategoryId());
     }
+    
+    @Transactional
+    public List<Integer> getInterestingEventsForUser(Integer userId){
+        return upRepo.getInterestingEventsForUser(userId);
+    }
 }

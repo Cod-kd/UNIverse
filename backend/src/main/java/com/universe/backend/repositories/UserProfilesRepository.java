@@ -79,4 +79,7 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
         @Param("userIdIn") Integer userId, 
         @Param("categoryIdIn") Integer categoryId
     );
+    
+    @Procedure(procedureName = "getInterestingEventsForUser")
+    List<Integer> getInterestingEventsForUser(@Param("userIdIn") Integer userIdIn);
 }
