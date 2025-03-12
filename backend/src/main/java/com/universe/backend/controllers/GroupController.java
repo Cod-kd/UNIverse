@@ -70,26 +70,49 @@ public class GroupController {
         return ResponseEntity.ok("Esemény sikeresen létrehozva!");
     }
     
-    @PostMapping("event/addinterest")
+    @PostMapping("event/add/interest")
     public ResponseEntity<String> addInterestedUser(@RequestBody Map<String, Integer> requestBody) {
         Integer eventId = requestBody.get("eventId");
         Integer userId = requestBody.get("userId");
         gs.addInterestedUser(eventId, userId);
-        return ResponseEntity.ok("Feliratkozás sikeres!");
+        return ResponseEntity.ok("Érdeklödő lettél!");
     }
 
-    @PostMapping("event/removeinterest")
+    @PostMapping("event/remove/interest")
     public ResponseEntity<String> reduceInterestedUser(@RequestBody Map<String, Integer> requestBody) {
         Integer eventId = requestBody.get("eventId");
         Integer userId = requestBody.get("userId");
         gs.reduceInterestedUser(eventId, userId);
-        return ResponseEntity.ok("Leiratkozás sikeres!");
+        return ResponseEntity.ok("Törölted az érdeklődést!");
     }
     
-    @PostMapping("event/interestedusers")
+    @PostMapping("event/interested_users")
     public ResponseEntity<List<Integer>> getInterestedUsersForEvent(@RequestBody Map<String, Integer> requestBody) {
         Integer eventId = requestBody.get("eventId");
         List<Integer> eventIdes = gs.getInterestedUsersForEvent(eventId);
+        return ResponseEntity.ok(eventIdes);
+    }
+    
+    @PostMapping("event/add/participant")
+    public ResponseEntity<String> addParticipant(@RequestBody Map<String, Integer> requestBody) {
+        Integer eventId = requestBody.get("eventId");
+        Integer userId = requestBody.get("userId");
+        gs.addParticipant(eventId, userId);
+        return ResponseEntity.ok("Résztvevő lettél!");
+    }
+
+    @PostMapping("event/remove/participant")
+    public ResponseEntity<String> reduceParticipant(@RequestBody Map<String, Integer> requestBody) {
+        Integer eventId = requestBody.get("eventId");
+        Integer userId = requestBody.get("userId");
+        gs.reduceParticipant(eventId, userId);
+        return ResponseEntity.ok("Már nem vagy résztvevő!");
+    }
+    
+    @PostMapping("event/users_schedule")
+    public ResponseEntity<List<Integer>> getUsersScheduleForEvent(@RequestBody Map<String, Integer> requestBody) {
+        Integer eventId = requestBody.get("eventId");
+        List<Integer> eventIdes = gs.getUsersScheduleForEvent(eventId);
         return ResponseEntity.ok(eventIdes);
     }
 }

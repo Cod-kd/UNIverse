@@ -745,8 +745,7 @@ ALTER TABLE `membersofgroups`
 -- A tábla indexei `participants`
 --
 ALTER TABLE `participants`
-  ADD KEY `eventId` (`eventId`),
-  ADD KEY `userId` (`userId`);
+  ADD PRIMARY KEY (`eventId`, `userId`);
 
 --
 -- A tábla indexei `posts`

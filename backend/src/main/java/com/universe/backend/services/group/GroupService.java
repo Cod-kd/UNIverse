@@ -72,4 +72,17 @@ public class GroupService {
     public List<Integer> getInterestedUsersForEvent(Integer eventId){
         return groupRepository.getInterestedUsersForEvent(eventId);
     }
+    
+    public void addParticipant(Integer eventId, Integer userId) {
+        groupRepository.addParticipant(eventId, userId);
+    }
+
+    public void reduceParticipant(Integer eventId, Integer userId) {
+        groupRepository.reduceParticipant(eventId, userId);
+    }
+    
+    @Transactional
+    public List<Integer> getUsersScheduleForEvent(Integer eventId){
+        return groupRepository.getUsersScheduleForEvent(eventId);
+    }
 }

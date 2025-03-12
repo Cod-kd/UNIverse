@@ -54,5 +54,12 @@ public interface GroupsRepository extends JpaRepository<Groups, Integer>{
     @Procedure(procedureName = "getInterestedUsersForEvent")
     List<Integer> getInterestedUsersForEvent(@Param("eventIdIn") Integer eventId);
     
+    @Procedure(procedureName = "addParticipant")
+    void addParticipant(@Param("eventIdIn") Integer eventId, @Param("userIdIn") Integer userId);
+
+    @Procedure(procedureName = "reduceParticipant")
+    void reduceParticipant(@Param("eventIdIn") Integer eventId, @Param("userIdIn") Integer userId);
     
+    @Procedure(procedureName = "getUsersScheduleForEvent")
+    List<Integer> getUsersScheduleForEvent(@Param("eventIdIn") Integer eventId);
 }
