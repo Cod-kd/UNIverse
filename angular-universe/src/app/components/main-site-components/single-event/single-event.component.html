@@ -18,6 +18,19 @@
             </span>
         </div>
 
+        <div class="event-creator">
+            <span>
+                <i class="fa fa-user-circle"></i>
+                @if(isLoadingCreator) {
+                <small>Készítő betöltése...</small>
+                } @else if(creatorName) {
+                {{ creatorName }}
+                } @else {
+                <small>Ismeretlen készítő</small>
+                }
+            </span>
+        </div>
+
         <p class="event-description">{{ event.description }}</p>
 
         <div class="event-stats">

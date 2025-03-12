@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Event } from '../../../models/event/event.model';
 import { ButtonComponent } from '../../general-components/button/button.component';
 import { UserEventService } from '../../../services/user-event/user-event.service';
-import { combineLatest, map, forkJoin } from 'rxjs';
+import { combineLatest, map, forkJoin, finalize } from 'rxjs';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
 
 @Component({
@@ -23,6 +23,8 @@ export class SingleEventComponent implements OnInit {
   userListType: 'interested' | 'participants' = 'participants';
   userList: { id: number, username: string }[] = [];
   loadingUsers = false;
+  creatorName: string = '';
+  isLoadingCreator = false;
 
   constructor(
     private userEventService: UserEventService,
@@ -31,6 +33,19 @@ export class SingleEventComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUserEventStatus();
+    this.loadCreatorInfo();
+  }
+
+  loadCreatorInfo(): void {
+    if (!this.event?.creatorId) return;
+
+    this.isLoadingCreator = true;
+    this.userEventService.getUsernameById(this.event.creatorId)
+      .pipe(finalize(() => this.isLoadingCreator = false))
+      .subscribe({
+        next: (username) => this.creatorName = username,
+        error: () => this.popupService.showError('Hiba a készítő betöltése közben!')
+      });
   }
 
   showUsers(type: 'interested' | 'participants'): void {
@@ -66,13 +81,13 @@ export class SingleEventComponent implements OnInit {
             this.loadingUsers = false;
           },
           error: () => {
-            this.popupService.showError('Failed to load user details');
+            this.popupService.showError('Hiba a felhasználó adatainak betöltésekor!');
             this.loadingUsers = false;
           }
         });
       },
       error: () => {
-        this.popupService.showError(`Failed to load ${this.userListType}`);
+        this.popupService.showError(`Nem sikerült betölteni: ${this.userListType}`);
         this.loadingUsers = false;
       }
     });
