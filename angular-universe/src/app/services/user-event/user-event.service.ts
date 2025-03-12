@@ -76,6 +76,26 @@ export class UserEventService {
     }, { responseType: 'text' });
   }
 
+
+  getEventInterestedUsers(eventId: number): Observable<number[]> {
+    return this.fetchService.post<number[]>(`/groups/event/interested_users`, {
+      eventId
+    });
+  }
+
+  getEventParticipants(eventId: number): Observable<number[]> {
+    return this.fetchService.post<number[]>(`/groups/event/users_schedule`, {
+      eventId
+    });
+  }
+
+  getUsernameById(userId: number): Observable<string> {
+    return this.fetchService.get<string>(`/user/username`, {
+      params: { id: userId.toString() },
+      responseType: 'text'
+    });
+  }
+
   clearCache(): void {
     this.interestedEventsCache$ = null;
     this.participatingEventsCache$ = null;

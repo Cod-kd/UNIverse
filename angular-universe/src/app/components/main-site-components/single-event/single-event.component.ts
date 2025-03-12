@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Event } from '../../../models/event/event.model';
 import { ButtonComponent } from '../../general-components/button/button.component';
 import { UserEventService } from '../../../services/user-event/user-event.service';
-import { combineLatest } from 'rxjs';
+import { combineLatest, map, forkJoin } from 'rxjs';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
 
 @Component({
@@ -19,6 +19,10 @@ export class SingleEventComponent implements OnInit {
   isInterested = false;
   isParticipating = false;
   isLoading = true;
+  showingUserList = false;
+  userListType: 'interested' | 'participants' = 'participants';
+  userList: { id: number, username: string }[] = [];
+  loadingUsers = false;
 
   constructor(
     private userEventService: UserEventService,
@@ -27,6 +31,58 @@ export class SingleEventComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUserEventStatus();
+  }
+
+  showUsers(type: 'interested' | 'participants'): void {
+    this.userListType = type;
+    this.showingUserList = true;
+    this.loadUsers();
+  }
+
+  loadUsers(): void {
+    this.loadingUsers = true;
+    this.userList = [];
+
+    const userIdsObservable = this.userListType === 'interested'
+      ? this.userEventService.getEventInterestedUsers(this.event.id)
+      : this.userEventService.getEventParticipants(this.event.id);
+
+    userIdsObservable.subscribe({
+      next: (userIds) => {
+        if (userIds.length === 0) {
+          this.loadingUsers = false;
+          return;
+        }
+
+        const userRequests = userIds.map(id =>
+          this.userEventService.getUsernameById(id).pipe(
+            map(username => ({ id, username }))
+          )
+        );
+
+        forkJoin(userRequests).subscribe({
+          next: (users) => {
+            this.userList = users;
+            this.loadingUsers = false;
+          },
+          error: (error) => {
+            console.error('Error loading usernames', error);
+            this.popupService.showError('Failed to load user details');
+            this.loadingUsers = false;
+          }
+        });
+      },
+      error: (error) => {
+        console.error(`Error loading ${this.userListType}`, error);
+        this.popupService.showError(`Failed to load ${this.userListType}`);
+        this.loadingUsers = false;
+      }
+    });
+  }
+
+  closeUserList(): void {
+    this.showingUserList = false;
+    this.userList = [];
   }
 
   loadUserEventStatus(): void {
@@ -54,7 +110,6 @@ export class SingleEventComponent implements OnInit {
       return;
     }
 
-    // Handle text responses
     if (this.isInterested) {
       this.userEventService.removeEventInterest(this.event.id).subscribe({
         next: (response) => {
@@ -88,7 +143,6 @@ export class SingleEventComponent implements OnInit {
       return;
     }
 
-    // Handle text responses
     if (this.isParticipating) {
       this.userEventService.removeEventParticipation(this.event.id).subscribe({
         next: (response) => {

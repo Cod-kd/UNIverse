@@ -21,19 +21,19 @@
         <p class="event-description">{{ event.description }}</p>
 
         <div class="event-stats">
-            <span class="participants inspectable">
+            <span class="participants inspectable" (click)="showUsers('participants')">
                 <i class="fa fa-users"></i>
-                {{ event.participantsCount }} attending
+                {{ event.participantsCount }} résztvevő
             </span>
-            <span class="interested inspectable">
+            <span class="interested inspectable" (click)="showUsers('interested')">
                 <i class="fa fa-star"></i>
-                {{ event.interestedUsersCount }} interested
+                {{ event.interestedUsersCount }} érdeklődő
             </span>
         </div>
     </div>
     <div class="button-container">
         @if(isLoading) {
-        <div class="loading-spinner">Loading...</div>
+        <div class="loading-spinner">Betöltés...</div>
         } @else {
         <app-button [size]="'small'" (click)="toggleParticipation()"
             [btnLabel]="isParticipating ? 'Nem veszek részt' : 'Részt veszek'"
@@ -46,3 +46,32 @@
         }
     </div>
 </div>
+@if(showingUserList) {
+<div class="user-list-overlay">
+    <div class="user-list-container">
+        <div class="user-list-header">
+            <h3>{{ userListType === 'interested' ? 'Érdeklődők' : 'Résztvevők' }}</h3>
+            <app-button [size]="'small'" [shape]="'rectangle'" [iconClass]="'fa-solid fa-x'" (click)="closeUserList()">
+                <i class="fa fa-times"></i>
+            </app-button>
+        </div>
+
+        <div class="user-list-content">
+            @if(loadingUsers) {
+            <div class="loading-spinner">Felhasználók betöltése...</div>
+            } @else if(userList.length === 0) {
+            <p class="no-users">Egy felhasználó sem</p>
+            } @else {
+            <ul class="user-list">
+                @for(user of userList; track user.id) {
+                <li class="user-item">
+                    <i class="fa {{ userListType === 'interested' ? 'fa-star' : 'fa-user' }}"></i>
+                    <span>{{ user.username }}</span>
+                </li>
+                }
+            </ul>
+            }
+        </div>
+    </div>
+</div>
+}
