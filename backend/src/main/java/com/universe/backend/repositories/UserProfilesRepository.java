@@ -84,6 +84,9 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
     @Procedure(procedureName = "getInterestingEventsForUser")
     List<Integer> getInterestingEventsForUser(@Param("userIdIn") Integer userIdIn);
     
+    @Procedure(procedureName = "getScheduledEventsForUser")
+    List<Integer> getScheduledEventsForUser(@Param("userIdIn") Integer userIdIn);
+    
     @Query(value = "SELECT * FROM events WHERE id = :eventIdIn", nativeQuery = true)
     Event getEvent(@Param("eventIdIn") Integer eventId);
 }

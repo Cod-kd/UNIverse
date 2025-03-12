@@ -124,6 +124,11 @@ public class UserService {
         return upRepo.getInterestingEventsForUser(userId);
     }
     
+    @Transactional
+    public List<Integer> getScheduledEventsForUser(Integer userId){
+        return upRepo.getScheduledEventsForUser(userId);
+    }
+    
     public Event getEvent(Integer eventId){
         return upRepo.getEvent(eventId);
     }

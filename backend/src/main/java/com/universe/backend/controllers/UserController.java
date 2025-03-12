@@ -162,9 +162,15 @@ public class UserController {
         }
     }
     
-    @GetMapping("get/eventsinterestedin")
+    @GetMapping("get/events_interested_in")
     public ResponseEntity<List<Integer>> getInterestingEventsForUser(@RequestParam Integer userId) {
         List<Integer> userIdes = us.getInterestingEventsForUser(userId);
+        return ResponseEntity.ok(userIdes);
+    }
+    
+    @GetMapping("get/events_scheduled")
+    public ResponseEntity<List<Integer>> getScheduledEventsForUser(@RequestParam Integer userId) {
+        List<Integer> userIdes = us.getScheduledEventsForUser(userId);
         return ResponseEntity.ok(userIdes);
     }
     

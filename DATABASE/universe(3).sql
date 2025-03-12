@@ -16,7 +16,6 @@ fill manual: (NNN addRank)
 back implement::
 
 procedures:
-getInterestingEventsForUser
 
 functions:
 
@@ -252,6 +251,7 @@ CREATE PROCEDURE `registerUser` (IN `emailIn` VARCHAR(50), IN `usernameIn` VARCH
     CALL addUserbio(@userId, facultyIn);
 END$$
 
+-- handle interested users
 CREATE PROCEDURE `addInterestedUser` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
 BEGIN  
     INSERT INTO `interestedusers` (`eventId`, `userId`) VALUES (eventIdIn, userIdIn);
@@ -272,6 +272,26 @@ BEGIN
     SELECT userId FROM `interestedusers` WHERE eventId = eventIdIn;
 END$$
 
+-- handle participants
+CREATE PROCEDURE `addParticipant` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
+BEGIN  
+    INSERT INTO `participants` (`eventId`, `userId`) VALUES (eventIdIn, userIdIn);
+END$$
+
+CREATE PROCEDURE `reduceParticipant` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
+BEGIN  
+    DELETE FROM `participants` WHERE `eventId` = eventIdIn AND `userId` = userIdIn;
+END$$
+
+CREATE PROCEDURE `getScheduledEventsForUser` (IN userIdIn MEDIUMINT)  
+BEGIN  
+    SELECT eventId FROM `participants` WHERE userId = userIdIn;
+END$$
+
+CREATE PROCEDURE `getUsersScheduleForEvent` (IN eventIdIn INT)  
+BEGIN  
+    SELECT userId FROM `participants` WHERE eventId = eventIdIn;
+END$$
 --
 -- Függvények
 --
