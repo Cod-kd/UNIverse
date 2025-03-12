@@ -25,7 +25,6 @@ export class FetchService {
     const {
       responseType = 'json',
       showError = true,
-      customErrorMessage,
       params
     } = options;
 
@@ -42,34 +41,31 @@ export class FetchService {
     return this.http.get<T>(url, {
       responseType: responseType as any,
     }).pipe(
-      catchError((error: HttpErrorResponse) => this.handleError(error, showError, customErrorMessage))
+      catchError((error: HttpErrorResponse) => this.handleError(error, showError))
     );
   }
 
   post<T>(endpoint: string, body: any, options: {
     responseType?: 'json' | 'text',
     showError?: boolean,
-    customErrorMessage?: string
   } = {}): Observable<T> {
     const {
       responseType = 'json',
       showError = true,
-      customErrorMessage
     } = options;
 
     return this.http.post<T>(`${this.baseUrl}${endpoint}`, body, {
       responseType: responseType as any,
     }).pipe(
-      catchError((error: HttpErrorResponse) => this.handleError(error, showError, customErrorMessage))
+      catchError((error: HttpErrorResponse) => this.handleError(error, showError))
     );
   }
 
-  private handleError(error: HttpErrorResponse, showError = true, customErrorMessage?: string): Observable<never> {
+  private handleError(error: HttpErrorResponse, showError = true): Observable<never> {
     if (!(error instanceof HttpErrorResponse) || error.status >= 200 && error.status < 300) {
       return throwError(() => error);
     }
 
-    // Use the actual error text from the server
     let errorMessage = error.error;
 
     if (showError && errorMessage) {

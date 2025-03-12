@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FetchService } from '../fetch/fetch.service';
-import { Observable, map, shareReplay } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +35,6 @@ export class UserEventService {
     return this.participatingEventsCache$;
   }
 
-  // Using text responseType for endpoints that return text
   addEventInterest(eventId: number): Observable<string> {
     const userId = localStorage.getItem('userId');
     this.interestedEventsCache$ = null;

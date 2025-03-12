@@ -29,15 +29,12 @@ export class UniversityService {
 
   getFacultyNameByAbbreviation(universityCode: string, abbreviation: string): string {
     const facultiesList = faculties[universityCode] || [];
-    // Find the faculty whose abbreviation matches
     return facultiesList.find(faculty =>
       this.generateAbbreviation(faculty) === abbreviation
-    ) || abbreviation; // Return abbreviation as fallback
+    ) || abbreviation;
   }
 
-  // Generates abbreviation from faculty name
   private generateAbbreviation(facultyName: string): string {
-    // Extract first letter of each meaningful word
     return facultyName
       .split(' ')
       .map(word => word.match(/^[A-ZÁÉÍÓÖŐÚÜŰ]/)?.[0] || '')
@@ -45,10 +42,9 @@ export class UniversityService {
   }
 
   loadFaculties(universityId: string): void {
-    // Map faculties to options with full labels but abbreviated values
     const facultyList = (faculties[universityId] || []).map(faculty => ({
-      label: faculty, // Full name for display
-      value: this.generateAbbreviation(faculty) // Abbreviation for submission
+      label: faculty,
+      value: this.generateAbbreviation(faculty)
     }));
 
     this.facultiesSubject.next(facultyList);

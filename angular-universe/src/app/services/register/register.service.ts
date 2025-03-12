@@ -34,7 +34,7 @@ export class RegisterService {
       nameIn: fullName,
       genderIn: gender === '1' ? true : gender === '0' ? false : null,
       birthDateIn: birthDate,
-      facultyIn: faculty, // This now contains the abbreviated faculty code
+      facultyIn: faculty,
       universityNameIn: university,
       profilePictureExtensionIn: 'jpg',
     };
@@ -53,12 +53,10 @@ export class RegisterService {
   }
 
   async handleRegisterResponse(response: string, registrationData: any) {
-    // Navigate to the next page after successful registration
     this.router.navigate(['/get-unicard'], {
       state: {
         message: response,
         userData: registrationData
-        // registration data passed here
       },
     });
   }

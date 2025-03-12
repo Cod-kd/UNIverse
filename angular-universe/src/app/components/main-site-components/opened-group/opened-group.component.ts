@@ -36,7 +36,6 @@ export class OpenedGroupComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // Clear user event service cache on component init
     this.userEventService.clearCache();
 
     this.subscriptions.add(
@@ -73,17 +72,14 @@ export class OpenedGroupComponent implements OnInit, OnDestroy {
     );
   }
 
-  // Method to show the event creation popup
   createEvent(): void {
     this.showEventCreationPopup = true;
   }
 
-  // Handle event creation cancel
   onCancelEventCreation(): void {
     this.showEventCreationPopup = false;
   }
 
-  // Handle event creation submission
   onSubmitEventCreation(eventData: any): void {
     if (!this.group) {
       this.popupService.showError('Csoport nem található');
@@ -95,11 +91,9 @@ export class OpenedGroupComponent implements OnInit, OnDestroy {
         next: () => {
           this.popupService.showSuccess('Esemény sikeresen létrehozva');
           this.showEventCreationPopup = false;
-          // Reload events to show the newly created one
           this.loadGroupEvents(this.group!.name);
         },
         error: (err) => {
-          // Error handling is already done in the FetchService
           console.error('Failed to create event:', err);
         }
       })

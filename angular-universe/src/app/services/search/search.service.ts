@@ -24,7 +24,6 @@ export class SearchService {
   private matchedProfilesSubject = new BehaviorSubject<Profile[]>([]);
   matchedProfiles$ = this.matchedProfilesSubject.asObservable();
 
-  // Add property to track if professional search is active
   private _isProfessionalSearchActive = false;
   get isProfessionalSearchActive(): boolean {
     return this._isProfessionalSearchActive;
@@ -80,7 +79,6 @@ export class SearchService {
     this.loadingService.show();
     this.errorShown = false;
 
-    // Store professional search state
     this._isProfessionalSearchActive = isProfessionalSearch;
 
     this.matchedProfilesSubject.next([]);
@@ -137,7 +135,6 @@ export class SearchService {
     const currentRoute = this.router.url;
     const isProfileRoute = currentRoute === '/main-site/user-profile' || currentRoute === '/main-site/you';
 
-    // Update professional search state if provided
     if (isProfessionalSearch !== undefined) {
       this._isProfessionalSearchActive = isProfessionalSearch;
     }

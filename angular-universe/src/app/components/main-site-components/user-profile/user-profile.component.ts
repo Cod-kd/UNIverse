@@ -90,10 +90,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
             this.updateUniversityAndFaculty();
             this.isProfileSaved = false;
 
-            // Always fetch username regardless of search type
             if (this.profile) {
               this.fetchUsername(this.profile.usersData.userId);
-              // Scroll to profile view after a short delay to ensure DOM is updated
               this.scrollToProfileView();
             }
 
@@ -155,7 +153,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   fetchUsername(userId: number): void {
-    this.username = ''; // Reset username before fetching
+    this.username = '';
 
     this.fetchService.get<string>(`/user/username`, {
       responseType: 'text',
@@ -164,7 +162,6 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         finalize(() => {
-          // Handle finalization if needed
         })
       )
       .subscribe({
@@ -173,17 +170,15 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('Error fetching username:', error);
-          // Don't show error popup to user - username display is not critical
         }
       });
   }
 
   selectProfile(profile: Profile): void {
     this.profile = profile;
-    this.username = ''; // Reset username when selecting a new profile
+    this.username = '';
     this.updateUniversityAndFaculty();
 
-    // Always fetch username for the selected profile
     this.fetchUsername(profile.usersData.userId);
 
     if (this.currentUserId && this.profile) {
@@ -198,22 +193,18 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       });
     }
 
-    // Scroll to profile view after profile selection
     this.scrollToProfileView();
   }
 
-  // New method to handle scrolling to profile view
   private scrollToProfileView(offsetY: number = 120): void {
     if (!this.isBrowser) return;
 
     setTimeout(() => {
       const profileContainer = document.getElementById('profile-container');
       if (profileContainer) {
-        // Get position of element
         const rect = profileContainer.getBoundingClientRect();
         const absoluteTop = rect.top + window.scrollY;
 
-        // Scroll to element position minus the offset
         window.scrollTo({
           top: absoluteTop - offsetY,
           behavior: 'smooth'
@@ -222,11 +213,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     }, 100);
   }
 
-  // Rest of the component methods remain unchanged
   getContactIcon(contactTypeId: number): string {
     const contactType = this.constantsService.getContactTypesSnapshot().find(ct => ct.id === contactTypeId);
 
-    // Map contact types to Font Awesome icons
     const iconMap: { [key: string]: string } = {
       'Facebook': 'fa-brands fa-facebook',
       'Youtube': 'fa-brands fa-youtube',
@@ -243,12 +232,10 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
     const contactType = this.constantsService.getContactTypesSnapshot().find(ct => ct.id === contact.contactTypeId);
 
-    // Return path directly if it already has a protocol
     if (contact.path.startsWith('http')) {
       return contact.path;
     }
 
-    // Add protocol and domain if needed
     if (contactType?.protocol && contactType?.domain) {
       return `${contactType.protocol}://${contactType.domain}/${contact.path}`;
     }
@@ -277,13 +264,11 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     const uniValue = this.profile.usersData.universityName;
     this.universityName = this.universityMap.get(uniValue) || uniValue;
 
-    // Get the full faculty name using the abbreviation
     this.facultyName = this.universityService.getFacultyNameByAbbreviation(
       uniValue,
       this.profile.faculty || ''
     );
 
-    // Also load faculties in case needed elsewhere
     this.universityService.loadFaculties(uniValue);
   }
 

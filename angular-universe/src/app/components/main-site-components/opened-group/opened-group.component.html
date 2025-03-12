@@ -22,7 +22,6 @@
         </div>
     </div>
 
-    <!-- Events section -->
     <section class="group-events">
         <h2>Események</h2>
         <app-button [btnLabel]="'Esemény létrehozása'" [iconClass]="'fa-solid fa-plus'"
@@ -42,7 +41,6 @@
         }
     </section>
 
-    <!-- Event Creation Popup -->
     @if(showEventCreationPopup) {
     <app-create-event-popup [groupName]="group.name" (cancel)="onCancelEventCreation()"
         (submit)="onSubmitEventCreation($event)">

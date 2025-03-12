@@ -28,7 +28,7 @@ export class CreateEventPopupComponent implements OnInit {
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
       place: ['', Validators.required],
-      attachmentRelPath: ['esemeny.jpg'], // Default value
+      attachmentRelPath: ['esemeny.jpg'],
       description: ['', Validators.required]
     });
   }
@@ -44,10 +44,8 @@ export class CreateEventPopupComponent implements OnInit {
 
   onSubmit(): void {
     if (this.eventForm.valid) {
-      // Format dates to ISO string
       const formData = this.eventForm.value;
 
-      // Ensure dates are properly formatted
       if (formData.startDate) {
         formData.startDate = new Date(formData.startDate).toISOString();
       }
@@ -58,7 +56,6 @@ export class CreateEventPopupComponent implements OnInit {
 
       this.submit.emit(formData);
     } else {
-      // Mark all fields as touched to show validation errors
       Object.keys(this.eventForm.controls).forEach(key => {
         this.eventForm.get(key)?.markAsTouched();
       });
