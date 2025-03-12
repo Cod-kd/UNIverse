@@ -32,7 +32,17 @@
         </div>
     </div>
     <div class="button-container">
-        <app-button [size]="'small'" (click)="addParticipation()" [btnLabel]="'Részt veszek'" [iconClass]="'fa-solid fa-person-walking-arrow-right'"></app-button>
-        <app-button [size]="'small'" (click)="addInterest()" [btnLabel]="'Érdekel'" [iconClass]="'fa-solid fa-star'"></app-button>
+        @if(isLoading) {
+        <div class="loading-spinner">Loading...</div>
+        } @else {
+        <app-button [size]="'small'" (click)="toggleParticipation()"
+            [btnLabel]="isParticipating ? 'Nem veszek részt' : 'Részt veszek'"
+            [iconClass]="'fa-solid fa-person-walking-arrow-right'" [isDisabled]="isInterested">
+        </app-button>
+
+        <app-button [size]="'small'" (click)="toggleInterest()" [btnLabel]="isInterested ? 'Nem érdeklődöm' : 'Érdekel'"
+            [iconClass]="'fa-solid fa-star'" [isDisabled]="isParticipating">
+        </app-button>
+        }
     </div>
 </div>
