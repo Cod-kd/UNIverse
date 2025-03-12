@@ -141,19 +141,20 @@
             </div>
 
             <div class="form-group">
-                <label>Név</label>
-                <input type="text" [(ngModel)]="newShortcut.name" placeholder="Parancsikon neve">
+                <label for="shortcutName">Név</label>
+                <input type="text" id="shortcutName" [(ngModel)]="newShortcut.name" placeholder="Parancsikon neve">
             </div>
 
             @if (newShortcut.type === 'website') {
             <div class="form-group">
-                <label>URL</label>
-                <input type="text" [(ngModel)]="newShortcut.url" placeholder="https://...">
+                <label for="shortcutValue">URL</label>
+                <input type="text" id="shortcutValue" [(ngModel)]="newShortcut.url" placeholder="https://...">
             </div>
             } @else if (newShortcut.type === 'uninote') {
             <div class="form-group">
-                <label>Leírás</label>
-                <textarea [(ngModel)]="newShortcut.description" placeholder="Jegyzet leírása"></textarea>
+                <label for="noteDescription">Leírás</label>
+                <textarea id="noteDescription" name="noteDescription" [(ngModel)]="newShortcut.description"
+                    placeholder="Jegyzet leírása" aria-label="Jegyzet leírása"></textarea>
             </div>
             }
         </div>

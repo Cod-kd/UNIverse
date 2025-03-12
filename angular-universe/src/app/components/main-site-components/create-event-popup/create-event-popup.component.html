@@ -5,7 +5,7 @@
         <form [formGroup]="eventForm">
             <div class="form-group">
                 <label for="name">Név</label>
-                <input type="text" id="name" formControlName="name">
+                <input type="text" autocomplete="off" id="name" formControlName="name">
                 @if(eventForm.get('name')?.invalid && eventForm.get('name')?.touched) {
                 <div class="error-message">Név megadása kötelező</div>
                 }

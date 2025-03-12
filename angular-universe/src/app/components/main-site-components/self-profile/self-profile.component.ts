@@ -244,7 +244,7 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
 
       const contactType = this.contactTypes.find(ct => ct.name === this.contactInput.type);
       if (contactType) {
-          this.profile.contacts.push({
+        this.profile.contacts.push({
           userId: this.profile.userId,
           contactTypeId: contactType.id,
           path: this.contactInput.value
@@ -419,20 +419,24 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
   }
 
   private updateContacts(userId: number): Promise<any> {
-    const originalContactLabels = this.displayContacts || [];
-    const currentContactLabels = this.displayContacts || [];
+    const backendContacts = this.originalProfile.contacts.map((c: any) => {
+      if (typeof c === 'string') return c;
 
-    const newContacts = currentContactLabels.filter(
-      (contact: string) => !originalContactLabels.includes(contact)
+      const contactType = this.contactTypes.find(ct => ct.id === c.contactTypeId);
+      return contactType ? `${contactType.name}: ${c.path}` : `${c.contactTypeId}: ${c.path}`;
+    });
+
+    const newContacts = this.displayContacts.filter(
+      (contact: string) => !backendContacts.includes(contact)
     );
 
-    if (newContacts.length === 0) return Promise.resolve();
+    const promises: Promise<any>[] = [];
 
-    const contactPromises = newContacts.map((contactLabel: string) => {
+    for (const contactLabel of newContacts) {
       const [typeName, path] = contactLabel.split(': ');
-
       const contactType = this.contactTypes.find(ct => ct.name === typeName);
-      if (!contactType) return Promise.resolve();
+
+      if (!contactType) continue;
 
       const contactData = {
         userId,
@@ -440,7 +444,7 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
         path
       };
 
-      return new Promise((resolve, reject) => {
+      const promise = new Promise((resolve, reject) => {
         this.fetchService.post('/user/add/contact', contactData, {
           responseType: 'text'
         }).subscribe({
@@ -448,31 +452,37 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
           error: (error) => reject(error)
         });
       });
-    });
 
-    return Promise.all(contactPromises);
+      promises.push(promise);
+    }
+
+    return Promise.all(promises);
   }
 
   private updateRoles(userId: number): Promise<any> {
-    const originalRoles = this.displayRoles || [];
-    const currentRoles = this.displayRoles || [];
+    const backendRoles = this.originalProfile.roles.map((r: any) => {
+      if (typeof r === 'string') return r;
 
-    const newRoles = currentRoles.filter(
-      (role: string) => !originalRoles.includes(role)
+      const role = this.roles.find(role => role.id === r.roleId);
+      return role ? role.name : `${r.roleId}`;
+    });
+
+    const newRoles = this.displayRoles.filter(
+      (role: string) => !backendRoles.includes(role)
     );
 
-    if (newRoles.length === 0) return Promise.resolve();
+    const promises: Promise<any>[] = [];
 
-    const rolePromises = newRoles.map((roleName: string) => {
+    for (const roleName of newRoles) {
       const role = this.roles.find(r => r.name === roleName);
-      if (!role) return Promise.resolve();
+      if (!role) continue;
 
       const roleData = {
         userId,
         roleId: role.id
       };
 
-      return new Promise((resolve, reject) => {
+      const promise = new Promise((resolve, reject) => {
         this.fetchService.post('/user/add/role', roleData, {
           responseType: 'text'
         }).subscribe({
@@ -480,31 +490,37 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
           error: (error) => reject(error)
         });
       });
-    });
 
-    return Promise.all(rolePromises);
+      promises.push(promise);
+    }
+
+    return Promise.all(promises);
   }
 
   private updateInterests(userId: number): Promise<any> {
-    const originalInterests = this.displayInterests || [];
-    const currentInterests = this.displayInterests || [];
+    const backendInterests = this.originalProfile.interests.map((i: any) => {
+      if (typeof i === 'string') return i;
 
-    const newInterests = currentInterests.filter(
-      (interest: string) => !originalInterests.includes(interest)
+      const category = this.categories.find(c => c.id === i.categoryId);
+      return category ? category.name : `${i.categoryId}`;
+    });
+
+    const newInterests = this.displayInterests.filter(
+      (interest: string) => !backendInterests.includes(interest)
     );
 
-    if (newInterests.length === 0) return Promise.resolve();
+    const promises: Promise<any>[] = [];
 
-    const interestPromises = newInterests.map((interestName: string) => {
+    for (const interestName of newInterests) {
       const category = this.categories.find(c => c.name === interestName);
-      if (!category) return Promise.resolve();
+      if (!category) continue;
 
       const interestData = {
         userId,
         categoryId: category.id
       };
 
-      return new Promise((resolve, reject) => {
+      const promise = new Promise((resolve, reject) => {
         this.fetchService.post('/user/add/interest', interestData, {
           responseType: 'text'
         }).subscribe({
@@ -512,9 +528,11 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
           error: (error) => reject(error)
         });
       });
-    });
 
-    return Promise.all(interestPromises);
+      promises.push(promise);
+    }
+
+    return Promise.all(promises);
   }
 
   confirmDeleteProfile(): void {

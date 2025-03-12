@@ -13,8 +13,8 @@
                         <div class="color-input-wrapper">
                             <input type="color" [id]="color.cssVar" [(ngModel)]="color.value"
                                 (change)="onColorChange(color)" class="form-control form-control-color">
-                            <input type="text" [(ngModel)]="color.value" (change)="onColorChange(color)"
-                                class="form-control color-text-input">
+                            <input type="text" [id]="color.cssVar + '-text'" [(ngModel)]="color.value"
+                                (change)="onColorChange(color)" class="form-control color-text-input">
                         </div>
                     </div>
                     }
