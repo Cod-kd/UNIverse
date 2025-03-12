@@ -11,16 +11,7 @@ import { ConstantsService } from '../../../services/constants/constants.service'
 import { Subscription } from 'rxjs';
 import { Role, ContactType, Category } from '../../../models/constants/constants.model';
 import { UniversityService } from '../../../services/university/university.service';
-
-interface ContactInput {
-  type: string;
-  value: string;
-}
-
-interface DeleteProfileData {
-  usernameIn: string;
-  passwordIn: string;
-}
+import { DeleteProfileData, ContactInput } from '../../../models/self-profile/self-profile.model';
 
 @Component({
   selector: 'app-self-profile',
