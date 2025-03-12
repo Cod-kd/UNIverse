@@ -33,7 +33,6 @@ export class EventService {
 
     const requests = eventIds.map(id => this.getEventById(id).pipe(
       catchError(error => {
-        console.error(`Error fetching event ${id}:`, error);
         return of(null);
       })
     ));

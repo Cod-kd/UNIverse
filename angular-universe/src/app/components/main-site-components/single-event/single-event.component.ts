@@ -66,14 +66,12 @@ export class SingleEventComponent implements OnInit {
             this.loadingUsers = false;
           },
           error: (error) => {
-            console.error('Error loading usernames', error);
             this.popupService.showError('Failed to load user details');
             this.loadingUsers = false;
           }
         });
       },
       error: (error) => {
-        console.error(`Error loading ${this.userListType}`, error);
         this.popupService.showError(`Failed to load ${this.userListType}`);
         this.loadingUsers = false;
       }
@@ -98,7 +96,6 @@ export class SingleEventComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Failed to load user event status', error);
         this.isLoading = false;
       }
     });
@@ -119,7 +116,6 @@ export class SingleEventComponent implements OnInit {
         },
         error: (error) => {
           this.popupService.showError('Hiba történt az érdeklődés törlésekor');
-          console.error('Error removing interest', error);
         }
       });
     } else {
@@ -131,7 +127,6 @@ export class SingleEventComponent implements OnInit {
         },
         error: (error) => {
           this.popupService.showError('Hiba történt az érdeklődés hozzáadásakor');
-          console.error('Error adding interest', error);
         }
       });
     }
@@ -152,7 +147,6 @@ export class SingleEventComponent implements OnInit {
         },
         error: (error) => {
           this.popupService.showError('Hiba történt a részvétel törlésekor');
-          console.error('Error removing participation', error);
         }
       });
     } else {
@@ -164,7 +158,6 @@ export class SingleEventComponent implements OnInit {
         },
         error: (error) => {
           this.popupService.showError('Hiba történt a részvétel hozzáadásakor');
-          console.error('Error adding participation', error);
         }
       });
     }

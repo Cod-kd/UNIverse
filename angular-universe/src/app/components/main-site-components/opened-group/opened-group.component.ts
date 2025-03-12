@@ -94,7 +94,6 @@ export class OpenedGroupComponent implements OnInit, OnDestroy {
           this.loadGroupEvents(this.group!.name);
         },
         error: (err) => {
-          console.error('Failed to create event:', err);
         }
       })
     );

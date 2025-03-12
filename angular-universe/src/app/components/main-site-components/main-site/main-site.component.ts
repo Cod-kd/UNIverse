@@ -147,7 +147,6 @@ export class MainSiteComponent implements OnInit {
           !(shortcut.type === 'uninote' && (shortcut as UNInoteShortcut).completed)
         );
       } catch (e) {
-        console.error('Failed to parse shortcuts:', e);
         this.shortcuts = [];
       }
     }

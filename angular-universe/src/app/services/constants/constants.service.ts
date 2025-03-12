@@ -47,22 +47,19 @@ export class ConstantsService {
 
   private fetchRoles(): void {
     this.fetchService.get<Role[]>('/user/common/roles').subscribe({
-      next: (data) => this.roles$.next(data),
-      error: (error) => console.error('Error fetching roles:', error)
+      next: (data) => this.roles$.next(data)
     });
   }
 
   private fetchContactTypes(): void {
     this.fetchService.get<ContactType[]>('/user/common/contacttypes').subscribe({
-      next: (data) => this.contactTypes$.next(data),
-      error: (error) => console.error('Error fetching contact types:', error)
+      next: (data) => this.contactTypes$.next(data)
     });
   }
 
   private fetchCategories(): void {
     this.fetchService.get<Category[]>('/user/common/categories').subscribe({
-      next: (data) => this.categories$.next(data),
-      error: (error) => console.error('Error fetching categories:', error)
+      next: (data) => this.categories$.next(data)
     });
   }
 }

@@ -34,15 +34,13 @@ export class EventsComponent implements OnInit {
   private loadUserEvents(): void {
     forkJoin({
       participating: this.userEventService.getUserParticipatingEvents().pipe(
-        catchError(error => {
-          console.error('Failed to load participating events', error);
+        catchError(() => {
           this.popupService.showError('Could not load your participating events');
           return of([]);
         })
       ),
       interested: this.userEventService.getUserInterestedEvents().pipe(
         catchError(error => {
-          console.error('Failed to load interested events', error);
           this.popupService.showError('Could not load your interested events');
           return of([]);
         })
@@ -63,8 +61,7 @@ export class EventsComponent implements OnInit {
         this.participatingEvents = participatingEvents;
         this.interestedEvents = interestedEvents;
       },
-      error: (error) => {
-        console.error('Error loading events', error);
+      error: () => {
         this.popupService.showError('Failed to load event details');
       }
     });
@@ -77,10 +74,7 @@ export class EventsComponent implements OnInit {
 
     const eventObservables = eventIds.map(id =>
       this.eventService.getEventById(id).pipe(
-        catchError(error => {
-          console.error(`Failed to fetch event ID ${id}`, error);
-          return of(null);
-        })
+        
       )
     );
 

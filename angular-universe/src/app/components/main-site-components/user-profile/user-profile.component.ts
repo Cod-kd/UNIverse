@@ -169,7 +169,6 @@ export class UserProfileComponent implements OnInit, OnDestroy {
           this.username = username;
         },
         error: (error) => {
-          console.error('Error fetching username:', error);
         }
       });
   }

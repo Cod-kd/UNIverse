@@ -66,7 +66,6 @@ export class AuthService {
     for (const key of this.authKeys) {
       const currentValue = localStorage.getItem(key) || '';
       if (currentValue !== this.cachedValues.get(key)) {
-        console.warn(`Storage change detected on key: ${key}`);
         this.logoutAndRedirect();
         return;
       }
