@@ -14,20 +14,6 @@
   animation: float 3s infinite forwards ease-in-out;
 }
 
-@keyframes float {
-  0% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
-
-  100%{
-    transform: translateY(0);
-  }
-}
-
 .profile-header {
   background: linear-gradient(45deg, var(--dark2), var(--main));
   color: var(--light1);
@@ -63,6 +49,20 @@
 .profile-item span {
   flex-grow: 1;
   color: var(--light1);
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
 }
 
 @media screen and (max-width: 480px) {

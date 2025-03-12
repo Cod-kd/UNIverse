@@ -32,20 +32,6 @@
   align-items: center;
 }
 
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
 #profile-picture {
   width: 120px;
   height: 120px;
@@ -186,16 +172,6 @@
   color: var(--dark2);
 }
 
-@keyframes spinAnimation {
-  0% {
-    transform: rotateY(0deg);
-  }
-
-  100% {
-    transform: rotateY(360deg);
-  }
-}
-
 #profile-picture.spin {
   animation: spinAnimation 1s ease-in-out;
 }
@@ -203,23 +179,6 @@
 .capture-animation {
   opacity: 0.7;
   animation: capture 0.6s ease;
-}
-
-@keyframes capture {
-  0% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 0.5;
-    transform: scale(1.03);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
 }
 
 .empty-message {
@@ -248,6 +207,97 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(200px, 1fr));
   gap: 12px;
+}
+
+.contact-icons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.contact-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--main);
+  color: var(--dark1);
+  font-size: 20px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.contact-icon:hover {
+  background-color: var(--dark2);
+  color: var(--main);
+  transform: scale(1.1);
+}
+
+@keyframes capture {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: scale(1.03);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+@keyframes spinAnimation {
+  0% {
+    transform: rotateY(0deg);
+  }
+
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@media (min-width: 468px) {
+  #profile-card {
+    grid-template-columns: 280px 1fr;
+    min-height: 500px;
+  }
+
+  #profile-info {
+    padding: 1.5rem;
+  }
+
+  .info-row {
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+  }
+
+  .info-row strong {
+    margin-bottom: 0.25rem;
+  }
 }
 
 @media (max-width: 468px) {
@@ -286,54 +336,5 @@
   #profile-info {
     padding: 1.5rem;
     align-items: center;
-  }
-}
-
-.contact-icons {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 8px;
-}
-
-.contact-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: var(--main);
-  color: var(--dark1);
-  font-size: 20px;
-  transition: all 0.2s ease;
-  text-decoration: none;
-}
-
-.contact-icon:hover {
-  background-color: var(--dark2);
-  color: var(--main);
-  transform: scale(1.1);
-}
-
-@media (min-width: 468px) {
-  #profile-card {
-    grid-template-columns: 280px 1fr;
-    min-height: 500px;
-  }
-
-  #profile-info {
-    padding: 1.5rem;
-  }
-
-  .info-row {
-    align-items: flex-start;
-    margin-bottom: 0.75rem;
-  }
-
-  .info-row strong {
-    margin-bottom: 0.25rem;
   }
 }

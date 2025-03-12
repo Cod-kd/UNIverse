@@ -71,9 +71,8 @@
             @if (contactInput.type) {
             <input id="newContactInput" type="text" class="tag-input" [(ngModel)]="contactInput.value"
                 [placeholder]="contactPlaceholder" (keydown.enter)="addContact()">
-            <button class="add-btn" (click)="addContact()">
-                <i class="fa-solid fa-plus"></i>
-            </button>
+            <app-button [iconClass]="'fa-solid fa-plus'" [btnLabel]="'Hozzáadás'" [shape]="'rectangle'"
+                (click)="addContact()"></app-button>
             }
         </div>
     </div>

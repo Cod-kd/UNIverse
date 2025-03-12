@@ -106,13 +106,6 @@ span:hover {
     margin: 0;
 }
 
-.close-btn {
-    background: none;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-}
-
 .user-list-content {
     padding: 16px;
     max-height: calc(80vh - 70px);

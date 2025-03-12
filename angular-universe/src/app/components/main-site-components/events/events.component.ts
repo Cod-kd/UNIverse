@@ -40,7 +40,7 @@ export class EventsComponent implements OnInit {
         })
       ),
       interested: this.userEventService.getUserInterestedEvents().pipe(
-        catchError(error => {
+        catchError(() => {
           this.popupService.showError('Could not load your interested events');
           return of([]);
         })

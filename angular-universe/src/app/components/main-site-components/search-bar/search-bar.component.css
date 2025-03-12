@@ -139,17 +139,15 @@ label[for="profSearch"]:hover {
     opacity: 1;
 }
 
-@keyframes ripple {
-    to {
-        transform: scale(2);
-        opacity: 0;
-    }
-}
-
 #search.searching {
     background-color: var(--dark2);
     opacity: 0.9;
 }
+
+#searchIconDiv.searching {
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
 
 @keyframes pulse {
     0% {
@@ -165,8 +163,11 @@ label[for="profSearch"]:hover {
     }
 }
 
-#searchIconDiv.searching {
-    animation: pulse 1.5s infinite ease-in-out;
+@keyframes ripple {
+    to {
+        transform: scale(2);
+        opacity: 0;
+    }
 }
 
 @media screen and (max-width: 468px) {

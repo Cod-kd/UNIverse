@@ -92,8 +92,6 @@ export class OpenedGroupComponent implements OnInit, OnDestroy {
           this.popupService.showSuccess('Esemény sikeresen létrehozva');
           this.showEventCreationPopup = false;
           this.loadGroupEvents(this.group!.name);
-        },
-        error: (err) => {
         }
       })
     );

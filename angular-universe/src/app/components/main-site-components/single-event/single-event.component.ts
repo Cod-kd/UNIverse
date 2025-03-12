@@ -65,13 +65,13 @@ export class SingleEventComponent implements OnInit {
             this.userList = users;
             this.loadingUsers = false;
           },
-          error: (error) => {
+          error: () => {
             this.popupService.showError('Failed to load user details');
             this.loadingUsers = false;
           }
         });
       },
-      error: (error) => {
+      error: () => {
         this.popupService.showError(`Failed to load ${this.userListType}`);
         this.loadingUsers = false;
       }
@@ -95,7 +95,7 @@ export class SingleEventComponent implements OnInit {
         this.isParticipating = participatingEvents.includes(this.event.id);
         this.isLoading = false;
       },
-      error: (error) => {
+      error: () => {
         this.isLoading = false;
       }
     });
@@ -114,7 +114,7 @@ export class SingleEventComponent implements OnInit {
           this.event.interestedUsersCount = Math.max(0, this.event.interestedUsersCount - 1);
           this.popupService.showSuccess(response || 'Sikeresen törölted az érdeklődésedet');
         },
-        error: (error) => {
+        error: () => {
           this.popupService.showError('Hiba történt az érdeklődés törlésekor');
         }
       });
@@ -125,7 +125,7 @@ export class SingleEventComponent implements OnInit {
           this.event.interestedUsersCount++;
           this.popupService.showSuccess(response || 'Sikeresen érdeklődőnek jelölted magad');
         },
-        error: (error) => {
+        error: () => {
           this.popupService.showError('Hiba történt az érdeklődés hozzáadásakor');
         }
       });
@@ -145,7 +145,7 @@ export class SingleEventComponent implements OnInit {
           this.event.participantsCount = Math.max(0, this.event.participantsCount - 1);
           this.popupService.showSuccess(response || 'Sikeresen törölted a részvételedet');
         },
-        error: (error) => {
+        error: () => {
           this.popupService.showError('Hiba történt a részvétel törlésekor');
         }
       });
@@ -156,7 +156,7 @@ export class SingleEventComponent implements OnInit {
           this.event.participantsCount++;
           this.popupService.showSuccess(response || 'Sikeresen résztvevőnek jelölted magad');
         },
-        error: (error) => {
+        error: () => {
           this.popupService.showError('Hiba történt a részvétel hozzáadásakor');
         }
       });
