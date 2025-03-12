@@ -19,6 +19,7 @@ general-components: (OK)
 -----------------------------------------
 
 main-site-components:
+-create-event-popup
 -events
 -groups
 -main-site
