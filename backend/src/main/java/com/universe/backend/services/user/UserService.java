@@ -6,6 +6,7 @@ import com.universe.backend.exceptions.UserNonExistsException;
 import com.universe.backend.exceptions.UserWrongPasswordException;
 import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
+import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Role;
 import com.universe.backend.modules.UserInterest;
 import com.universe.backend.modules.UserProfiles;
@@ -121,5 +122,9 @@ public class UserService {
     @Transactional
     public List<Integer> getInterestingEventsForUser(Integer userId){
         return upRepo.getInterestingEventsForUser(userId);
+    }
+    
+    public Event getEvent(Integer eventId){
+        return upRepo.getEvent(eventId);
     }
 }

@@ -4,6 +4,7 @@ import com.universe.backend.dto.UserLoginDTO;
 import com.universe.backend.dto.UserRegistrationDTO;
 import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
+import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Role;
 import com.universe.backend.modules.UserInterest;
 import com.universe.backend.modules.UserRole;
@@ -161,12 +162,15 @@ public class UserController {
         }
     }
     
-    @PostMapping("get/eventsinterestedin")
-    public ResponseEntity<List<Integer>> getInterestingEventsForUser(@RequestBody Map<String, Integer> requestBody) {
-        Integer userId = requestBody.get("userId");
+    @GetMapping("get/eventsinterestedin")
+    public ResponseEntity<List<Integer>> getInterestingEventsForUser(@RequestParam Integer userId) {
         List<Integer> userIdes = us.getInterestingEventsForUser(userId);
         return ResponseEntity.ok(userIdes);
     }
     
-    
+    @GetMapping("get/event")
+    public ResponseEntity<Event> getEvent(@RequestParam Integer eventId) {
+        Event event = us.getEvent(eventId);
+        return ResponseEntity.ok(event);
+    }
 }

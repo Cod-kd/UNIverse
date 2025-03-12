@@ -2,6 +2,7 @@ package com.universe.backend.repositories;
 
 import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
+import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Role;
 import com.universe.backend.modules.UserProfiles;
 import com.universe.backend.modules.UsersBio;
@@ -82,4 +83,7 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
     
     @Procedure(procedureName = "getInterestingEventsForUser")
     List<Integer> getInterestingEventsForUser(@Param("userIdIn") Integer userIdIn);
+    
+    @Query(value = "SELECT * FROM events WHERE id = :eventIdIn", nativeQuery = true)
+    Event getEvent(@Param("eventIdIn") Integer eventId);
 }
