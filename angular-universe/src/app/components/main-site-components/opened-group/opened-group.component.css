@@ -1,0 +1,23 @@
+.group-events {
+    margin-top: 24px;
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.loading-spinner,
+.error-message,
+.no-events-message {
+    text-align: center;
+    padding: 24px;
+    font-size: 16px;
+    color: #666;
+}
+
+.error-message {
+    color: var(--main);
+}

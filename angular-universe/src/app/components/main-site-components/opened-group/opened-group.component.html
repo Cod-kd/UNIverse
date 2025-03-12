@@ -1,4 +1,3 @@
-<!-- opened-group.component.html -->
 <div class="opened-group-container" *ngIf="group">
     <h1 class="group-name">{{ group.name }}</h1>
     <div class="group-info">
@@ -16,13 +15,35 @@
                 <span class="stat-label">Posztok</span>
                 <span class="stat-value">{{ group.postCount }}</span>
             </div>
-            <!-- Other stats -->
+            <div class="stat-item">
+                <span class="stat-label">Események</span>
+                <span class="stat-value">{{group.allEventCount}}</span>
+            </div>
         </div>
     </div>
 
-    <!-- Group content goes here -->
+    <!-- Events section -->
+    <section class="group-events">
+        <h2>Események</h2>
+
+        @if(loading) {
+        <div class="loading-spinner">Loading events...</div>
+        } @else if(error) {
+        <div class="error-message">{{ error }}</div>
+        } @else if(events.length === 0) {
+        <div class="no-events-message">Nincsenek események ebben a csoportban</div>
+        } @else {
+        <div class="events-grid">
+            @for(event of events; track event.id) {
+            <app-single-event [event]="event"></app-single-event>
+            }
+        </div>
+        }
+    </section>
 </div>
 
-<div class="error-message" *ngIf="!group">
+@if(!group){
+<div class="error-message">
     Csoport nem található
 </div>
+}

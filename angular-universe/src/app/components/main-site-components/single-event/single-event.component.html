@@ -1,0 +1,38 @@
+<div class="event-card">
+    <div class="event-header">
+        <h3 class="event-name">{{ event.name }}</h3>
+    </div>
+
+    <div class="event-details">
+        <div class="event-date">
+            <span>
+                <i class="fa fa-calendar"></i>
+                {{ event.startDate | date:'medium' }}
+            </span>
+        </div>
+
+        <div class="event-location">
+            <span>
+                <i class="fa fa-map-marker"></i>
+                {{ event.place }}
+            </span>
+        </div>
+
+        <p class="event-description">{{ event.description }}</p>
+
+        <div class="event-stats">
+            <span class="participants inspectable">
+                <i class="fa fa-users"></i>
+                {{ event.participantsCount }} attending
+            </span>
+            <span class="interested inspectable">
+                <i class="fa fa-star"></i>
+                {{ event.interestedUsersCount }} interested
+            </span>
+        </div>
+    </div>
+    <div class="button-container">
+        <app-button [size]="'small'" (click)="addParticipation()" [btnLabel]="'Részt veszek'" [iconClass]="'fa-solid fa-person-walking-arrow-right'"></app-button>
+        <app-button [size]="'small'" (click)="addInterest()" [btnLabel]="'Érdekel'" [iconClass]="'fa-solid fa-star'"></app-button>
+    </div>
+</div>
