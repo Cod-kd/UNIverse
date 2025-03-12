@@ -17,7 +17,7 @@ export class ThemeService {
     '--dark1': '#343434',
     '--dark2': '#141414',
     '--light1': '#FFF0EB',
-    '--light2': '#FFD2C2'
+    '--light2': '#666666'
   };
 
   private themeSubject = new BehaviorSubject<ThemeVariables>(this.defaultTheme);

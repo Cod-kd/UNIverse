@@ -123,7 +123,7 @@ hr {
 }
 
 .stat-label {
-    color: #aaa;
+    color: var(--light2);
 }
 
 .activity-list {
@@ -156,7 +156,7 @@ hr {
 }
 
 .activity-date {
-    color: #aaa;
+    color: var(--light2);
     font-size: 0.9rem;
 }
 
@@ -307,7 +307,7 @@ input[type="radio"]:checked::before {
 .shortcut-actions button {
     background: none;
     border: none;
-    color: #ff5555;
+    color: var(--main);
     cursor: pointer;
     padding: 0.3rem 0.5rem;
     border-radius: 4px;
@@ -321,7 +321,8 @@ input[type="radio"]:checked::before {
 }
 
 .shortcut-actions button:hover {
-    background-color: rgba(255, 85, 85, 0.2);
+    background-color: var(--main);
+    color: var(--dark2);
 }
 
 .shortcut-content i {
@@ -367,7 +368,7 @@ input[type="radio"]:checked::before {
 }
 
 .note-time {
-    color: #aaa;
+    color: var(--light2);
     font-size: 0.9rem;
     min-width: 80px;
     text-align: start;
@@ -414,7 +415,7 @@ input[type="radio"]:checked::before {
     top: 2px;
     width: 5px;
     height: 10px;
-    border: solid white;
+    border: solid var(--light1);
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
 }
@@ -424,7 +425,7 @@ input[type="radio"]:checked::before {
 }
 
 .no-shortcuts {
-    color: #aaa;
+    color: var(--light2);
     text-align: center;
     padding: 1rem;
 }
@@ -510,7 +511,7 @@ input[type="radio"]:checked::before {
     display: flex;
     gap: 1rem;
     font-size: 0.8rem;
-    color: #aaa;
+    color: var(--light2);
 }
 
 .counter-item {

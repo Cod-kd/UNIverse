@@ -46,7 +46,7 @@
 }
 
 .sample-card {
-    background-color: white;
+    background-color: var(--light1);
     border-color: var(--light2);
     margin-bottom: 1rem;
 }
@@ -96,7 +96,7 @@
     height: 50px;
     border-radius: 4px;
     margin-bottom: 5px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--light1);
 }
 
 .swatch-name {

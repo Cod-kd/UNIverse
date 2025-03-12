@@ -32,7 +32,7 @@
 
 .event-date,
 .event-location {
-    color: #666;
+    color: var(--light2);
     font-size: 14px;
     margin-bottom: 8px;
 }
@@ -42,7 +42,7 @@
     justify-content: space-between;
     margin-top: 12px;
     font-size: 13px;
-    color: #777;
+    color: var(--light2);
 }
 
 .button-container{
