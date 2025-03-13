@@ -91,14 +91,19 @@ export class UserProfileComponent implements OnInit, OnDestroy {
             this.isProfileSaved = false;
 
             if (this.profile) {
-              this.fetchUsername(this.profile.usersData.userId);
+              // Convert userId to number if it's a string
+              const userId = typeof this.profile.userId === 'string'
+                ? parseInt(this.profile.userId, 10)
+                : this.profile.userId;
+
+              this.fetchUsername(userId);
               this.scrollToProfileView();
             }
 
             if (this.currentUserId && this.profile) {
               return this.followService.checkFollowStatus(
                 this.currentUserId,
-                this.profile.usersData.userId
+                this.profile.userId
               ).pipe(
                 catchError(() => of(false))
               );
@@ -178,12 +183,17 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     this.username = '';
     this.updateUniversityAndFaculty();
 
-    this.fetchUsername(profile.usersData.userId);
+    // Convert userId to number if necessary
+    const userId = typeof profile.userId === 'string'
+      ? parseInt(profile.userId, 10)
+      : profile.userId;
+
+    this.fetchUsername(userId);
 
     if (this.currentUserId && this.profile) {
       this.followService.checkFollowStatus(
         this.currentUserId,
-        this.profile.usersData.userId
+        this.profile.userId
       ).pipe(
         catchError(() => of(false)),
         takeUntil(this.destroy$)
