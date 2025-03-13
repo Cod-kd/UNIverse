@@ -51,6 +51,30 @@
   color: var(--light1);
 }
 
+.compact-mode {
+  transform: scale(0.85);
+  transform-origin: top left;
+  width: 15em;
+}
+
+.compact-mode #userDataDiv {
+  animation: none;
+  border: 1px solid var(--main);
+  width: 18em;
+}
+
+.compact-mode .profile-content {
+  margin-bottom: 8px;
+}
+
+.compact-mode .profile-item {
+  margin-bottom: 4px;
+}
+
+.compact-mode app-button {
+  margin-top: 4px;
+}
+
 @keyframes float {
   0% {
     transform: translateY(0);

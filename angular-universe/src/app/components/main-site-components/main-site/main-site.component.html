@@ -96,15 +96,10 @@
             </div>
 
             <div class="quick-card">
-                <h3>Aktivitás</h3>
+                <h3>UNIcard</h3>
                 <hr class="main-hr">
-                <div class="activity-list">
-                    @for (activity of recentActivities; track activity.date) {
-                    <div class="item">
-                        <span class="activity-date">{{activity.date | date:'yyyy.MM.dd.':'hu-HU'}}</span>
-                        <span class="activity-desc">{{activity.description}}</span>
-                    </div>
-                    }
+                <div class="unicard">
+                    <app-unicard [isCompactMode]="true"></app-unicard>
                 </div>
             </div>
 
@@ -114,7 +109,6 @@
                 <div class="quick-links">
                     <a (click)="navigateTo('/main-site/you')">Saját profil</a>
                     <a (click)="navigateTo('/main-site/settings')">Beállítások</a>
-                    <a (click)="navigateTo('/get-unicard')">UNIcard</a>
                 </div>
             </div>
         </div>

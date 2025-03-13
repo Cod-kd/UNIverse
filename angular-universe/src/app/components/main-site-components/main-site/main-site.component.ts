@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { registerLocaleData } from '@angular/common';
 import localeHu from '@angular/common/locales/hu';
 import { WebsiteShortcut, UNInoteShortcut, Shortcut, ShortcutFormData } from '../../../models/shortcut/shortcut.model';
+import { UNIcardComponent } from '../../root-page-components/unicard/unicard.component';
 
 @Component({
   selector: 'app-main-site',
@@ -17,7 +18,8 @@ import { WebsiteShortcut, UNInoteShortcut, Shortcut, ShortcutFormData } from '..
     SearchBarComponent,
     DatePipe,
     ButtonComponent,
-    FormsModule
+    FormsModule,
+    UNIcardComponent
   ],
   templateUrl: './main-site.component.html',
   styleUrl: './main-site.component.css',
@@ -43,11 +45,6 @@ export class MainSiteComponent implements OnInit {
     name: '',
     url: '',
   };
-
-  recentActivities = [
-    { date: new Date(Date.now() - 86400000), description: 'Profil frissítve' },
-    { date: new Date(Date.now() - 259200000), description: 'Beállítások módosítva' }
-  ];
 
   constructor(
     private router: Router,

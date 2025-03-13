@@ -56,8 +56,8 @@ hr {
     margin: 2rem auto;
     max-width: 1000px;
     grid-template-areas:
-        "quick-access content1 activity"
-        "quick-access content2 activity";
+        "quick-access content1 unicard"
+        "quick-access content2 unicard";
 }
 
 .quick-card {
@@ -86,7 +86,7 @@ hr {
 }
 
 .quick-card:nth-child(3) {
-    grid-area: activity;
+    grid-area: unicard;
     height: 100%;
 }
 
@@ -111,25 +111,11 @@ hr {
     color: var(--light2);
 }
 
-.activity-list {
-    min-height: 220px;
+.unicard {
+    margin-top: 3em;
     flex-grow: 1;
     overflow-y: auto;
-    max-height: 400px;
-}
-
-.activity-list::-webkit-scrollbar {
-    width: 8px;
-}
-
-.activity-list::-webkit-scrollbar-track {
-    background: var(--dark2);
-    border-radius: 4px;
-}
-
-.activity-list::-webkit-scrollbar-thumb {
-    background-color: var(--main);
-    border-radius: 20px;
+    height: 400px;
 }
 
 .item {
@@ -138,11 +124,6 @@ hr {
     margin-bottom: 0.8rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.activity-date {
-    color: var(--light2);
-    font-size: 0.9rem;
 }
 
 .quick-links {
@@ -520,7 +501,7 @@ input[type="radio"]:checked::before {
             "quick-access"
             "content1"
             "content2"
-            "activity";
+            "unicard";
         gap: 0.8rem;
         margin: 1rem auto;
     }
@@ -545,7 +526,7 @@ input[type="radio"]:checked::before {
         max-height: 170px;
     }
 
-    .activity-list {
+    .unicard {
         min-height: 250px;
     }
 

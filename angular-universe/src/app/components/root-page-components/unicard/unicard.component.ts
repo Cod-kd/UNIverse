@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, Input } from '@angular/core';
 import { ButtonComponent } from '../../general-components/button/button.component';
 import { Router } from '@angular/router';
 import { CardMetadataService } from '../../../services/card-meta-data/card-meta-data.service';
@@ -19,7 +19,8 @@ import { Profile } from '../../../models/profile/profile.model';
   styleUrls: ['./unicard.component.css'],
 })
 export class UNIcardComponent implements OnInit {
-  userData: UserData = history.state.userData || {} as UserData;
+  @Input() isCompactMode = false;
+  userData: UserData = history.state.userData;
   private cardMetadataService = inject(CardMetadataService);
 
   universityName = '';
