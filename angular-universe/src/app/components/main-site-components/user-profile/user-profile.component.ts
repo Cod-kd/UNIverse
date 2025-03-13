@@ -284,7 +284,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   getProfileImageSrc(): string {
     if (!this.profile) return '';
 
-    return '/images/cat-pfp.jpg';
+    return '/images/default-pfp.jpg';
   }
 
   get genderDisplay(): string {

@@ -166,7 +166,7 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
   }
 
   getProfileImageSrc(): string {
-    return 'images/cat-pfp.jpg';
+    return 'images/default-pfp.jpg';
   }
 
   editDescription(): void {
