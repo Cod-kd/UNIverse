@@ -5,6 +5,11 @@ import { CardMetadataService } from '../../../services/card-meta-data/card-meta-
 import { PopupService } from '../../../services/popup-message/popup-message.service';
 import { UniversityService } from '../../../services/university/university.service';
 import { UserData } from '../../../models/unicard/unicard.model';
+import { AuthService } from '../../../services/auth/auth.service';
+import { FetchService } from '../../../services/fetch/fetch.service';
+import { LoadingService } from '../../../services/loading/loading.service';
+import { finalize } from 'rxjs/operators';
+import { Profile } from '../../../models/profile/profile.model';
 
 @Component({
   selector: 'app-unicard',
@@ -14,43 +19,82 @@ import { UserData } from '../../../models/unicard/unicard.model';
   styleUrls: ['./unicard.component.css'],
 })
 export class UNIcardComponent implements OnInit {
-  // User data retrieved from navigation state or initialized as empty
   userData: UserData = history.state.userData || {} as UserData;
   private cardMetadataService = inject(CardMetadataService);
 
-  // Display names for UI
-  universityName: string = '';
-  facultyName: string = '';
+  universityName = '';
+  facultyName = '';
+  isLoading = false;
 
   constructor(
     private router: Router,
     private popupService: PopupService,
-    private universityService: UniversityService
+    private universityService: UniversityService,
+    private authService: AuthService,
+    private fetchService: FetchService,
+    private loadingService: LoadingService
   ) { }
 
   ngOnInit(): void {
-    // Clear any stored registration data
     localStorage.removeItem('registrationFormData');
 
-    // Redirect if user data is missing
-    if (!this.userData?.username) {
+    if (this.userData?.username) {
+      this.processUserData();
+      return;
+    }
+
+    if (this.authService.getLoginStatus()) {
+      this.fetchUserData();
+    } else {
+      this.router.navigate(['/UNIcard-login']);
+    }
+  }
+
+  private fetchUserData(): void {
+    const credentials = this.authService.getStoredCredentials();
+    if (!credentials) {
       this.router.navigate(['/UNIcard-login']);
       return;
     }
 
-    // Retrieve university display name
-    this.universityName = this.universityService.getUniversityName(this.userData.university);
+    this.isLoading = true;
+    this.loadingService.show();
 
-    // Check if faculty is valid for the university, otherwise use default name
-    if (this.universityService.isFacultyValid(this.userData.university, this.userData.faculty)) {
-      this.facultyName = this.userData.faculty;
-    } else {
-      // If faculty isn't found, use original value
-      this.facultyName = this.userData.faculty;
-    }
+    this.fetchService.get<Profile>(`/user/name/${credentials.username}`, {
+      responseType: 'json',
+      showError: true
+    })
+      .pipe(finalize(() => {
+        this.loadingService.hide();
+        this.isLoading = false;
+      }))
+      .subscribe({
+        next: (profile) => {
+          this.userData = {
+            username: credentials.username,
+            password: credentials.password,
+            fullName: profile.usersData.name,
+            gender: profile.usersData.gender === null ? '' : profile.usersData.gender ? '1' : '0',
+            birthDate: profile.usersData.birthDate,
+            university: profile.usersData.universityName,
+            faculty: profile.faculty
+          };
+          this.processUserData();
+        },
+        error: () => {
+          this.popupService.showError('Nem sikerült lekérni a felhasználói adatokat!');
+          this.router.navigate(['/UNIcard-login']);
+        }
+      });
   }
 
-  // Save user UNIcard data
+  private processUserData(): void {
+    this.universityName = this.universityService.getUniversityName(this.userData.university);
+    this.facultyName = this.universityService.isFacultyValid(this.userData.university, this.userData.faculty)
+      ? this.userData.faculty
+      : this.userData.faculty;
+  }
+
   saveUniCard = async () => {
     if (!this.userData?.username) {
       this.popupService.showError('Érvénytelen adatok!');
@@ -65,9 +109,10 @@ export class UNIcardComponent implements OnInit {
     }
 
     try {
-      // Save user data and navigate back to login
       await this.cardMetadataService.saveCardData(this.userData, userDataDiv);
-      this.router.navigate(['/UNIcard-login']);
+      if (!this.authService.getLoginStatus()) {
+        this.router.navigate(['/UNIcard-login']);
+      }
     } catch (error) {
       this.popupService.showError(`UNIcard mentése sikertelen: ${error}`);
     }

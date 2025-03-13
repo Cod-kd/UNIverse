@@ -1,5 +1,9 @@
 <div id="unicardDiv">
-
+    @if (isLoading) {
+    <div class="loading-container">
+        <p>Adatok betöltése...</p>
+    </div>
+    } @else {
     <div id="userDataDiv">
         <div class="profile-header">
             <h2>UNIcard</h2>
@@ -15,11 +19,6 @@
             <div class="profile-item">
                 <i class="fa-solid fa-signature"></i>
                 <span>{{ userData.fullName }}</span>
-            </div>
-            <!-- Email -->
-            <div class="profile-item">
-                <i class="fas fa-envelope"></i>
-                <span>{{ userData.email }}</span>
             </div>
             <!-- Birth date -->
             <div class="profile-item">
@@ -46,5 +45,7 @@
             </div>
         </div>
     </div>
-    <app-button [btnLabel]="'Kérem a kártyám!'" iconClass="fa-solid fa-download" [size]="'big'" (click)="saveUniCard()"></app-button>
+    <app-button [btnLabel]="'Kérem a kártyám!'" iconClass="fa-solid fa-download" [size]="'big'"
+        (click)="saveUniCard()"></app-button>
+    }
 </div>

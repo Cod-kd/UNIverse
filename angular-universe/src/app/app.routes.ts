@@ -29,7 +29,6 @@ export const routes: Routes = [
     {
         path: 'get-unicard',
         component: UNIcardComponent,
-        canActivate: [rootGuard]
     },
     {
         path: 'login',
