@@ -76,7 +76,7 @@
                 <div id="contacts">
                     <h3 class="section-title">Elérhetőségek</h3>
                     <div class="contact-icons">
-                        @for (contact of profile.contacts; track contact.contactTypeId + '-' + contact.userId) {
+                        @for (contact of profile.contacts; track contact.contactTypeId + '-' + profile.userId) {
                         <a [href]="getContactUrl(contact)" target="_blank" class="contact-icon"
                             title="{{ getContactTypeById(contact.contactTypeId) }}">
                             <i class="{{ getContactIcon(contact.contactTypeId) }}"></i>
@@ -95,7 +95,7 @@
                 <div id="interests">
                     <h3 class="section-title">Érdeklődési körök</h3>
                     <div class="tags">
-                        @for (interest of profile.interests; track interest.categoryId + '-' + interest.userId) {
+                        @for (interest of profile.interests; track interest.categoryId + '-' + profile.userId) {
                         <span class="tag">{{ getCategoryById(interest.categoryId) }}</span>
                         }
                     </div>
@@ -111,7 +111,7 @@
                 <div id="roles">
                     <h3 class="section-title">Szerepkörök</h3>
                     <div class="tags">
-                        @for (role of profile.roles; track role.roleId + '-' + role.userId) {
+                        @for (role of profile.roles; track role.roleId + '-' + profile.userId) {
                         <span class="tag">{{ getRoleById(role.roleId) }}</span>
                         }
                     </div>

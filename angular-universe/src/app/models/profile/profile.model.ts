@@ -10,18 +10,15 @@ export interface UsersData {
 }
 
 interface ContactObj {
-    userId: number,
     contactTypeId: number,
     path: string
 }
 
 interface RoleObj {
-    userId: number,
     roleId: number,
 }
 
 interface InterestObj {
-    userId: number,
     categoryId: number
 }
 

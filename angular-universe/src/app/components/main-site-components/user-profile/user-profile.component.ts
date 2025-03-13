@@ -25,7 +25,7 @@ import { FetchService } from '../../../services/fetch/fetch.service';
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
   @ViewChild('profileCard') profileCard!: ElementRef;
-  @ViewChild('profileContainer') profileContainer!: ElementRef; // Added reference to container
+  @ViewChild('profileContainer') profileContainer!: ElementRef;
   profile: Profile | null = null;
   isFriendAdded = false;
   isProfileSaved = false;
@@ -168,7 +168,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
         next: (username) => {
           this.username = username;
         },
-        error: (error) => {
+        error: () => {
         }
       });
   }

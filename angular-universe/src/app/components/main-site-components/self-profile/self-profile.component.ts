@@ -245,7 +245,6 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
       const contactType = this.contactTypes.find(ct => ct.name === this.contactInput.type);
       if (contactType) {
         this.profile.contacts.push({
-          userId: this.profile.userId,
           contactTypeId: contactType.id,
           path: this.contactInput.value
         });
@@ -287,7 +286,6 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
       const role = this.roles.find(r => r.name === this.newRole);
       if (role) {
         this.profile.roles.push({
-          userId: this.profile.userId,
           roleId: role.id
         });
       } else {
@@ -324,7 +322,6 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
       const category = this.categories.find(c => c.name === this.newInterest);
       if (category) {
         this.profile.interests.push({
-          userId: this.profile.userId,
           categoryId: category.id
         });
       } else {
