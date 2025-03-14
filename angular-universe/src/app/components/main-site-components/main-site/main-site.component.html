@@ -36,7 +36,7 @@
                                 <span class="checkmark"></span>
                             </label>
                             <span class="note-title" (click)="openNoteDetailModal(shortcut)">{{shortcut.name}}</span>
-                            <span class="note-time">{{shortcut.startTime | date:'yyyy. MMM d.':'hu-HU'}}</span>
+                            <span class="note-time">{{ shortcut.startTime | date:'yyyy. MMM d.':'':'hu-HU' }}</span>
                         </div>
                         <div class="shortcut-actions">
                             <button (click)="deleteShortcut(shortcut.id)">
@@ -78,12 +78,12 @@
 
                 <div class="item">
                     <span class="stat-label">Dátum:</span>
-                    <span class="stat-value">{{ currentDate }}</span>
+                    <span class="stat-value">{{ today | date:'longDate':'':'hu-HU' }}</span>
                 </div>
 
                 <div class="item">
                     <span class="stat-label">Nap:</span>
-                    <span class="stat-value">{{ currentDay }}</span>
+                    <span class="stat-value">{{ today | date:'EEEE':'':'hu-HU' }}</span>
                 </div>
                 <div class="item">
                     <span class="stat-label">Követőid:</span>

@@ -2,13 +2,14 @@ import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { AuthService } from '../../../services/auth/auth.service';
-import { DatePipe } from '@angular/common';
+import { DatePipe, registerLocaleData } from '@angular/common';
+import localeHu from '@angular/common/locales/hu';
 import { ButtonComponent } from "../../general-components/button/button.component";
 import { FormsModule } from '@angular/forms';
-import { registerLocaleData } from '@angular/common';
-import localeHu from '@angular/common/locales/hu';
 import { WebsiteShortcut, UNInoteShortcut, Shortcut, ShortcutFormData } from '../../../models/shortcut/shortcut.model';
 import { UNIcardComponent } from '../../root-page-components/unicard/unicard.component';
+
+registerLocaleData(localeHu);
 
 @Component({
   selector: 'app-main-site',
@@ -32,6 +33,8 @@ export class MainSiteComponent implements OnInit {
   currentTime: string = '';
   followerCount: number = 0;
   postCount: number = 0;
+
+  today: Date = new Date();
 
   shortcuts: Shortcut[] = [];
   fadingItems: Set<string> = new Set();
@@ -82,10 +85,6 @@ export class MainSiteComponent implements OnInit {
       this.authService.logout();
       this.router.navigate(['/UNIcard-login']);
     }
-
-    const now = new Date();
-    this.currentDate = this.formatDateToHungarian(now);
-    this.currentDay = this.getHungarianDayName(now.getDay());
 
     this.updateTime();
     setInterval(() => this.updateTime(), 1000);

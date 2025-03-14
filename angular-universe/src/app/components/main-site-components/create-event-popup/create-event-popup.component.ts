@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ButtonComponent } from '../../general-components/button/button.component';
 
 @Component({
@@ -30,7 +30,21 @@ export class CreateEventPopupComponent implements OnInit {
       place: ['', Validators.required],
       attachmentRelPath: ['esemeny.jpg'],
       description: ['', Validators.required]
-    });
+    }, { validators: this.dateRangeValidator });
+  }
+
+  dateRangeValidator(control: AbstractControl): ValidationErrors | null {
+    const startDate = control.get('startDate')?.value;
+    const endDate = control.get('endDate')?.value;
+
+    if (!startDate || !endDate) {
+      return null;
+    }
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    return end <= start ? { endDateBeforeStartDate: true } : null;
   }
 
   private getUserIdFromLocalStorage(): number {

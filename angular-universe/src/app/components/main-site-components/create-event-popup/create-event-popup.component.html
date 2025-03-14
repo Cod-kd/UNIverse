@@ -25,6 +25,10 @@
                 @if(eventForm.get('endDate')?.invalid && eventForm.get('endDate')?.touched) {
                 <div class="error-message">Befejező dátum megadása kötelező</div>
                 }
+                @if(eventForm.hasError('endDateBeforeStartDate') && eventForm.get('endDate')?.touched &&
+                eventForm.get('startDate')?.touched) {
+                <div class="error-message">A befejező dátumnak későbbinek kell lennie, mint a kezdő dátum</div>
+                }
             </div>
 
             <div class="form-group">
@@ -45,7 +49,8 @@
 
             <div class="button-container">
                 <app-button [btnLabel]="'Mégsem'" (click)="onCancel()"></app-button>
-                <app-button [btnLabel]="'Létrehozás'" [isDisabled]="eventForm.invalid" (click)="onSubmit()"></app-button>
+                <app-button [btnLabel]="'Létrehozás'" [isDisabled]="eventForm.invalid"
+                    (click)="onSubmit()"></app-button>
             </div>
         </form>
     </div>
