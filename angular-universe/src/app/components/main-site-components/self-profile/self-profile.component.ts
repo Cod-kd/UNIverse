@@ -58,8 +58,13 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
   roleOptions: string[] = [];
   interestOptions: string[] = [];
 
-  emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  phonePattern = /^\+?[0-9]{10,15}$/;
+  contactIcons: { [key: string]: string } = {
+    'Facebook': 'fa-brands fa-facebook',
+    'LinkedIn': 'fa-brands fa-linkedin',
+    'GitHub': 'fa-brands fa-github',
+    'TikTok': 'fa-brands fa-tiktok',
+    'YouTube': 'fa-brands fa-youtube',
+  };
 
   private subscriptions: Subscription[] = [];
 
@@ -113,6 +118,18 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
         }
       })
     );
+  }
+
+  getContactUsername(path: string): string {
+    if (path.includes('://')) {
+      const urlParts = path.split('/');
+      return urlParts[urlParts.length - 1];
+    }
+    return path;
+  }
+
+  getContactIcon(type: string): string {
+    return this.contactIcons[type] || 'fa-solid fa-link';
   }
 
   private loadConstants(): void {
@@ -190,10 +207,6 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
 
     if (selectedContact) {
       return `${selectedContact.protocol}://${selectedContact.domain}/username`;
-    } else if (this.contactInput.type === 'Email') {
-      return 'example@domain.com';
-    } else if (this.contactInput.type === 'Phone Number') {
-      return '+36201234567';
     }
     return '';
   }
@@ -210,16 +223,6 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
       const linkPattern = new RegExp(`^${selectedContact.protocol}://${selectedContact.domain.replace('.', '\\.')}/[\\w-_.~/?#[\\]@!$&'()*+,;=]*$`);
       if (!linkPattern.test(this.contactInput.value)) {
         this.popupService.showError(`Hibás ${selectedContact.name} link formátum!`);
-        return false;
-      }
-    } else if (this.contactInput.type === 'Email') {
-      if (!this.emailPattern.test(this.contactInput.value)) {
-        this.popupService.showError('Hibás e-mail formátum!');
-        return false;
-      }
-    } else if (this.contactInput.type === 'Phone Number') {
-      if (!this.phonePattern.test(this.contactInput.value)) {
-        this.popupService.showError('Hibás telefonszám formátum!');
         return false;
       }
     } else {

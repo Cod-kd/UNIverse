@@ -1,124 +1,168 @@
 @if (profile) {
 <div class="profile-container">
-    <div class="profile-header">
-        <h2>{{ profile.usersData.name }}</h2>
-        <img [src]="getProfileImageSrc()" [alt]="profile.usersData.name + '\'s profile picture'"
-            class="profile-picture">
-        <div>
-            <p><span>Követők:</span> {{ profile.usersData.followerCount }}</p>
-            <p><span>Követés:</span> {{ profile.usersData.followedCount }}</p>
-        </div>
-    </div>
-
-    <div class="profile-field">
-        <span class="field-label">Leírás <i class="fa-solid fa-pen-to-square"></i></span>
-        @if (editingDescription) {
-        <textarea class="edit-textarea" [(ngModel)]="tempDescription" (blur)="saveDescription()"
-            (keydown.enter)="$event.preventDefault(); saveDescription()">
-                          </textarea>
-        } @else {
-        <div class="field-value" (click)="editDescription()">
-            {{ profile.description || 'Kattints a hozzáadáshoz!' }}
-        </div>
-        }
-    </div>
-
-    <div class="profile-field">
-        <span class="field-label">Születési dátum</span>
-        <div class="field-value">
-            {{ userBirthDate }}
-        </div>
-    </div>
-
-    <div class="profile-field">
-        <span class="field-label">Nem</span>
-        <div class="field-value">
-            {{ profile.usersData.gender === true ? 'Férfi' :
-            profile.usersData.gender === false ? 'Nő' : 'Egyéb' }}
-        </div>
-    </div>
-
-    <div class="profile-field">
-        <span class="field-label">Egyetem</span>
-        <div class="field-value">{{ universityName }}</div>
-    </div>
-
-    <div class="profile-field">
-        <span class="field-label">Kar</span>
-        <div class="field-value">{{ facultyName }}</div>
-    </div>
-
-    <div class="profile-field">
-        <span class="field-label">Elérhetőségek <i class="fa-solid fa-pen-to-square"></i></span>
-        <div class="tags-container">
-            @for (contact of displayContacts; track contact) {
-            <div class="tag">
-                {{ contact }}
-                <span class="tag-close" (click)="removeContact(contact)">×</span>
+    <div class="profile-grid">
+        <!-- Column 1: Profile, picture, followers -->
+        <div class="column">
+            <div class="column-title">Profile</div>
+            <div class="profile-header">
+                <h2>{{ profile.usersData.name }}</h2>
+                <img [src]="getProfileImageSrc()" [alt]="profile.usersData.name + '\'s profile picture'"
+                    class="profile-picture">
+                <div>
+                    <p><span>Követők:</span> {{ profile.usersData.followerCount }}</p>
+                    <p><span>Követés:</span> {{ profile.usersData.followedCount }}</p>
+                </div>
             </div>
-            }
         </div>
 
-        <div class="contact-form">
-            <select id="contactSelect" class="dropdown" [(ngModel)]="contactInput.type"
-                (change)="updateContactPlaceholder()">
-                <option value="" disabled selected>Válassz típust...</option>
-                @for (option of contactOptions; track option) {
-                <option [value]="option">{{ option }}</option>
+        <!-- Column 2: Bio information -->
+        <div class="column">
+            <div class="column-title">Információk</div>
+
+            <div class="profile-field">
+                <span class="field-label">Leírás <i class="fa-solid fa-pen-to-square"></i></span>
+                @if (editingDescription) {
+                <textarea class="edit-textarea" [(ngModel)]="tempDescription" (blur)="saveDescription()"
+                    (keydown.enter)="$event.preventDefault(); saveDescription()">
+                        </textarea>
+                } @else {
+                <div class="field-value" (click)="editDescription()">
+                    {{ profile.description || 'Kattints a hozzáadáshoz!' }}
+                </div>
                 }
-            </select>
-
-            @if (contactInput.type) {
-            <input id="newContactInput" type="text" class="tag-input" [(ngModel)]="contactInput.value"
-                [placeholder]="contactPlaceholder" (keydown.enter)="addContact()">
-            <app-button [iconClass]="'fa-solid fa-plus'" [btnLabel]="'Hozzáadás'" [shape]="'rectangle'"
-                (click)="addContact()"></app-button>
-            }
-        </div>
-    </div>
-
-    <div class="profile-field">
-        <span class="field-label">Szerepkörök <i class="fa-solid fa-pen-to-square"></i></span>
-        <div class="tags-container">
-            @for (role of displayRoles; track role) {
-            <div class="tag">
-                {{ role }}
-                <span class="tag-close" (click)="removeRole(role)">×</span>
             </div>
-            }
-        </div>
-        <select id="roleSelect" class="dropdown" [(ngModel)]="newRole" (change)="addRole()">
-            <option value="" disabled selected>Szerepkör hozzáadása...</option>
-            @for (option of roleOptions; track option) {
-            <option [value]="option">{{ option }}</option>
-            }
-        </select>
-    </div>
 
-    <div class="profile-field">
-        <span class="field-label">Érdeklődések <i class="fa-solid fa-pen-to-square"></i></span>
-        <div class="tags-container">
-            @for (interest of displayInterests; track interest) {
-            <div class="tag">
-                {{ interest }}
-                <span class="tag-close" (click)="removeInterest(interest)">×</span>
+            <div class="profile-field">
+                <span class="field-label">Születési dátum</span>
+                <div class="field-value">
+                    {{ userBirthDate }}
+                </div>
             </div>
-            }
+
+            <div class="profile-field">
+                <span class="field-label">Nem</span>
+                <div class="field-value">
+                    {{ profile.usersData.gender === true ? 'Férfi' :
+                    profile.usersData.gender === false ? 'Nő' : 'Egyéb' }}
+                </div>
+            </div>
+
+            <div class="profile-field">
+                <span class="field-label">Egyetem</span>
+                <div class="field-value">{{ universityName }}</div>
+            </div>
+
+            <div class="profile-field">
+                <span class="field-label">Kar</span>
+                <div class="field-value">{{ facultyName }}</div>
+            </div>
         </div>
-        <select id="interestSelect" class="dropdown" [(ngModel)]="newInterest" (change)="addInterest()">
-            <option value="" disabled selected>Érdeklődés hozzáadása...</option>
-            @for (option of interestOptions; track option) {
-            <option [value]="option">{{ option }}</option>
-            }
-        </select>
-    </div>
-    <div class="button-container">
-        <app-button [btnLabel]="'Profil törlése'" [iconClass]="'fa-solid fa-user-slash'"
-            (click)="confirmDeleteProfile()">
-        </app-button>
-        <app-button [btnLabel]="isSaving ? 'Mentve' : 'Mentés'" [iconClass]="isSaving ? 'fa-solid fa-check' : ''"
-            [isDisabled]="isSaving" (click)="saveChanges()">
-        </app-button>
+
+        <!-- Column 3: Contacts -->
+        <div class="column">
+            <div class="column-title">Elérhetőségek <i class="fa-solid fa-pen-to-square"></i></div>
+            <div class="profile-field">
+                <!-- Inputs first (at the top) -->
+                <div class="contact-form">
+                    <select id="contactSelect" class="dropdown" [(ngModel)]="contactInput.type"
+                        (change)="updateContactPlaceholder()">
+                        <option value="" disabled selected>Válassz típust...</option>
+                        @for (option of contactOptions; track option) {
+                        <option [value]="option">{{ option }}</option>
+                        }
+                    </select>
+                    @if (contactInput.type) {
+                    <input id="newContactInput" type="text" class="tag-input" [(ngModel)]="contactInput.value"
+                        [placeholder]="contactPlaceholder" (keydown.enter)="addContact()">
+                    <app-button [iconClass]="'fa-solid fa-plus'" [btnLabel]="'Hozzáadás'" [shape]="'rectangle'"
+                        (click)="addContact()"></app-button>
+                    }
+                </div>
+                <!-- Tags display below -->
+                <div class="tags-container">
+                    @for (contact of displayContacts; track contact) {
+                    <div class="tag">
+                        @if (contact.includes(': ')) {
+                        @let parts = contact.split(': ');
+                        @let contactType = parts[0];
+                        @let contactValue = parts[1];
+                        <i class="{{ getContactIcon(contactType) }}"></i>
+                        <span>{{ getContactUsername(contactValue) }}</span>
+                        } @else {
+                        <i class="fa-solid fa-link"></i>
+                        <span>{{ contact }}</span>
+                        }
+                        <span class="tag-close" (click)="removeContact(contact)">×</span>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Column 4: Roles -->
+        <div class="column">
+            <div class="column-title">Szerepkörök <i class="fa-solid fa-pen-to-square"></i></div>
+            <div class="profile-field">
+                <!-- Input first (at the top) -->
+                <div class="input-controls">
+                    <select id="roleSelect" class="dropdown" [(ngModel)]="newRole" (change)="addRole()">
+                        <option value="" disabled selected>Szerepkör hozzáadása...</option>
+                        @for (option of roleOptions; track option) {
+                        <option [value]="option">{{ option }}</option>
+                        }
+                    </select>
+                </div>
+                <!-- Tags display below -->
+                <div class="tags-container">
+                    @for (role of displayRoles; track role) {
+                    <div class="tag">
+                        {{ role }}
+                        <span class="tag-close" (click)="removeRole(role)">×</span>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Column 5: Interests -->
+        <div class="column">
+            <div class="column-title">Érdeklődések <i class="fa-solid fa-pen-to-square"></i></div>
+
+            <div class="profile-field">
+                <!-- Input first (at the top) -->
+                <div class="input-controls">
+                    <select id="interestSelect" class="dropdown" [(ngModel)]="newInterest" (change)="addInterest()">
+                        <option value="" disabled selected>Érdeklődés hozzáadása...</option>
+                        @for (option of interestOptions; track option) {
+                        <option [value]="option">{{ option }}</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Tags display below -->
+                <div class="tags-container">
+                    @for (interest of displayInterests; track interest) {
+                    <div class="tag">
+                        {{ interest }}
+                        <span class="tag-close" (click)="removeInterest(interest)">×</span>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="column-title">Műveletek</div>
+
+            <div class="button-container">
+                <app-button [btnLabel]="'Profil törlése'" [iconClass]="'fa-solid fa-user-slash'"
+                    (click)="confirmDeleteProfile()">
+                </app-button>
+                <app-button [btnLabel]="isSaving ? 'Mentve' : 'Mentés'"
+                    [iconClass]="isSaving ? 'fa-solid fa-check' : ''" [isDisabled]="isSaving" (click)="saveChanges()">
+                </app-button>
+            </div>
+        </div>
     </div>
 </div>
 
