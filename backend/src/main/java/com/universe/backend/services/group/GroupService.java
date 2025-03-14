@@ -22,6 +22,10 @@ public class GroupService {
         }
         return gId;
     }
+    
+    public void createGroup(String groupName, Integer adminId){
+        groupRepository.createGroup(groupName, adminId);
+    }
 
     public List<Groups> getAllGroups() {
         return groupRepository.findAll();

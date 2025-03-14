@@ -153,8 +153,8 @@ CALL linkEventToGroup(groupIdIn, @eventId);
 */
 END$$
 
-CREATE PROCEDURE `createGroup` (IN `nameIn` VARCHAR(60))   BEGIN
-	INSERT INTO `groups`(`name`) VALUES (nameIn);
+CREATE PROCEDURE `createGroup` (IN `nameIn` VARCHAR(60), IN `adminIdIn` MEDIUMINT)   BEGIN
+	INSERT INTO `groups`(`name`, `adminId`) VALUES (nameIn, adminIdIn);
 END$$
 
 CREATE PROCEDURE `createRank` (IN `nameIn` VARCHAR(30), IN `isAdminIn` BOOLEAN, IN `canViewIn` BOOLEAN, IN `canCommentIn` BOOLEAN, IN `canPostIn` BOOLEAN, IN `canModifyIn` BOOLEAN)   BEGIN
@@ -471,7 +471,8 @@ CREATE TABLE `groups` (
   `membersCount` mediumint(9) DEFAULT '0',
   `postCount` int(11) DEFAULT '0',
   `actualEventCount` int(11) DEFAULT '0',
-  `allEventCount` int(11) DEFAULT '0'
+  `allEventCount` int(11) DEFAULT '0',
+  `adminId` mediumint(9) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -949,6 +950,9 @@ ALTER TABLE `groupranks`
   ADD CONSTRAINT `groupranks_ibfk_2` FOREIGN KEY (`userId`) REFERENCES `userprofiles` (`id`),
   ADD CONSTRAINT `groupranks_ibfk_3` FOREIGN KEY (`rankId`) REFERENCES `ranks` (`id`);
 
+
+ALTER TABLE `groups`
+	ADD CONSTRAINT `groups_ibfk_1` FOREIGN KEY (`adminId`) REFERENCES `usersdata` (`userId`);
 --
 -- Megkötések a táblához `interestedusers`
 --
@@ -1070,11 +1074,11 @@ CALL addUserInterest(1, 1);
 CALL addUserInterest(1, 2);
 
 -- Generate 5 Group entities
-CALL createGroup('CodeMasters');
-CALL createGroup('NumberNinjas');
-CALL createGroup('BioWizards');
-CALL createGroup('QuantumMinds');
-CALL createGroup('EngineersUnited');
+CALL createGroup('CodeMasters', 1);
+CALL createGroup('NumberNinjas', 2);
+CALL createGroup('BioWizards', 3);
+CALL createGroup('QuantumMinds', 4);
+CALL createGroup('EngineersUnited', 5);
 
 -- events
 -- Esemény a Computer Science csoporthoz

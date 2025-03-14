@@ -33,6 +33,14 @@ public class GroupController {
         return ResponseEntity.ok(gs.searchGroupsByName(name));
     }
     
+    @PostMapping("/create")
+    public ResponseEntity<String> createGroup(@RequestBody Map<String, Object> request) {
+        String groupName = (String) request.get("groupName");
+        Integer adminId = (Integer) request.get("adminId");
+        gs.createGroup(groupName, adminId);
+        return ResponseEntity.ok("A csoport létrejött: " + groupName);
+    }
+    
     @PostMapping("name/{groupName}/follow")
     public ResponseEntity<String> addGroupMember(@PathVariable String groupName, @RequestBody Map<String, Integer> request) {
         Integer userId = request.get("userId");
