@@ -145,6 +145,8 @@ END$$
 
 CREATE PROCEDURE `createEvent` (IN `nameIn` VARCHAR(30), IN `creatorIdIn` MEDIUMINT, IN `startDateIn` TIMESTAMP, IN `endDateIn` TIMESTAMP, IN `placeIn` VARCHAR(255), IN `attachmentRelPathIn` VARCHAR(50), IN `descriptionIn` VARCHAR(180), IN `groupIdIn` MEDIUMINT)   BEGIN
 INSERT INTO `events`(`name`, `creatorId`, `startDate`, `endDate`, `place`, `attachmentRelPath`, `description`, `groupId`) VALUES (`nameIn`, `creatorIdIn`, `startDateIn`, `endDateIn`, `placeIn`, `attachmentRelPathIn`, `descriptionIn`, `groupIdIn`);
+CALL addGroupActualEventCount(groupIdIn);
+CALL addGroupAllEventCount(groupIdIn);
 /*SET @eventId = 0;  
 CALL idByEventName(nameIn, @eventId);
 CALL linkEventToGroup(groupIdIn, @eventId);
@@ -213,8 +215,6 @@ END$$
 /*
 CREATE PROCEDURE `linkEventToGroup` (IN `groupIdIn` MEDIUMINT, IN `eventIdIn` MEDIUMINT)   BEGIN
 INSERT INTO `eventsofgroups`(`groupId`, `eventId`) VALUES (groupIdIn, eventIdIn);
-CALL addGroupActualEventCount(groupIdIn);
-CALL addGroupAllEventCount(groupIdIn);
 END$$
 */
 
@@ -276,6 +276,7 @@ END$$
 CREATE PROCEDURE `addParticipant` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
 BEGIN  
     INSERT INTO `participants` (`eventId`, `userId`) VALUES (eventIdIn, userIdIn);
+    /*add part count*/
 END$$
 
 CREATE PROCEDURE `reduceParticipant` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  

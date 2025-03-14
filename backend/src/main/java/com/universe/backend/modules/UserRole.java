@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 @Table(name = "userroles")
 public class UserRole {
     @Id
+    @JsonIgnore
     @Column(nullable = false)
     private Integer userId;
 

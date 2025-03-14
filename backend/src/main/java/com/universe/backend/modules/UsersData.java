@@ -1,6 +1,7 @@
 package com.universe.backend.modules;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 @Table(name = "usersdata")
 public class UsersData {
     @Id
+    @JsonIgnore
     private Integer userId;
 
     @Column(nullable = false, length = 80)

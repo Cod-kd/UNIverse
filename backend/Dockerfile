@@ -1,5 +1,5 @@
 # docker pull kamikou/universe:v1.0
-# docker run --name database -e MYSQL_ROOT_PASSWORD=passin -p 3306:3306 -d mysql:8.4
+# docker run --name database -e MYSQL_ROOT_PASSWORD=passin -p 3306:3306 -d mysql:8.4 # 5.7 on server 😅
 # docker run -t --name backend --link database:mysql -p 8080:8080 kamikou/universe:v1.0
 
 # to build:

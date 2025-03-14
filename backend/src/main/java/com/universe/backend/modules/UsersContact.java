@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 @Table(name = "userscontacts")
 public class UsersContact {
     @Id
+    @JsonIgnore
     @Column(nullable = false)
     private Integer userId;
 
