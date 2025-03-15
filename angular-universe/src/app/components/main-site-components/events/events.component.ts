@@ -35,13 +35,13 @@ export class EventsComponent implements OnInit {
     forkJoin({
       participating: this.userEventService.getUserParticipatingEvents().pipe(
         catchError(() => {
-          this.popupService.showError('Could not load your participating events');
+          this.popupService.showError('Sikertelen betöltése az eseményeknek, amelyeken részt veszel!');
           return of([]);
         })
       ),
       interested: this.userEventService.getUserInterestedEvents().pipe(
         catchError(() => {
-          this.popupService.showError('Could not load your interested events');
+          this.popupService.showError('Sikertelen betöltése az eseményeknek, amelyek érdekelnek!');
           return of([]);
         })
       )
@@ -62,7 +62,7 @@ export class EventsComponent implements OnInit {
         this.interestedEvents = interestedEvents;
       },
       error: () => {
-        this.popupService.showError('Failed to load event details');
+        this.popupService.showError('Sikertelen esemény információk betöltése!');
       }
     });
   }
