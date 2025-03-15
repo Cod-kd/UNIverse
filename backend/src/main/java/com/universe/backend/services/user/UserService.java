@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 import com.universe.backend.repositories.UserProfilesRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
-import static java.util.Objects.isNull;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -48,29 +46,6 @@ public class UserService {
     @Transactional
     public List<Role> getRoles(){
         return upRepo.getRoles();
-    }
-    
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
-    
-    @Transactional
-    public UserProfiles login(UserLoginDTO ulDTO) {
-        UserProfiles up = upRepo.login(ulDTO.getUsernameIn());
-        
-        if(isNull(up))
-            throw new UserNonExistsException("A felhasználó nem létezik");
-        if(!isNull(up.getDeletedAt()))
-            throw new UserIsDeletedExistsException("A felhasználó már nem létezik");
-        if(!encoder.matches(ulDTO.getPasswordIn(), up.getPassword()))
-            throw new UserWrongPasswordException("A jelszó hibás");
-        
-        return up;
-    }
-    
-    @Transactional
-    public UserProfiles deleteUserProfile(UserLoginDTO ulDTO) {
-        UserProfiles up = login(ulDTO);
-        upRepo.deleteUserProfile(ulDTO.getUsernameIn());
-        return up;
     }
     
     public UsersBio getUsersBioByUsername(String username) {

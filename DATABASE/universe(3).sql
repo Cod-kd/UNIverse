@@ -255,11 +255,13 @@ END$$
 CREATE PROCEDURE `addInterestedUser` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
 BEGIN  
     INSERT INTO `interestedusers` (`eventId`, `userId`) VALUES (eventIdIn, userIdIn);
+    /* todo: create addInterestedUsersCount*/
 END$$
 
 CREATE PROCEDURE `reduceInterestedUser` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
 BEGIN  
     DELETE FROM `interestedusers` WHERE `eventId` = eventIdIn AND `userId` = userIdIn;
+    /* todo: create reduceInterestedUsersCount*/
 END$$
 
 CREATE PROCEDURE `getInterestingEventsForUser` (IN userIdIn MEDIUMINT)  
@@ -276,12 +278,13 @@ END$$
 CREATE PROCEDURE `addParticipant` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
 BEGIN  
     INSERT INTO `participants` (`eventId`, `userId`) VALUES (eventIdIn, userIdIn);
-    /*add part count*/
+    /* todo: create addParticipantsCount*/
 END$$
 
 CREATE PROCEDURE `reduceParticipant` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
 BEGIN  
     DELETE FROM `participants` WHERE `eventId` = eventIdIn AND `userId` = userIdIn;
+    /* todo: create reduceParticipantsCount*/
 END$$
 
 CREATE PROCEDURE `getScheduledEventsForUser` (IN userIdIn MEDIUMINT)  

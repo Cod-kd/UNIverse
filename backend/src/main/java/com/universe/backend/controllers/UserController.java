@@ -1,6 +1,5 @@
 package com.universe.backend.controllers;
 
-import com.universe.backend.dto.UserLoginDTO;
 import com.universe.backend.dto.UserRegistrationDTO;
 import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
@@ -55,18 +54,6 @@ public class UserController {
     @GetMapping("common/roles")
     public ResponseEntity<List<Role>> getRoles() {
         return ResponseEntity.ok(us.getRoles());
-    }
-    
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid UserLoginDTO ulDTO) {
-        us.login(ulDTO);
-        return ResponseEntity.ok("Üdv, " + ulDTO.getUsernameIn() + "!");
-    }
-    
-    @PostMapping("/delete")
-    public ResponseEntity<String> deleteUserProfile(@RequestBody @Valid UserLoginDTO ulDTO) {
-        us.deleteUserProfile(ulDTO);
-        return ResponseEntity.ok("Sikeres törlés: " + ulDTO.getUsernameIn());
     }
 
     @Autowired
