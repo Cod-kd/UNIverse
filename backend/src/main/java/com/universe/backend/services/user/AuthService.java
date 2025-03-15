@@ -42,9 +42,8 @@ public class AuthService {
     }
     
     @Transactional
-    public UserProfiles deleteUserProfile(UserLoginDTO ulDTO) {
-        UserProfiles up = upRepo.login(ulDTO.getUsernameIn());
+    public void deleteUserProfile(UserLoginDTO ulDTO) {
+        String up = login(ulDTO);
         upRepo.deleteUserProfile(ulDTO.getUsernameIn());
-        return up;
     }
 }
