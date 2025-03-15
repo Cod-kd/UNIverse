@@ -1,5 +1,6 @@
 package com.universe.backend.controllers;
 
+import com.universe.backend.config.CustomUserPrincipal;
 import com.universe.backend.dto.UserRegistrationDTO;
 import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
@@ -21,6 +22,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/user")
@@ -140,8 +142,15 @@ public class UserController {
     }
     
     @PostMapping(value = "/add/interest", consumes = "application/json")
-    public ResponseEntity<String> addUserInterest(@RequestBody UserInterest ui) {
+    public ResponseEntity<String> addUserInterest(@RequestBody UserInterest ui, Authentication authentication) {
         try {
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return ResponseEntity.status(401).body("Felhasználó nincs bejelentkezve!");
+            }
+            CustomUserPrincipal principal = (CustomUserPrincipal) authentication.getPrincipal();
+            Integer userId = principal.getUserId(); // Access logged-in user's ID
+            String username = principal.getUsername(); // Access logged-in user's username
+            ui.setUserId(userId); // Set userId for the interest
             us.addUserInterest(ui);
             return ResponseEntity.ok("Érdeklődés hozzáadva!");
         } catch (Exception e) {

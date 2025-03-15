@@ -35,6 +35,10 @@ public class UserInterest {
         return usersBio;
     }
 
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
     public void setUsersBio(UsersBio usersBio) {
         this.usersBio = usersBio;
     }
