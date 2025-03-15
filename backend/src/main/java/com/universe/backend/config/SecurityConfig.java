@@ -35,6 +35,17 @@ public class SecurityConfig {
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/auth/delete").permitAll()
                         .requestMatchers("/user/registration").permitAll()
+                        .requestMatchers("/user/all").permitAll()
+                        .requestMatchers("/user/name/**").permitAll()
+                        .requestMatchers("/user/common/**").permitAll()
+                        .requestMatchers("/user/username").permitAll()
+                        .requestMatchers("/user/id").permitAll()
+                        .requestMatchers("/user/get/**").permitAll()
+                        .requestMatchers("/groups/search").permitAll()
+                        .requestMatchers("/groups").permitAll()
+                        .requestMatchers("/groups/event/users_schedule").permitAll()
+                        .requestMatchers("/groups/event/interested_users").permitAll()
+                        .requestMatchers("/groups/name/*/events").permitAll()
                         .anyRequest().authenticated() // All other endpoints require authentication
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // JWT filter

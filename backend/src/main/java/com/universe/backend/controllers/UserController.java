@@ -78,36 +78,33 @@ public class UserController {
     }
 
     @PostMapping("name/{username}/follow")
-    public ResponseEntity<String> followUser(@PathVariable String username, @RequestBody Map<String, Integer> request) {
-        Integer followerId = request.get("followerId");
+    public ResponseEntity<String> followUser(@PathVariable String username, Authentication authentication) {
         Integer followedId = us.userIdByName(username);
 
         if (followedId == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("A felhasználó nem létezik!");
         }
-        us.followUser(followerId, followedId);
+        us.followUser(followedId, authentication);
         return ResponseEntity.ok("Sikeres követés!");
     }
 
     @PostMapping("name/{username}/unfollow")
-    public ResponseEntity<String> unFollowUser(@PathVariable String username, @RequestBody Map<String, Integer> request) {
-        Integer followerId = request.get("followerId");
+    public ResponseEntity<String> unFollowUser(@PathVariable String username, Authentication authentication) {
         Integer followedId = us.userIdByName(username);
 
         if (followedId == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("A felhasználó nem létezik!");
         }
-        us.unfollowUser(followerId, followedId);
+        us.unfollowUser(followedId, authentication);
         return ResponseEntity.ok("Sikeres kikövetés!");
     }
 
     @PostMapping("/isFollowed")
-    public ResponseEntity<Boolean> isFollowed(@RequestBody Map<String, Integer> requestBody) {
-        int followerId = requestBody.get("followerId");
+    public ResponseEntity<Boolean> isFollowed(@RequestBody Map<String, Integer> requestBody, Authentication authentication) {
         int followedId = requestBody.get("followedId");
-        Boolean isFollowed = us.isUserFollowed(followerId, followedId);
+        Boolean isFollowed = us.isUserFollowed(followedId, authentication);
         return ResponseEntity.ok(isFollowed);
     }
 
@@ -137,14 +134,14 @@ public class UserController {
     }
 
     @GetMapping("get/events_interested_in")
-    public ResponseEntity<List<Integer>> getInterestingEventsForUser(@RequestParam Integer userId) {
-        List<Integer> userIdes = us.getInterestingEventsForUser(userId);
+    public ResponseEntity<List<Integer>> getInterestingEventsForUser(Authentication authentication) {
+        List<Integer> userIdes = us.getInterestingEventsForUser(authentication);
         return ResponseEntity.ok(userIdes);
     }
 
     @GetMapping("get/events_scheduled")
-    public ResponseEntity<List<Integer>> getScheduledEventsForUser(@RequestParam Integer userId) {
-        List<Integer> userIdes = us.getScheduledEventsForUser(userId);
+    public ResponseEntity<List<Integer>> getScheduledEventsForUser(Authentication authentication) {
+        List<Integer> userIdes = us.getScheduledEventsForUser(authentication);
         return ResponseEntity.ok(userIdes);
     }
 

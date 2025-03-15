@@ -26,7 +26,7 @@ public class UserService {
         this.upRepo = upRepo;
     }
 
-    public CustomUserPrincipal getPrincipal(Authentication authentication) {
+    private CustomUserPrincipal getPrincipal(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new AuthenticationFailedException("Felhasználó nincs bejelentkezve!");
         }
@@ -73,15 +73,18 @@ public class UserService {
         return usersBios;
     }
 
-    public void followUser(Integer followerId, Integer followedId) {
+    public void followUser(Integer followedId, Authentication authentication) {
+        Integer followerId = getPrincipal(authentication).getUserId();
         upRepo.followUser(followerId, followedId);
     }
 
-    public void unfollowUser(Integer followerId, Integer followedId) {
+    public void unfollowUser(Integer followedId, Authentication authentication) {
+        Integer followerId = getPrincipal(authentication).getUserId();
         upRepo.unfollowUser(followerId, followedId);
     }
 
-    public Boolean isUserFollowed(int followerId, int followedId) {
+    public Boolean isUserFollowed(Integer followedId, Authentication authentication) {
+        Integer followerId = getPrincipal(authentication).getUserId();
         return upRepo.isUserFollowed(followerId, followedId);
     }
 
@@ -127,12 +130,14 @@ public class UserService {
     }
 
     @Transactional
-    public List<Integer> getInterestingEventsForUser(Integer userId) {
+    public List<Integer> getInterestingEventsForUser(Authentication authentication) {
+        Integer userId = getPrincipal(authentication).getUserId();
         return upRepo.getInterestingEventsForUser(userId);
     }
 
     @Transactional
-    public List<Integer> getScheduledEventsForUser(Integer userId) {
+    public List<Integer> getScheduledEventsForUser(Authentication authentication) {
+        Integer userId = getPrincipal(authentication).getUserId();
         return upRepo.getScheduledEventsForUser(userId);
     }
 
