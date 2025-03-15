@@ -85,6 +85,7 @@
                 <li class="user-item">
                     <i class="fa {{ userListType === 'interested' ? 'fa-star' : 'fa-user' }}"></i>
                     <span>{{ user.username }}</span>
+                    <i class="fa fa-copy copy-icon" (click)="copyUsername(user.username, $event)"></i>
                 </li>
                 }
             </ul>

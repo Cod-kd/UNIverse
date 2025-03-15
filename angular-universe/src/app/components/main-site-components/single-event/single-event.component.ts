@@ -123,6 +123,18 @@ export class SingleEventComponent implements OnInit {
     });
   }
 
+  copyUsername(username: string, event: MouseEvent): void {
+    event.stopPropagation();
+
+    navigator.clipboard.writeText(username)
+      .then(() => {
+        this.popupService.showSuccess(`"${username}" felhasználónév vágólapra másolva!`);
+      })
+      .catch(() => {
+        this.popupService.showError('Nem sikerült másolni a vágólapra');
+      });
+  }
+
   toggleInterest(): void {
     if (this.isParticipating) {
       this.popupService.showError('Nem lehetsz érdeklődő, ha már résztvevő vagy');

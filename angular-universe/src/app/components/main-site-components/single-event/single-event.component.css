@@ -123,9 +123,21 @@ span:hover {
     border-bottom: 1px solid var(--light1);
     display: flex;
     align-items: center;
+    gap: 8px;
 }
 
-.user-item i {
+.copy-icon {
+    cursor: pointer;
+    margin-left: auto;
+    color: var(--light2);
+    transition: color 0.2s ease;
+}
+
+.copy-icon:hover {
+    color: var(--main);
+}
+
+.user-item i:first-child {
     margin-right: 10px;
     color: var(--main);
 }
