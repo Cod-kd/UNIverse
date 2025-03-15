@@ -1,6 +1,5 @@
 package com.universe.backend.controllers;
 
-import com.universe.backend.config.CustomUserPrincipal;
 import com.universe.backend.dto.UserRegistrationDTO;
 import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
@@ -11,25 +10,27 @@ import com.universe.backend.modules.UserRole;
 import com.universe.backend.modules.UsersBio;
 import com.universe.backend.modules.UsersContact;
 import com.universe.backend.services.user.RegistrationService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import com.universe.backend.services.user.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Map;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    private UserService us;
+    private final UserService us;
+    private final RegistrationService rs;
+
+    public UserController(UserService us, RegistrationService rs) {
+        this.us = us;
+        this.rs = rs;
+    }
 
     @GetMapping("/id")
     public ResponseEntity<Integer> getId(@RequestParam String username) {
@@ -42,24 +43,21 @@ public class UserController {
         String username = us.usernameById(id);
         return ResponseEntity.ok(username);
     }
-    
+
     @GetMapping("common/contacttypes")
     public ResponseEntity<List<ContactTypes>> getContactTypes() {
         return ResponseEntity.ok(us.getContactTypes());
     }
-    
+
     @GetMapping("common/categories")
     public ResponseEntity<List<Category>> getCategories() {
         return ResponseEntity.ok(us.getCategories());
     }
-    
+
     @GetMapping("common/roles")
     public ResponseEntity<List<Role>> getRoles() {
         return ResponseEntity.ok(us.getRoles());
     }
-
-    @Autowired
-    private RegistrationService rs;
 
     @PostMapping("/registration")
     public ResponseEntity<String> registration(@RequestBody @Valid UserRegistrationDTO urDTO) {
@@ -72,7 +70,7 @@ public class UserController {
         UsersBio usersBio = us.getUsersBioByUsername(username);
         return ResponseEntity.ok(usersBio);
     }
-    
+
     @GetMapping("/all")
     public ResponseEntity<List<UsersBio>> getAllUsersBio() {
         List<UsersBio> usersBios = us.getAllUsersBio();
@@ -91,7 +89,7 @@ public class UserController {
         us.followUser(followerId, followedId);
         return ResponseEntity.ok("Sikeres követés!");
     }
-    
+
     @PostMapping("name/{username}/unfollow")
     public ResponseEntity<String> unFollowUser(@PathVariable String username, @RequestBody Map<String, Integer> request) {
         Integer followerId = request.get("followerId");
@@ -104,7 +102,7 @@ public class UserController {
         us.unfollowUser(followerId, followedId);
         return ResponseEntity.ok("Sikeres kikövetés!");
     }
-    
+
     @PostMapping("/isFollowed")
     public ResponseEntity<Boolean> isFollowed(@RequestBody Map<String, Integer> requestBody) {
         int followerId = requestBody.get("followerId");
@@ -120,56 +118,37 @@ public class UserController {
         us.updateUserDescription(description, userId);
         return ResponseEntity.ok("A leírás frissítve!");
     }
-    
+
     @PostMapping(value = "/add/contact", consumes = "application/json")
-    public ResponseEntity<String> addUserContact(@RequestBody UsersContact uc) {
-        try {
-            us.addUserContact(uc);
-            return ResponseEntity.ok("Kontakt hozzáadva!");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Hiba történt: " + e.getMessage());
-        }
+    public ResponseEntity<String> addUserContact(@RequestBody UsersContact uc, Authentication authentication) {
+        us.addUserContact(uc, authentication);
+        return ResponseEntity.ok("Kontakt hozzáadva!");
     }
-    
+
     @PostMapping(value = "/add/role", consumes = "application/json")
-    public ResponseEntity<String> addUserRole(@RequestBody UserRole ur) {
-        try {
-            us.addUserRole(ur);
-            return ResponseEntity.ok("Szerepkör hozzáadva!");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Hiba történt: " + e.getMessage());
-        }
+    public ResponseEntity<String> addUserRole(@RequestBody UserRole ur, Authentication authentication) {
+        us.addUserRole(ur, authentication);
+        return ResponseEntity.ok("Szerepkör hozzáadva!");
     }
-    
+
     @PostMapping(value = "/add/interest", consumes = "application/json")
     public ResponseEntity<String> addUserInterest(@RequestBody UserInterest ui, Authentication authentication) {
-        try {
-            if (authentication == null || !authentication.isAuthenticated()) {
-                return ResponseEntity.status(401).body("Felhasználó nincs bejelentkezve!");
-            }
-            CustomUserPrincipal principal = (CustomUserPrincipal) authentication.getPrincipal();
-            Integer userId = principal.getUserId(); // Access logged-in user's ID
-            String username = principal.getUsername(); // Access logged-in user's username
-            ui.setUserId(userId); // Set userId for the interest
-            us.addUserInterest(ui);
-            return ResponseEntity.ok("Érdeklődés hozzáadva!");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Hiba történt: " + e.getMessage());
-        }
+        us.addUserInterest(ui, authentication);
+        return ResponseEntity.ok("Érdeklődés hozzáadva!");
     }
-    
+
     @GetMapping("get/events_interested_in")
     public ResponseEntity<List<Integer>> getInterestingEventsForUser(@RequestParam Integer userId) {
         List<Integer> userIdes = us.getInterestingEventsForUser(userId);
         return ResponseEntity.ok(userIdes);
     }
-    
+
     @GetMapping("get/events_scheduled")
     public ResponseEntity<List<Integer>> getScheduledEventsForUser(@RequestParam Integer userId) {
         List<Integer> userIdes = us.getScheduledEventsForUser(userId);
         return ResponseEntity.ok(userIdes);
     }
-    
+
     @GetMapping("get/event")
     public ResponseEntity<Event> getEvent(@RequestParam Integer eventId) {
         Event event = us.getEvent(eventId);

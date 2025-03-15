@@ -46,5 +46,9 @@ public class UserRole {
     public void setRoleId(Integer roleId) {
         this.roleId = roleId;
     }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
     
 }

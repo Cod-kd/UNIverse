@@ -16,6 +16,7 @@ com\universe\backend\controllers\AuthController.class
 com\universe\backend\modules\UsersBio.class
 com\universe\backend\services\user\AuthService.class
 com\universe\backend\controllers\UserController.class
+com\universe\backend\exceptions\AuthenticationFailedException.class
 com\universe\backend\modules\UsersData.class
 com\universe\backend\dto\UserRegistrationDTO.class
 com\universe\backend\services\user\UserService.class
@@ -27,6 +28,7 @@ com\universe\backend\controllers\GroupController.class
 com\universe\backend\modules\ContactTypes.class
 com\universe\backend\services\group\GroupService.class
 com\universe\backend\exceptions\UserAlreadyExistsException.class
+com\universe\backend\config\CustomUserPrincipal.class
 com\universe\backend\exceptions\GlobalExceptionHandler.class
 com\universe\backend\config\JwtFilter.class
 com\universe\backend\modules\UserInterest.class

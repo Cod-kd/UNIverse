@@ -1,3 +1,4 @@
+C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\config\CustomUserPrincipal.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\config\JwtFilter.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\config\SecurityConfig.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\controllers\AuthController.java
@@ -5,6 +6,7 @@ C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\ba
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\controllers\UserController.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\dto\UserLoginDTO.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\dto\UserRegistrationDTO.java
+C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\exceptions\AuthenticationFailedException.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\exceptions\GlobalExceptionHandler.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\exceptions\GroupNotFoundException.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\exceptions\UserAlreadyExistsException.java

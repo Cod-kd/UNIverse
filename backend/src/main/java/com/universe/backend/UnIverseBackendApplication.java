@@ -5,11 +5,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication(scanBasePackages = "com.universe.backend")
 @EnableJpaRepositories(basePackages = "com.universe.backend.repositories")
 @EntityScan(basePackages = "com.universe.backend.modules")
 @ComponentScan(basePackages = {"com.universe.backend", "com.universe.backend.utils", "com.universe.backend.config"})
+@EnableTransactionManagement(proxyTargetClass = true)
 public class UnIverseBackendApplication {
 
 	public static void main(String[] args) {
