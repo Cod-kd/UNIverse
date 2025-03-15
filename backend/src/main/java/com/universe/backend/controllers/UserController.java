@@ -112,10 +112,9 @@ public class UserController {
     }
 
     @PostMapping("/update/desc")
-    public ResponseEntity<String> updateUserDesc(@RequestBody Map<String, Object> requestBody) {
-        String description = (String) requestBody.get("description");
-        Integer userId = (Integer) requestBody.get("userId");
-        us.updateUserDescription(description, userId);
+    public ResponseEntity<String> updateUserDesc(@RequestBody Map<String, String> requestBody, Authentication authentication) {
+        String description = requestBody.get("description");
+        us.updateUserDescription(description, authentication);
         return ResponseEntity.ok("A leírás frissítve!");
     }
 

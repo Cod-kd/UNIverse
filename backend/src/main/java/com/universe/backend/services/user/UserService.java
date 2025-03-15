@@ -85,7 +85,8 @@ public class UserService {
         return upRepo.isUserFollowed(followerId, followedId);
     }
 
-    public void updateUserDescription(String description, int userId) {
+    public void updateUserDescription(String description, Authentication authentication) {
+        Integer userId = getPrincipal(authentication).getUserId();
         upRepo.updateUserDesc(description, userId);
     }
 
