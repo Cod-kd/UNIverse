@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,27 +33,31 @@ public class GroupController {
         return ResponseEntity.ok(gs.searchGroupsByName(name));
     }
     
+    @PostMapping("/create")
+    public ResponseEntity<String> createGroup(@RequestBody Map<String, String> request, Authentication authentication) {
+        String groupName = (String) request.get("groupName");
+        gs.createGroup(groupName, authentication);
+        return ResponseEntity.ok("A csoport létrejött: " + groupName);
+    }
+    
     @PostMapping("name/{groupName}/follow")
-    public ResponseEntity<String> addGroupMember(@PathVariable String groupName, @RequestBody Map<String, Integer> request) {
-        Integer userId = request.get("userId");
+    public ResponseEntity<String> addGroupMember(@PathVariable String groupName, Authentication authentication) {
         Integer groupId = gs.groupIdByName(groupName);
-        gs.addGroupMember(groupId, userId);
+        gs.addGroupMember(groupId, authentication);
         return ResponseEntity.ok("Sikeres követés!");
     }
     
     @PostMapping("name/{groupName}/unfollow")
-    public ResponseEntity<String> reduceGroupMember(@PathVariable String groupName, @RequestBody Map<String, Integer> request) {
-        Integer userId = request.get("userId");
+    public ResponseEntity<String> reduceGroupMember(@PathVariable String groupName, Authentication authentication) {
         Integer groupId = gs.groupIdByName(groupName);
-        gs.reduceGroupMember(groupId, userId);
+        gs.reduceGroupMember(groupId, authentication);
         return ResponseEntity.ok("Sikeres kikövetés!");
     }
     
     @PostMapping("/isGroupFollowed")
-    public ResponseEntity<Boolean> isGroupFollowed(@RequestBody Map<String, Integer> requestBody) {
-        int userId = requestBody.get("userId");
+    public ResponseEntity<Boolean> isGroupFollowed(@RequestBody Map<String, Integer> requestBody, Authentication authentication) {
         int groupId = requestBody.get("groupId");
-        Boolean isFollowed = gs.isGroupFollowed(groupId, userId);
+        Boolean isFollowed = gs.isGroupFollowed(groupId, authentication);
         return ResponseEntity.ok(isFollowed);
     }
     
@@ -64,25 +68,23 @@ public class GroupController {
     }
     
     @PostMapping("name/{groupName}/newevent")
-    public ResponseEntity<String> createEvent(@RequestBody Event event, @PathVariable String groupName) {
+    public ResponseEntity<String> createEvent(@RequestBody Event event, @PathVariable String groupName, Authentication authentication) {
         Integer groupId = gs.groupIdByName(groupName);
-        gs.createEvent(event,groupId);
+        gs.createEvent(event, groupId, authentication);
         return ResponseEntity.ok("Esemény sikeresen létrehozva!");
     }
     
     @PostMapping("event/add/interest")
-    public ResponseEntity<String> addInterestedUser(@RequestBody Map<String, Integer> requestBody) {
+    public ResponseEntity<String> addInterestedUser(@RequestBody Map<String, Integer> requestBody, Authentication authentication) {
         Integer eventId = requestBody.get("eventId");
-        Integer userId = requestBody.get("userId");
-        gs.addInterestedUser(eventId, userId);
+        gs.addInterestedUser(eventId, authentication);
         return ResponseEntity.ok("Érdeklödő lettél!");
     }
 
     @PostMapping("event/remove/interest")
-    public ResponseEntity<String> reduceInterestedUser(@RequestBody Map<String, Integer> requestBody) {
+    public ResponseEntity<String> reduceInterestedUser(@RequestBody Map<String, Integer> requestBody, Authentication authentication) {
         Integer eventId = requestBody.get("eventId");
-        Integer userId = requestBody.get("userId");
-        gs.reduceInterestedUser(eventId, userId);
+        gs.reduceInterestedUser(eventId, authentication);
         return ResponseEntity.ok("Törölted az érdeklődést!");
     }
     
@@ -94,18 +96,16 @@ public class GroupController {
     }
     
     @PostMapping("event/add/participant")
-    public ResponseEntity<String> addParticipant(@RequestBody Map<String, Integer> requestBody) {
+    public ResponseEntity<String> addParticipant(@RequestBody Map<String, Integer> requestBody, Authentication authentication) {
         Integer eventId = requestBody.get("eventId");
-        Integer userId = requestBody.get("userId");
-        gs.addParticipant(eventId, userId);
+        gs.addParticipant(eventId, authentication);
         return ResponseEntity.ok("Résztvevő lettél!");
     }
 
     @PostMapping("event/remove/participant")
-    public ResponseEntity<String> reduceParticipant(@RequestBody Map<String, Integer> requestBody) {
+    public ResponseEntity<String> reduceParticipant(@RequestBody Map<String, Integer> requestBody, Authentication authentication) {
         Integer eventId = requestBody.get("eventId");
-        Integer userId = requestBody.get("userId");
-        gs.reduceParticipant(eventId, userId);
+        gs.reduceParticipant(eventId, authentication);
         return ResponseEntity.ok("Már nem vagy résztvevő!");
     }
     

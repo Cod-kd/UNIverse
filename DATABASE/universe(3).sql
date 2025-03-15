@@ -145,14 +145,16 @@ END$$
 
 CREATE PROCEDURE `createEvent` (IN `nameIn` VARCHAR(30), IN `creatorIdIn` MEDIUMINT, IN `startDateIn` TIMESTAMP, IN `endDateIn` TIMESTAMP, IN `placeIn` VARCHAR(255), IN `attachmentRelPathIn` VARCHAR(50), IN `descriptionIn` VARCHAR(180), IN `groupIdIn` MEDIUMINT)   BEGIN
 INSERT INTO `events`(`name`, `creatorId`, `startDate`, `endDate`, `place`, `attachmentRelPath`, `description`, `groupId`) VALUES (`nameIn`, `creatorIdIn`, `startDateIn`, `endDateIn`, `placeIn`, `attachmentRelPathIn`, `descriptionIn`, `groupIdIn`);
+CALL addGroupActualEventCount(groupIdIn);
+CALL addGroupAllEventCount(groupIdIn);
 /*SET @eventId = 0;  
 CALL idByEventName(nameIn, @eventId);
 CALL linkEventToGroup(groupIdIn, @eventId);
 */
 END$$
 
-CREATE PROCEDURE `createGroup` (IN `nameIn` VARCHAR(60))   BEGIN
-	INSERT INTO `groups`(`name`) VALUES (nameIn);
+CREATE PROCEDURE `createGroup` (IN `nameIn` VARCHAR(60), IN `adminIdIn` MEDIUMINT)   BEGIN
+	INSERT INTO `groups`(`name`, `adminId`) VALUES (nameIn, adminIdIn);
 END$$
 
 CREATE PROCEDURE `createRank` (IN `nameIn` VARCHAR(30), IN `isAdminIn` BOOLEAN, IN `canViewIn` BOOLEAN, IN `canCommentIn` BOOLEAN, IN `canPostIn` BOOLEAN, IN `canModifyIn` BOOLEAN)   BEGIN
@@ -213,8 +215,6 @@ END$$
 /*
 CREATE PROCEDURE `linkEventToGroup` (IN `groupIdIn` MEDIUMINT, IN `eventIdIn` MEDIUMINT)   BEGIN
 INSERT INTO `eventsofgroups`(`groupId`, `eventId`) VALUES (groupIdIn, eventIdIn);
-CALL addGroupActualEventCount(groupIdIn);
-CALL addGroupAllEventCount(groupIdIn);
 END$$
 */
 
@@ -252,14 +252,30 @@ CREATE PROCEDURE `registerUser` (IN `emailIn` VARCHAR(50), IN `usernameIn` VARCH
 END$$
 
 -- handle interested users
+CREATE PROCEDURE `addInterestedUsersCount` (IN eventIdIn INT)  
+BEGIN
+    UPDATE `events` 
+    SET `interestedUsersCount` = GREATEST(0, participantsCount + 1) 
+    WHERE `id` = eventIdIn;
+END$$
+
+CREATE PROCEDURE `reduceInterestedUsersCount` (IN eventIdIn INT)  
+BEGIN
+    UPDATE `events` 
+    SET `interestedUsersCount` = GREATEST(0, participantsCount - 1) 
+    WHERE `id` = eventIdIn;
+END$$
+
 CREATE PROCEDURE `addInterestedUser` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
 BEGIN  
     INSERT INTO `interestedusers` (`eventId`, `userId`) VALUES (eventIdIn, userIdIn);
+    CALL addInterestedUsersCount(eventIdIn);
 END$$
 
 CREATE PROCEDURE `reduceInterestedUser` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
 BEGIN  
     DELETE FROM `interestedusers` WHERE `eventId` = eventIdIn AND `userId` = userIdIn;
+    CALL reduceInterestedUsersCount(eventIdIn);
 END$$
 
 CREATE PROCEDURE `getInterestingEventsForUser` (IN userIdIn MEDIUMINT)  
@@ -273,14 +289,30 @@ BEGIN
 END$$
 
 -- handle participants
+CREATE PROCEDURE `addParticipantsCount` (IN eventIdIn INT)  
+BEGIN
+    UPDATE `events` 
+    SET `participantsCount` = GREATEST(0, participantsCount + 1) 
+    WHERE `id` = eventIdIn;
+END$$
+
+CREATE PROCEDURE `reduceParticipantsCount` (IN eventIdIn INT)  
+BEGIN
+    UPDATE `events` 
+    SET `participantsCount` = GREATEST(0, participantsCount - 1) 
+    WHERE `id` = eventIdIn;
+END$$
+
 CREATE PROCEDURE `addParticipant` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
 BEGIN  
     INSERT INTO `participants` (`eventId`, `userId`) VALUES (eventIdIn, userIdIn);
+    CALL addParticipantsCount(eventIdIn);
 END$$
 
 CREATE PROCEDURE `reduceParticipant` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
 BEGIN  
     DELETE FROM `participants` WHERE `eventId` = eventIdIn AND `userId` = userIdIn;
+    CALL reduceParticipantsCount(eventIdIn);
 END$$
 
 CREATE PROCEDURE `getScheduledEventsForUser` (IN userIdIn MEDIUMINT)  
@@ -470,7 +502,8 @@ CREATE TABLE `groups` (
   `membersCount` mediumint(9) DEFAULT '0',
   `postCount` int(11) DEFAULT '0',
   `actualEventCount` int(11) DEFAULT '0',
-  `allEventCount` int(11) DEFAULT '0'
+  `allEventCount` int(11) DEFAULT '0',
+  `adminId` mediumint(9) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -948,6 +981,9 @@ ALTER TABLE `groupranks`
   ADD CONSTRAINT `groupranks_ibfk_2` FOREIGN KEY (`userId`) REFERENCES `userprofiles` (`id`),
   ADD CONSTRAINT `groupranks_ibfk_3` FOREIGN KEY (`rankId`) REFERENCES `ranks` (`id`);
 
+
+ALTER TABLE `groups`
+	ADD CONSTRAINT `groups_ibfk_1` FOREIGN KEY (`adminId`) REFERENCES `usersdata` (`userId`);
 --
 -- Megkötések a táblához `interestedusers`
 --
@@ -1069,11 +1105,11 @@ CALL addUserInterest(1, 1);
 CALL addUserInterest(1, 2);
 
 -- Generate 5 Group entities
-CALL createGroup('CodeMasters');
-CALL createGroup('NumberNinjas');
-CALL createGroup('BioWizards');
-CALL createGroup('QuantumMinds');
-CALL createGroup('EngineersUnited');
+CALL createGroup('CodeMasters', 1);
+CALL createGroup('NumberNinjas', 2);
+CALL createGroup('BioWizards', 3);
+CALL createGroup('QuantumMinds', 4);
+CALL createGroup('EngineersUnited', 5);
 
 -- events
 -- Esemény a Computer Science csoporthoz

@@ -16,6 +16,9 @@ public interface GroupsRepository extends JpaRepository<Groups, Integer>{
     @Procedure(procedureName = "idByGroupName")
     Integer idByGroupName(@Param("groupNameIn") String groupName);
     
+    @Procedure(procedureName = "createGroup")
+    void createGroup(@Param("nameIn") String groupName, @Param("adminIdIn") Integer adminId);
+    
     @Override
     List<Groups> findAll();
     

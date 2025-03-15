@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 @Table(name = "userroles")
 public class UserRole {
     @Id
+    @JsonIgnore
     @Column(nullable = false)
     private Integer userId;
 
@@ -44,6 +45,10 @@ public class UserRole {
 
     public void setRoleId(Integer roleId) {
         this.roleId = roleId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
     
 }

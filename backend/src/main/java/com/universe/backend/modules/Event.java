@@ -47,7 +47,7 @@ public class Event {
 
     @Column
     private Boolean isActual = true;  // tinyint(1) used as boolean
-
+     
     // Default constructor (required by JPA)
     public Event() {}
 
@@ -132,7 +132,8 @@ public class Event {
     public void setInterestedUsersCount(Integer interestedUsersCount) {
         this.interestedUsersCount = interestedUsersCount;
     }
-
+    
+    @JsonIgnore
     public Boolean getIsActual() {
         return isActual;
     }
