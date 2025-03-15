@@ -252,16 +252,30 @@ CREATE PROCEDURE `registerUser` (IN `emailIn` VARCHAR(50), IN `usernameIn` VARCH
 END$$
 
 -- handle interested users
+CREATE PROCEDURE `addInterestedUsersCount` (IN eventIdIn INT)  
+BEGIN
+    UPDATE `events` 
+    SET `interestedUsersCount` = GREATEST(0, participantsCount + 1) 
+    WHERE `id` = eventIdIn;
+END$$
+
+CREATE PROCEDURE `reduceInterestedUsersCount` (IN eventIdIn INT)  
+BEGIN
+    UPDATE `events` 
+    SET `interestedUsersCount` = GREATEST(0, participantsCount - 1) 
+    WHERE `id` = eventIdIn;
+END$$
+
 CREATE PROCEDURE `addInterestedUser` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
 BEGIN  
     INSERT INTO `interestedusers` (`eventId`, `userId`) VALUES (eventIdIn, userIdIn);
-    /* todo: create addInterestedUsersCount*/
+    CALL addInterestedUsersCount(eventIdIn);
 END$$
 
 CREATE PROCEDURE `reduceInterestedUser` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
 BEGIN  
     DELETE FROM `interestedusers` WHERE `eventId` = eventIdIn AND `userId` = userIdIn;
-    /* todo: create reduceInterestedUsersCount*/
+    CALL reduceInterestedUsersCount(eventIdIn);
 END$$
 
 CREATE PROCEDURE `getInterestingEventsForUser` (IN userIdIn MEDIUMINT)  
@@ -275,16 +289,30 @@ BEGIN
 END$$
 
 -- handle participants
+CREATE PROCEDURE `addParticipantsCount` (IN eventIdIn INT)  
+BEGIN
+    UPDATE `events` 
+    SET `participantsCount` = GREATEST(0, participantsCount + 1) 
+    WHERE `id` = eventIdIn;
+END$$
+
+CREATE PROCEDURE `reduceParticipantsCount` (IN eventIdIn INT)  
+BEGIN
+    UPDATE `events` 
+    SET `participantsCount` = GREATEST(0, participantsCount - 1) 
+    WHERE `id` = eventIdIn;
+END$$
+
 CREATE PROCEDURE `addParticipant` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
 BEGIN  
     INSERT INTO `participants` (`eventId`, `userId`) VALUES (eventIdIn, userIdIn);
-    /* todo: create addParticipantsCount*/
+    CALL addParticipantsCount(eventIdIn);
 END$$
 
 CREATE PROCEDURE `reduceParticipant` (IN eventIdIn INT, IN userIdIn MEDIUMINT)  
 BEGIN  
     DELETE FROM `participants` WHERE `eventId` = eventIdIn AND `userId` = userIdIn;
-    /* todo: create reduceParticipantsCount*/
+    CALL reduceParticipantsCount(eventIdIn);
 END$$
 
 CREATE PROCEDURE `getScheduledEventsForUser` (IN userIdIn MEDIUMINT)  
