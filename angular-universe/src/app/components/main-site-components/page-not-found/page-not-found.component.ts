@@ -13,7 +13,9 @@ import { AuthService } from '../../../services/auth/auth.service';
 export class PageNotFoundComponent {
   isLoggedIn: boolean;
 
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(
+    private router: Router, 
+    private authService: AuthService) {
     this.isLoggedIn = this.authService.getLoginStatus();
 
     if (this.isLoggedIn && !this.router.url.includes('/main-site/page-not-found')) {

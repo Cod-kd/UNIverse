@@ -13,6 +13,7 @@ import { UniversityService } from '../../../services/university/university.servi
 import { DeleteProfileData, ContactInput } from '../../../models/self-profile/self-profile.model';
 import { SelfProfileDataService } from '../../../services/self-profile-data/self-profile-data.service';
 import { Profile } from '../../../models/profile/profile.model';
+import { ValidationService } from '../../../services/validation/validation.service';
 
 @Component({
   selector: 'app-self-profile',
@@ -76,7 +77,8 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
     private router: Router,
     private constantsService: ConstantsService,
     private universityService: UniversityService,
-    private profileDataService: SelfProfileDataService
+    private profileDataService: SelfProfileDataService,
+    private validationService: ValidationService
   ) { }
 
   ngOnInit(): void {
@@ -234,29 +236,6 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
     return '';
   }
 
-  validateContact(): boolean {
-    if (!this.contactInput.value) {
-      this.popupService.showError('Kérjük, add meg az elérhetőség értékét!');
-      return false;
-    }
-
-    const selectedContact = this.contactTypes.find(c => c.name === this.contactInput.type);
-
-    if (selectedContact) {
-      const escapedDomain = selectedContact.domain.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const linkPattern = new RegExp(`^${selectedContact.protocol}://${escapedDomain}/[\\w-_.~/?#[\\]@!$&'()*+,;=]*$`);
-
-      if (!linkPattern.test(this.contactInput.value)) {
-        this.popupService.showError(`Hibás ${selectedContact.name} link formátum!`);
-        return false;
-      }
-    } else {
-      this.popupService.showError('Kérjük, válassz elérhetőség típust!');
-      return false;
-    }
-    return true;
-  }
-
   addContact(): void {
     if (!this.profile) return;
 
@@ -265,7 +244,7 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (!this.validateContact()) return;
+    if (!this.validationService.validateContact(this.contactInput, this.contactTypes)) return;
 
     const formattedContact = `${this.contactInput.type}: ${this.contactInput.value}`;
 

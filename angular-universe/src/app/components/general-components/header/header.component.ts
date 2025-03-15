@@ -1,4 +1,4 @@
-import { Component, HostListener, ElementRef, OnInit, DestroyRef, inject } from '@angular/core';
+import { Component, HostListener, ElementRef, OnInit, DestroyRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule, ViewportScroller } from '@angular/common';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -20,7 +20,6 @@ export class HeaderComponent implements OnInit {
   isMobile = false;
   isLoggedIn$;
   private lastScrollPosition = 0;
-  private destroyRef = inject(DestroyRef);
 
   // Navigation items for the header menu
   navItems: NavItem[] = [
@@ -34,7 +33,8 @@ export class HeaderComponent implements OnInit {
     private elementRef: ElementRef,
     private viewportScroller: ViewportScroller,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private destroyRef: DestroyRef
   ) {
     this.isLoggedIn$ = this.authService.isLoggedIn$;
   }

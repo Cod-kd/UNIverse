@@ -1,13 +1,14 @@
-import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit, ViewChild, Signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators, FormGroup } from '@angular/forms';
 import { UniversityService } from '../../../services/university/university.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { ButtonComponent } from "../../general-components/button/button.component";
 import { Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ToggleInputComponent } from '../toggle-input/toggle-input.component';
 import { RegisterService } from '../../../services/register/register.service';
 import { debounceTime } from 'rxjs/operators';
 import { ValidationService } from '../../../services/validation/validation.service';
+import { University, FacultyOption } from '../../../models/uni-faculty/uni-faculty.model';
 
 @Component({
   selector: 'app-registration',
@@ -19,30 +20,37 @@ import { ValidationService } from '../../../services/validation/validation.servi
 export class RegistrationComponent implements OnInit, OnDestroy {
   @ViewChild(ToggleInputComponent) passwordInput!: ToggleInputComponent;
 
-  private fb = inject(FormBuilder);
-  private universityService = inject(UniversityService);
-  private registerService = inject(RegisterService);
   private formStorageKey = 'registrationFormData';
-
-  constructor(private router: Router, private validationService: ValidationService) { }
-
   showCard = false;
+  universities!: Signal<University[]>;
+  faculties!: Signal<FacultyOption[]>;
+  registrationForm: FormGroup;
 
-  // Retrieve list of universities and faculties as reactive signals
-  universities = toSignal(this.universityService.getUniversities());
-  faculties = toSignal(this.universityService.faculties$);
+  constructor(
+    private router: Router,
+    private validationService: ValidationService,
+    private fb: FormBuilder,
+    private universityService: UniversityService,
+    private registerService: RegisterService
+  ) {
+    // Initialize signals
+    this.universities = toSignal(this.universityService.getUniversities(),
+      { initialValue: [] as University[] });
+    this.faculties = toSignal(this.universityService.faculties$,
+      { initialValue: [] as FacultyOption[] });
 
-  // Define registration form with required fields and validators
-  registrationForm = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    username: ['', Validators.required],
-    fullName: ['', Validators.required],
-    gender: ['', Validators.required],
-    password: ['', Validators.required],
-    birthDate: ['', Validators.required],
-    university: ['', Validators.required],
-    faculty: ['', Validators.required]
-  });
+    // Initialize form here after fb is available
+    this.registrationForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      username: ['', Validators.required],
+      fullName: ['', Validators.required],
+      gender: ['', Validators.required],
+      password: ['', Validators.required],
+      birthDate: ['', Validators.required],
+      university: ['', Validators.required],
+      faculty: ['', Validators.required]
+    });
+  }
 
   ngOnInit() {
     this.onUniversityChange();

@@ -17,7 +17,9 @@ export class SingleGroupComponent {
   @Input() isExpanded: boolean = false;
   @Output() toggleRequest = new EventEmitter<number>();
 
-  constructor(private groupService: GroupService, private router: Router) { }
+  constructor(
+    private groupService: GroupService, 
+    private router: Router) { }
 
   toggleExpand(event: Event) {
     event.stopPropagation();

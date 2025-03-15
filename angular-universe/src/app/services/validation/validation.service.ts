@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { PopupService } from '../popup-message/popup-message.service';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { ContactType } from '../../models/constants/constants.model';
+import { ContactInput } from '../../models/self-profile/self-profile.model';
 
 @Injectable({
     providedIn: 'root'
@@ -151,5 +154,47 @@ export class ValidationService {
             this.universityValid &&
             this.facultyValid
         );
+    }
+
+    dateRangeValidator(control: AbstractControl): ValidationErrors | null {
+        const startDate = control.get('startDate')?.value;
+        const endDate = control.get('endDate')?.value;
+
+        if (!startDate || !endDate) {
+            return null;
+        }
+
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        return end <= start ? { endDateBeforeStartDate: true } : null;
+    }
+
+    validateContact(contactInput: ContactInput, contactTypes: ContactType[]): boolean {
+        if (!contactInput.value) {
+            this.popupService.showError('Kérjük, add meg az elérhetőség értékét!');
+            return false;
+        }
+
+        if (!contactInput.type) {
+            this.popupService.showError('Kérjük, válassz elérhetőség típust!');
+            return false;
+        }
+
+        const selectedContact = contactTypes.find(c => c.name === contactInput.type);
+
+        if (selectedContact) {
+            const escapedDomain = selectedContact.domain.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const linkPattern = new RegExp(`^${selectedContact.protocol}://${escapedDomain}/[\\w-_.~/?#[\\]@!$&'()*+,;=]*$`);
+
+            if (!linkPattern.test(contactInput.value)) {
+                this.popupService.showError(`Hibás ${selectedContact.name} link formátum!`);
+                return false;
+            }
+        } else {
+            this.popupService.showError('Kérjük, válassz elérhetőség típust!');
+            return false;
+        }
+        return true;
     }
 }

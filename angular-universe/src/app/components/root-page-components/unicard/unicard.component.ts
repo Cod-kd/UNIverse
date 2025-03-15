@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ButtonComponent } from '../../general-components/button/button.component';
 import { Router } from '@angular/router';
 import { CardMetadataService } from '../../../services/card-meta-data/card-meta-data.service';
@@ -21,7 +21,6 @@ import { Profile } from '../../../models/profile/profile.model';
 export class UNIcardComponent implements OnInit {
   @Input() isCompactMode = false;
   userData: UserData = history.state.userData;
-  private cardMetadataService = inject(CardMetadataService);
 
   universityName = '';
   facultyName = '';
@@ -33,7 +32,8 @@ export class UNIcardComponent implements OnInit {
     private universityService: UniversityService,
     private authService: AuthService,
     private fetchService: FetchService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private cardMetadataService: CardMetadataService
   ) { }
 
   ngOnInit(): void {

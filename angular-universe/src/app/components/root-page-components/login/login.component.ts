@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonComponent } from "../../general-components/button/button.component";
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -17,18 +17,19 @@ import { PopupService } from '../../../services/popup-message/popup-message.serv
 export class LoginComponent {
   @ViewChild(ToggleInputComponent) passwordInput!: ToggleInputComponent;
   isLoginDisabled = true;
-  private fb = inject(FormBuilder);
-  private loginService = inject(LoginService);
-  private validationService = inject(ValidationService);
+  loginForm;
 
-  // Reactive form setup with username and password fields
-  loginForm = this.fb.group({
-    username: ['', Validators.required],
-    password: ['', Validators.required]
-  });
+  constructor(
+    private router: Router,
+    private popupService: PopupService,
+    private validationService: ValidationService,
+    private loginService: LoginService,
+    private fb: FormBuilder) {
+    this.loginForm = this.fb.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
+    });
 
-  constructor(private router: Router, private popupService: PopupService) {
-    // Monitor form changes to enable or disable the login button dynamically
     this.loginForm.valueChanges.subscribe(() => {
       this.updateLoginButtonState();
     });

@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from '../../general-components/button/button.component';
+import { ValidationService } from '../../../services/validation/validation.service';
 
 @Component({
   selector: 'app-create-event-popup',
@@ -17,7 +18,9 @@ export class CreateEventPopupComponent implements OnInit {
 
   eventForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(
+    private fb: FormBuilder, 
+    private validationService: ValidationService) { }
 
   ngOnInit(): void {
     const userId = this.getUserIdFromLocalStorage();
@@ -30,21 +33,7 @@ export class CreateEventPopupComponent implements OnInit {
       place: ['', Validators.required],
       attachmentRelPath: ['esemeny.jpg'],
       description: ['', Validators.required]
-    }, { validators: this.dateRangeValidator });
-  }
-
-  dateRangeValidator(control: AbstractControl): ValidationErrors | null {
-    const startDate = control.get('startDate')?.value;
-    const endDate = control.get('endDate')?.value;
-
-    if (!startDate || !endDate) {
-      return null;
-    }
-
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-
-    return end <= start ? { endDateBeforeStartDate: true } : null;
+    }, { validators: this.validationService.dateRangeValidator });
   }
 
   private getUserIdFromLocalStorage(): number {

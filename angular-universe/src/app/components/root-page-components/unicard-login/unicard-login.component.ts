@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { ButtonComponent } from '../../general-components/button/button.component';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -16,10 +16,12 @@ import { PopupService } from '../../../services/popup-message/popup-message.serv
 export class UNIcardLoginComponent {
   selectedFile: File | null = null; // Stores selected UNIcard file
   isLoginDisabled = true; // Disables login button until a file is selected
-  private loginService = inject(LoginService);
-  private cardMetadataService = inject(CardMetadataService);
 
-  constructor(private router: Router, private popupService: PopupService) { }
+  constructor(
+    private router: Router, 
+    private popupService: PopupService, 
+    private cardMetadataService: CardMetadataService, 
+    private loginService: LoginService) { }
 
   // Handles file selection for login
   onFileSelected(event: Event) {
