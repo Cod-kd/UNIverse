@@ -473,7 +473,6 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
           this.isSaving = false;
         },
         error: (error) => {
-          console.error('Profile update failed:', error);
           this.popupService.showError(error?.message || "Hiba történt a mentés során!");
           this.isSaving = false;
         }
@@ -523,7 +522,6 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
         this.showDeleteConfirm = false;
       },
       error: (error) => {
-        console.error('Profile deletion error:', error);
         this.isDeleting = false;
 
         const errorMessage = error?.error?.message || "Hiba történt a fiók törlése során!";

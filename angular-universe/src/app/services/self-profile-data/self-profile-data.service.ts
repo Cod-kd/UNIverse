@@ -62,8 +62,7 @@ export class SelfProfileDataService {
       if (!contactType) continue;
 
       observables.push(this.addContact(userId, contactType.id, path).pipe(
-        catchError(error => {
-          console.error('Hiba az elérhetőség hozzáadásakor:', error);
+        catchError(() => {
           return of(null);
         })
       ));
@@ -89,8 +88,7 @@ export class SelfProfileDataService {
       if (!role) continue;
 
       observables.push(this.addRole(userId, role.id).pipe(
-        catchError(error => {
-          console.error('Hiba a szerepkör hozzáadásakor:', error);
+        catchError(() => {
           return of(null);
         })
       ));
@@ -118,8 +116,7 @@ export class SelfProfileDataService {
       if (!category) continue;
 
       observables.push(this.addInterest(userId, category.id).pipe(
-        catchError(error => {
-          console.error('Hiba az érdeklődés hozzáadásakor:', error);
+        catchError(() => {
           return of(null);
         })
       ));
