@@ -1,120 +1,65 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, interval, Subscription } from 'rxjs';
-import { Router } from '@angular/router';
-import { takeWhile } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+
+interface StoredCredentials {
+  username: string;
+  password: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private isLoggedIn = new BehaviorSubject<boolean>(this.getStoredLoginStatus());
+  private isLoggedIn = new BehaviorSubject<boolean>(this.hasValidToken());
   isLoggedIn$ = this.isLoggedIn.asObservable();
 
-  private cachedValues = new Map<string, string>();
-  private authKeys = ['isLoggedIn', 'username', 'password'];
-  private pollingActive = false;
-  private pollingSubscription?: Subscription;
-  private storageEventHandler = (event: StorageEvent) => this.handleStorageEvent(event);
-
-  constructor(
-    private router: Router,
-  ) {
-    this.isLoggedIn.subscribe(isLoggedIn => {
-      if (isLoggedIn) {
-        this.startPolling();
-      } else {
-        this.stopPolling();
-        this.clearUserData();
-      }
-    });
-
-    this.updateValueCache();
+  private hasValidToken(): boolean {
+    return !!localStorage.getItem('jwt_token');
   }
 
-  private startPolling(): void {
-    if (this.pollingActive) return;
-
-    this.pollingActive = true;
-    window.addEventListener('storage', this.storageEventHandler);
-
-    this.pollingSubscription = interval(500)
-      .pipe(takeWhile(() => this.pollingActive))
-      .subscribe(() => this.checkStorageChanges());
-  }
-
-  stopPolling(): void {
-    this.pollingActive = false;
-    window.removeEventListener('storage', this.storageEventHandler);
-    this.pollingSubscription?.unsubscribe();
-  }
-
-  private updateValueCache(): void {
-    this.authKeys.forEach(key => {
-      this.cachedValues.set(key, localStorage.getItem(key) || '');
-    });
-  }
-
-  private handleStorageEvent(event: StorageEvent): void {
-    if (event.key && this.authKeys.includes(event.key)) {
-      this.logoutAndRedirect();
-    }
-  }
-
-  private checkStorageChanges(): void {
-    if (!this.pollingActive) return;
-
-    for (const key of this.authKeys) {
-      const currentValue = localStorage.getItem(key) || '';
-      if (currentValue !== this.cachedValues.get(key)) {
-        this.logoutAndRedirect();
-        return;
-      }
-    }
-  }
-
-  private logoutAndRedirect(): void {
-    this.stopPolling();
-    this.isLoggedIn.next(false);
-    this.router.navigate(['/UNIcard-login']);
-  }
-
-  private getStoredLoginStatus(): boolean {
-    return localStorage.getItem('isLoggedIn') === 'true' &&
-      !!localStorage.getItem('username') &&
-      !!localStorage.getItem('password');
-  }
-
-  private clearUserData(): void {
-    this.authKeys.forEach(key => localStorage.removeItem(key));
-    localStorage.removeItem("userId");
-    localStorage.removeItem("registrationFormData");
-    this.updateValueCache();
-  }
-
-  login(username: string, password: string): void {
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('username', username);
-    localStorage.setItem('password', password);
-    localStorage.removeItem('registrationFormData');
+  login(token: string, userId: string): void {
+    localStorage.setItem('jwt_token', token);
+    localStorage.setItem('userId', userId);
     this.isLoggedIn.next(true);
-    this.updateValueCache();
-    setTimeout(() => this.startPolling(), 500);
   }
 
   logout(): void {
-    this.stopPolling();
-    localStorage.setItem('isLoggedIn', 'false');
-    this.clearUserData();
+    localStorage.removeItem('jwt_token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('temp_credentials');
     this.isLoggedIn.next(false);
   }
 
-  getLoginStatus(): boolean {
-    return this.getStoredLoginStatus();
+  getToken(): string | null {
+    return localStorage.getItem('jwt_token');
   }
 
-  getStoredCredentials(): { username: string, password: string } | null {
-    const username = localStorage.getItem('username');
-    const password = localStorage.getItem('password');
-    return (username && password) ? { username, password } : null;
+  getLoginStatus(): boolean {
+    return this.hasValidToken();
+  }
+
+  getUserId(): string | null {
+    return localStorage.getItem('userId');
+  }
+
+  // Store credentials temporarily until card is downloaded
+  storeCredentialsTemporarily(username: string, password: string): void {
+    const credentials: StoredCredentials = { username, password };
+    localStorage.setItem('temp_credentials', btoa(JSON.stringify(credentials)));
+  }
+
+  getStoredCredentials(): StoredCredentials | null {
+    const storedData = localStorage.getItem('temp_credentials');
+    if (!storedData) return null;
+
+    try {
+      return JSON.parse(atob(storedData)) as StoredCredentials;
+    } catch {
+      return null;
+    }
+  }
+
+  clearStoredCredentials(): void {
+    localStorage.removeItem('temp_credentials');
   }
 }

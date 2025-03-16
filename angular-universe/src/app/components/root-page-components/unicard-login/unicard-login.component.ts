@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { LoginService } from '../../../services/login/login.service';
 import { CardMetadataService } from '../../../services/card-meta-data/card-meta-data.service';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-unicard-login',
@@ -14,25 +15,31 @@ import { PopupService } from '../../../services/popup-message/popup-message.serv
   styleUrls: ['./unicard-login.component.css'],
 })
 export class UNIcardLoginComponent {
-  selectedFile: File | null = null; // Stores selected UNIcard file
-  isLoginDisabled = true; // Disables login button until a file is selected
+  selectedFile: File | null = null;
+  isLoginDisabled = true;
 
   constructor(
-    private router: Router, 
-    private popupService: PopupService, 
-    private cardMetadataService: CardMetadataService, 
-    private loginService: LoginService) { }
+    private router: Router,
+    private popupService: PopupService,
+    private cardMetadataService: CardMetadataService,
+    private loginService: LoginService,
+    private authService: AuthService) { }
 
-  // Handles file selection for login
+  ngOnInit(): void {
+    // Check if user is already logged in with JWT
+    if (this.authService.getLoginStatus()) {
+      this.router.navigate(['/main-site']);
+    }
+  }
+
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
-      this.isLoginDisabled = false; // Enable login button
+      this.isLoginDisabled = false;
     }
   }
 
-  // Attempts login using the selected UNIcard file
   async loginWithCard(event: Event) {
     event.preventDefault();
     if (!this.selectedFile) {
@@ -41,18 +48,12 @@ export class UNIcardLoginComponent {
     }
 
     try {
-      // Read credentials from UNIcard metadata
       const credentials = await this.cardMetadataService.readCardMetadata(this.selectedFile);
 
       if (credentials) {
         const { username, password } = credentials;
         if (username && password) {
-          // Authenticate using fetched credentials
-          this.loginService.fetchLogin(username, password).subscribe({
-            next: () => {
-              this.loginService.handleLoginResponse(credentials);
-            }
-          });
+          this.loginService.handleLoginResponse({ username, password });
         }
       } else {
         this.popupService.showError('Nem található bejelentkezési adat a kártyán.');
@@ -62,13 +63,6 @@ export class UNIcardLoginComponent {
     }
   }
 
-  // Navigate back to traditional credential login page
-  backToCredentialLogin() {
-    this.router.navigate(['/login']);
-  }
-
-  // Navigate back to registration page
-  backToRegistration() {
-    this.router.navigate(['/registration']);
-  }
+  backToCredentialLogin = () => this.router.navigate(['/login']);
+  backToRegistration = () => this.router.navigate(['/registration']);
 }

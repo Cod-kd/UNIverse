@@ -6,6 +6,7 @@ import { ToggleInputComponent } from '../toggle-input/toggle-input.component';
 import { LoginService } from '../../../services/login/login.service';
 import { ValidationService } from '../../../services/validation/validation.service';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +25,7 @@ export class LoginComponent {
     private popupService: PopupService,
     private validationService: ValidationService,
     private loginService: LoginService,
+    private authService: AuthService,
     private fb: FormBuilder) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
@@ -36,11 +38,12 @@ export class LoginComponent {
   }
 
   ngOnInit(): void {
-    // Check for stored credentials on component initialization
-    this.checkStoredCredentials();
+    // Check if user is already logged in with JWT
+    if (this.authService.getLoginStatus()) {
+      this.router.navigate(['/main-site']);
+    }
   }
 
-  // Handle username input changes and validate the username
   onUsernameChange() {
     const username = this.loginForm.get('username')?.value;
     if (typeof username === 'string') {
@@ -49,56 +52,28 @@ export class LoginComponent {
     }
   }
 
-  // Enable or disable login button based on validation results
   updateLoginButtonState() {
     this.isLoginDisabled = !(this.validationService.usernameValid &&
       this.validationService.passwordValid);
   }
 
-  // Attempt to log in with provided credentials
   loginWithCredentials() {
     const username = this.loginForm.get('username')?.value ?? '';
     const password = this.loginForm.get('password')?.value ?? '';
 
-    // Show error if both fields are empty
     if (!username.trim() && !password.trim()) {
       this.popupService.showError("Hiányzó adatok");
       return;
     }
 
-    // Validate username and password before making login request
     const isUsernameValid = this.validationService.validateUsername(username);
     const isPasswordValid = this.validationService.validatePassword(password);
 
     if (isUsernameValid && isPasswordValid) {
-      this.loginService.fetchLogin(username, password).subscribe({
-        next: () => {
-          this.loginService.handleLoginResponse(this.loginForm.value);
-        }
-      });
+      this.loginService.handleLoginResponse({ username, password });
     }
   }
 
-  // Automatically attempt login if credentials are stored in local storage
-  private checkStoredCredentials(): void {
-    const storedUsername = localStorage.getItem('username');
-    const storedPassword = localStorage.getItem('password');
-
-    if (storedUsername && storedPassword) {
-      this.loginService.fetchLogin(storedUsername, storedPassword).subscribe({
-        next: () => {
-          this.loginService.handleLoginResponse({
-            username: storedUsername,
-            password: storedPassword
-          });
-        }
-      });
-    }
-  }
-
-  // Navigate to UNIcard login page
   onUNIcardLoginClick = () => this.router.navigate(["/UNIcard-login"]);
-
-  // Navigate back to registration page
   backToRegistration = () => this.router.navigate(["/registration"]);
 }
