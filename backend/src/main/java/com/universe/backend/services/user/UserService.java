@@ -42,7 +42,6 @@ public class UserService {
         if (email == null) {
             throw new EntityNotFoundException("Érvénytelen vagy lejárt token!");
         }
-
         Integer affectedRows = jdbcTemplate.execute(
             (CallableStatementCreator) conn -> {
                 CallableStatement cs = conn.prepareCall("{CALL universe.verifyUserByEmail(?, ?)}");

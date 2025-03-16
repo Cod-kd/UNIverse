@@ -50,6 +50,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body("A verifikációs email küldése sikertelen: " + ex.getMessage());
     }
+    
+    @ExceptionHandler(UserNotVerifyedException.class)
+    public ResponseEntity<String> handleMessagingException(UserNotVerifyedException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGeneralException(Exception ex) {

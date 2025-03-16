@@ -3,6 +3,7 @@ com\universe\backend\modules\Groups.class
 com\universe\backend\repositories\UserProfilesRepository.class
 com\universe\backend\dto\UserLoginDTO.class
 com\universe\backend\modules\Role.class
+com\universe\backend\exceptions\UserNotVerifyedException.class
 com\universe\backend\UnIverseBackendApplication.class
 com\universe\backend\exceptions\UserIsDeletedExistsException.class
 com\universe\backend\config\SecurityConfig.class

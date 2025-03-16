@@ -12,6 +12,7 @@ C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\ba
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\exceptions\UserAlreadyExistsException.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\exceptions\UserIsDeletedExistsException.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\exceptions\UserNonExistsException.java
+C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\exceptions\UserNotVerifyedException.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\exceptions\UserWrongPasswordException.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\modules\Category.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\modules\ContactTypes.java
