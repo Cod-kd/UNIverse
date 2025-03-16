@@ -12,6 +12,7 @@ C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\ba
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\exceptions\UserAlreadyExistsException.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\exceptions\UserIsDeletedExistsException.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\exceptions\UserNonExistsException.java
+C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\exceptions\UserNotVerifyedException.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\exceptions\UserWrongPasswordException.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\modules\Category.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\modules\ContactTypes.java
@@ -26,9 +27,11 @@ C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\ba
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\modules\UsersData.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\repositories\GroupsRepository.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\repositories\UserProfilesRepository.java
+C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\services\EmailService.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\services\group\GroupService.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\services\user\AuthService.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\services\user\RegistrationService.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\services\user\UserService.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\UnIverseBackendApplication.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\utils\JwtUtil.java
+C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\utils\JwtUtilForEmail.java

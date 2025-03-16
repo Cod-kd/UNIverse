@@ -3,6 +3,7 @@ package com.universe.backend.services.user;
 import com.universe.backend.dto.UserLoginDTO;
 import com.universe.backend.exceptions.UserIsDeletedExistsException;
 import com.universe.backend.exceptions.UserNonExistsException;
+import com.universe.backend.exceptions.UserNotVerifyedException;
 import com.universe.backend.exceptions.UserWrongPasswordException;
 import com.universe.backend.modules.UserProfiles;
 import com.universe.backend.repositories.UserProfilesRepository;
@@ -32,6 +33,9 @@ public class AuthService {
         }
         if (up.getDeletedAt() != null) {
             throw new UserIsDeletedExistsException("A felhasználó már nem létezik");
+        }
+        if (!up.getIsVerified()){
+            throw new UserNotVerifyedException("Erősítsd meg az emailedet!");
         }
         if (!encoder.matches(ulDTO.getPasswordIn(), up.getPassword())) {
             throw new UserWrongPasswordException("A jelszó hibás");

@@ -2,12 +2,14 @@ package com.universe.backend.services.user;
 
 import com.universe.backend.dto.UserRegistrationDTO;
 import com.universe.backend.exceptions.UserAlreadyExistsException;
+import com.universe.backend.services.EmailService;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ConnectionCallback;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import jakarta.mail.MessagingException;
 import java.sql.CallableStatement;
 
 @Service
@@ -15,13 +17,15 @@ public class RegistrationService {
 
     private final JdbcTemplate jdbcTemplate;
     private final BCryptPasswordEncoder encoder;
+    private final EmailService es;
 
-    public RegistrationService(JdbcTemplate jdbcTemplate) {
+    public RegistrationService(JdbcTemplate jdbcTemplate, EmailService es) {
         this.jdbcTemplate = jdbcTemplate;
         this.encoder = new BCryptPasswordEncoder(12);
+        this.es = es;
     }
 
-    public void registerUser(UserRegistrationDTO urDTO) {
+    public void registerUser(UserRegistrationDTO urDTO) throws MessagingException {
         try {
             urDTO.setPasswordIn(encoder.encode(urDTO.getPasswordIn()));
             jdbcTemplate.execute((ConnectionCallback<Object>) connection -> {
@@ -42,8 +46,14 @@ public class RegistrationService {
                 callableStatement.execute();
                 return null;
             });
+
+            // Send verification email after successful registration
+            es.sendVerificationEmail(urDTO.getEmailIn());
+
         } catch (DuplicateKeyException ex) {
             throw new UserAlreadyExistsException("A felhasználónév vagy email már foglalt.");
+        } catch (MessagingException ex) {
+            throw new MessagingException("Email küldése sikertelen: " + ex.getMessage(), ex);
         }
     }
 }

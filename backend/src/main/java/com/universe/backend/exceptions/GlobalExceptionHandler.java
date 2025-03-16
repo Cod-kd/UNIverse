@@ -1,5 +1,6 @@
 package com.universe.backend.exceptions;
 
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,17 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(AuthenticationFailedException.class)
     public ResponseEntity<String> handleAuthenticationFailedException(AuthenticationFailedException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+    
+    @ExceptionHandler(MessagingException.class)
+    public ResponseEntity<String> handleMessagingException(MessagingException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body("A verifikációs email küldése sikertelen: " + ex.getMessage());
+    }
+    
+    @ExceptionHandler(UserNotVerifyedException.class)
+    public ResponseEntity<String> handleMessagingException(UserNotVerifyedException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 

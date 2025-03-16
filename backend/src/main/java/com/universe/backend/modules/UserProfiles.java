@@ -25,6 +25,9 @@ public class UserProfiles {
 
     @Column(nullable = true)
     private LocalDateTime deletedAt;
+    
+    @Column(name = "isVerified")
+    private Boolean isVerified;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id", referencedColumnName = "userId")
@@ -33,6 +36,14 @@ public class UserProfiles {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Boolean getIsVerified() {
+        return isVerified;
+    }
+
+    public void setIsVerified(Boolean isVerified) {
+        this.isVerified = isVerified;
     }
 
     public void setUsername(String username) {

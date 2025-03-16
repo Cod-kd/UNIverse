@@ -11,6 +11,7 @@ import com.universe.backend.modules.UsersBio;
 import com.universe.backend.modules.UsersContact;
 import com.universe.backend.services.user.RegistrationService;
 import com.universe.backend.services.user.UserService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,8 +61,14 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<String> registration(@RequestBody @Valid UserRegistrationDTO urDTO) {
+    public ResponseEntity<String> registration(@RequestBody @Valid UserRegistrationDTO urDTO) throws MessagingException {
         rs.registerUser(urDTO);
+        return ResponseEntity.ok("A regisztráció folyamatban!<br>Kérjük erősítsd meg az emailcímed!");
+    }
+    
+    @GetMapping("/verify")
+    public ResponseEntity<String> verifyUserEmail(@RequestParam("token") String token) {
+        us.verifyUserEmail(token);
         return ResponseEntity.ok("Sikeres regisztráció!");
     }
 
