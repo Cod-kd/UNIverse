@@ -67,7 +67,7 @@ public class UserController {
     }
     
     @GetMapping("/verify")
-    public ResponseEntity<String> verifyUserEmail(@PathVariable String token) {
+    public ResponseEntity<String> verifyUserEmail(@RequestParam("token") String token) {
         us.verifyUserEmail(token);
         return ResponseEntity.ok("Sikeres regisztráció!");
     }

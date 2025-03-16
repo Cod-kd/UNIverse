@@ -169,10 +169,16 @@ CREATE PROCEDURE `createUserProfile` (IN `emailIn` VARCHAR(50), IN `usernameIn` 
     INSERT INTO `userprofiles`(`email`, `username`, `password`) VALUES (emailIn, usernameIn, passwordIn);
 END$$
 
-CREATE PROCEDURE `verifyUserByEmail` (IN `emailIn` VARCHAR(50))   BEGIN
-	SET SQL_SAFE_UPDATES = 0;
-    UPDATE `userprofiles` SET isVerified = true WHERE email=emailIn AND isVerified=false;
-    SELECT ROW_COUNT() AS affected_rows;
+CREATE PROCEDURE `universe`.`verifyUserByEmail` (
+    IN `emailIn` VARCHAR(50),
+    OUT `affectedRows` INT
+)
+BEGIN
+    SET SQL_SAFE_UPDATES = 0;
+    UPDATE `universe`.`userprofiles` 
+    SET `isVerified` = TRUE 
+    WHERE `email` = `emailIn` AND `isVerified` = FALSE;
+    SET `affectedRows` = ROW_COUNT();
     SET SQL_SAFE_UPDATES = 1;
 END$$
 
@@ -1101,11 +1107,13 @@ CALL registerUser('user4@example.com', 'user4', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUT
 CALL registerUser('user5@example.com', 'user5', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'Charlie White', TRUE, '1991-05-05', 'Engineering', 'University E', 'bmp');
 
 -- verify them
-call universe.verifyUserByEmail('user1@example.com');
-call universe.verifyUserByEmail('user2@example.com');
-call universe.verifyUserByEmail('user3@example.com');
-call universe.verifyUserByEmail('user4@example.com');
-call universe.verifyUserByEmail('user5@example.com');
+SET @affected = 0;
+call universe.verifyUserByEmail('user1@example.com', @affected);
+call universe.verifyUserByEmail('user2@example.com', @affected);
+call universe.verifyUserByEmail('user3@example.com', @affected);
+call universe.verifyUserByEmail('user4@example.com', @affected);
+call universe.verifyUserByEmail('user5@example.com', @affected);
+SET @affected = 0;
 
 -- usercontact generálása
 CALL addUserContact(1, 'johndoe', 1);

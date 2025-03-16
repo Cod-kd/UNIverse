@@ -13,30 +13,51 @@ import com.universe.backend.modules.UsersContact;
 import com.universe.backend.repositories.UserProfilesRepository;
 import com.universe.backend.utils.JwtUtilForEmail;
 import jakarta.persistence.EntityNotFoundException;
+import java.sql.CallableStatement;
+import java.sql.Types;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import org.springframework.jdbc.core.CallableStatementCreator;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @Service
 public class UserService {
     private final UserProfilesRepository upRepo;
     private final JwtUtilForEmail jwtUtilEmail;
+    private final JdbcTemplate jdbcTemplate;
 
-    public UserService(UserProfilesRepository upRepo, JwtUtilForEmail jwtUtilEmail) {
+    public UserService(UserProfilesRepository upRepo, JwtUtilForEmail jwtUtilEmail, JdbcTemplate jdbcTemplate) {
         this.upRepo = upRepo;
         this.jwtUtilEmail = jwtUtilEmail;
+        this.jdbcTemplate = jdbcTemplate;
     }
     
     @Transactional
     public void verifyUserEmail(String token) {
         String email = jwtUtilEmail.validateVerificationToken(token);
+        System.out.println(email);
         if (email == null) {
-            throw new EntityNotFoundException("Kritikus hiba a regisztráció során!");
+            throw new EntityNotFoundException("Érvénytelen vagy lejárt token!");
         }
-        if(!(upRepo.verifyUserByEmail(email) > 0)){
-            throw new EntityNotFoundException("A verifikáció sikertelen!");
+
+        Integer affectedRows = jdbcTemplate.execute(
+            (CallableStatementCreator) conn -> {
+                CallableStatement cs = conn.prepareCall("{CALL universe.verifyUserByEmail(?, ?)}");
+                cs.setString(1, email);
+                cs.registerOutParameter(2, Types.INTEGER);
+                return cs;
+            },
+            cs -> {
+                cs.execute();
+                return cs.getInt(2);
+            }
+        );
+
+        if (affectedRows == null || affectedRows <= 0) {
+            throw new EntityNotFoundException("A verifikáció sikertelen! A felhasználó nem található vagy már ellenőrzött.");
         }
     }
     
