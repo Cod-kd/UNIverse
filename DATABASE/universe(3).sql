@@ -169,6 +169,13 @@ CREATE PROCEDURE `createUserProfile` (IN `emailIn` VARCHAR(50), IN `usernameIn` 
     INSERT INTO `userprofiles`(`email`, `username`, `password`) VALUES (emailIn, usernameIn, passwordIn);
 END$$
 
+CREATE PROCEDURE `verifyUserByEmail` (IN `emailIn` VARCHAR(50))   BEGIN
+	SET SQL_SAFE_UPDATES = 0;
+    UPDATE `userprofiles` SET isVerified = true WHERE email=emailIn AND isVerified=false;
+    SELECT ROW_COUNT() AS affected_rows;
+    SET SQL_SAFE_UPDATES = 1;
+END$$
+
 CREATE PROCEDURE `deleteUserProfile` (IN `usernameIn` VARCHAR(12))   BEGIN
 	UPDATE `userprofiles` SET `deletedAt`= NOW() WHERE userprofiles.username = usernameIn;
 END$$
@@ -623,7 +630,8 @@ CREATE TABLE `userprofiles` (
   `username` varchar(12) NOT NULL,
   `password` varchar(60) NOT NULL,
   `createdAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `deletedAt` timestamp NULL DEFAULT NULL
+  `deletedAt` timestamp NULL DEFAULT NULL,
+  `isVerified` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1091,6 +1099,13 @@ CALL registerUser('user2@example.com', 'user2', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUT
 CALL registerUser('user3@example.com', 'user3', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'Alice Johnson', FALSE, '1995-03-03', 'Biology', 'University C', 'gif');
 CALL registerUser('user4@example.com', 'user4', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'Bob Brown', TRUE, '1988-04-04', 'Physics', 'University D', 'jpeg');
 CALL registerUser('user5@example.com', 'user5', '$2y$12$x9Qx33ZDWV3p.eyLSR7zXuUTyUah7/RLlq2apJTQpSEyOn7NXdQz6', 'Charlie White', TRUE, '1991-05-05', 'Engineering', 'University E', 'bmp');
+
+-- verify them
+call universe.verifyUserByEmail('user1@example.com');
+call universe.verifyUserByEmail('user2@example.com');
+call universe.verifyUserByEmail('user3@example.com');
+call universe.verifyUserByEmail('user4@example.com');
+call universe.verifyUserByEmail('user5@example.com');
 
 -- usercontact generálása
 CALL addUserContact(1, 'johndoe', 1);

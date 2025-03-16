@@ -11,6 +11,7 @@ import com.universe.backend.modules.UserRole;
 import com.universe.backend.modules.UsersBio;
 import com.universe.backend.modules.UsersContact;
 import com.universe.backend.repositories.UserProfilesRepository;
+import com.universe.backend.utils.JwtUtilForEmail;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -21,9 +22,26 @@ import java.util.List;
 @Service
 public class UserService {
     private final UserProfilesRepository upRepo;
+    private final JwtUtilForEmail jwtUtilEmail;
 
-    public UserService(UserProfilesRepository upRepo) {
+    public UserService(UserProfilesRepository upRepo, JwtUtilForEmail jwtUtilEmail) {
         this.upRepo = upRepo;
+        this.jwtUtilEmail = jwtUtilEmail;
+    }
+    
+    @Transactional
+    public void verifyUserEmail(String token) {
+        String email = jwtUtilEmail.validateVerificationToken(token);
+        if (email == null) {
+            throw new EntityNotFoundException("Kritikus hiba a regisztráció során!");
+        }
+        if(!(upRepo.verifyUserByEmail(email) > 0)){
+            throw new EntityNotFoundException("A verifikáció sikertelen!");
+        }
+    }
+    
+    public void sendEmail(String email) {
+        jwtUtilEmail.generateVerificationToken(email);
     }
 
     private CustomUserPrincipal getPrincipal(Authentication authentication) {

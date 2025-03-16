@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/user/name/**").permitAll()
                         .requestMatchers("/user/common/**").permitAll()
                         .requestMatchers("/user/username").permitAll()
+                        .requestMatchers("/user/verify").permitAll()
                         .requestMatchers("/user/id").permitAll()
                         .requestMatchers("/user/get/**").permitAll()
                         .requestMatchers("/groups/search").permitAll()

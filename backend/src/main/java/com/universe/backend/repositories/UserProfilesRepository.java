@@ -19,6 +19,9 @@ public interface UserProfilesRepository extends JpaRepository<UserProfiles, Inte
     @Procedure(procedureName = "idByUsername")
     Integer idByUsername(@Param("usernameIn") String username);
     
+    @Procedure(procedureName = "verifyUserByEmail")
+    Integer verifyUserByEmail(@Param("emailIn") String email);
+    
     @Procedure(procedureName = "usernameById")
     String usernameById(@Param("userIdIn") Integer id);
     
