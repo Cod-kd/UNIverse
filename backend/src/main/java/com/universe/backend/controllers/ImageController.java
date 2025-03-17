@@ -50,20 +50,32 @@ public class ImageController {
     
     @GetMapping("/get/profilepicture")
     public ResponseEntity<Resource> getProfilePicture(
-            @RequestParam("id") Integer id,
-            @RequestParam(value = "extension", defaultValue = "jpg") String extension) {
+            @RequestParam("id") Integer id) {
         
         try {
-            Resource resource = imageService.loadProfileImage(id, extension);
+            Resource resource = imageService.loadProfileImage(id);
+            // Determine the extension from the resource's filename
+            String filename = resource.getFilename();
+            String extension = filename != null && filename.contains(".") ?
+                    filename.substring(filename.lastIndexOf(".") + 1) : "jpg";
             String contentType = imageService.determineContentType(extension);
             
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + filename + "\"")
                     .body(resource);
         } catch (MalformedURLException e) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Error-Message", "Kép nem található: " + e.getMessage());
             return ResponseEntity.badRequest()
-                    .body(null); // Or return a default image/error response
+                    .headers(headers)
+                    .body(null);
+        } catch (IOException e) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Error-Message", "Hiba a kép betöltésekor: " + e.getMessage());
+            return ResponseEntity.badRequest()
+                    .headers(headers)
+                    .body(null);
         }
     }
 }

@@ -73,15 +73,39 @@ public class ImageService {
         }
     }
     
-    public Resource loadProfileImage(Integer id, String extension) throws MalformedURLException {
-        Path filePath = uploadPath.resolve(id + "." + extension);
-        System.out.println("Loading image from: " + filePath.toAbsolutePath()); // todo: get this out
-        Resource resource = new UrlResource(filePath.toUri());
-        if (resource.exists() && resource.isReadable()) {
-            return resource;
-        } else {
-            throw new MalformedURLException("A kép nem létezik: " + filePath);
+    public Resource loadProfileImage(Integer id) throws MalformedURLException, IOException {
+        // Scan the directory for a file matching the id
+        Path filePath = null;
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(uploadPath, id + ".*")) {
+            for (Path path : stream) {
+                if (Files.isRegularFile(path)) {
+                    filePath = path;
+                    break; // Use the first matching file
+                }
+            }
+        } catch (IOException e) {
+            throw new MalformedURLException("Hiba a fájlok beolvasása közben: " + e.getMessage());
         }
+
+        if (filePath == null) {
+            throw new MalformedURLException("A kép nem létezik az adott felhasználóhoz: " + id);
+        }
+
+        System.out.println("Loading image from: " + filePath.toAbsolutePath());
+        Resource resource = new UrlResource(filePath.toUri());
+        if (!resource.exists() || !resource.isReadable()) {
+            throw new IOException("A kép nem olvasható vagy nem létezik: " + filePath);
+        }
+        return resource;
+    }
+
+    public String getExtensionFromFilePath(Path filePath) {
+        String filename = filePath.getFileName().toString();
+        int lastDotIndex = filename.lastIndexOf(".");
+        if (lastDotIndex != -1) {
+            return filename.substring(lastDotIndex + 1);
+        }
+        return "jpg"; // Fallback if no extension is found
     }
     
     public String determineContentType(String extension) {
