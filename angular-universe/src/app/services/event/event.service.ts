@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FetchService } from '../fetch/fetch.service';
+import { AuthType, FetchService } from '../fetch/fetch.service';
 import { Observable, forkJoin, of, throwError } from 'rxjs';
 import { Event } from '../../models/event/event.model';
 import { map, catchError, timeout, retry, finalize } from 'rxjs/operators';
@@ -16,7 +16,7 @@ export class EventService {
 
   getGroupEvents(groupName: string): Observable<Event[]> {
     this.loadingService.show();
-    return this.fetchService.post<Event[]>(`/groups/name/${groupName}/events`, {}).pipe(
+    return this.fetchService.post<Event[]>(`/groups/name/${groupName}/events`, { authType: AuthType.NONE }).pipe(
       timeout(10000),
       retry(1),
       catchError(() => {
@@ -29,7 +29,8 @@ export class EventService {
   createEvent(groupName: string, eventData: any): Observable<string> {
     this.loadingService.show();
     return this.fetchService.post<string>(`/groups/name/${groupName}/newevent`, eventData, {
-      responseType: 'text'
+      responseType: 'text',
+      authType: AuthType.JWT
     }).pipe(
       timeout(15000),
       catchError(error => {
@@ -41,7 +42,7 @@ export class EventService {
 
   getEventById(eventId: number): Observable<Event> {
     return this.fetchService.get<Event>(`/user/get/event`, {
-      params: { eventId: eventId.toString() }
+      params: { eventId: eventId.toString() }, authType: AuthType.NONE
     }).pipe(
       timeout(8000),
       retry(1),

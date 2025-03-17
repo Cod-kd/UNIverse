@@ -6,7 +6,7 @@ import { PopupService } from '../../../services/popup-message/popup-message.serv
 import { UniversityService } from '../../../services/university/university.service';
 import { UserData } from '../../../models/unicard/unicard.model';
 import { AuthService } from '../../../services/auth/auth.service';
-import { FetchService } from '../../../services/fetch/fetch.service';
+import { AuthType, FetchService } from '../../../services/fetch/fetch.service';
 import { LoadingService } from '../../../services/loading/loading.service';
 import { finalize } from 'rxjs/operators';
 import { Profile } from '../../../models/profile/profile.model';
@@ -64,6 +64,7 @@ export class UNIcardComponent implements OnInit {
 
     this.fetchService.get<Profile>(`/user/name/${credentials.username}`, {
       responseType: 'json',
+      authType: AuthType.NONE,
       showError: true
     })
       .pipe(finalize(() => {

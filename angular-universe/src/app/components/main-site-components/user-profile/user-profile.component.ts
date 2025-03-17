@@ -14,7 +14,7 @@ import { PopupService } from '../../../services/popup-message/popup-message.serv
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ConstantsService } from '../../../services/constants/constants.service';
-import { FetchService } from '../../../services/fetch/fetch.service';
+import { AuthType, FetchService } from '../../../services/fetch/fetch.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -160,6 +160,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
     this.fetchService.get<string>(`/user/username`, {
       responseType: 'text',
+      authType: AuthType.NONE,
       params: { id: userId.toString() }
     })
       .pipe(

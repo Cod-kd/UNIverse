@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { tap, map, catchError, timeout, retry, finalize } from 'rxjs/operators';
-import { FetchService } from '../fetch/fetch.service';
+import { AuthType, FetchService } from '../fetch/fetch.service';
 import { Group } from '../../models/group/group.model';
 import { PopupService } from '../popup-message/popup-message.service';
 import { LoadingService } from '../loading/loading.service';
@@ -63,13 +63,11 @@ export class GroupService {
   }
 
   isGroupMember(groupId: number): Observable<boolean> {
-    if (!this.currentUserId) return of(false);
-
     return this.fetchService.post<boolean>(`${this.baseEndpoint}/isGroupFollowed`, {
-      userId: this.currentUserId,
       groupId: groupId
     }, {
       responseType: 'json',
+      authType: AuthType.JWT,
       showError: false
     }).pipe(
       catchError(() => {
@@ -79,17 +77,11 @@ export class GroupService {
   }
 
   joinGroup(group: Group): Observable<any> {
-    if (!this.currentUserId) {
-      this.popupService.showError('Jelentkezz be a csoporthoz való csatlakozáshoz!');
-      return throwError(() => new Error('Nem vagy bejelentkezve!'));
-    }
-
     this.loadingService.show();
 
     return this.fetchService.post<any>(
       `${this.baseEndpoint}/name/${encodeURIComponent(group.name)}/follow`,
-      { userId: this.currentUserId },
-      { responseType: 'text' }
+      { responseType: 'text', authType: AuthType.JWT }
     ).pipe(
       timeout(10000),
       tap({
@@ -110,17 +102,11 @@ export class GroupService {
   }
 
   leaveGroup(group: Group): Observable<any> {
-    if (!this.currentUserId) {
-      this.popupService.showError('A csoportból való kilépéshez jelentkezz be!');
-      return throwError(() => new Error('Nem vagy bejelentkezve!'));
-    }
-
     this.loadingService.show();
 
     return this.fetchService.post<any>(
       `${this.baseEndpoint}/name/${encodeURIComponent(group.name)}/unfollow`,
-      { userId: this.currentUserId },
-      { responseType: 'text' }
+      { responseType: 'text', authType: AuthType.JWT }
     ).pipe(
       timeout(10000),
       tap({

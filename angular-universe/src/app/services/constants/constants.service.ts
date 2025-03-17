@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FetchService } from '../fetch/fetch.service';
+import { AuthType, FetchService } from '../fetch/fetch.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Role, ContactType, Category } from '../../models/constants/constants.model';
 
@@ -46,7 +46,7 @@ export class ConstantsService {
   }
 
   private fetchRoles(): void {
-    this.fetchService.get<Role[]>('/user/common/roles').subscribe({
+    this.fetchService.get<Role[]>('/user/common/roles', { authType: AuthType.NONE }).subscribe({
       next: (data) => this.roles$.next(data),
       error: () => {
         if (this.roles$.getValue().length === 0) {
@@ -57,7 +57,7 @@ export class ConstantsService {
   }
 
   private fetchContactTypes(): void {
-    this.fetchService.get<ContactType[]>('/user/common/contacttypes').subscribe({
+    this.fetchService.get<ContactType[]>('/user/common/contacttypes', { authType: AuthType.NONE }).subscribe({
       next: (data) => this.contactTypes$.next(data),
       error: () => {
         if (this.contactTypes$.getValue().length === 0) {
@@ -68,7 +68,7 @@ export class ConstantsService {
   }
 
   private fetchCategories(): void {
-    this.fetchService.get<Category[]>('/user/common/categories').subscribe({
+    this.fetchService.get<Category[]>('/user/common/categories', { authType: AuthType.NONE }).subscribe({
       next: (data) => this.categories$.next(data),
       error: () => {
         if (this.categories$.getValue().length === 0) {

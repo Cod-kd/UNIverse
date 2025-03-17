@@ -6,7 +6,7 @@ import { LoadingService } from '../loading/loading.service';
 import { Group } from '../../models/group/group.model';
 import { Router, NavigationEnd } from '@angular/router';
 import { Profile } from '../../models/profile/profile.model';
-import { FetchService } from '../fetch/fetch.service';
+import { AuthType, FetchService } from '../fetch/fetch.service';
 import { GroupService } from '../group/group.service';
 
 export type SearchResult = Group[] | Profile | Profile[] | null;
@@ -116,7 +116,7 @@ export class SearchService {
       }
 
       return this.fetchService.get<SearchResult>(endpoint, {
-        responseType: 'json',
+        responseType: 'json', authType: AuthType.NONE,
         params
       }).pipe(
         tap(results => this.handleSearchResponse(results, searchTerm, isProfessionalSearch)),

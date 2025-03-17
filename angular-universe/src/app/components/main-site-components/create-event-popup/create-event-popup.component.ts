@@ -23,22 +23,14 @@ export class CreateEventPopupComponent implements OnInit {
     private validationService: ValidationService) { }
 
   ngOnInit(): void {
-    const userId = this.getUserIdFromLocalStorage();
-
     this.eventForm = this.fb.group({
       name: ['', Validators.required],
-      creatorId: [userId, Validators.required],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
       place: ['', Validators.required],
       attachmentRelPath: ['esemeny.jpg'],
       description: ['', Validators.required]
     }, { validators: this.validationService.dateRangeValidator });
-  }
-
-  private getUserIdFromLocalStorage(): number {
-    const userIdStr = localStorage.getItem('userId');
-    return userIdStr ? parseInt(userIdStr, 10) : 0;
   }
 
   onCancel(): void {

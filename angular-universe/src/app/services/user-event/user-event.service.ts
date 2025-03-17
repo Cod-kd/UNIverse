@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FetchService } from '../fetch/fetch.service';
+import { AuthType, FetchService } from '../fetch/fetch.service';
 import { Observable, shareReplay, of, throwError } from 'rxjs';
 import { catchError, timeout, retry, finalize } from 'rxjs/operators';
 import { LoadingService } from '../loading/loading.service';
@@ -25,7 +25,8 @@ export class UserEventService {
 
     if (!this.interestedEventsCache$) {
       this.interestedEventsCache$ = this.fetchService.get<number[]>(`/user/get/events_interested_in`, {
-        params: { userId }
+        params: { userId },
+        authType: AuthType.JWT
       }).pipe(
         timeout(10000),
         retry(1),
@@ -48,7 +49,8 @@ export class UserEventService {
 
     if (!this.participatingEventsCache$) {
       this.participatingEventsCache$ = this.fetchService.get<number[]>(`/user/get/events_scheduled`, {
-        params: { userId }
+        params: { userId },
+        authType: AuthType.JWT
       }).pipe(
         timeout(10000),
         retry(1),
@@ -63,19 +65,12 @@ export class UserEventService {
   }
 
   addEventInterest(eventId: number): Observable<string> {
-    const userId = localStorage.getItem('userId');
-
-    if (!userId) {
-      return throwError(() => new Error('User must be logged in'));
-    }
-
     this.loadingService.show();
     this.interestedEventsCache$ = null;
 
     return this.fetchService.post<string>(`/groups/event/add/interest`, {
-      userId,
       eventId
-    }, { responseType: 'text' }).pipe(
+    }, { responseType: 'text', authType: AuthType.JWT }).pipe(
       catchError(error => {
         return throwError(() => error);
       }),
@@ -84,19 +79,12 @@ export class UserEventService {
   }
 
   removeEventInterest(eventId: number): Observable<string> {
-    const userId = localStorage.getItem('userId');
-
-    if (!userId) {
-      return throwError(() => new Error('Nem vagy bejelentkezve!'));
-    }
-
     this.loadingService.show();
     this.interestedEventsCache$ = null;
 
     return this.fetchService.post<string>(`/groups/event/remove/interest`, {
-      userId,
       eventId
-    }, { responseType: 'text' }).pipe(
+    }, { responseType: 'text', authType: AuthType.JWT }).pipe(
       catchError(error => {
         return throwError(() => error);
       }),
@@ -105,19 +93,12 @@ export class UserEventService {
   }
 
   addEventParticipation(eventId: number): Observable<string> {
-    const userId = localStorage.getItem('userId');
-
-    if (!userId) {
-      return throwError(() => new Error('Nem vagy bejelentkezve!'));
-    }
-
     this.loadingService.show();
     this.participatingEventsCache$ = null;
 
     return this.fetchService.post<string>(`/groups/event/add/participant`, {
-      userId,
       eventId
-    }, { responseType: 'text' }).pipe(
+    }, { responseType: 'text', authType: AuthType.JWT }).pipe(
       catchError(error => {
         return throwError(() => error);
       }),
@@ -126,19 +107,12 @@ export class UserEventService {
   }
 
   removeEventParticipation(eventId: number): Observable<string> {
-    const userId = localStorage.getItem('userId');
-
-    if (!userId) {
-      return throwError(() => new Error('Nem vagy bejelentkezve!'));
-    }
-
     this.loadingService.show();
     this.participatingEventsCache$ = null;
 
     return this.fetchService.post<string>(`/groups/event/remove/participant`, {
-      userId,
       eventId
-    }, { responseType: 'text' }).pipe(
+    }, { responseType: 'text', authType: AuthType.JWT }).pipe(
       catchError(error => {
         return throwError(() => error);
       }),
@@ -149,7 +123,7 @@ export class UserEventService {
   getEventInterestedUsers(eventId: number): Observable<number[]> {
     return this.fetchService.post<number[]>(`/groups/event/interested_users`, {
       eventId
-    }).pipe(
+    }, { authType: AuthType.NONE }).pipe(
       catchError(() => {
         return of([]);
       })
@@ -159,7 +133,7 @@ export class UserEventService {
   getEventParticipants(eventId: number): Observable<number[]> {
     return this.fetchService.post<number[]>(`/groups/event/users_schedule`, {
       eventId
-    }).pipe(
+    }, { authType: AuthType.NONE }).pipe(
       catchError(() => {
         return of([]);
       })
@@ -169,7 +143,7 @@ export class UserEventService {
   getUsernameById(userId: number): Observable<string> {
     return this.fetchService.get<string>(`/user/username`, {
       params: { id: userId.toString() },
-      responseType: 'text'
+      responseType: 'text', authType: AuthType.NONE
     }).pipe(
       catchError(() => {
         return of('Unknown User');
