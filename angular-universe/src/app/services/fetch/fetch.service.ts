@@ -7,7 +7,6 @@ import { PopupService } from '../popup-message/popup-message.service';
 
 export enum AuthType {
   NONE = 'none',
-  BASIC = 'basic',
   JWT = 'jwt'
 }
 
@@ -33,7 +32,7 @@ export class FetchService {
       responseType = 'json',
       showError = true,
       params,
-      authType = AuthType.BASIC
+      authType = AuthType.NONE
     } = options;
 
     let url = `${this.baseUrl}${endpoint}`;
@@ -62,7 +61,7 @@ export class FetchService {
     const {
       responseType = 'json',
       showError = true,
-      authType = AuthType.BASIC
+      authType = AuthType.NONE
     } = options;
 
     return this.http.post<T>(`${this.baseUrl}${endpoint}`, body, {
@@ -79,10 +78,6 @@ export class FetchService {
     });
 
     switch (authType) {
-      case AuthType.BASIC:
-        const credentials = btoa(`${environment.auth.adminUsername}:${environment.auth.adminPassword}`);
-        headers = headers.set('Authorization', `Basic ${credentials}`);
-        break;
       case AuthType.JWT:
         const token = localStorage.getItem('token');
         if (token) {

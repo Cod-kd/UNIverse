@@ -14,14 +14,12 @@ export class GroupService {
   groups$ = this.groupsSubject.asObservable();
 
   private baseEndpoint = '/groups';
-  private currentUserId: string | null = null;
 
   constructor(
     private fetchService: FetchService,
     private popupService: PopupService,
     private loadingService: LoadingService
   ) {
-    this.currentUserId = localStorage.getItem('userId');
   }
 
   fetchAllGroups(): Observable<Group[]> {
@@ -46,8 +44,6 @@ export class GroupService {
   }
 
   checkGroupMembership(groupId: number): Observable<void> {
-    if (!this.currentUserId) return of(void 0);
-
     return this.isGroupMember(groupId).pipe(
       tap(isMember => {
         const updatedGroups = this.groupsSubject.value.map(group =>
@@ -81,7 +77,11 @@ export class GroupService {
 
     return this.fetchService.post<any>(
       `${this.baseEndpoint}/name/${encodeURIComponent(group.name)}/follow`,
-      { responseType: 'text', authType: AuthType.JWT }
+      {},
+      {
+        responseType: 'text',
+        authType: AuthType.JWT
+      }
     ).pipe(
       timeout(10000),
       tap({
@@ -105,7 +105,7 @@ export class GroupService {
     this.loadingService.show();
 
     return this.fetchService.post<any>(
-      `${this.baseEndpoint}/name/${encodeURIComponent(group.name)}/unfollow`,
+      `${this.baseEndpoint}/name/${encodeURIComponent(group.name)}/unfollow`, {},
       { responseType: 'text', authType: AuthType.JWT }
     ).pipe(
       timeout(10000),
@@ -147,9 +147,5 @@ export class GroupService {
       finalize(() => this.loadingService.hide()),
       map(() => this.groupsSubject.value)
     );
-  }
-
-  refreshUserId(): void {
-    this.currentUserId = localStorage.getItem('userId');
   }
 }

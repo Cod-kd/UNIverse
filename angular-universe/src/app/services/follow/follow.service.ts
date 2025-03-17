@@ -41,7 +41,7 @@ export class FollowService {
   followUser(targetUserName: string): Observable<any> {
     this.loadingService.show();
     return this.fetchService.post(
-      `/user/name/${targetUserName}/follow`,
+      `/user/name/${targetUserName}/follow`, {},
       { responseType: 'text', authType: AuthType.JWT }
     ).pipe(
       timeout(10000),
@@ -55,7 +55,7 @@ export class FollowService {
   unfollowUser(targetUserName: string): Observable<any> {
     this.loadingService.show();
     return this.fetchService.post(
-      `/user/name/${targetUserName}/unfollow`,
+      `/user/name/${targetUserName}/unfollow`, {},
       { responseType: 'text', authType: AuthType.JWT }
     ).pipe(
       timeout(10000),

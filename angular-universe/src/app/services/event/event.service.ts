@@ -16,7 +16,7 @@ export class EventService {
 
   getGroupEvents(groupName: string): Observable<Event[]> {
     this.loadingService.show();
-    return this.fetchService.post<Event[]>(`/groups/name/${groupName}/events`, { authType: AuthType.NONE }).pipe(
+    return this.fetchService.post<Event[]>(`/groups/name/${groupName}/events`,{}, { authType: AuthType.NONE }).pipe(
       timeout(10000),
       retry(1),
       catchError(() => {
@@ -28,7 +28,7 @@ export class EventService {
 
   createEvent(groupName: string, eventData: any): Observable<string> {
     this.loadingService.show();
-    return this.fetchService.post<string>(`/groups/name/${groupName}/newevent`, eventData, {
+    return this.fetchService.post<string>(`/groups/name/${groupName}/newevent`, eventData,{
       responseType: 'text',
       authType: AuthType.JWT
     }).pipe(
