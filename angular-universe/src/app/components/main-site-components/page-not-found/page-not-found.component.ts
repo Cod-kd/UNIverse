@@ -14,9 +14,9 @@ export class PageNotFoundComponent {
   isLoggedIn: boolean;
 
   constructor(
-    private router: Router, 
+    private router: Router,
     private authService: AuthService) {
-    this.isLoggedIn = this.authService.getLoginStatus();
+    this.isLoggedIn = this.authService.getAuthStatus();
 
     if (this.isLoggedIn && !this.router.url.includes('/main-site/page-not-found')) {
       this.router.navigate(['/main-site/page-not-found']);

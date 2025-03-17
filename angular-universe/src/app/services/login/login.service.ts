@@ -25,11 +25,11 @@ export class LoginService implements OnDestroy {
       .pipe(
         filter(event => event instanceof NavigationStart && event.url === '/main-site')
       )
-      .subscribe(() => this.validateServerAuthentication());
+      .subscribe(() => this.validateLocalAuthentication());
 
-    this.authSubscription = this.authService.hasToken$.subscribe(hasToken => {
-      if (hasToken) {
-        this.validateServerAuthentication();
+    this.authSubscription = this.authService.isAuthenticated$.subscribe(isAuth => {
+      if (isAuth) {
+        this.validateLocalAuthentication();
       }
     });
   }
@@ -40,34 +40,24 @@ export class LoginService implements OnDestroy {
     this.authService.stopPolling();
   }
 
-  private validateServerAuthentication(): void {
-    const credentials = this.authService.getStoredCredentials();
-    if (credentials) {
-      this.loadingService.show();
-      this.fetchLogin(credentials.username, credentials.password, false)
-        .pipe(
-          timeout(15000),
-          retry(1),
-          finalize(() => this.loadingService.hide()),
-          catchError(() => {
-            this.authService.logout();
-            this.router.navigate(['/UNIcard-login']);
-            this.popupService.showError('Sikertelen autentikáció!');
-            return throwError(() => new Error('Sikertelen szerver autentikáció!'));
-          })
-        )
-        .subscribe({
-          next: (token: string) => {
-            localStorage.setItem("token", token);
+  private validateLocalAuthentication(): void {
+    // Check if required auth data exists in localStorage
+    const username = this.authService.getUsername();
+    const token = this.authService.getToken();
+    const userId = this.authService.getUserId();
 
-            this.fetchUserId(credentials.username).subscribe({
-              next: (userId) => {
-                localStorage.setItem("userId", userId);
-              }
-            });
-          }
-        });
+    if (!username || !token || !userId) {
+      // Missing required auth data, log out and redirect
+      this.authService.logout();
+      this.router.navigate(['/UNIcard-login']);
+      this.popupService.showError('Hiányzó bejelentkezési adatok!');
+      return;
     }
+
+    // Optional: Additional validation logic can be added here
+    // For example, check token format/expiry if embedded in token
+
+    // If needed later, you can re-add server validation with proper error handling
   }
 
   fetchLogin(loginUsername: string, loginPassword: string, showErrors = true): Observable<string> {
@@ -83,11 +73,6 @@ export class LoginService implements OnDestroy {
       showError: showErrors,
       authType: AuthType.NONE
     }).pipe(
-      tap(token => {
-        if (token) {
-          localStorage.setItem('token', token);
-        }
-      }),
       finalize(() => {
         if (showErrors) this.loadingService.hide();
       })
@@ -102,9 +87,8 @@ export class LoginService implements OnDestroy {
     });
   }
 
-  async handleLoginResponse(credentials: any) {
+  handleLoginResponse(credentials: any, token: string) {
     try {
-      this.authService.login(credentials.username, credentials.password);
       this.loadingService.show();
 
       this.fetchUserId(credentials.username)
@@ -119,9 +103,12 @@ export class LoginService implements OnDestroy {
         .subscribe({
           next: (userId) => {
             if (userId) {
-              localStorage.setItem("userId", userId);
+              // Login with token-based auth
+              this.authService.login(credentials.username, token, userId);
+              this.router.navigate(["/main-site"]);
+            } else {
+              this.popupService.showError('Hiányzó felhasználói azonosító!');
             }
-            this.router.navigate(["/main-site"], { state: { credentials } });
           }
         });
     } catch {

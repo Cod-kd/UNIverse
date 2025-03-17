@@ -73,7 +73,7 @@ export class MainSiteComponent implements OnInit {
       }
     });
 
-    if (!this.authService.getLoginStatus()) {
+    if (!this.authService.getAuthStatus()) {
       this.router.navigate(['/UNIcard-login']);
       return;
     }

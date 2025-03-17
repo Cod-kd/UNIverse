@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { PopupService } from '../popup-message/popup-message.service';
+import { AuthService } from '../auth/auth.service';
+import { Router } from '@angular/router';
 
 export enum AuthType {
   NONE = 'none',
@@ -18,7 +20,9 @@ export class FetchService {
 
   constructor(
     private http: HttpClient,
-    private popupService: PopupService
+    private popupService: PopupService,
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   get<T>(endpoint: string, options: {
@@ -92,6 +96,16 @@ export class FetchService {
   private handleError(error: HttpErrorResponse, showError = true): Observable<never> {
     if (!(error instanceof HttpErrorResponse)) {
       return throwError(() => error);
+    }
+
+    // Handle authentication errors 
+    if (error.status === 401 || error.status === 403) {
+      this.authService.logout();
+      this.router.navigate(['/UNIcard-login']);
+      if (showError) {
+        this.popupService.showError('Bejelentkezés lejárt vagy érvénytelen');
+      }
+      return throwError(() => new Error('Authentication error'));
     }
 
     if (error.status >= 200 && error.status < 300) {

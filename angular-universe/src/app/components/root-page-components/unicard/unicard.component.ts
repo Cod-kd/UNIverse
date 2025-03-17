@@ -43,7 +43,8 @@ export class UNIcardComponent implements OnInit {
       return;
     }
 
-    if (this.authService.getLoginStatus()) {
+    // Use existing getAuthStatus method instead of getLoginStatus
+    if (this.authService.getAuthStatus()) {
       this.fetchUserData();
     } else {
       this.router.navigate(['/UNIcard-login']);
@@ -51,8 +52,12 @@ export class UNIcardComponent implements OnInit {
   }
 
   private fetchUserData(): void {
-    const credentials = this.authService.getStoredCredentials();
-    if (!credentials) {
+    // Extract credentials from localStorage directly instead of using getStoredCredentials
+    const username = this.authService.getUsername();
+    // Assuming password needs to be retrieved another way - from the form or state
+    const password = localStorage.getItem('password') || '';
+
+    if (!username) {
       this.router.navigate(['/UNIcard-login']);
       return;
     }
@@ -60,7 +65,7 @@ export class UNIcardComponent implements OnInit {
     this.isLoading = true;
     this.loadingService.show();
 
-    this.fetchService.get<Profile>(`/user/name/${credentials.username}`, {
+    this.fetchService.get<Profile>(`/user/name/${username}`, {
       responseType: 'json',
       authType: AuthType.NONE,
       showError: true
@@ -72,8 +77,8 @@ export class UNIcardComponent implements OnInit {
       .subscribe({
         next: (profile) => {
           this.userData = {
-            username: credentials.username,
-            password: credentials.password,
+            username: username,
+            password: password,
             fullName: profile.usersData.name,
             gender: profile.usersData.gender === null ? '' : profile.usersData.gender ? '1' : '0',
             birthDate: profile.usersData.birthDate,
@@ -111,7 +116,8 @@ export class UNIcardComponent implements OnInit {
 
     try {
       await this.cardMetadataService.saveCardData(this.userData, userDataDiv);
-      if (!this.authService.getLoginStatus()) {
+      // Use existing getAuthStatus instead of getLoginStatus
+      if (!this.authService.getAuthStatus()) {
         this.router.navigate(['/UNIcard-login']);
       }
     } catch (error) {

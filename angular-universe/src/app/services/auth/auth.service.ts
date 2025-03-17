@@ -7,20 +7,18 @@ import { takeWhile } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private hasToken = new BehaviorSubject<boolean>(this.getStoredLoginStatus());
-  hasToken$ = this.hasToken.asObservable();
+  private isAuthenticated = new BehaviorSubject<boolean>(this.getStoredAuthStatus());
+  isAuthenticated$ = this.isAuthenticated.asObservable();
 
   private cachedValues = new Map<string, string>();
-  private authKeys = []; // Temporarily removed username
+  private authKeys = ['token', 'username', 'userId']; // Keys to monitor
   private pollingActive = false;
   private pollingSubscription?: Subscription;
-  //private storageEventHandler = (event: StorageEvent) => this.handleStorageEvent(event);
+  private isInitialLogin = false; // Flag for initial login
 
-  constructor(
-    private router: Router,
-  ) {
-    this.hasToken.subscribe(hasToken => {
-      if (hasToken) {
+  constructor(private router: Router) {
+    this.isAuthenticated.subscribe(isAuth => {
+      if (isAuth) {
         this.startPolling();
       } else {
         this.stopPolling();
@@ -35,7 +33,12 @@ export class AuthService {
     if (this.pollingActive) return;
 
     this.pollingActive = true;
-    //window.addEventListener('storage', this.storageEventHandler);
+
+    // If this is an initial login, update the cache before starting to poll
+    if (this.isInitialLogin) {
+      this.updateValueCache();
+      this.isInitialLogin = false;
+    }
 
     this.pollingSubscription = interval(500)
       .pipe(takeWhile(() => this.pollingActive))
@@ -44,7 +47,6 @@ export class AuthService {
 
   stopPolling(): void {
     this.pollingActive = false;
-    //window.removeEventListener('storage', this.storageEventHandler);
     this.pollingSubscription?.unsubscribe();
   }
 
@@ -54,20 +56,13 @@ export class AuthService {
     });
   }
 
-  /*
-  private handleStorageEvent(event: StorageEvent): void {
-    if (event.key && this.authKeys.includes(event.key)) {
-      this.logoutAndRedirect();
-    }
-  }
-    */
-
   private checkStorageChanges(): void {
     if (!this.pollingActive) return;
 
     for (const key of this.authKeys) {
       const currentValue = localStorage.getItem(key) || '';
       if (currentValue !== this.cachedValues.get(key)) {
+        console.log(`Storage change detected: ${key}`);
         this.logoutAndRedirect();
         return;
       }
@@ -76,45 +71,55 @@ export class AuthService {
 
   private logoutAndRedirect(): void {
     this.stopPolling();
-    this.hasToken.next(false);
+    this.isAuthenticated.next(false);
     this.router.navigate(['/UNIcard-login']);
   }
 
-  private getStoredLoginStatus(): boolean {
-    return localStorage.getItem('hasToken') === 'true' &&
-      !!localStorage.getItem('username') &&
-      !!localStorage.getItem('password');
+  private getStoredAuthStatus(): boolean {
+    // Check if token and username are present
+    return !!localStorage.getItem('token') &&
+      !!localStorage.getItem('username');
   }
 
   private clearUserData(): void {
     this.authKeys.forEach(key => localStorage.removeItem(key));
-    localStorage.removeItem("userId");
     this.updateValueCache();
   }
 
-  login(username: string, password: string): void {
-    localStorage.setItem('hasToken', 'true');
+  login(username: string, token: string, userId: string): void {
+    // Set flag to indicate initial login
+    this.isInitialLogin = true;
+
+    // Update localStorage values
     localStorage.setItem('username', username);
-    localStorage.setItem('password', password);
-    this.hasToken.next(true);
-    this.updateValueCache();
-    setTimeout(() => this.startPolling(), 500);
+    localStorage.setItem('token', token);
+    localStorage.setItem('userId', userId);
+
+    // Update authentication state
+    this.isAuthenticated.next(true);
+
+    // The updateValueCache will be called in startPolling due to the isInitialLogin flag
   }
 
   logout(): void {
     this.stopPolling();
-    localStorage.setItem('hasToken', 'false');
     this.clearUserData();
-    this.hasToken.next(false);
+    this.isAuthenticated.next(false);
   }
 
-  getLoginStatus(): boolean {
-    return this.getStoredLoginStatus();
+  getAuthStatus(): boolean {
+    return this.getStoredAuthStatus();
   }
 
-  getStoredCredentials(): { username: string, password: string } | null {
-    const username = localStorage.getItem('username');
-    const password = localStorage.getItem('password');
-    return (username && password) ? { username, password } : null;
+  getUsername(): string | null {
+    return localStorage.getItem('username');
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  getUserId(): string | null {
+    return localStorage.getItem('userId');
   }
 }

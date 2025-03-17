@@ -6,6 +6,7 @@ import { ToggleInputComponent } from '../toggle-input/toggle-input.component';
 import { LoginService } from '../../../services/login/login.service';
 import { ValidationService } from '../../../services/validation/validation.service';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -24,6 +25,7 @@ export class LoginComponent {
     private popupService: PopupService,
     private validationService: ValidationService,
     private loginService: LoginService,
+    private authService: AuthService,
     private fb: FormBuilder) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
@@ -36,8 +38,8 @@ export class LoginComponent {
   }
 
   ngOnInit(): void {
-    // Check for stored credentials on component initialization
-    this.checkStoredCredentials();
+    // Check for stored token on component initialization
+    this.checkStoredAuth();
   }
 
   // Handle username input changes and validate the username
@@ -72,27 +74,27 @@ export class LoginComponent {
 
     if (isUsernameValid && isPasswordValid) {
       this.loginService.fetchLogin(username, password).subscribe({
-        next: () => {
-          this.loginService.handleLoginResponse(this.loginForm.value);
+        next: (token: string) => {
+          if (token) {
+            // Pass credentials and token to handle login
+            this.loginService.handleLoginResponse({ username }, token);
+          } else {
+            this.popupService.showError("Érvénytelen token!");
+          }
         }
       });
     }
   }
 
-  // Automatically attempt login if credentials are stored in local storage
-  private checkStoredCredentials(): void {
-    const storedUsername = localStorage.getItem('username');
-    const storedPassword = localStorage.getItem('password');
+  // Check for stored token on component initialization
+  private checkStoredAuth(): void {
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('username');
+    const userId = localStorage.getItem('userId');
 
-    if (storedUsername && storedPassword) {
-      this.loginService.fetchLogin(storedUsername, storedPassword).subscribe({
-        next: () => {
-          this.loginService.handleLoginResponse({
-            username: storedUsername,
-            password: storedPassword
-          });
-        }
-      });
+    if (token && username && userId) {
+      // Auto-validate existing token
+      this.router.navigate(['/main-site']);
     }
   }
 

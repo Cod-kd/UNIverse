@@ -4,7 +4,7 @@ import { CommonModule, ViewportScroller } from '@angular/common';
 import { AuthService } from '../../../services/auth/auth.service';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { fromEvent } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
 import { NavItem } from '../../../models/nav/nav.model';
 
@@ -18,7 +18,7 @@ import { NavItem } from '../../../models/nav/nav.model';
 export class HeaderComponent implements OnInit {
   isMenuOpen = false;
   isMobile = false;
-  hasToken$;
+  hasToken$: Observable<boolean>; // Declare without initialization
   private lastScrollPosition = 0;
 
   // Navigation items for the header menu
@@ -36,11 +36,12 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private destroyRef: DestroyRef
   ) {
-    this.hasToken$ = this.authService.hasToken$;
+    // Initialize after authService is available
+    this.hasToken$ = this.authService.isAuthenticated$;
   }
 
   ngOnInit() {
-    this.checkScreenSize(); // Determine if the screen is mobile on load
+    this.checkScreenSize();
 
     fromEvent(window, 'scroll')
       .pipe(
@@ -52,14 +53,12 @@ export class HeaderComponent implements OnInit {
 
   @HostListener('window:resize')
   checkScreenSize() {
-    // Check if the screen width is small enough to be considered mobile
     this.isMobile = window.innerWidth <= 468;
-    if (!this.isMobile) this.isMenuOpen = false; // Close the menu on larger screens
+    if (!this.isMobile) this.isMenuOpen = false;
   }
 
   onWindowScroll() {
     const currentScroll = window.scrollY;
-    // Close the menu if the scroll distance is significant
     if (Math.abs(currentScroll - this.lastScrollPosition) > 10) {
       this.isMenuOpen = false;
       this.lastScrollPosition = currentScroll;
@@ -68,13 +67,11 @@ export class HeaderComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
-    // Close the menu if the user clicks outside of it
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.isMenuOpen = false;
     }
   }
 
-  // Toggle the menu open/close state
   toggleMenu(event: Event) {
     event.stopPropagation();
     this.isMenuOpen = !this.isMenuOpen;
@@ -82,7 +79,7 @@ export class HeaderComponent implements OnInit {
 
   onNavigate() {
     this.isMenuOpen = false;
-    this.viewportScroller.scrollToPosition([0, 0]); // Scroll to the top of the page
+    this.viewportScroller.scrollToPosition([0, 0]);
   }
 
   logout() {

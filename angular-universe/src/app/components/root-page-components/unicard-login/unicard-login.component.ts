@@ -49,8 +49,12 @@ export class UNIcardLoginComponent {
         if (username && password) {
           // Authenticate using fetched credentials
           this.loginService.fetchLogin(username, password).subscribe({
-            next: () => {
-              this.loginService.handleLoginResponse(credentials);
+            next: (token: string) => {
+              if (token) {
+                this.loginService.handleLoginResponse({ username }, token);
+              } else {
+                this.popupService.showError("Érvénytelen token!");
+              }
             }
           });
         }

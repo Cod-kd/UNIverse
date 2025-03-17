@@ -6,5 +6,5 @@ export const rootGuard = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  return authService.getLoginStatus() ? router.navigate(['/main-site']) : true;
+  return authService.getAuthStatus() ? router.navigate(['/main-site']) : true;
 };
