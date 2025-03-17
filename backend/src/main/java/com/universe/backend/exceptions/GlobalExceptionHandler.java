@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     }
     
     @ExceptionHandler(UserNotVerifyedException.class)
-    public ResponseEntity<String> handleMessagingException(UserNotVerifyedException ex) {
+    public ResponseEntity<String> handleUserNotVerifyedException(UserNotVerifyedException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 
