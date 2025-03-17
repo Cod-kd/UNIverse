@@ -11,10 +11,10 @@ export class AuthService {
   hasToken$ = this.hasToken.asObservable();
 
   private cachedValues = new Map<string, string>();
-  private authKeys = ['hasToken', 'password', 'token']; // Temporarily removed username
+  private authKeys = []; // Temporarily removed username
   private pollingActive = false;
   private pollingSubscription?: Subscription;
-  private storageEventHandler = (event: StorageEvent) => this.handleStorageEvent(event);
+  //private storageEventHandler = (event: StorageEvent) => this.handleStorageEvent(event);
 
   constructor(
     private router: Router,
@@ -35,7 +35,7 @@ export class AuthService {
     if (this.pollingActive) return;
 
     this.pollingActive = true;
-    window.addEventListener('storage', this.storageEventHandler);
+    //window.addEventListener('storage', this.storageEventHandler);
 
     this.pollingSubscription = interval(500)
       .pipe(takeWhile(() => this.pollingActive))
@@ -44,7 +44,7 @@ export class AuthService {
 
   stopPolling(): void {
     this.pollingActive = false;
-    window.removeEventListener('storage', this.storageEventHandler);
+    //window.removeEventListener('storage', this.storageEventHandler);
     this.pollingSubscription?.unsubscribe();
   }
 
@@ -54,11 +54,13 @@ export class AuthService {
     });
   }
 
+  /*
   private handleStorageEvent(event: StorageEvent): void {
     if (event.key && this.authKeys.includes(event.key)) {
       this.logoutAndRedirect();
     }
   }
+    */
 
   private checkStorageChanges(): void {
     if (!this.pollingActive) return;
