@@ -39,8 +39,9 @@ public class EmailService {
         String verificationLink = baseUrl + "/user/verify?token=" + token;
         helper.setText(
             "<h1>Üdvözöl az UNIverse-um!</h1>" +
-            "<p>Kérlek kattints az alábbi linkre, hogy ellenőrizhessük emailcímed helyességét:</p>" +
-            "<a href=\"" + verificationLink + "\">Email ellenőrzése</a>",
+            "<h3>Kérlek kattints <b><a href=\"" + verificationLink + "\">IDE</a></b>" + ", hogy ellenőrizhessük emailcímed helyességét:</h3>" +
+            "<br><p>Az UNIverse csapata</p>"
+            ,
             true
         );
 

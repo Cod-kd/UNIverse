@@ -6,8 +6,10 @@ com\universe\backend\modules\Role.class
 com\universe\backend\exceptions\UserNotVerifyedException.class
 com\universe\backend\UnIverseBackendApplication.class
 com\universe\backend\exceptions\UserIsDeletedExistsException.class
+com\universe\backend\services\ImageService.class
 com\universe\backend\config\SecurityConfig.class
 com\universe\backend\utils\JwtUtil.class
+com\universe\backend\controllers\ImageController.class
 com\universe\backend\exceptions\UserNonExistsException.class
 com\universe\backend\modules\UserProfiles.class
 com\universe\backend\services\user\RegistrationService.class
@@ -20,6 +22,7 @@ com\universe\backend\services\user\AuthService.class
 com\universe\backend\controllers\UserController.class
 com\universe\backend\exceptions\AuthenticationFailedException.class
 com\universe\backend\modules\UsersData.class
+com\universe\backend\config\FileUploadConfig.class
 com\universe\backend\dto\UserRegistrationDTO.class
 com\universe\backend\services\EmailService.class
 com\universe\backend\services\user\UserService.class

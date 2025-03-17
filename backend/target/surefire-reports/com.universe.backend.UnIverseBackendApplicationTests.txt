@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.universe.backend.UNIverseBackendApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.113 s -- in com.universe.backend.UNIverseBackendApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.843 s -- in com.universe.backend.UNIverseBackendApplicationTests
