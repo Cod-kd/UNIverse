@@ -47,6 +47,7 @@ public class SecurityConfig {
                         .requestMatchers("/groups/event/users_schedule").permitAll()
                         .requestMatchers("/groups/event/interested_users").permitAll()
                         .requestMatchers("/groups/name/*/events").permitAll()
+                        .requestMatchers("/image/get/profilepicture").permitAll()
                         .anyRequest().authenticated() // All other endpoints require authentication
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // JWT filter
