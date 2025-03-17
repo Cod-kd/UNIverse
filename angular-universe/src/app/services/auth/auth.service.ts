@@ -11,7 +11,7 @@ export class AuthService {
   hasToken$ = this.hasToken.asObservable();
 
   private cachedValues = new Map<string, string>();
-  private authKeys = ['hasToken', 'username', 'password', 'token'];
+  private authKeys = ['hasToken', 'password', 'token']; // Temporarily removed username
   private pollingActive = false;
   private pollingSubscription?: Subscription;
   private storageEventHandler = (event: StorageEvent) => this.handleStorageEvent(event);

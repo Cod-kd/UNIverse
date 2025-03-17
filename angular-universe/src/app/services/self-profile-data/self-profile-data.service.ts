@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { FetchService } from '../fetch/fetch.service';
+import { FetchService, AuthType } from '../fetch/fetch.service';
 import { ContactType, Role, Category } from '../../models/constants/constants.model';
 import { DeleteProfileData } from '../../models/self-profile/self-profile.model';
 
@@ -36,8 +36,9 @@ export class SelfProfileDataService {
   }
 
   deleteProfile(deleteData: DeleteProfileData): Observable<any> {
-    return this.fetchService.post('/user/delete', deleteData, {
-      responseType: 'text'
+    return this.fetchService.post('/auth/delete', deleteData, {
+      responseType: 'text',
+      authType: AuthType.NONE
     });
   }
 
