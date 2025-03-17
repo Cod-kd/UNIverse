@@ -89,7 +89,6 @@ export class AuthService {
   private clearUserData(): void {
     this.authKeys.forEach(key => localStorage.removeItem(key));
     localStorage.removeItem("userId");
-    localStorage.removeItem("registrationFormData");
     this.updateValueCache();
   }
 
@@ -97,7 +96,6 @@ export class AuthService {
     localStorage.setItem('hasToken', 'true');
     localStorage.setItem('username', username);
     localStorage.setItem('password', password);
-    localStorage.removeItem('registrationFormData');
     this.hasToken.next(true);
     this.updateValueCache();
     setTimeout(() => this.startPolling(), 500);

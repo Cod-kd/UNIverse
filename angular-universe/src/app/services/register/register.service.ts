@@ -52,7 +52,6 @@ export class RegisterService {
       catchError(error => {
         return throwError(() => error);
       }),
-      tap(() => localStorage.removeItem('registrationFormData')),
       finalize(() => this.loadingService.hide())
     );
   }

@@ -37,8 +37,6 @@ export class UNIcardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    localStorage.removeItem('registrationFormData');
-
     if (this.userData?.username && this.userData?.password) {
       console.log('Using userData from navigation state');
       this.processUserData();

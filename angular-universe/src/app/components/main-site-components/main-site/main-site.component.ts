@@ -125,7 +125,7 @@ export class MainSiteComponent implements OnInit {
   }
 
   loadShortcuts(): void {
-    const savedShortcuts = localStorage.getItem('unicard-shortcuts');
+    const savedShortcuts = localStorage.getItem('shortcuts');
     if (savedShortcuts) {
       try {
         this.shortcuts = JSON.parse(savedShortcuts);
@@ -149,7 +149,7 @@ export class MainSiteComponent implements OnInit {
   }
 
   saveShortcutsToStorage(): void {
-    localStorage.setItem('unicard-shortcuts', JSON.stringify(this.shortcuts));
+    localStorage.setItem('shortcuts', JSON.stringify(this.shortcuts));
   }
 
   openShortcutModal(): void {
