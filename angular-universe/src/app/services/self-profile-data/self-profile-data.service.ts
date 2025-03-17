@@ -11,27 +11,31 @@ import { DeleteProfileData } from '../../models/self-profile/self-profile.model'
 export class SelfProfileDataService {
   constructor(private fetchService: FetchService) { }
 
-  updateDescription(userId: number, description: string): Observable<any> {
-    return this.fetchService.post('/user/update/desc', { description, userId }, {
-      responseType: 'text'
+  updateDescription(description: string): Observable<any> {
+    return this.fetchService.post('/user/update/desc', { description }, {
+      responseType: 'text',
+      authType: AuthType.JWT
     });
   }
 
-  addContact(userId: number, contactTypeId: number, path: string): Observable<any> {
-    return this.fetchService.post('/user/add/contact', { userId, contactTypeId, path }, {
-      responseType: 'text'
+  addContact(contactTypeId: number, path: string): Observable<any> {
+    return this.fetchService.post('/user/add/contact', { contactTypeId, path }, {
+      responseType: 'text',
+      authType: AuthType.JWT
     });
   }
 
-  addRole(userId: number, roleId: number): Observable<any> {
-    return this.fetchService.post('/user/add/role', { userId, roleId }, {
-      responseType: 'text'
+  addRole(roleId: number): Observable<any> {
+    return this.fetchService.post('/user/add/role', { roleId }, {
+      responseType: 'text',
+      authType: AuthType.JWT
     });
   }
 
-  addInterest(userId: number, categoryId: number): Observable<any> {
-    return this.fetchService.post('/user/add/interest', { userId, categoryId }, {
-      responseType: 'text'
+  addInterest(categoryId: number): Observable<any> {
+    return this.fetchService.post('/user/add/interest', { categoryId }, {
+      responseType: 'text',
+      authType: AuthType.JWT
     });
   }
 
@@ -42,7 +46,7 @@ export class SelfProfileDataService {
     });
   }
 
-  processContactChanges(userId: number,
+  processContactChanges(
     displayContacts: string[],
     backendContacts: string[],
     contactTypes: ContactType[]): Observable<any> {
@@ -62,7 +66,7 @@ export class SelfProfileDataService {
 
       if (!contactType) continue;
 
-      observables.push(this.addContact(userId, contactType.id, path).pipe(
+      observables.push(this.addContact(contactType.id, path).pipe(
         catchError(() => {
           return of(null);
         })
@@ -72,7 +76,7 @@ export class SelfProfileDataService {
     return forkJoin(observables);
   }
 
-  processRoleChanges(userId: number,
+  processRoleChanges(
     displayRoles: string[],
     backendRoles: string[],
     roles: Role[]): Observable<any> {
@@ -88,7 +92,7 @@ export class SelfProfileDataService {
       const role = roles.find(r => r.name === roleName);
       if (!role) continue;
 
-      observables.push(this.addRole(userId, role.id).pipe(
+      observables.push(this.addRole(role.id).pipe(
         catchError(() => {
           return of(null);
         })
@@ -98,7 +102,7 @@ export class SelfProfileDataService {
     return forkJoin(observables);
   }
 
-  processInterestChanges(userId: number,
+  processInterestChanges(
     displayInterests: string[],
     backendInterests: string[],
     categories: Category[]): Observable<any> {
@@ -116,7 +120,7 @@ export class SelfProfileDataService {
       const category = categories.find(c => c.name === interestName);
       if (!category) continue;
 
-      observables.push(this.addInterest(userId, category.id).pipe(
+      observables.push(this.addInterest(category.id).pipe(
         catchError(() => {
           return of(null);
         })

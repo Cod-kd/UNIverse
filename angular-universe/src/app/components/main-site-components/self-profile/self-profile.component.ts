@@ -378,12 +378,6 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
-      this.popupService.showError("Felhasználó azonosító hiányzik!");
-      return;
-    }
-
     const hasDescriptionChanges = this.profile.description !== this.originalProfile.description;
     const hasContactChanges = JSON.stringify(this.profile.contacts) !== JSON.stringify(this.originalProfile.contacts);
     const hasRoleChanges = JSON.stringify(this.profile.roles) !== JSON.stringify(this.originalProfile.roles);
@@ -395,7 +389,6 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
     }
 
     this.isSaving = true;
-    const parsedUserId = parseInt(userId);
     const observables: Observable<any>[] = [];
 
     const backendContacts = this.profileDataService.mapContactsToDisplayStrings(
@@ -414,12 +407,11 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
     );
 
     if (hasDescriptionChanges) {
-      observables.push(this.profileDataService.updateDescription(parsedUserId, this.profile.description || ''));
+      observables.push(this.profileDataService.updateDescription(this.profile.description || ''));
     }
 
     if (hasContactChanges) {
       observables.push(this.profileDataService.processContactChanges(
-        parsedUserId,
         this.displayContacts,
         backendContacts,
         this.contactTypes
@@ -428,7 +420,6 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
 
     if (hasRoleChanges) {
       observables.push(this.profileDataService.processRoleChanges(
-        parsedUserId,
         this.displayRoles,
         backendRoles,
         this.roles
@@ -437,7 +428,6 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
 
     if (hasInterestChanges) {
       observables.push(this.profileDataService.processInterestChanges(
-        parsedUserId,
         this.displayInterests,
         backendInterests,
         this.categories
