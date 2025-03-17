@@ -1,6 +1,7 @@
 #groupsContainer {
     display: grid;
     gap: 3rem;
+    margin-top: 2em;
 }
 
 @media (max-width: 480px) {

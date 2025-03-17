@@ -4,4 +4,10 @@
         (toggleRequest)="handleGroupToggle($event)">
     </app-single-group>
     }
+    <app-button btnLabel="Létrehozás" iconClass="fas fa-plus" (click)="openCreateGroupPopup()" size="normal">
+    </app-button>
 </div>
+
+@if(showCreatePopup) {
+<app-create-group-popup (closePopup)="closeCreateGroupPopup()"></app-create-group-popup>
+}

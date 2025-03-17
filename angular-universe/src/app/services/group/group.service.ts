@@ -148,4 +148,28 @@ export class GroupService {
       map(() => this.groupsSubject.value)
     );
   }
+
+  createGroup(groupName: string): Observable<any> {
+    this.loadingService.show();
+
+    return this.fetchService.post<any>(
+      `${this.baseEndpoint}/create`,
+      { groupName },
+      {
+        responseType: 'text',
+        authType: AuthType.JWT
+      }
+    ).pipe(
+      timeout(10000),
+      tap((response) => {
+        this.popupService.showSuccess(response);
+        this.fetchAllGroups().subscribe();
+      }),
+      catchError(error => {
+        this.popupService.showError('Sikertelen csoport létrehozás!');
+        return throwError(() => error);
+      }),
+      finalize(() => this.loadingService.hide())
+    );
+  }
 }

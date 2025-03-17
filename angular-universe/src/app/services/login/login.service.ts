@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
-import { Observable, Subscription, throwError, of } from 'rxjs';
-import { catchError, filter, finalize, timeout, retry, tap } from 'rxjs/operators';
+import { Observable, Subscription, of } from 'rxjs';
+import { catchError, filter, finalize, timeout } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { FetchService, AuthType } from '../fetch/fetch.service';
 import { LoadingService } from '../loading/loading.service';
@@ -41,23 +41,16 @@ export class LoginService implements OnDestroy {
   }
 
   private validateLocalAuthentication(): void {
-    // Check if required auth data exists in localStorage
     const username = this.authService.getUsername();
     const token = this.authService.getToken();
     const userId = this.authService.getUserId();
 
     if (!username || !token || !userId) {
-      // Missing required auth data, log out and redirect
       this.authService.logout();
       this.router.navigate(['/UNIcard-login']);
       this.popupService.showError('Hiányzó bejelentkezési adatok!');
       return;
     }
-
-    // Optional: Additional validation logic can be added here
-    // For example, check token format/expiry if embedded in token
-
-    // If needed later, you can re-add server validation with proper error handling
   }
 
   fetchLogin(loginUsername: string, loginPassword: string, showErrors = true): Observable<string> {
@@ -103,7 +96,6 @@ export class LoginService implements OnDestroy {
         .subscribe({
           next: (userId) => {
             if (userId) {
-              // Login with token-based auth
               this.authService.login(credentials.username, token, userId);
               this.router.navigate(["/main-site"]);
             } else {

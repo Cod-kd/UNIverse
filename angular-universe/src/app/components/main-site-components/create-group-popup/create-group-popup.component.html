@@ -1,0 +1,27 @@
+<div class="popup-overlay" (click)="onOverlayClick($event)">
+    <div class="popup-container">
+        <div class="popup-header">
+            <h2>Csoport létrehozása</h2>
+        </div>
+        <div class="popup-content">
+            <form [formGroup]="groupForm" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label for="groupName">Csoport neve</label>
+                    <input type="text" id="groupName" formControlName="groupName" placeholder="Csoport neve"
+                        autocomplete="off">
+                    @if(groupForm.get('groupName')?.invalid && groupForm.get('groupName')?.touched) {
+                    <div class="error-message">
+                        Csoport név megadása kötelező
+                    </div>
+                    }
+                </div>
+                <div class="actions">
+                    <app-button btnLabel="Mégse" (click)="close()" [isDisabled]="loading">
+                    </app-button>
+                    <app-button btnLabel="Létrehozom!" [isDisabled]="groupForm.invalid || loading" (click)="onSubmit()">
+                    </app-button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
