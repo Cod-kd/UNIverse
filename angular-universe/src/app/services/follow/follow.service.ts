@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
-import { FetchService } from '../fetch/fetch.service';
+import { AuthType, FetchService } from '../fetch/fetch.service';
 import { catchError, timeout, retry, finalize } from 'rxjs/operators';
 import { LoadingService } from '../loading/loading.service';
-import { PopupService } from '../popup-message/popup-message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +11,12 @@ export class FollowService {
   constructor(
     private fetchService: FetchService,
     private loadingService: LoadingService,
-    private popupService: PopupService
   ) { }
 
   getUserId(username: string): Observable<number> {
     return this.fetchService.get<number>('/user/id', {
-      params: { username }
+      params: { username },
+      authType: AuthType.NONE
     }).pipe(
       timeout(8000),
       retry(1),
@@ -27,14 +26,11 @@ export class FollowService {
     );
   }
 
-  checkFollowStatus(followerId: string, followedId: number): Observable<boolean> {
-    if (!followerId) {
-      return of(false);
-    }
-
+  checkFollowStatus(followedId: number): Observable<boolean> {
     return this.fetchService.post<boolean>('/user/isFollowed', {
-      followerId,
-      followedId
+      followedId,
+    }, {
+      authType: AuthType.JWT
     }).pipe(
       catchError(() => {
         return of(false);
@@ -43,18 +39,10 @@ export class FollowService {
   }
 
   followUser(targetUserName: string): Observable<any> {
-    const followerId = localStorage.getItem('userId');
-
-    if (!followerId) {
-      this.popupService.showError('A követéshez jelentkezz be!');
-      return throwError(() => new Error('Nem vagy bejelentkezve!'));
-    }
-
     this.loadingService.show();
     return this.fetchService.post(
       `/user/name/${targetUserName}/follow`,
-      { followerId },
-      { responseType: 'text' }
+      { responseType: 'text', authType: AuthType.JWT }
     ).pipe(
       timeout(10000),
       catchError(error => {
@@ -65,18 +53,10 @@ export class FollowService {
   }
 
   unfollowUser(targetUserName: string): Observable<any> {
-    const followerId = localStorage.getItem('userId');
-
-    if (!followerId) {
-      this.popupService.showError('A kikövetéshez jelentkezz be!');
-      return throwError(() => new Error('Nem vagy bejelentkezve!'));
-    }
-
     this.loadingService.show();
     return this.fetchService.post(
       `/user/name/${targetUserName}/unfollow`,
-      { followerId },
-      { responseType: 'text' }
+      { responseType: 'text', authType: AuthType.JWT }
     ).pipe(
       timeout(10000),
       catchError(error => {

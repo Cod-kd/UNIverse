@@ -67,7 +67,6 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
-    this.currentUserId = localStorage.getItem('userId');
 
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
@@ -100,9 +99,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
               this.scrollToProfileView();
             }
 
-            if (this.currentUserId && this.profile) {
+            if (this.profile) {
               return this.followService.checkFollowStatus(
-                this.currentUserId,
                 this.profile.userId
               ).pipe(
                 catchError(() => of(false))
@@ -190,9 +188,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
     this.fetchUsername(userId);
 
-    if (this.currentUserId && this.profile) {
+    if (this.profile) {
       this.followService.checkFollowStatus(
-        this.currentUserId,
         this.profile.userId
       ).pipe(
         catchError(() => of(false)),

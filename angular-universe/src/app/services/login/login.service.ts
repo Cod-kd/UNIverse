@@ -98,7 +98,7 @@ export class LoginService implements OnDestroy {
     return this.fetchService.get<string>(`/user/id`, {
       responseType: 'text',
       params: { username },
-      authType: AuthType.JWT
+      authType: AuthType.NONE
     });
   }
 
