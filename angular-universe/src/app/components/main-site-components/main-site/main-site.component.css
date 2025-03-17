@@ -112,10 +112,10 @@ hr {
 }
 
 .unicard {
-    margin-top: 3em;
+    margin-top: 2em;
     flex-grow: 1;
     overflow-y: auto;
-    height: 400px;
+    height: 380px;
 }
 
 .item {
