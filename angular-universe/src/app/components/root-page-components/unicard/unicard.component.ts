@@ -20,7 +20,7 @@ import { Profile } from '../../../models/profile/profile.model';
 })
 export class UNIcardComponent implements OnInit {
   @Input() isCompactMode = false;
-  userData: UserData = history.state.userData;
+  userData: UserData = history.state.userData || {};
 
   universityName = '';
   facultyName = '';
@@ -39,7 +39,8 @@ export class UNIcardComponent implements OnInit {
   ngOnInit(): void {
     localStorage.removeItem('registrationFormData');
 
-    if (this.userData?.username) {
+    if (this.userData?.username && this.userData?.password) {
+      console.log('Using userData from navigation state');
       this.processUserData();
       return;
     }
@@ -97,8 +98,8 @@ export class UNIcardComponent implements OnInit {
   }
 
   saveUniCard = async () => {
-    if (!this.userData?.username) {
-      this.popupService.showError('Érvénytelen adatok!');
+    if (!this.userData?.username || !this.userData?.password) {
+      this.popupService.showError('Hiányzó felhasználónév vagy jelszó!');
       this.router.navigate(['/UNIcard-login']);
       return;
     }

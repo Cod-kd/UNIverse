@@ -1,9 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { Observable, Subscription, throwError, of } from 'rxjs';
-import { catchError, filter, switchMap, finalize, timeout, retry } from 'rxjs/operators';
+import { catchError, filter, finalize, timeout, retry, tap } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
-import { FetchService } from '../fetch/fetch.service';
+import { FetchService, AuthType } from '../fetch/fetch.service';
 import { LoadingService } from '../loading/loading.service';
 import { PopupService } from '../popup-message/popup-message.service';
 
@@ -27,8 +27,8 @@ export class LoginService implements OnDestroy {
       )
       .subscribe(() => this.validateServerAuthentication());
 
-    this.authSubscription = this.authService.isLoggedIn$.subscribe(isLoggedIn => {
-      if (isLoggedIn) {
+    this.authSubscription = this.authService.hasToken$.subscribe(hasToken => {
+      if (hasToken) {
         this.validateServerAuthentication();
       }
     });
@@ -48,7 +48,6 @@ export class LoginService implements OnDestroy {
         .pipe(
           timeout(15000),
           retry(1),
-          switchMap(() => this.fetchUserId(credentials.username)),
           finalize(() => this.loadingService.hide()),
           catchError(() => {
             this.authService.logout();
@@ -58,8 +57,14 @@ export class LoginService implements OnDestroy {
           })
         )
         .subscribe({
-          next: (userId) => {
-            localStorage.setItem("userId", userId);
+          next: (token: string) => {
+            localStorage.setItem("token", token);
+
+            this.fetchUserId(credentials.username).subscribe({
+              next: (userId) => {
+                localStorage.setItem("userId", userId);
+              }
+            });
           }
         });
     }
@@ -73,10 +78,16 @@ export class LoginService implements OnDestroy {
 
     if (showErrors) this.loadingService.show();
 
-    return this.fetchService.post<string>('/user/login', body, {
+    return this.fetchService.post<string>('/auth/login', body, {
       responseType: 'text',
-      showError: showErrors
+      showError: showErrors,
+      authType: AuthType.NONE
     }).pipe(
+      tap(token => {
+        if (token) {
+          localStorage.setItem('token', token);
+        }
+      }),
       finalize(() => {
         if (showErrors) this.loadingService.hide();
       })
@@ -86,7 +97,8 @@ export class LoginService implements OnDestroy {
   fetchUserId(username: string): Observable<string> {
     return this.fetchService.get<string>(`/user/id`, {
       responseType: 'text',
-      params: { username }
+      params: { username },
+      authType: AuthType.JWT
     });
   }
 

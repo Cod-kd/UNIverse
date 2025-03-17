@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { tap, catchError, timeout, finalize } from 'rxjs/operators';
 import { LoadingService } from '../loading/loading.service';
-import { FetchService } from '../fetch/fetch.service';
+import { FetchService, AuthType } from '../fetch/fetch.service';
 import { PopupService } from '../popup-message/popup-message.service';
 
 @Injectable({
@@ -42,7 +42,8 @@ export class RegisterService {
     this.loadingService.show();
 
     return this.fetchService.post('/user/registration', body, {
-      responseType: 'text'
+      responseType: 'text',
+      authType: AuthType.NONE
     }).pipe(
       timeout(20000),
       tap(response => {
@@ -56,12 +57,20 @@ export class RegisterService {
     );
   }
 
-  async handleRegisterResponse(response: string, registrationData: any) {
+  handleRegisterResponse(response: string, formData: any) {
     try {
       this.router.navigate(['/get-unicard'], {
         state: {
           message: response,
-          userData: registrationData
+          userData: {
+            username: formData.username,
+            password: formData.password,
+            fullName: formData.fullName,
+            gender: formData.gender,
+            birthDate: formData.birthDate,
+            university: formData.university,
+            faculty: formData.faculty
+          }
         },
       });
     } catch (error) {

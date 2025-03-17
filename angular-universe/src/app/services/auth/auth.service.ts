@@ -7,11 +7,11 @@ import { takeWhile } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private isLoggedIn = new BehaviorSubject<boolean>(this.getStoredLoginStatus());
-  isLoggedIn$ = this.isLoggedIn.asObservable();
+  private hasToken = new BehaviorSubject<boolean>(this.getStoredLoginStatus());
+  hasToken$ = this.hasToken.asObservable();
 
   private cachedValues = new Map<string, string>();
-  private authKeys = ['isLoggedIn', 'username', 'password'];
+  private authKeys = ['hasToken', 'username', 'password', 'token'];
   private pollingActive = false;
   private pollingSubscription?: Subscription;
   private storageEventHandler = (event: StorageEvent) => this.handleStorageEvent(event);
@@ -19,8 +19,8 @@ export class AuthService {
   constructor(
     private router: Router,
   ) {
-    this.isLoggedIn.subscribe(isLoggedIn => {
-      if (isLoggedIn) {
+    this.hasToken.subscribe(hasToken => {
+      if (hasToken) {
         this.startPolling();
       } else {
         this.stopPolling();
@@ -74,12 +74,12 @@ export class AuthService {
 
   private logoutAndRedirect(): void {
     this.stopPolling();
-    this.isLoggedIn.next(false);
+    this.hasToken.next(false);
     this.router.navigate(['/UNIcard-login']);
   }
 
   private getStoredLoginStatus(): boolean {
-    return localStorage.getItem('isLoggedIn') === 'true' &&
+    return localStorage.getItem('hasToken') === 'true' &&
       !!localStorage.getItem('username') &&
       !!localStorage.getItem('password');
   }
@@ -92,20 +92,20 @@ export class AuthService {
   }
 
   login(username: string, password: string): void {
-    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('hasToken', 'true');
     localStorage.setItem('username', username);
     localStorage.setItem('password', password);
     localStorage.removeItem('registrationFormData');
-    this.isLoggedIn.next(true);
+    this.hasToken.next(true);
     this.updateValueCache();
     setTimeout(() => this.startPolling(), 500);
   }
 
   logout(): void {
     this.stopPolling();
-    localStorage.setItem('isLoggedIn', 'false');
+    localStorage.setItem('hasToken', 'false');
     this.clearUserData();
-    this.isLoggedIn.next(false);
+    this.hasToken.next(false);
   }
 
   getLoginStatus(): boolean {

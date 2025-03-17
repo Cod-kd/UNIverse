@@ -18,7 +18,7 @@ import { NavItem } from '../../../models/nav/nav.model';
 export class HeaderComponent implements OnInit {
   isMenuOpen = false;
   isMobile = false;
-  isLoggedIn$;
+  hasToken$;
   private lastScrollPosition = 0;
 
   // Navigation items for the header menu
@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private destroyRef: DestroyRef
   ) {
-    this.isLoggedIn$ = this.authService.isLoggedIn$;
+    this.hasToken$ = this.authService.hasToken$;
   }
 
   ngOnInit() {

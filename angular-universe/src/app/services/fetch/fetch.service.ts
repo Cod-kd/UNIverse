@@ -1,9 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { PopupService } from '../popup-message/popup-message.service';
+
+export enum AuthType {
+  NONE = 'none',
+  BASIC = 'basic',
+  JWT = 'jwt'
+}
 
 @Injectable({
   providedIn: 'root'
@@ -20,12 +26,14 @@ export class FetchService {
     responseType?: 'json' | 'text',
     showError?: boolean,
     customErrorMessage?: string,
-    params?: Record<string, string>
+    params?: Record<string, string>,
+    authType?: AuthType
   } = {}): Observable<T> {
     const {
       responseType = 'json',
       showError = true,
-      params
+      params,
+      authType = AuthType.BASIC
     } = options;
 
     let url = `${this.baseUrl}${endpoint}`;
@@ -40,6 +48,7 @@ export class FetchService {
 
     return this.http.get<T>(url, {
       responseType: responseType as any,
+      headers: this.getHeaders(authType)
     }).pipe(
       catchError((error: HttpErrorResponse) => this.handleError(error, showError))
     );
@@ -48,17 +57,41 @@ export class FetchService {
   post<T>(endpoint: string, body: any, options: {
     responseType?: 'json' | 'text',
     showError?: boolean,
+    authType?: AuthType
   } = {}): Observable<T> {
     const {
       responseType = 'json',
       showError = true,
+      authType = AuthType.BASIC
     } = options;
 
     return this.http.post<T>(`${this.baseUrl}${endpoint}`, body, {
       responseType: responseType as any,
+      headers: this.getHeaders(authType)
     }).pipe(
       catchError((error: HttpErrorResponse) => this.handleError(error, showError))
     );
+  }
+
+  private getHeaders(authType: AuthType): HttpHeaders {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    switch (authType) {
+      case AuthType.BASIC:
+        const credentials = btoa(`${environment.auth.adminUsername}:${environment.auth.adminPassword}`);
+        headers = headers.set('Authorization', `Basic ${credentials}`);
+        break;
+      case AuthType.JWT:
+        const token = localStorage.getItem('token');
+        if (token) {
+          headers = headers.set('Authorization', `Bearer ${token}`);
+        }
+        break;
+    }
+
+    return headers;
   }
 
   private handleError(error: HttpErrorResponse, showError = true): Observable<never> {

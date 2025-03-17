@@ -16,7 +16,7 @@
     }
 
     <!-- Only display logout option if the user is logged in -->
-    @if (isLoggedIn$ | async) {
+    @if (hasToken$ | async) {
     <a href="#" class="link link--elara" (click)="logout()">
       <span>Kijelentkezés</span>
     </a>
@@ -34,14 +34,14 @@
   </button>
 
   <!-- Phone resolution menu - reuses the same navItems array -->
-  <div class="mobile-menu" [class.active]="isMenuOpen" [style.height]="(isLoggedIn$ | async) ? '35vh' : '30vh'">
+  <div class="mobile-menu" [class.active]="isMenuOpen" [style.height]="(hasToken$ | async) ? '35vh' : '30vh'">
     <nav>
       @for (item of navItems; track item.path) {
       <a [routerLink]="[item.path]" class="link link--elara" (click)="onNavigate()">
         <span>{{ item.label }}</span>
       </a>
       }
-      @if (isLoggedIn$ | async) {
+      @if (hasToken$ | async) {
       <a href="#" class="link link--elara" (click)="logout()">
         <span>Kijelentkezés</span>
       </a>
