@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SearchService, SearchResult } from '../../../services/search/search.service';
@@ -23,6 +23,8 @@ import { ValidationService } from '../../../services/validation/validation.servi
   styleUrl: './self-profile.component.css'
 })
 export class SelfProfileComponent implements OnInit, OnDestroy {
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
   profile: Profile | null = null;
   originalProfile: Profile | null = null;
 
@@ -60,6 +62,12 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
   roleOptions: string[] = [];
   interestOptions: string[] = [];
 
+  // Profile picture variables
+  profileImageSrc = '';
+  isUploading = false;
+  showUploadProgress = false;
+  uploadStatusMessage = '';
+
   contactIcons: Record<string, string> = {
     'Facebook': 'fa-brands fa-facebook',
     'LinkedIn': 'fa-brands fa-linkedin',
@@ -84,6 +92,11 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadConstants();
     this.loadUserProfile();
+    this.initProfileImage();
+  }
+
+  private initProfileImage(): void {
+    this.profileImageSrc = this.profileDataService.getProfilePictureUrl();
   }
 
   private updateProfileDisplay(): void {
@@ -205,8 +218,52 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  getProfileImageSrc(): string {
-    return 'images/default-pfp.jpg';
+  // Profile picture methods
+  triggerFileInput(): void {
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+
+    // Validate file
+    if (!file.type.startsWith('image/')) {
+      this.popupService.showError('Csak képfájl tölthető fel!');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      this.popupService.showError('A fájl mérete nem haladhatja meg az 5MB-ot!');
+      return;
+    }
+
+    this.uploadProfilePicture(file);
+  }
+
+  uploadProfilePicture(file: File): void {
+    this.isSaving = true;
+
+    this.profileDataService.uploadProfilePicture(file).subscribe({
+      next: () => {
+        this.profileImageSrc = this.profileDataService.getProfilePictureUrl();
+
+        this.popupService.showSuccess('Profilkép sikeresen feltöltve!');
+        this.isSaving = false;
+      },
+      error: (error) => {
+        this.popupService.showError(error?.message || 'Nem sikerült feltölteni a profilképet.');
+        this.isSaving = false;
+      }
+    });
+  }
+
+  closeUploadModal(): void {
+    this.showUploadProgress = false;
+    this.isUploading = false;
+    this.uploadStatusMessage = '';
   }
 
   editDescription(): void {

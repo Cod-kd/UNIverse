@@ -27,6 +27,10 @@
     padding-bottom: 0.75rem;
 }
 
+img{
+    margin-bottom: 1em;
+}
+
 .profile-header>div p {
     display: flex;
     gap: 0.5rem;

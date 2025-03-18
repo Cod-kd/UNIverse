@@ -39,6 +39,26 @@ export class SelfProfileDataService {
     });
   }
 
+  uploadProfilePicture(imageFile: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', imageFile);
+
+    return this.fetchService.postFormData('/image/upload/profilepicture', formData, {
+      authType: AuthType.JWT
+    });
+  }
+
+  getProfilePictureUrl(): string {
+    const timestamp = new Date().getTime();
+    const userId = localStorage.getItem('userId');
+
+    if (userId) {
+      return `${this.fetchService.getBaseUrl()}/image/get/profilepicture?id=${userId}&t=${timestamp}`;
+    }
+
+    return `${this.fetchService.getBaseUrl()}/image/get/profilepicture?t=${timestamp}`;
+  }
+
   deleteProfile(deleteData: DeleteProfileData): Observable<any> {
     return this.fetchService.post('/auth/delete', deleteData, {
       responseType: 'text',

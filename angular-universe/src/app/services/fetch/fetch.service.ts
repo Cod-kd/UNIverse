@@ -25,6 +25,10 @@ export class FetchService {
     private router: Router
   ) { }
 
+  getBaseUrl(): string {
+    return this.baseUrl;
+  }
+
   get<T>(endpoint: string, options: {
     responseType?: 'json' | 'text',
     showError?: boolean,
@@ -76,10 +80,49 @@ export class FetchService {
     );
   }
 
+  // New method for handling FormData (no Content-Type header)
+  postFormData<T>(endpoint: string, formData: FormData, options: {
+    responseType?: 'json' | 'text',
+    showError?: boolean,
+    authType?: AuthType
+  } = {}): Observable<T> {
+    const {
+      responseType = 'json',
+      showError = true,
+      authType = AuthType.NONE
+    } = options;
+
+    // Get headers without Content-Type since browser sets it with boundary for FormData
+    const headers = this.getHeadersForFormData(authType);
+
+    return this.http.post<T>(`${this.baseUrl}${endpoint}`, formData, {
+      responseType: responseType as any,
+      headers
+    }).pipe(
+      catchError((error: HttpErrorResponse) => this.handleError(error, showError))
+    );
+  }
+
   private getHeaders(authType: AuthType): HttpHeaders {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
+
+    switch (authType) {
+      case AuthType.JWT:
+        const token = localStorage.getItem('token');
+        if (token) {
+          headers = headers.set('Authorization', `Bearer ${token}`);
+        }
+        break;
+    }
+
+    return headers;
+  }
+
+  // FormData-specific headers (no Content-Type)
+  private getHeadersForFormData(authType: AuthType): HttpHeaders {
+    let headers = new HttpHeaders();
 
     switch (authType) {
       case AuthType.JWT:

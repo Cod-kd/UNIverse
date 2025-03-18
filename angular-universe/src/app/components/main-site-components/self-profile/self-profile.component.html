@@ -6,8 +6,14 @@
             <div class="column-title">Profile</div>
             <div class="profile-header">
                 <h2>{{ profile.usersData.name }}</h2>
-                <img [src]="getProfileImageSrc()" [alt]="profile.usersData.name + '\'s profile picture'"
-                    class="profile-picture">
+                <div class="profile-image-container">
+                    <img [src]="profileImageSrc" [alt]="profile.usersData.name + '\'s profile picture'"
+                        class="profile-picture">
+                    <app-button [btnLabel]="'Módosítás'" [size]="'small'" [iconClass]="'fa-solid fa-camera'"
+                        [isDisabled]="isUploading" (click)="triggerFileInput()">
+                    </app-button>
+                    <input type="file" #fileInput hidden accept="image/*" (change)="onFileSelected($event)">
+                </div>
                 <div>
                     <p><span>Követők:</span> {{ profile.usersData.followerCount }}</p>
                     <p><span>Követés:</span> {{ profile.usersData.followedCount }}</p>
@@ -24,7 +30,7 @@
                 @if (editingDescription) {
                 <textarea class="edit-textarea" [(ngModel)]="tempDescription" (blur)="saveDescription()"
                     (keydown.enter)="$event.preventDefault(); saveDescription()">
-                        </textarea>
+                            </textarea>
                 } @else {
                 <div class="field-value" (click)="editDescription()">
                     {{ profile.description || 'Kattints a hozzáadáshoz!' }}
@@ -153,7 +159,6 @@
 
         <div class="column">
             <div class="column-title">Műveletek</div>
-
             <div class="button-container">
                 <app-button [btnLabel]="'Profil törlése'" [iconClass]="'fa-solid fa-user-slash'"
                     (click)="confirmDeleteProfile()">
@@ -189,5 +194,4 @@
         </div>
     </div>
 </div>
-}
-}
+}}
