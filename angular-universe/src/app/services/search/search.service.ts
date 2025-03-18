@@ -139,6 +139,10 @@ export class SearchService {
       this._isProfessionalSearchActive = isProfessionalSearch;
     }
 
+    if (isProfessionalSearch && currentRoute === "/main-site/user-profile") {
+      this.searchResultsSubject.next(null);
+    }
+
     if (isProfessionalSearch && Array.isArray(response) && currentRoute === "/main-site/user-profile") {
       const filteredProfiles = searchTerm?.trim()
         ? this.filterProfilesBySearchTerm(response as Profile[], searchTerm)

@@ -84,13 +84,18 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         switchMap(result => {
+          if (!result) {
+            this.profile = null;
+            this.username = '';
+            return of(false);
+          }
+
           if (result && !Array.isArray(result)) {
             this.profile = result as Profile;
             this.updateUniversityAndFaculty();
             this.isProfileSaved = false;
 
             if (this.profile) {
-              // Convert userId to number if it's a string
               const userId = typeof this.profile.userId === 'string'
                 ? parseInt(this.profile.userId, 10)
                 : this.profile.userId;
@@ -106,7 +111,6 @@ export class UserProfileComponent implements OnInit, OnDestroy {
                 catchError(() => of(false))
               );
             }
-            return of(false);
           }
           return of(false);
         })
