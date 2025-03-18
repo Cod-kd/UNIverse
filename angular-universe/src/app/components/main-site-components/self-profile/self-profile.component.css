@@ -17,6 +17,11 @@
     gap: 1.5rem;
 }
 
+.profile-image-container{
+    display: grid;
+    place-items: center;
+}
+
 .profile-header {
     display: flex;
     flex-direction: column;

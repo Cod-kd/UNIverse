@@ -4,12 +4,16 @@ import { catchError } from 'rxjs/operators';
 import { FetchService, AuthType } from '../fetch/fetch.service';
 import { ContactType, Role, Category } from '../../models/constants/constants.model';
 import { DeleteProfileData } from '../../models/self-profile/self-profile.model';
+import { ProfileImageService } from '../profile-image/profile-image.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SelfProfileDataService {
-  constructor(private fetchService: FetchService) { }
+  constructor(
+    private fetchService: FetchService,
+    private profileImageService: ProfileImageService
+  ) { }
 
   updateDescription(description: string): Observable<any> {
     return this.fetchService.post('/user/update/desc', { description }, {
@@ -40,23 +44,12 @@ export class SelfProfileDataService {
   }
 
   uploadProfilePicture(imageFile: File): Observable<any> {
-    const formData = new FormData();
-    formData.append('file', imageFile);
-
-    return this.fetchService.postFormData('/image/upload/profilepicture', formData, {
-      authType: AuthType.JWT
-    });
+    return this.profileImageService.uploadProfilePicture(imageFile);
   }
 
   getProfilePictureUrl(): string {
-    const timestamp = new Date().getTime();
     const userId = localStorage.getItem('userId');
-
-    if (userId) {
-      return `${this.fetchService.getBaseUrl()}/image/get/profilepicture?id=${userId}&t=${timestamp}`;
-    }
-
-    return `${this.fetchService.getBaseUrl()}/image/get/profilepicture?t=${timestamp}`;
+    return this.profileImageService.getProfileImageUrl(userId || undefined);
   }
 
   deleteProfile(deleteData: DeleteProfileData): Observable<any> {

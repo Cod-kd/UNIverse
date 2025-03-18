@@ -97,6 +97,12 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
 
   private initProfileImage(): void {
     this.profileImageSrc = this.profileDataService.getProfilePictureUrl();
+
+    const img = new Image();
+    img.onerror = () => {
+      this.profileImageSrc = '/images/default-pfp.jpg';
+    };
+    img.src = this.profileImageSrc;
   }
 
   private updateProfileDisplay(): void {

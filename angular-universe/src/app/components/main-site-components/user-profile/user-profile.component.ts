@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, OnDestroy, PLATFORM_ID, Inject, ChangeDetectorRef } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Profile } from '../../../models/profile/profile.model';
 import { SearchService } from '../../../services/search/search.service';
@@ -15,6 +15,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ConstantsService } from '../../../services/constants/constants.service';
 import { AuthType, FetchService } from '../../../services/fetch/fetch.service';
+import { ProfileImageService } from '../../../services/profile-image/profile-image.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -64,9 +65,17 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     private router: Router,
     private constantsService: ConstantsService,
     private fetchService: FetchService,
+    private profileImageService: ProfileImageService,
+    private cdRef: ChangeDetectorRef,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+
+    this.profileImageService.getImageRefreshTime()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        if (this.profile) this.cdRef.markForCheck();
+      });
 
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
@@ -89,6 +98,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
             this.username = '';
             return of(false);
           }
+
+          this.profileImageService.refreshImages();
 
           if (result && !Array.isArray(result)) {
             this.profile = result as Profile;
@@ -133,6 +144,9 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(profiles => {
         this.matchedProfiles = profiles;
+        if (profiles && profiles.length > 0) {
+          this.profileImageService.refreshImages();
+        }
       });
   }
 
@@ -284,9 +298,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   getProfileImageSrc(): string {
-    if (!this.profile) return '';
-
-    return '/images/default-pfp.jpg';
+    if (!this.profile?.usersData?.userId) return '/images/default-pfp.jpg';
+    return this.profileImageService.getProfileImageUrl(this.profile.usersData.userId);
   }
 
   get genderDisplay(): string {
