@@ -235,7 +235,6 @@
 .contact-icon:hover {
   background-color: var(--dark2);
   color: var(--main);
-  transform: scale(1.1);
 }
 
 @keyframes capture {

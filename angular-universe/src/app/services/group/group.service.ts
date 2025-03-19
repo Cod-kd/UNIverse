@@ -74,7 +74,7 @@ export class GroupService {
 
   joinGroup(group: Group): Observable<any> {
     this.loadingService.show();
-
+    console.log(`${this.baseEndpoint}/name/${encodeURIComponent(group.name)}/follow`);
     return this.fetchService.post<any>(
       `${this.baseEndpoint}/name/${encodeURIComponent(group.name)}/follow`,
       {},
