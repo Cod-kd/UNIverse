@@ -94,16 +94,16 @@ export class AuthService {
     localStorage.setItem('username', username);
     localStorage.setItem('token', token);
     localStorage.setItem('userId', userId);
+    localStorage.removeItem("registrationFormData");
 
     // Update authentication state
     this.isAuthenticated.next(true);
-
-    // The updateValueCache will be called in startPolling due to the isInitialLogin flag
   }
 
   logout(): void {
     this.stopPolling();
     this.clearUserData();
+    localStorage.removeItem("registrationFormData");
     this.isAuthenticated.next(false);
   }
 
