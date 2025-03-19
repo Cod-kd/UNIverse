@@ -220,7 +220,7 @@ CREATE PROCEDURE `usernameById` (IN `userIdIn` MEDIUMINT, OUT `usernameOut` VARC
     WHERE userprofiles.id = userIdIn LIMIT 1;
 END$$
 
-CREATE PROCEDURE `idByGroupName` (IN `groupNameIn` VARCHAR(12), OUT `groupIdOut` MEDIUMINT)   BEGIN
+CREATE PROCEDURE `idByGroupName` (IN `groupNameIn` VARCHAR(60), OUT `groupIdOut` MEDIUMINT)   BEGIN
     SELECT `groups`.id INTO groupIdOut FROM `groups`
     WHERE `groups`.`name` = groupNameIn LIMIT 1;
 END$$
