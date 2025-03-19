@@ -254,7 +254,7 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
 
     this.profileDataService.uploadProfilePicture(file).subscribe({
       next: () => {
-        this.profileImageSrc = this.profileDataService.getProfilePictureUrl();
+        this.profileImageSrc = this.profileDataService.getProfilePictureUrl() + `&nocache=${Date.now()}`;
 
         this.popupService.showSuccess('Profilkép sikeresen feltöltve!');
         this.isSaving = false;

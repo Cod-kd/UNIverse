@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { FetchService, AuthType } from '../fetch/fetch.service';
 
 @Injectable({
@@ -43,6 +43,10 @@ export class ProfileImageService {
 
     return this.fetchService.postFormData('/image/upload/profilepicture', formData, {
       authType: AuthType.JWT
-    });
+    }).pipe(
+      tap(() => {
+        this.refreshImages();
+      })
+    );
   }
 }
