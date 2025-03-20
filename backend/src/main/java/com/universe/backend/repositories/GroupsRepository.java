@@ -43,7 +43,6 @@ public interface GroupsRepository extends JpaRepository<Groups, Integer>{
         @Param("startDateIn") LocalDateTime startDate,
         @Param("endDateIn") LocalDateTime endDate,
         @Param("placeIn") String place,
-        @Param("attachmentRelPathIn") String attachmentRelPath,
         @Param("descriptionIn") String description,
         @Param("groupIdIn") Integer groupId
     );

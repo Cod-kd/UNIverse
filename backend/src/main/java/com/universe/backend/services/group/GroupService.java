@@ -78,7 +78,6 @@ public class GroupService {
             event.getStartDate(),
             event.getEndDate(),
             event.getPlace(),
-            event.getAttachmentRelPath(),
             event.getDescription(),
             groupId
         );
