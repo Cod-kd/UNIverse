@@ -20,16 +20,26 @@ import org.springframework.security.core.Authentication;
 @Service
 public class ImageService {
 
-    private final Path uploadPath;
+    private final Path profileUploadPath;
+    private final Path postUploadPath;
 
     public ImageService(@Value("${file.upload-dir:./uploads/images}") String uploadDir) {
-        this.uploadPath = Paths.get(uploadDir + "/profiles").toAbsolutePath().normalize();
-        System.out.println("ImageService upload path: " + this.uploadPath);
-        if (!Files.exists(uploadPath)) {
+        this.profileUploadPath = Paths.get(uploadDir + "/profiles").toAbsolutePath().normalize();
+        this.postUploadPath = Paths.get(uploadDir + "/posts").toAbsolutePath().normalize();
+        
+        System.out.println("Profile upload path: " + this.profileUploadPath);
+        System.out.println("Post upload path: " + this.postUploadPath);
+        
+        createDirectoryIfNotExists(profileUploadPath);
+        createDirectoryIfNotExists(postUploadPath);
+    }
+
+    private void createDirectoryIfNotExists(Path path) {
+        if (!Files.exists(path)) {
             try {
-                Files.createDirectories(uploadPath);
+                Files.createDirectories(path);
             } catch (IOException e) {
-                throw new RuntimeException("Failed to create upload directory: " + uploadPath, e);
+                throw new RuntimeException("Failed to create upload directory: " + path, e);
             }
         }
     }
@@ -45,42 +55,60 @@ public class ImageService {
         return (CustomUserPrincipal) principal;
     }
 
+    // For profile pictures
     public String storeProfileImage(MultipartFile file, Authentication authentication) throws IOException {
         Integer id = getPrincipal(authentication).getUserId();
-        // Get file extension from original filename
-        String originalFilename = file.getOriginalFilename();
-        String fileExtension = originalFilename != null ? 
-                originalFilename.substring(originalFilename.lastIndexOf(".")) : ".jpg";
-        
-        // Delete any existing profile pictures for this id
-        deleteExistingProfilePictures(id);
-        
-        // Create the file path
+        String fileExtension = getFileExtension(file);
+        deleteExistingImages(profileUploadPath, id, "");
         String filename = id + fileExtension;
-        Path filePath = uploadPath.resolve(filename);
-        
-        // Save the file
+        Path filePath = profileUploadPath.resolve(filename);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        
         return filename;
     }
+
+    // For post images
+    public String storePostImage(MultipartFile file, Integer postId) throws IOException {
+        String fileExtension = getFileExtension(file);
+        deleteExistingImages(postUploadPath, postId, "post");
+        String filename = "post" + postId + fileExtension;
+        Path filePath = postUploadPath.resolve(filename);
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        return fileExtension; // Return the extension to store in the post
+    }
     
-    private void deleteExistingProfilePictures(Integer id) throws IOException {
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(uploadPath, id + ".*")) {
+    private String getFileExtension(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+        return originalFilename != null && originalFilename.contains(".") ?
+                originalFilename.substring(originalFilename.lastIndexOf(".")) : ".jpg";
+    }
+
+    private void deleteExistingImages(Path directory, Integer id, String prefix) throws IOException {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory, prefix + id + ".*")) {
             for (Path file : stream) {
                 Files.deleteIfExists(file);
             }
         }
     }
-    
+
+    // For profile pictures
     public Resource loadProfileImage(Integer id) throws MalformedURLException, IOException {
-        // Scan the directory for a file matching the id
+        Path filePath = findImagePath(profileUploadPath, id, "");
+        return loadResource(filePath, id);
+    }
+
+    // For post images
+    public Resource loadPostImage(Integer postId) throws MalformedURLException, IOException {
+        Path filePath = findImagePath(postUploadPath, postId, "post");
+        return loadResource(filePath, postId);
+    }
+
+    private Path findImagePath(Path directory, Integer id, String prefix) throws MalformedURLException, IOException {
         Path filePath = null;
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(uploadPath, id + ".*")) {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(directory, prefix + id + ".*")) {
             for (Path path : stream) {
                 if (Files.isRegularFile(path)) {
                     filePath = path;
-                    break; // Use the first matching file
+                    break;
                 }
             }
         } catch (IOException e) {
@@ -88,9 +116,12 @@ public class ImageService {
         }
 
         if (filePath == null) {
-            throw new MalformedURLException("A kép nem létezik az adott felhasználóhoz: " + id);
+            throw new MalformedURLException("A kép nem létezik az adott azonosítóhoz: " + id);
         }
+        return filePath;
+    }
 
+    private Resource loadResource(Path filePath, Integer id) throws IOException {
         System.out.println("Loading image from: " + filePath.toAbsolutePath());
         Resource resource = new UrlResource(filePath.toUri());
         if (!resource.exists() || !resource.isReadable()) {
@@ -105,7 +136,7 @@ public class ImageService {
         if (lastDotIndex != -1) {
             return filename.substring(lastDotIndex + 1);
         }
-        return "jpg"; // Fallback if no extension is found
+        return "jpg";
     }
     
     public String determineContentType(String extension) {

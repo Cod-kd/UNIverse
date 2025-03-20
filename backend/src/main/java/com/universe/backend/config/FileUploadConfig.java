@@ -24,11 +24,15 @@ public class FileUploadConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        Path uploadPath = Paths.get(uploadDir + "/profiles").toAbsolutePath().normalize();
-        String uploadPathString = uploadPath.toString();
-        System.out.println("Resource handler path: " + uploadPathString);
+        Path profileUploadPath = Paths.get(uploadDir + "/profiles").toAbsolutePath().normalize();
+        Path postUploadPath = Paths.get(uploadDir + "/posts").toAbsolutePath().normalize();
         
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:" + uploadPathString + "/");
+        System.out.println("Profile resource handler path: " + profileUploadPath);
+        System.out.println("Post resource handler path: " + postUploadPath);
+        
+        registry.addResourceHandler("/uploads/profiles/**")
+                .addResourceLocations("file:" + profileUploadPath.toString() + "/");
+        registry.addResourceHandler("/uploads/posts/**")
+                .addResourceLocations("file:" + postUploadPath.toString() + "/");
     }
 }

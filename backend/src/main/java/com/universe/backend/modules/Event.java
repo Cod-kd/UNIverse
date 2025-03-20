@@ -33,9 +33,6 @@ public class Event {
     @Column(nullable = false, length = 255)
     private String place;  // varchar(255)
 
-    @Column(nullable = false, length = 50)
-    private String attachmentRelPath = "";  // varchar(50)
-
     @Column(nullable = false, length = 180)
     private String description = "";  // varchar(180)
 
@@ -99,14 +96,6 @@ public class Event {
 
     public void setPlace(String place) {
         this.place = place;
-    }
-
-    public String getAttachmentRelPath() {
-        return attachmentRelPath;
-    }
-
-    public void setAttachmentRelPath(String attachmentRelPath) {
-        this.attachmentRelPath = attachmentRelPath;
     }
 
     public String getDescription() {

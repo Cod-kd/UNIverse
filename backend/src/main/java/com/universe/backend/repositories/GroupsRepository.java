@@ -1,7 +1,9 @@
 package com.universe.backend.repositories;
 
+import com.universe.backend.modules.Comment;
 import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Groups;
+import com.universe.backend.modules.Posts;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,7 +35,7 @@ public interface GroupsRepository extends JpaRepository<Groups, Integer>{
     @Query(value = "SELECT checkGroupMember(:groupIdIn, :userIdIn)", nativeQuery = true)
     Boolean isGroupFollowed(@Param("groupIdIn") Integer groupId, @Param("userIdIn") Integer userId);
     
-    @Query(value = "SELECT * FROM events WHERE groupId = :groupIdIn", nativeQuery = true)
+    @Query(value = "SELECT * FROM events WHERE groupId = :groupIdIn ORDER BY id DESC", nativeQuery = true)
     List<Event> getEvents(@Param("groupIdIn") Integer groupId);
     
     @Procedure(procedureName = "createEvent")
@@ -43,7 +45,6 @@ public interface GroupsRepository extends JpaRepository<Groups, Integer>{
         @Param("startDateIn") LocalDateTime startDate,
         @Param("endDateIn") LocalDateTime endDate,
         @Param("placeIn") String place,
-        @Param("attachmentRelPathIn") String attachmentRelPath,
         @Param("descriptionIn") String description,
         @Param("groupIdIn") Integer groupId
     );
@@ -65,4 +66,16 @@ public interface GroupsRepository extends JpaRepository<Groups, Integer>{
     
     @Procedure(procedureName = "getUsersScheduleForEvent")
     List<Integer> getUsersScheduleForEvent(@Param("eventIdIn") Integer eventId);
+
+    @Query(value = "SELECT * FROM posts WHERE groupId = :groupIdIn ORDER BY id DESC", nativeQuery = true)
+    List<Posts> getPosts(@Param("groupIdIn") Integer groupId);
+    
+    @Procedure(procedureName = "addComment")
+    void addComment(@Param("postIdIn") Integer postId, @Param("userIdIn") Integer userId, @Param("commentIn") String comment);
+
+    @Query(value = "SELECT * FROM comments WHERE postId = :postIdIn ORDER BY id", nativeQuery = true)
+    List<Comment> getComments(@Param("postIdIn") Integer postId);
+    
+    @Procedure(procedureName = "addCreditToPost")
+    void addCredit(@Param("postIdIn") Integer postId);
 }
