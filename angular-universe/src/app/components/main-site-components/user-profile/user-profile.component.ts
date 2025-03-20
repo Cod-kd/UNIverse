@@ -308,13 +308,13 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   startFollowing(): void {
-    if (!this.profile || this.isFollowInProgress || !this.searchedUsername) return;
-
+    if (!this.profile || this.isFollowInProgress) return;
     this.isFollowInProgress = true;
+    const targetUsername = this.username;
 
     const followAction = this.isFollowing
-      ? this.followService.unfollowUser(this.searchedUsername)
-      : this.followService.followUser(this.searchedUsername);
+      ? this.followService.unfollowUser(targetUsername)
+      : this.followService.followUser(targetUsername);
 
     followAction
       .pipe(
