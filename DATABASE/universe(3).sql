@@ -1,25 +1,6 @@
 -- Gép: localhost:8889
-/*
-NNN:= NotNessaryNow
 
-todo:
-get this out: DEFINER=`root`@`localhost`
-
-create procedure add: {togroup} category, post (create post and link to group)
-
-create procedure: (NNN: handleGroupRank)
-
-fill manual: (NNN addRank)
-(by CALL) (NNN: createRank)
-
-
-back implement::
-
-procedures:
-
-functions:
-
-*/
+/* Ranks and related are for future implementations. */
 
 SET SQL_MODE = "";
 SET GLOBAL log_bin_trust_function_creators = 1;
@@ -143,18 +124,26 @@ CREATE PROCEDURE `createContactType` (IN `nameIn` VARCHAR(20), IN `domainIn` VAR
 	INSERT INTO `contacttypes`(`name`, `domain`, `protocol`) VALUES (nameIn, domainIn, protocolIn);
 END$$
 
-CREATE PROCEDURE `createEvent` (IN `nameIn` VARCHAR(30), IN `creatorIdIn` MEDIUMINT, IN `startDateIn` TIMESTAMP, IN `endDateIn` TIMESTAMP, IN `placeIn` VARCHAR(255), IN `attachmentRelPathIn` VARCHAR(50), IN `descriptionIn` VARCHAR(180), IN `groupIdIn` MEDIUMINT)   BEGIN
-INSERT INTO `events`(`name`, `creatorId`, `startDate`, `endDate`, `place`, `attachmentRelPath`, `description`, `groupId`) VALUES (`nameIn`, `creatorIdIn`, `startDateIn`, `endDateIn`, `placeIn`, `attachmentRelPathIn`, `descriptionIn`, `groupIdIn`);
+CREATE PROCEDURE `createEvent` (IN `nameIn` VARCHAR(30), IN `creatorIdIn` MEDIUMINT, IN `startDateIn` TIMESTAMP, IN `endDateIn` TIMESTAMP, IN `placeIn` VARCHAR(255), IN `descriptionIn` VARCHAR(180), IN `groupIdIn` MEDIUMINT)   BEGIN
+INSERT INTO `events`(`name`, `creatorId`, `startDate`, `endDate`, `place`, `description`, `groupId`) VALUES (`nameIn`, `creatorIdIn`, `startDateIn`, `endDateIn`, `placeIn`, `descriptionIn`, `groupIdIn`);
 CALL addGroupActualEventCount(groupIdIn);
 CALL addGroupAllEventCount(groupIdIn);
-/*SET @eventId = 0;  
-CALL idByEventName(nameIn, @eventId);
-CALL linkEventToGroup(groupIdIn, @eventId);
-*/
 END$$
 
-CREATE PROCEDURE `createGroup` (IN `nameIn` VARCHAR(60), IN `adminIdIn` MEDIUMINT)   BEGIN
-	INSERT INTO `groups`(`name`, `adminId`) VALUES (nameIn, adminIdIn);
+CREATE PROCEDURE `createGroup` (IN `nameIn` VARCHAR(60), IN `adminIdIn` MEDIUMINT)	BEGIN
+    DECLARE `newGroupId` MEDIUMINT;
+    INSERT INTO `groups` (`name`, `adminId`) VALUES (nameIn, adminIdIn);
+    SET newGroupId = LAST_INSERT_ID();
+    CALL addGroupMember(newGroupId, adminIdIn);
+END$$
+
+CREATE PROCEDURE `addGroupCategory` (
+    IN `groupIdIn` MEDIUMINT,
+    IN `categoryIdIn` SMALLINT
+)
+BEGIN
+    INSERT INTO `groupcategories` (`groupId`, `categoryId`) 
+    VALUES (groupIdIn, categoryIdIn);
 END$$
 
 CREATE PROCEDURE `createRank` (IN `nameIn` VARCHAR(30), IN `isAdminIn` BOOLEAN, IN `canViewIn` BOOLEAN, IN `canCommentIn` BOOLEAN, IN `canPostIn` BOOLEAN, IN `canModifyIn` BOOLEAN)   BEGIN
@@ -183,7 +172,9 @@ BEGIN
 END$$
 
 CREATE PROCEDURE `deleteUserProfile` (IN `usernameIn` VARCHAR(12))   BEGIN
+	SET SQL_SAFE_UPDATES = 0;
 	UPDATE `userprofiles` SET `deletedAt`= NOW() WHERE userprofiles.username = usernameIn;
+	SET SQL_SAFE_UPDATES = 1;
 END$$
 
 CREATE PROCEDURE `getCategory` (IN `idIn` SMALLINT)   BEGIN
@@ -225,12 +216,6 @@ CREATE PROCEDURE `idByGroupName` (IN `groupNameIn` VARCHAR(60), OUT `groupIdOut`
     WHERE `groups`.`name` = groupNameIn LIMIT 1;
 END$$
 
-/*
-CREATE PROCEDURE `linkEventToGroup` (IN `groupIdIn` MEDIUMINT, IN `eventIdIn` MEDIUMINT)   BEGIN
-INSERT INTO `eventsofgroups`(`groupId`, `eventId`) VALUES (groupIdIn, eventIdIn);
-END$$
-*/
-
 CREATE PROCEDURE `login` (IN `usernameIn` VARCHAR(12))   BEGIN
 	SELECT * FROM `userprofiles` WHERE userprofiles.username = usernameIn;
 END$$
@@ -241,11 +226,6 @@ END$$
 
 CREATE PROCEDURE `reduceGroupAllEventCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
 UPDATE `groups` SET `allEventCount` = allEventCount - 1 WHERE groups.id = groupIdIn;
-END$$
-
-CREATE PROCEDURE `reduceGroupMembers` (IN `groupIdIn` MEDIUMINT, IN `userIdIn` MEDIUMINT)   BEGIN
-DELETE FROM `membersofgroups` WHERE membersofgroups.groupId = groupIdIn AND membersofgroups.userId = userIdIn;
-CALL reduceGroupMemberCount(groupIdIn);
 END$$
 
 CREATE PROCEDURE `reduceGroupPostCount` (IN `groupIdIn` MEDIUMINT)   BEGIN
@@ -337,6 +317,37 @@ CREATE PROCEDURE `getUsersScheduleForEvent` (IN eventIdIn INT)
 BEGIN  
     SELECT userId FROM `participants` WHERE eventId = eventIdIn;
 END$$
+
+CREATE PROCEDURE createPost(
+    IN creatorIdIn INT,
+    IN groupIdIn INT,
+    IN descriptionIn TEXT,
+    OUT newPostId INT
+)
+BEGIN
+    INSERT INTO posts (creatorId, groupId, creditCount, description)
+    VALUES (creatorIdIn, groupIdIn, 0, descriptionIn);
+    
+    SET newPostId = LAST_INSERT_ID();
+END$$
+
+CREATE PROCEDURE `addComment` (
+    IN `postIdIn` INT,
+    IN `userIdIn` MEDIUMINT,
+    IN `commentIn` TINYTEXT
+)
+BEGIN
+    INSERT INTO `comments` (`postId`, `userId`, `comment`)
+    VALUES (postIdIn, userIdIn, commentIn);
+END$$
+
+CREATE PROCEDURE `addCreditToPost` (IN postIdIn INT)
+BEGIN
+    UPDATE posts 
+    SET creditCount = creditCount + 1
+    WHERE id = postIdIn;
+END$$
+
 --
 -- Függvények
 --
@@ -410,17 +421,6 @@ CREATE TABLE `contacttypes` (
 -- --------------------------------------------------------
 
 --
--- Tábla szerkezet ehhez a táblához `eventcalendars`
---
-
-CREATE TABLE `eventcalendars` (
-  `userId` mediumint(9) NOT NULL,
-  `eventId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
 -- Tábla szerkezet ehhez a táblához `eventcategories`
 --
 
@@ -443,31 +443,12 @@ CREATE TABLE `events` (
   `startDate` timestamp NULL DEFAULT NULL,
   `endDate` timestamp NULL DEFAULT NULL,
   `place` varchar(255) NOT NULL,
-  `attachmentRelPath` varchar(50) NOT NULL DEFAULT '',
   `description` varchar(180) NOT NULL DEFAULT '',
   `participantsCount` mediumint(9) DEFAULT '0',
   `interestedUsersCount` mediumint(9) DEFAULT '0',
   `isActual` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Tábla szerkezet ehhez a táblához `eventsofgroups`
---
-/*
-CREATE TABLE `eventsofgroups` (
-  `groupId` mediumint(9) NOT NULL,
-  `eventId` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-*/
-/*--
--- Tábla szerkezet ehhez a táblához `followedgroups`
---
-
-CREATE TABLE `followedgroups` (
-  `followerId` mediumint(9) NOT NULL,
-  `followedGroupId` mediumint(9) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-*/
 -- --------------------------------------------------------
 
 --
@@ -559,9 +540,9 @@ CREATE TABLE `participants` (
 CREATE TABLE `posts` (
   `id` int(11) NOT NULL,
   `creatorId` mediumint(9) NOT NULL,
+  `groupId` mediumint(9) NOT NULL,
   `creditCount` mediumint(9) DEFAULT '0',
-  `description` text NOT NULL,
-  `attachmentRelPath` VARCHAR(60) NOT NULL
+  `description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -573,17 +554,6 @@ CREATE TABLE `posts` (
 CREATE TABLE `postscategories` (
   `postId` int(11) NOT NULL,
   `categoryId` smallint(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Tábla szerkezet ehhez a táblához `postsofgroups`
---
-
-CREATE TABLE `postsofgroups` (
-  `groupId` mediumint(9) NOT NULL,
-  `postId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -714,13 +684,6 @@ ALTER TABLE `contacttypes`
   ADD PRIMARY KEY (`id`);
 
 --
--- A tábla indexei `eventcalendars`
---
-ALTER TABLE `eventcalendars`
-  ADD KEY `userId` (`userId`),
-  ADD KEY `eventId` (`eventId`);
-
---
 -- A tábla indexei `eventcategories`
 --
 ALTER TABLE `eventcategories`
@@ -734,14 +697,6 @@ ALTER TABLE `events`
   ADD PRIMARY KEY (`id`),
   ADD KEY `creatorId` (`creatorId`);
 
---
--- A tábla indexei `eventsofgroups`
---
-/*
-ALTER TABLE `eventsofgroups`
-  ADD KEY `groupId` (`groupId`),
-  ADD KEY `eventId` (`eventId`);
-*/
 --
 -- A tábla indexei `membersofgroups`
 --
@@ -807,14 +762,7 @@ ALTER TABLE `posts`
 ALTER TABLE `postscategories`
   ADD KEY `postId` (`postId`),
   ADD KEY `categoryId` (`categoryId`);
-
---
--- A tábla indexei `postsofgroups`
---
-ALTER TABLE `postsofgroups`
-  ADD KEY `groupId` (`groupId`),
-  ADD KEY `postId` (`postId`);
-
+  
 --
 -- A tábla indexei `ranks`
 --
@@ -926,7 +874,7 @@ ALTER TABLE `userprofiles`
   MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT;
 
 --
--- Megkötések a kiírt táblákhoz
+-- Megkötések
 --
 
 --
@@ -935,13 +883,6 @@ ALTER TABLE `userprofiles`
 ALTER TABLE `comments`
   ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`postId`) REFERENCES `posts` (`id`),
   ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`userId`) REFERENCES `userprofiles` (`id`);
-
---
--- Megkötések a táblához `eventcalendars`
---
-ALTER TABLE `eventcalendars`
-  ADD CONSTRAINT `eventcalendars_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `usersdata` (`userId`),
-  ADD CONSTRAINT `eventcalendars_ibfk_2` FOREIGN KEY (`eventId`) REFERENCES `events` (`id`);
 
 --
 -- Megkötések a táblához `eventcategories`
@@ -956,23 +897,7 @@ ALTER TABLE `eventcategories`
 ALTER TABLE `events`
   ADD CONSTRAINT `events_ibfk_1` FOREIGN KEY (`groupId`) REFERENCES `groups` (`id`),
   ADD CONSTRAINT `events_ibfk_2` FOREIGN KEY (`creatorId`) REFERENCES `userprofiles` (`id`);
-  
 
---
--- Megkötések a táblához `eventsofgroups`
---
-/*
-ALTER TABLE `eventsofgroups`
-  ADD CONSTRAINT `eventsofgroups_ibfk_1` FOREIGN KEY (`groupId`) REFERENCES `groups` (`id`),
-  ADD CONSTRAINT `eventsofgroups_ibfk_2` FOREIGN KEY (`eventId`) REFERENCES `events` (`id`);
-*/
-/*--
--- Megkötések a táblához `followedgroups`
---
-ALTER TABLE `followedgroups`
-  ADD CONSTRAINT `followedgroups_ibfk_1` FOREIGN KEY (`followerId`) REFERENCES `userprofiles` (`id`),
-  ADD CONSTRAINT `followedgroups_ibfk_2` FOREIGN KEY (`followedGroupId`) REFERENCES `groups` (`id`);
-*/
 --
 -- Megkötések a táblához `followedusers`
 --
@@ -1031,13 +956,6 @@ ALTER TABLE `posts`
 ALTER TABLE `postscategories`
   ADD CONSTRAINT `postscategories_ibfk_1` FOREIGN KEY (`postId`) REFERENCES `posts` (`id`),
   ADD CONSTRAINT `postscategories_ibfk_2` FOREIGN KEY (`categoryId`) REFERENCES `categories` (`id`);
-
---
--- Megkötések a táblához `postsofgroups`
---
-ALTER TABLE `postsofgroups`
-  ADD CONSTRAINT `postsofgroups_ibfk_1` FOREIGN KEY (`groupId`) REFERENCES `groups` (`id`),
-  ADD CONSTRAINT `postsofgroups_ibfk_2` FOREIGN KEY (`postId`) REFERENCES `posts` (`id`);
 
 --
 -- Megkötések a táblához `userinterests`
@@ -1134,6 +1052,12 @@ CALL createGroup('BioWizards', 3);
 CALL createGroup('QuantumMinds', 4);
 CALL createGroup('EngineersUnited', 5);
 
+CALL addGroupCategory(1, 1);
+CALL addGroupCategory(1, 2);  
+CALL addGroupCategory(3, 3);  
+CALL addGroupCategory(4, 4);  
+CALL addGroupCategory(5, 5);  
+
 -- events
 -- Esemény a Computer Science csoporthoz
 CALL createEvent(
@@ -1142,7 +1066,6 @@ CALL createEvent(
     '2024-11-15 09:00:00', 
     '2024-11-15 18:00:00', 
     'Tech Park Hall A', 
-    'hackathon2024.jpg', 
     'An intense coding competition for students and professionals.', 
     1
 );
@@ -1154,7 +1077,6 @@ CALL createEvent(
     '2024-03-14 10:00:00', 
     '2024-03-14 14:00:00', 
     'Math Department, Room 101', 
-    'piday2024.png', 
     'Join us for Pi-themed activities and a pie-eating contest!', 
     2
 );
@@ -1166,7 +1088,6 @@ CALL createEvent(
     '2024-04-22 08:30:00', 
     '2024-04-22 17:00:00', 
     'University C Botanical Garden', 
-    'ecoexploration.gif', 
     'Explore the local ecosystem with guided tours and hands-on activities.', 
     3
 );
@@ -1178,7 +1099,6 @@ CALL createEvent(
     '2024-05-10 13:00:00', 
     '2024-05-10 15:00:00', 
     'Physics Building, Room 302', 
-    'quantumlecture.jpeg', 
     'A special guest lecture on the mysteries of quantum mechanics.', 
     4
 );
@@ -1190,10 +1110,26 @@ CALL createEvent(
     '2024-06-05 10:00:00', 
     '2024-06-05 16:00:00', 
     'Engineering Lab, Main Hall', 
-    'roboticshowcase.bmp', 
     'See the latest in student-designed robots and engineering projects.', 
     5
 );
+
+-- Create posts
+SET @postId = 0;
+CALL createPost(1, 1, 'Ez egy új bejegyzés.', @postId);
+CALL createPost(1, 1, 'Nagyon jó napom volt ma!', @postId);
+CALL createPost(2, 2, 'Szeretem ezt a csoportot.', @postId);
+CALL createPost(3, 3, 'Mit gondoltok erről a témáról?', @postId);
+CALL createPost(4, 4, 'Csak egy gyors frissítés.', @postId);
+
+-- Add comments
+CALL addComment(1, 2, 'Nagyon jó bejegyzés!');
+CALL addComment(1, 3, 'Egyetértek, ez tényleg érdekes.');
+CALL addComment(2, 4, 'Köszönöm, hogy megosztottad!');
+CALL addComment(3, 1, 'Mit gondoltok erről a témáról?');
+CALL addComment(4, 5, 'Nagyon inspiráló gondolatok.');
+
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
