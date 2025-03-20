@@ -74,7 +74,6 @@ export class GroupService {
 
   joinGroup(group: Group): Observable<any> {
     this.loadingService.show();
-    console.log(`${this.baseEndpoint}/name/${encodeURIComponent(group.name)}/follow`);
     return this.fetchService.post<any>(
       `${this.baseEndpoint}/name/${encodeURIComponent(group.name)}/follow`,
       {},
@@ -87,7 +86,11 @@ export class GroupService {
       tap({
         next: () => {
           const updatedGroups = this.groupsSubject.value.map(g =>
-            g.id === group.id ? { ...g, isMember: true } : g
+            g.id === group.id ? {
+              ...g,
+              isMember: true,
+              membersCount: g.membersCount + 1
+            } : g
           );
           this.groupsSubject.next(updatedGroups);
           this.popupService.showSuccess('Sikeresen csatlakoztál a csoporthoz!');
@@ -112,7 +115,11 @@ export class GroupService {
       tap({
         next: () => {
           const updatedGroups = this.groupsSubject.value.map(g =>
-            g.id === group.id ? { ...g, isMember: false } : g
+            g.id === group.id ? {
+              ...g,
+              isMember: false,
+              membersCount: Math.max(0, g.membersCount - 1)
+            } : g
           );
           this.groupsSubject.next(updatedGroups);
           this.popupService.showSuccess('Sikeresen kiléptél a csoportból!');
