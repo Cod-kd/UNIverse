@@ -1,5 +1,6 @@
 package com.universe.backend.modules;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -39,6 +40,7 @@ public class Comment {
         this.id = id;
     }
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // !important: so it's not in Json response
     public Integer getPostId() {
         return postId;
     }
