@@ -177,7 +177,7 @@
 }
 
 .capture-animation {
-  opacity: 0.7;
+  opacity: 0.9;
   animation: capture 0.6s ease;
 }
 

@@ -7,6 +7,8 @@ import { PopupService } from '../popup-message/popup-message.service';
   providedIn: 'root'
 })
 export class CardMetadataService {
+  // Change encryption key
+  private readonly encryptionKey = 'UNI-SECURE-KEY-2025';
 
   constructor(private popupService: PopupService) { }
 
@@ -17,25 +19,31 @@ export class CardMetadataService {
       reader.onload = (event: ProgressEvent<FileReader>) => {
         try {
           const base64Data = event.target?.result as string;
-
           const exifData = piexifjs.load(base64Data);
           const exif = exifData["Exif"] || {};
-
           const userCommentTag = 37510;
           let userComment = exif[userCommentTag];
 
           if (userComment) {
+            // Remove ASCII prefix
             userComment = userComment.replace("ASCII\0\0\0", "");
 
-            const match = userComment.match(/usernameIn: (.*?), passwordIn: (.*)/);
+            try {
+              // Decrypt the data
+              const decryptedData = this.decrypt(userComment);
+              const match = decryptedData.match(/usernameIn: (.*?), passwordIn: (.*)/);
 
-            if (match) {
-              const result = {
-                username: match[1],
-                password: match[2],
-              };
-              resolve(result);
-            } else {
+              if (match) {
+                const result = {
+                  username: match[1],
+                  password: match[2],
+                };
+                resolve(result);
+              } else {
+                resolve(null);
+              }
+            } catch (decryptError) {
+              this.popupService.showError('A kártya adatai nem olvashatók: hibás vagy nem titkosított formátum.');
               resolve(null);
             }
           } else {
@@ -66,8 +74,15 @@ export class CardMetadataService {
         const exif = exifData['Exif'] || {};
         const gps = exifData['GPS'] || {};
 
+        // Create the user data string
+        const userDataString = `usernameIn: ${userData.username}, passwordIn: ${userData.password}`;
+
+        // Encrypt the data
+        const encryptedData = this.encrypt(userDataString);
+
+        // Add ASCII prefix required by the EXIF standard
         const userCommentPrefix = 'ASCII\0\0\0';
-        const userCommentValue = `${userCommentPrefix}usernameIn: ${userData.username}, passwordIn: ${userData.password}`;
+        const userCommentValue = `${userCommentPrefix}${encryptedData}`;
         const userCommentTag = 37510;
         exif[userCommentTag] = userCommentValue;
 
@@ -78,7 +93,6 @@ export class CardMetadataService {
         });
 
         const newImageData = piexifjs.insert(exifBytes, base64Image);
-
         const newBlob = this.dataURItoBlob(newImageData);
 
         const link = document.createElement('a');
@@ -106,5 +120,41 @@ export class CardMetadataService {
       arrayBuffer[i] = byteString.charCodeAt(i);
     }
     return new Blob([arrayBuffer], { type: mimeString });
+  }
+
+  // Simple XOR encryption
+  private encrypt(text: string): string {
+    // Convert to Base64 first to handle special characters
+    const base64 = btoa(text);
+    let result = '';
+
+    for (let i = 0; i < base64.length; i++) {
+      // XOR each character with the corresponding character in the key
+      const charCode = base64.charCodeAt(i) ^ this.encryptionKey.charCodeAt(i % this.encryptionKey.length);
+      result += String.fromCharCode(charCode);
+    }
+
+    // Return as Base64 to ensure it can be stored in EXIF
+    return btoa(result);
+  }
+
+  // Simple XOR decryption
+  private decrypt(encryptedBase64: string): string {
+    try {
+      // Decode the outer Base64
+      const encrypted = atob(encryptedBase64);
+      let result = '';
+
+      for (let i = 0; i < encrypted.length; i++) {
+        // XOR each character with the corresponding character in the key
+        const charCode = encrypted.charCodeAt(i) ^ this.encryptionKey.charCodeAt(i % this.encryptionKey.length);
+        result += String.fromCharCode(charCode);
+      }
+
+      // Decode the inner Base64 to get the original text
+      return atob(result);
+    } catch (e) {
+      throw new Error('Decryption failed');
+    }
   }
 }
