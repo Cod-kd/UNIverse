@@ -1,6 +1,7 @@
 package com.universe.backend.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.universe.backend.modules.Comment;
 import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Groups;
 import com.universe.backend.modules.Posts;
@@ -160,5 +161,17 @@ public class GroupController {
         Integer groupId = gs.groupIdByName(groupName);
         List<Posts> posts = gs.getPosts(groupId);
         return ResponseEntity.ok(posts);
+    }
+    
+    @PostMapping("post/add/comment")
+    public ResponseEntity<String> addComment(@RequestBody Comment comment, Authentication authentication) {
+        gs.addComment(comment, authentication);
+        return ResponseEntity.ok("Sikeres kommentelés!");
+    }
+    
+    @GetMapping("post/get/comment")
+    public ResponseEntity<List<Comment>> getComments(@RequestParam Integer postId) {
+        List<Comment> comments = gs.getComments(postId);
+        return ResponseEntity.ok(comments);
     }
 }

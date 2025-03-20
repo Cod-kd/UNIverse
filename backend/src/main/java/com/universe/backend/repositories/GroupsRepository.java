@@ -1,5 +1,6 @@
 package com.universe.backend.repositories;
 
+import com.universe.backend.modules.Comment;
 import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Groups;
 import com.universe.backend.modules.Posts;
@@ -68,4 +69,10 @@ public interface GroupsRepository extends JpaRepository<Groups, Integer>{
 
     @Query(value = "SELECT * FROM posts WHERE groupId = :groupIdIn ORDER BY id DESC", nativeQuery = true)
     List<Posts> getPosts(@Param("groupIdIn") Integer groupId);
+    
+    @Procedure(procedureName = "addComment")
+    void addComment(@Param("postIdIn") Integer postId, @Param("userIdIn") Integer userId, @Param("commentIn") String comment);
+
+    @Query(value = "SELECT * FROM comments WHERE postId = :postIdIn ORDER BY id", nativeQuery = true)
+    List<Comment> getComments(@Param("postIdIn") Integer postId);
 }

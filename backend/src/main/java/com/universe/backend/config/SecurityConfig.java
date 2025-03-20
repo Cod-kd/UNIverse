@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/groups/event/interested_users").permitAll()
                         .requestMatchers("/groups/name/*/events").permitAll()
                         .requestMatchers("/groups/name/*/posts").permitAll()
+                        .requestMatchers("/groups/post/get/comment").permitAll()
                         .requestMatchers("/image/get/**").permitAll()
                         .anyRequest().authenticated() // All other endpoints require authentication
                 )

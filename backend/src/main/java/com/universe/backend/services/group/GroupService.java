@@ -3,6 +3,7 @@ package com.universe.backend.services.group;
 import com.universe.backend.config.CustomUserPrincipal;
 import com.universe.backend.exceptions.AuthenticationFailedException;
 import com.universe.backend.exceptions.GroupNotFoundException;
+import com.universe.backend.modules.Comment;
 import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Groups;
 import com.universe.backend.modules.Posts;
@@ -143,5 +144,15 @@ public class GroupService {
 
     public List<Posts> getPosts(Integer groupId) {
         return groupRepository.getPosts(groupId);
+    }
+    
+    public void addComment(Comment comment, Authentication authentication) {
+        Integer userId = getPrincipal(authentication).getUserId();
+        comment.setUserId(userId);
+        groupRepository.addComment(comment.getPostId(), comment.getUserId(), comment.getComment());
+    }
+    
+    public List<Comment> getComments(Integer postId) {
+        return groupRepository.getComments(postId);
     }
 }
