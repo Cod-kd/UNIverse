@@ -1,20 +1,20 @@
 package com.universe.backend.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Groups;
+import com.universe.backend.modules.Posts;
+import com.universe.backend.services.ImageService;
 import com.universe.backend.services.group.GroupService;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/groups")
@@ -22,6 +22,12 @@ public class GroupController {
 
     @Autowired
     private GroupService gs;
+
+    @Autowired
+    private ImageService imageService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
     
     @GetMapping
     public ResponseEntity<List<Groups>> getAllGroups() {
@@ -35,7 +41,7 @@ public class GroupController {
     
     @PostMapping("/create")
     public ResponseEntity<String> createGroup(@RequestBody Map<String, String> request, Authentication authentication) {
-        String groupName = (String) request.get("groupName");
+        String groupName = request.get("groupName");
         gs.createGroup(groupName, authentication);
         return ResponseEntity.ok("A csoport létrejött: " + groupName);
     }
@@ -62,7 +68,7 @@ public class GroupController {
     }
     
     @PostMapping("name/{groupName}/events")
-    public ResponseEntity<List<Event> > getEvents(@PathVariable String groupName) {
+    public ResponseEntity<List<Event>> getEvents(@PathVariable String groupName) {
         Integer groupId = gs.groupIdByName(groupName);
         return ResponseEntity.ok(gs.getEvents(groupId));
     }
@@ -114,5 +120,45 @@ public class GroupController {
         Integer eventId = requestBody.get("eventId");
         List<Integer> eventIdes = gs.getUsersScheduleForEvent(eventId);
         return ResponseEntity.ok(eventIdes);
+    }
+    
+    @PostMapping(value = "name/{groupName}/newpost", consumes = "multipart/form-data")
+    public ResponseEntity<Map<String, Object>> createPost(
+            @PathVariable String groupName,
+            @RequestParam("post") String postJson,
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            Authentication authentication) {
+        try {
+            // Parse the post JSON
+            Posts post = objectMapper.readValue(postJson, Posts.class);
+            
+            Integer groupId = gs.groupIdByName(groupName);
+            post.setGroupId(groupId);
+            Posts createdPost = gs.createPost(post, authentication);
+            
+            // If an image is provided, upload it
+            if (image != null && !image.isEmpty()) {
+                imageService.storePostImage(image, createdPost.getId());
+            }
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("message", "Poszt sikeresen létrehozva!");
+            response.put("post", createdPost);
+            
+            return ResponseEntity.ok(response);
+        } catch (IOException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "error");
+            response.put("message", "Hiba a poszt létrehozásakor: " + e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping("name/{groupName}/posts")
+    public ResponseEntity<List<Posts>> getPosts(@PathVariable String groupName) {
+        Integer groupId = gs.groupIdByName(groupName);
+        List<Posts> posts = gs.getPosts(groupId);
+        return ResponseEntity.ok(posts);
     }
 }

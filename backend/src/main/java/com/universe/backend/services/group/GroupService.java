@@ -5,16 +5,23 @@ import com.universe.backend.exceptions.AuthenticationFailedException;
 import com.universe.backend.exceptions.GroupNotFoundException;
 import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Groups;
+import com.universe.backend.modules.Posts;
 import com.universe.backend.repositories.GroupsRepository;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Map;
 import static java.util.Objects.isNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
 public class GroupService {
+
     @Autowired
     private GroupsRepository groupRepository;
     
@@ -29,15 +36,15 @@ public class GroupService {
         return (CustomUserPrincipal) principal;
     }
     
-    public Integer groupIdByName(String groupName){
+    public Integer groupIdByName(String groupName) {
         Integer gId = groupRepository.idByGroupName(groupName);
-        if(isNull(gId)){
+        if (isNull(gId)) {
             throw new GroupNotFoundException("A csoport nem létezik!");
         }
         return gId;
     }
     
-    public void createGroup(String groupName, Authentication authentication){
+    public void createGroup(String groupName, Authentication authentication) {
         Integer adminId = getPrincipal(authentication).getUserId();
         groupRepository.createGroup(groupName, adminId);
     }
@@ -94,7 +101,7 @@ public class GroupService {
     }
     
     @Transactional
-    public List<Integer> getInterestedUsersForEvent(Integer eventId){
+    public List<Integer> getInterestedUsersForEvent(Integer eventId) {
         return groupRepository.getInterestedUsersForEvent(eventId);
     }
     
@@ -109,7 +116,32 @@ public class GroupService {
     }
     
     @Transactional
-    public List<Integer> getUsersScheduleForEvent(Integer eventId){
+    public List<Integer> getUsersScheduleForEvent(Integer eventId) {
         return groupRepository.getUsersScheduleForEvent(eventId);
+    }
+    
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    
+    @Transactional
+    public Posts createPost(Posts post, Authentication authentication) {
+        Integer userId = getPrincipal(authentication).getUserId();
+        post.setCreatorId(userId);
+        
+        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
+                .withProcedureName("createPost");
+
+        SqlParameterSource in = new MapSqlParameterSource()
+                .addValue("creatorIdIn", post.getCreatorId())
+                .addValue("groupIdIn", post.getGroupId())
+                .addValue("descriptionIn", post.getDescription());
+
+        Map<String, Object> out = jdbcCall.execute(in);
+        post.setId((Integer) out.get("newPostId"));
+        return post;
+    }
+
+    public List<Posts> getPosts(Integer groupId) {
+        return groupRepository.getPosts(groupId);
     }
 }

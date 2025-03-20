@@ -2,6 +2,7 @@ package com.universe.backend.repositories;
 
 import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Groups;
+import com.universe.backend.modules.Posts;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -64,4 +65,7 @@ public interface GroupsRepository extends JpaRepository<Groups, Integer>{
     
     @Procedure(procedureName = "getUsersScheduleForEvent")
     List<Integer> getUsersScheduleForEvent(@Param("eventIdIn") Integer eventId);
+
+    @Query(value = "SELECT * FROM posts WHERE groupId = :groupIdIn ORDER BY id DESC", nativeQuery = true)
+    List<Posts> getPosts(@Param("groupIdIn") Integer groupId);
 }

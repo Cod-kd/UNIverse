@@ -318,15 +318,17 @@ BEGIN
     SELECT userId FROM `participants` WHERE eventId = eventIdIn;
 END$$
 
-CREATE PROCEDURE `createPost` (
-    IN `creatorIdIn` MEDIUMINT,
-    IN `groupIdIn` MEDIUMINT,
-    IN `descriptionIn` TEXT
+CREATE PROCEDURE createPost(
+    IN creatorIdIn INT,
+    IN groupIdIn INT,
+    IN descriptionIn TEXT,
+    OUT newPostId INT
 )
 BEGIN
-    INSERT INTO `posts` (`creatorId`, `groupId`, `description`)
-    VALUES (creatorIdIn, groupIdIn, descriptionIn);
-    CALL addGroupPostCount(groupIdIn);
+    INSERT INTO posts (creatorId, groupId, creditCount, description)
+    VALUES (creatorIdIn, groupIdIn, 0, descriptionIn);
+    
+    SET newPostId = LAST_INSERT_ID();
 END$$
 
 CREATE PROCEDURE `addComment` (
@@ -1106,11 +1108,12 @@ CALL createEvent(
 );
 
 -- Create posts
-CALL createPost(1, 1, 'Ez egy új bejegyzés.');
-CALL createPost(1, 1, 'Nagyon jó napom volt ma!');
-CALL createPost(2, 2, 'Szeretem ezt a csoportot.');
-CALL createPost(3, 3, 'Mit gondoltok erről a témáról?');
-CALL createPost(4, 4, 'Csak egy gyors frissítés.');
+SET @postId = 0;
+CALL createPost(1, 1, 'Ez egy új bejegyzés.', @postId);
+CALL createPost(1, 1, 'Nagyon jó napom volt ma!', @postId);
+CALL createPost(2, 2, 'Szeretem ezt a csoportot.', @postId);
+CALL createPost(3, 3, 'Mit gondoltok erről a témáról?', @postId);
+CALL createPost(4, 4, 'Csak egy gyors frissítés.', @postId);
 
 -- Add comments
 CALL addComment(1, 2, 'Nagyon jó bejegyzés!');
