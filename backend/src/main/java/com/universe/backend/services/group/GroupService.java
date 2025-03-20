@@ -155,4 +155,9 @@ public class GroupService {
     public List<Comment> getComments(Integer postId) {
         return groupRepository.getComments(postId);
     }
+    
+    public void addCredit(Integer postId, Authentication authentication){
+        getPrincipal(authentication).getUserId();
+        groupRepository.addCredit(postId);
+    }
 }

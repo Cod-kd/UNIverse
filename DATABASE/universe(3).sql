@@ -341,6 +341,13 @@ BEGIN
     VALUES (postIdIn, userIdIn, commentIn);
 END$$
 
+CREATE PROCEDURE `addCreditToPost` (IN postIdIn INT)
+BEGIN
+    UPDATE posts 
+    SET creditCount = creditCount + 1
+    WHERE id = postIdIn;
+END$$
+
 --
 -- Függvények
 --

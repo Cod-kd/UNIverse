@@ -35,7 +35,7 @@ public interface GroupsRepository extends JpaRepository<Groups, Integer>{
     @Query(value = "SELECT checkGroupMember(:groupIdIn, :userIdIn)", nativeQuery = true)
     Boolean isGroupFollowed(@Param("groupIdIn") Integer groupId, @Param("userIdIn") Integer userId);
     
-    @Query(value = "SELECT * FROM events WHERE groupId = :groupIdIn", nativeQuery = true)
+    @Query(value = "SELECT * FROM events WHERE groupId = :groupIdIn ORDER BY id DESC", nativeQuery = true)
     List<Event> getEvents(@Param("groupIdIn") Integer groupId);
     
     @Procedure(procedureName = "createEvent")
@@ -75,4 +75,7 @@ public interface GroupsRepository extends JpaRepository<Groups, Integer>{
 
     @Query(value = "SELECT * FROM comments WHERE postId = :postIdIn ORDER BY id", nativeQuery = true)
     List<Comment> getComments(@Param("postIdIn") Integer postId);
+    
+    @Procedure(procedureName = "addCreditToPost")
+    void addCredit(@Param("postIdIn") Integer postId);
 }

@@ -174,4 +174,10 @@ public class GroupController {
         List<Comment> comments = gs.getComments(postId);
         return ResponseEntity.ok(comments);
     }
+    
+    @PostMapping("post/add/credit")
+    public ResponseEntity<String> addCredit(@RequestParam Integer postId, Authentication authentication) {
+        gs.addCredit(postId, authentication);
+        return ResponseEntity.ok("Kredit kézbesítve!");
+    }
 }
