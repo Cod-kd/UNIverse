@@ -49,7 +49,7 @@
             } @else {
             <div class="events-list">
                 @for(event of events; track event.id) {
-                <hr>
+                <hr class="event-hr">
                 <app-single-event [event]="event"></app-single-event>
                 }
             </div>

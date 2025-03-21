@@ -13,7 +13,7 @@
     margin-bottom: 12px;
 }
 
-hr{
+hr {
     border-color: var(--light2);
 }
 
@@ -33,7 +33,7 @@ hr{
     gap: 6px;
     padding: 6px 12px;
     background: var(--main);
-    color: white;
+    color: var(--light1);
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -41,10 +41,11 @@ hr{
 
 .post-content {
     margin-bottom: 16px;
+    color: var(--light1);
 }
 
 .post-image {
-    max-width: 100%;
+    width: 100%;
     border-radius: 8px;
     margin-top: 8px;
 }

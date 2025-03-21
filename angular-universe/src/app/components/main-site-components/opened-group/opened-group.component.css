@@ -103,10 +103,14 @@
     height: fit-content;
 }
 
-hr{
+hr, .event-hr{
     border-color: var(--main);
     height: 5px;
     opacity: 1;
+}
+
+.event-hr{
+    width: 100%;
 }
 
 .events-sidebar h2 {
