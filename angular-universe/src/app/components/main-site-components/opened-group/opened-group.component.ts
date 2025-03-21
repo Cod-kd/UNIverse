@@ -6,7 +6,11 @@ import { EventService } from '../../../services/event/event.service';
 import { UserEventService } from '../../../services/user-event/user-event.service';
 import { Group } from '../../../models/group/group.model';
 import { Event } from '../../../models/event/event.model';
+import { Post } from '../../../models/post/post.model';
 import { SingleEventComponent } from '../single-event/single-event.component';
+import { PostService } from '../../../services/post/post.service';
+import { SinglePostComponent } from '../single-post/single-post.component';
+import { CreatePostComponent } from '../create-post/create-post.component';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
 import { Subscription } from 'rxjs';
 import { ButtonComponent } from "../../general-components/button/button.component";
@@ -15,22 +19,28 @@ import { CreateEventPopupComponent } from '../create-event-popup/create-event-po
 @Component({
   selector: 'app-opened-group',
   standalone: true,
-  imports: [CommonModule, SingleEventComponent, ButtonComponent, CreateEventPopupComponent],
+  imports: [CommonModule, SingleEventComponent, ButtonComponent, CreateEventPopupComponent,
+    SinglePostComponent, CreatePostComponent],
   templateUrl: './opened-group.component.html',
   styleUrl: './opened-group.component.css'
 })
 export class OpenedGroupComponent implements OnInit, OnDestroy {
   group?: Group;
   events: Event[] = [];
-  loading = false;
-  error = '';
+  posts: Post[] = [];
+  eventsLoading = false;
+  postsLoading = false;
+  eventsError = '';
+  postsError = '';
   showEventCreationPopup = false;
+  showPostCreation = false;
   private subscriptions = new Subscription();
 
   constructor(
     private route: ActivatedRoute,
     private groupService: GroupService,
     private eventService: EventService,
+    private postService: PostService,
     private userEventService: UserEventService,
     private popupService: PopupService
   ) { }
@@ -46,6 +56,7 @@ export class OpenedGroupComponent implements OnInit, OnDestroy {
 
           if (this.group) {
             this.loadGroupEvents(this.group.name);
+            this.loadGroupPosts(this.group.name);
           }
         }
       })
@@ -57,16 +68,32 @@ export class OpenedGroupComponent implements OnInit, OnDestroy {
   }
 
   private loadGroupEvents(groupName: string) {
-    this.loading = true;
+    this.eventsLoading = true;
     this.subscriptions.add(
       this.eventService.getGroupEvents(groupName).subscribe({
         next: (events) => {
           this.events = this.sortEvents(events);
-          this.loading = false;
+          this.eventsLoading = false;
         },
         error: () => {
-          this.loading = false;
-          this.error = 'Hiba az események betöltésekor';
+          this.eventsLoading = false;
+          this.eventsError = 'Hiba az események betöltésekor';
+        }
+      })
+    );
+  }
+
+  private loadGroupPosts(groupName: string) {
+    this.postsLoading = true;
+    this.subscriptions.add(
+      this.postService.getGroupPosts(groupName).subscribe({
+        next: (posts) => {
+          this.posts = posts;
+          this.postsLoading = false;
+        },
+        error: () => {
+          this.postsLoading = false;
+          this.postsError = 'Hiba a bejegyzések betöltésekor';
         }
       })
     );
@@ -112,6 +139,28 @@ export class OpenedGroupComponent implements OnInit, OnDestroy {
           this.popupService.showSuccess('Esemény sikeresen létrehozva');
           this.showEventCreationPopup = false;
           this.loadGroupEvents(this.group!.name);
+        },
+        error: () => {
+          this.popupService.showError('Hiba az esemény létrehozásakor');
+        }
+      })
+    );
+  }
+
+  createPost(postData: { content: string, file?: File }): void {
+    if (!this.group) {
+      this.popupService.showError('Csoport nem található');
+      return;
+    }
+
+    this.subscriptions.add(
+      this.postService.createPost(this.group.name, postData.content, postData.file).subscribe({
+        next: () => {
+          this.popupService.showSuccess('Bejegyzés sikeresen létrehozva');
+          this.showPostCreation = false;
+        },
+        error: () => {
+          this.popupService.showError('Hiba a bejegyzés létrehozásakor');
         }
       })
     );

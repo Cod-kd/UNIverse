@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { PopupService } from '../popup-message/popup-message.service';
 import { AuthService } from '../auth/auth.service';
@@ -64,15 +64,27 @@ export class FetchService {
   post<T>(endpoint: string, body: any, options: {
     responseType?: 'json' | 'text',
     showError?: boolean,
-    authType?: AuthType
+    authType?: AuthType,
+    params?: Record<string, string>
   } = {}): Observable<T> {
     const {
       responseType = 'json',
       showError = true,
-      authType = AuthType.NONE
+      authType = AuthType.NONE,
+      params
     } = options;
 
-    return this.http.post<T>(`${this.baseUrl}${endpoint}`, body, {
+    let url = `${this.baseUrl}${endpoint}`;
+
+    if (params) {
+      const queryParams = new URLSearchParams();
+      Object.entries(params).forEach(([key, value]) => {
+        queryParams.append(key, value);
+      });
+      url += `?${queryParams.toString()}`;
+    }
+
+    return this.http.post<T>(url, body, {
       responseType: responseType as any,
       headers: this.getHeaders(authType)
     }).pipe(
@@ -80,6 +92,7 @@ export class FetchService {
     );
   }
 
+  // Rest of the FetchService code remains the same
   // New method for handling FormData (no Content-Type header)
   postFormData<T>(endpoint: string, formData: FormData, options: {
     responseType?: 'json' | 'text',

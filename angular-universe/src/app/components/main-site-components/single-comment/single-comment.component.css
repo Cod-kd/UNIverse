@@ -1,0 +1,26 @@
+.comment-container {
+    padding: 12px;
+    margin-bottom: 8px;
+    background-color: var(--dark1);
+    border-radius: 6px;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.comment-author {
+    font-weight: bold;
+    color: var(--main);
+}
+
+.comment-date {
+    font-size: 0.8em;
+    color: var(--light2);
+}
+
+.comment-content {
+    color: var(--light1);
+}

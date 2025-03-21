@@ -1,0 +1,19 @@
+<div class="create-post-container">
+    <h3>Új bejegyzés létrehozása</h3>
+    <textarea [(ngModel)]="postContent" placeholder="Mi jár a fejedben?" rows="3"></textarea>
+
+    <div class="upload-container">
+        <label class="file-upload">
+            <input type="file" accept="image/*" (change)="onFileSelected($event)">
+            <i class="fa-solid fa-image"></i> Kép feltöltése
+        </label>
+        @if(selectedFile){
+        <span>{{ selectedFile.name }}</span>
+        }
+    </div>
+
+    <div class="button-container">
+        <app-button [btnLabel]="'Mégse'" (click)="cancel()"></app-button>
+        <app-button [btnLabel]="'Közzététel'" [isDisabled]="!postContent.trim()" (click)="submit()"></app-button>
+    </div>
+</div>

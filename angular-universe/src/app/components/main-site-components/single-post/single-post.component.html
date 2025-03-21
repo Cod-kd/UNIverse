@@ -1,0 +1,48 @@
+<div class="post-container">
+    <div class="post-header">
+        <div class="post-info">
+            <span class="post-creator">Felhasználó #{{ post.creatorId }}</span>
+        </div>
+        <button class="credit-button" (click)="addCredit()">
+            <i class="fa-solid fa-thumbs-up"></i>
+            <span>{{ post.creditCount }}</span>
+        </button>
+    </div>
+
+    <div class="post-content">
+        <p>{{ post.description }}</p>
+        @if(imageUrl){
+        <img [src]="imageUrl" alt="Post Image" class="post-image">
+        }
+    </div>
+
+    <div class="post-actions">
+        <button class="comment-toggle" (click)="toggleComments()">
+            <i class="fa-solid" [class.fa-comment]="!post.showComments"
+                [class.fa-comment-slash]="post.showComments"></i>
+            {{ post.showComments ? 'Kommentek elrejtése' : 'Kommentek mutatása' }}
+            @if(comments.length > 0){
+            <span>({{ comments.length }})</span>
+            }
+        </button>
+    </div>
+
+    @if(post.showComments){
+
+    }
+    <div class="comments-section">
+        <div class="comments-list">
+            @for (comment of comments; track comment.id) {
+            <app-single-comment [comment]="comment"></app-single-comment>
+            }
+            @if (comments.length === 0) {
+            <p class="no-comments">Nincsenek kommentek</p>
+            }
+        </div>
+
+        <div class="add-comment">
+            <textarea [(ngModel)]="newComment" placeholder="Írj kommentet..." rows="2"></textarea>
+            <button (click)="addComment()" [disabled]="!newComment.trim()">Küldés</button>
+        </div>
+    </div>
+</div>

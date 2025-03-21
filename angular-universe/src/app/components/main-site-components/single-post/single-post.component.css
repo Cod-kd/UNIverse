@@ -1,0 +1,109 @@
+.post-container {
+    background-color: var(--dark2);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.post-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-creator {
+    font-weight: bold;
+    color: var(--main);
+}
+
+.credit-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--main);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.post-content {
+    margin-bottom: 16px;
+}
+
+.post-image {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 8px;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.comment-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: var(--light1);
+    cursor: pointer;
+    padding: 6px 12px;
+}
+
+.comment-toggle:hover {
+    color: var(--main);
+}
+
+.comments-section {
+    margin-top: 16px;
+}
+
+.comments-list {
+    margin-bottom: 16px;
+}
+
+.no-comments {
+    font-style: italic;
+    color: var(--light2);
+    text-align: center;
+}
+
+.add-comment {
+    display: flex;
+    gap: 8px;
+}
+
+.add-comment textarea {
+    flex: 1;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: var(--dark1);
+    border: 1px solid var(--light3);
+    color: var(--light1);
+    resize: none;
+}
+
+.add-comment button {
+    padding: 8px 16px;
+    background-color: var(--main);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-comment button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

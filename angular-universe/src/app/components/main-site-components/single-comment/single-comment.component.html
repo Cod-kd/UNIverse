@@ -1,0 +1,11 @@
+<div class="comment-container">
+    <div class="comment-header">
+        <span class="comment-author">
+            {{ comment.userName || 'User #' + comment.userId }}
+        </span>
+        <span class="comment-date">{{ comment.createdAt | date:'short' }}</span>
+    </div>
+    <div class="comment-content">
+        {{ comment.comment }}
+    </div>
+</div>
