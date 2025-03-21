@@ -88,4 +88,12 @@ export class PostService {
       })
     );
   }
+
+  updatePostCredit(postId: number): void {
+    const currentPosts = this.postsSubject.value;
+    const updatedPosts = currentPosts.map(post =>
+      post.id === postId ? { ...post, creditCount: post.creditCount + 1 } : post
+    );
+    this.postsSubject.next(updatedPosts);
+  }
 }

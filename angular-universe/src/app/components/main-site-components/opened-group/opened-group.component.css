@@ -1,4 +1,5 @@
 .opened-group-container {
+    width: 80vw;
     max-width: 1200px;
     margin: 0 auto;
     padding: 24px;
@@ -19,6 +20,7 @@
     background-color: var(--dark2);
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 24px;
 }
 
 .visibility-badge {
@@ -30,11 +32,9 @@
     border-radius: 16px;
     font-size: 14px;
     font-weight: 500;
-}
-
-.visibility-badge {
     background-color: var(--dark2);
     color: var(--main);
+    align-self: flex-start;
 }
 
 .visibility-badge i {
@@ -43,7 +43,7 @@
 
 .group-stats {
     display: grid;
-    grid-template-columns: repeat(3, minmax(100px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     margin-top: 8px;
 }
@@ -56,7 +56,7 @@
     background-color: var(--dark2);
     border-radius: 8px;
     border: 1px solid var(--main);
-    transition: transform 0.2s ease;
+    transition: all 0.2s ease;
     color: var(--light1);
 }
 
@@ -70,11 +70,20 @@
 .stat-label {
     font-size: 14px;
     margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .stat-value {
     font-size: 20px;
     font-weight: 600;
+}
+
+.content-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
 }
 
 .section-header {
@@ -84,29 +93,91 @@
     margin-bottom: 16px;
 }
 
-.group-events {
-    display: grid;
-    gap: 2em;
-    margin-top: 32px;
+.events-sidebar {
+    background-color: transparent;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: fit-content;
 }
 
-.group-events h2 {
+hr{
+    border-color: var(--main);
+    height: 5px;
+    opacity: 1;
+}
+
+.events-sidebar h2 {
     font-size: 22px;
     font-weight: 500;
-    margin-bottom: 0;
+    margin-bottom: 16px;
+    color: var(--light1);
+    align-self: center;
+}
+
+.events-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+    width: 100%;
+}
+
+.events-list app-single-event {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.posts-section {
+    background-color: transparent;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.posts-section h2 {
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 16px;
     color: var(--light1);
 }
 
-.events-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
+.posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
     margin-top: 16px;
+}
+
+.action-button {
+    align-self: flex-start;
+    margin-bottom: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .opened-group-container {
+        width: 95vw;
+    }
+}
+
+@media (max-width: 768px) {
+    .content-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .group-stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 .loading-spinner,
 .error-message,
-.no-events-message {
+.no-events-message,
+.no-posts-message {
     text-align: center;
     padding: 24px;
     font-size: 16px;

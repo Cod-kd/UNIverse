@@ -13,6 +13,10 @@
     margin-bottom: 12px;
 }
 
+hr{
+    border-color: var(--light2);
+}
+
 .post-info {
     display: flex;
     flex-direction: column;

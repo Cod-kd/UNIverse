@@ -8,15 +8,24 @@
 
         <div class="group-stats">
             <div class="stat-item">
-                <span class="stat-label">Tagok</span>
+                <span class="stat-label">
+                    <i class="fa-solid fa-users"></i>
+                    Tagok
+                </span>
                 <span class="stat-value">{{ group.membersCount }}</span>
             </div>
             <div class="stat-item">
-                <span class="stat-label">Posztok</span>
+                <span class="stat-label">
+                    <i class="fa-solid fa-comment"></i>
+                    Posztok
+                </span>
                 <span class="stat-value">{{ group.postCount }}</span>
             </div>
             <div class="stat-item">
-                <span class="stat-label">Események</span>
+                <span class="stat-label">
+                    <i class="fa-solid fa-calendar"></i>
+                    Események
+                </span>
                 <span class="stat-value">{{group.allEventCount}}</span>
             </div>
         </div>
@@ -25,9 +34,11 @@
     <div class="content-layout">
         <!-- Left sidebar for events -->
         <section class="events-sidebar">
-            <h2>Események</h2>
-            <app-button [btnLabel]="'Esemény létrehozása'" [iconClass]="'fa-solid fa-plus'"
-                (click)="createEvent()"></app-button>
+            <div class="events-first-row">
+                <h2>Események</h2>
+                <app-button class="action-button" [btnLabel]="'Esemény létrehozása'" [iconClass]="'fa-solid fa-plus'"
+                    (click)="createEvent()"></app-button>
+            </div>
 
             @if(eventsLoading) {
             <div class="loading-spinner">Események betöltése...</div>
@@ -38,6 +49,7 @@
             } @else {
             <div class="events-list">
                 @for(event of events; track event.id) {
+                <hr>
                 <app-single-event [event]="event"></app-single-event>
                 }
             </div>
@@ -47,7 +59,7 @@
         <!-- Main content area for posts -->
         <section class="posts-section">
             <h2>Bejegyzések</h2>
-            <app-button [btnLabel]="'Új bejegyzés'" [iconClass]="'fa-solid fa-plus'"
+            <app-button class="action-button" [btnLabel]="'Új bejegyzés'" [iconClass]="'fa-solid fa-plus'"
                 (click)="showPostCreation = true"></app-button>
 
             @if(showPostCreation) {
@@ -65,6 +77,7 @@
             } @else {
             <div class="posts-list">
                 @for(post of posts; track post.id) {
+                <hr>
                 <app-single-post [post]="post"></app-single-post>
                 }
             </div>

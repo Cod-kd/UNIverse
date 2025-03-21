@@ -64,7 +64,14 @@ export class SinglePostComponent implements OnInit {
   addCredit() {
     this.postService.addCredit(this.post.id).subscribe({
       next: () => {
+        // Update the local post object
         this.post.creditCount++;
+
+        // Notify the PostService about this change
+        this.postService.updatePostCredit(this.post.id);
+      },
+      error: (err) => {
+        console.error('Failed to add credit', err);
       }
     });
   }
