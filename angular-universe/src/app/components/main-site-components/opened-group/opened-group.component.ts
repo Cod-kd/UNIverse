@@ -10,17 +10,21 @@ import { Post } from '../../../models/post/post.model';
 import { SingleEventComponent } from '../single-event/single-event.component';
 import { PostService } from '../../../services/post/post.service';
 import { SinglePostComponent } from '../single-post/single-post.component';
-import { CreatePostComponent } from '../create-post/create-post.component';
 import { PopupService } from '../../../services/popup-message/popup-message.service';
 import { Subscription } from 'rxjs';
 import { ButtonComponent } from "../../general-components/button/button.component";
 import { CreateEventPopupComponent } from '../create-event-popup/create-event-popup.component';
+import { CreatePostPopupComponent } from '../create-post-popup/create-post.component';
+
+// Storage key for current group
+const CURRENT_GROUP_KEY = 'currentGroupId';
+const CURRENT_GROUP_DATA_KEY = 'currentGroupData';
 
 @Component({
   selector: 'app-opened-group',
   standalone: true,
   imports: [CommonModule, SingleEventComponent, ButtonComponent, CreateEventPopupComponent,
-    SinglePostComponent, CreatePostComponent],
+    SinglePostComponent, CreatePostPopupComponent],
   templateUrl: './opened-group.component.html',
   styleUrl: './opened-group.component.css'
 })
@@ -52,11 +56,19 @@ export class OpenedGroupComponent implements OnInit, OnDestroy {
       this.route.paramMap.subscribe(params => {
         const groupId = Number(params.get('id'));
         if (groupId) {
+          // Save current group ID for refresh cases
+          localStorage.setItem(CURRENT_GROUP_KEY, groupId.toString());
+
+          // Try to get group from service
           this.group = this.groupService.getGroupById(groupId);
 
           if (this.group) {
-            this.loadGroupEvents(this.group.name);
-            this.loadGroupPosts(this.group.name);
+            // Save current group to localStorage for persistence
+            localStorage.setItem(CURRENT_GROUP_DATA_KEY, JSON.stringify(this.group));
+            this.loadGroupData(this.group);
+          } else {
+            // Fallback to localStorage if not found in service
+            this.loadFromLocalStorage(groupId);
           }
         }
       })
@@ -65,6 +77,31 @@ export class OpenedGroupComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  /**
+   * Load from localStorage if service fails
+   */
+  private loadFromLocalStorage(groupId: number): void {
+    try {
+      const storedGroupJson = localStorage.getItem(CURRENT_GROUP_DATA_KEY);
+      const storedGroupId = localStorage.getItem(CURRENT_GROUP_KEY);
+
+      if (storedGroupJson && storedGroupId === groupId.toString()) {
+        this.group = JSON.parse(storedGroupJson) as Group;
+        this.loadGroupData(this.group);
+      }
+    } catch (error) {
+      console.error('Error loading group from localStorage:', error);
+    }
+  }
+
+  /**
+   * Common method to load events and posts once we have a group
+   */
+  private loadGroupData(group: Group): void {
+    this.loadGroupEvents(group.name);
+    this.loadGroupPosts(group.name);
   }
 
   private loadGroupEvents(groupName: string) {
@@ -158,6 +195,8 @@ export class OpenedGroupComponent implements OnInit, OnDestroy {
         next: () => {
           this.popupService.showSuccess('Bejegyzés sikeresen létrehozva');
           this.showPostCreation = false;
+          // Reload posts after creating a new one
+          this.loadGroupPosts(this.group!.name);
         },
         error: () => {
           this.popupService.showError('Hiba a bejegyzés létrehozásakor');

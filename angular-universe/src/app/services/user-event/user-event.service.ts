@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AuthType, FetchService } from '../fetch/fetch.service';
-import { Observable, shareReplay, of, throwError } from 'rxjs';
+import { Observable, shareReplay, of, throwError, map } from 'rxjs';
 import { catchError, timeout, retry, finalize } from 'rxjs/operators';
 import { LoadingService } from '../loading/loading.service';
+import { UserBasicService } from '../user-basic/user-basic.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,8 @@ export class UserEventService {
 
   constructor(
     private fetchService: FetchService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private userBasicService: UserBasicService
   ) { }
 
   getUserInterestedEvents(): Observable<number[]> {
@@ -141,13 +143,9 @@ export class UserEventService {
   }
 
   getUsernameById(userId: number): Observable<string> {
-    return this.fetchService.get<string>(`/user/username`, {
-      params: { id: userId.toString() },
-      responseType: 'text', authType: AuthType.NONE
-    }).pipe(
-      catchError(() => {
-        return of('Unknown User');
-      })
+    return this.userBasicService.usernameById(userId).pipe(
+      map(response => response.username),
+      catchError(() => of('Unknown User'))
     );
   }
 

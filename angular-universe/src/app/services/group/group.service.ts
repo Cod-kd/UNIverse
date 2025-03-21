@@ -5,6 +5,7 @@ import { AuthType, FetchService } from '../fetch/fetch.service';
 import { Group } from '../../models/group/group.model';
 import { PopupService } from '../popup-message/popup-message.service';
 import { LoadingService } from '../loading/loading.service';
+import { UserBasicService } from '../user-basic/user-basic.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,8 @@ export class GroupService {
   constructor(
     private fetchService: FetchService,
     private popupService: PopupService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private userBasicService: UserBasicService
   ) {
   }
 

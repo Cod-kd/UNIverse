@@ -63,9 +63,8 @@
                 (click)="showPostCreation = true"></app-button>
 
             @if(showPostCreation) {
-            <app-create-post [groupName]="group.name" (cancelEvent)="showPostCreation = false"
-                (submitEvent)="createPost($event)">
-            </app-create-post>
+            <app-create-post-popup [groupName]="group.name" (cancelEvent)="showPostCreation = false"(submitEvent)="createPost($event)">
+            </app-create-post-popup>
             }
 
             @if(postsLoading) {

@@ -1,0 +1,30 @@
+<div class="popup-overlay" (click)="cancel($event)">
+    <div class="popup-content" (click)="$event.stopPropagation()">
+        <h2>Új bejegyzés létrehozása</h2>
+
+        <form [formGroup]="postForm">
+            <div class="form-group">
+                <label for="content">Mi jár a fejedben?</label>
+                <textarea id="content" formControlName="content" rows="4"></textarea>
+                @if(postForm.get('content')?.invalid && postForm.get('content')?.touched) {
+                <div class="error-message">Szöveg megadása kötelező</div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label class="file-upload">
+                    <input type="file" accept="image/*" (change)="onFileSelected($event)">
+                    <i class="fa-solid fa-image"></i> Kép feltöltése
+                </label>
+                @if(selectedFile) {
+                <span class="selected-file">{{ selectedFile.name }}</span>
+                }
+            </div>
+
+            <div class="button-container">
+                <app-button [btnLabel]="'Mégsem'" (click)="cancel()"></app-button>
+                <app-button [btnLabel]="'Közzététel'" [isDisabled]="postForm.invalid" (click)="submit()"></app-button>
+            </div>
+        </form>
+    </div>
+</div>
