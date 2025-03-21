@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FetchService, AuthType } from '../fetch/fetch.service';
-import { Observable } from 'rxjs';
+import { Observable, map, catchError, of } from 'rxjs';
 
 interface UsernameResponse {
   username: string;
@@ -24,9 +24,18 @@ export class UserBasicService {
   }
 
   usernameById(id: number | string): Observable<UsernameResponse> {
-    return this.fetchService.get<UsernameResponse>('/user/username', {
+    return this.fetchService.get<string>('/user/username', {
       params: { id: id.toString() },
-      authType: AuthType.NONE
-    });
+      authType: AuthType.NONE,
+      responseType: 'text'
+    }).pipe(
+      map(username => ({ username })),
+      catchError(error => {
+        if (error?.error?.text) {
+          return of({ username: error.error.text });
+        }
+        return of({ username: `User #${id}` });
+      })
+    );
   }
 }

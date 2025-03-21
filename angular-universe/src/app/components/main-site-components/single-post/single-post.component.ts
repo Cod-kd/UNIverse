@@ -5,11 +5,13 @@ import { Comment } from '../../../models/comment/comment.model';
 import { PostService } from '../../../services/post/post.service';
 import { CommentService } from '../../../services/comment/comment.service';
 import { SingleCommentComponent } from '../single-comment/single-comment.component';
+import { UserBasicService } from '../../../services/user-basic/user-basic.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-single-post',
   standalone: true,
-  imports: [FormsModule, SingleCommentComponent],
+  imports: [FormsModule, SingleCommentComponent, CommonModule],
   templateUrl: './single-post.component.html',
   styleUrl: './single-post.component.css'
 })
@@ -19,21 +21,34 @@ export class SinglePostComponent implements OnInit {
   newComment: string = '';
   imageUrl: string | null = null;
   imageExists: boolean = false;
+  creatorUsername: string = '';
 
   constructor(
     private postService: PostService,
-    private commentService: CommentService
+    private commentService: CommentService,
+    private userBasicService: UserBasicService
   ) { }
 
   ngOnInit() {
     this.post = { ...this.post, showComments: false };
     this.checkAndSetImage();
     this.loadComments();
+    this.loadCreatorUsername();
+  }
+
+  private loadCreatorUsername() {
+    this.userBasicService.usernameById(this.post.creatorId).subscribe({
+      next: (response) => {
+        this.creatorUsername = response.username;
+      },
+      error: () => {
+        this.creatorUsername = 'Felhasználó #' + this.post.creatorId;
+      }
+    });
   }
 
   private checkAndSetImage() {
     const url = this.postService.getPostImage(this.post.id);
-    // Create a test image to check if it loads
     const img = new Image();
     img.onload = () => {
       this.imageUrl = url;
@@ -50,6 +65,19 @@ export class SinglePostComponent implements OnInit {
     this.commentService.getCommentsByPostId(this.post.id).subscribe({
       next: (comments: Comment[]) => {
         this.comments = comments;
+        this.loadCommentUsernames();
+      }
+    });
+  }
+
+  private loadCommentUsernames() {
+    this.comments.forEach(comment => {
+      if (!comment.userName) {
+        this.userBasicService.usernameById(comment.userId).subscribe({
+          next: (response) => {
+            comment.userName = response.username;
+          }
+        });
       }
     });
   }
@@ -64,10 +92,7 @@ export class SinglePostComponent implements OnInit {
   addCredit() {
     this.postService.addCredit(this.post.id).subscribe({
       next: () => {
-        // Update the local post object
         this.post.creditCount++;
-
-        // Notify the PostService about this change
         this.postService.updatePostCredit(this.post.id);
       },
       error: (err) => {
