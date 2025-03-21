@@ -72,6 +72,17 @@ hr {
 
 .comments-section {
     margin-top: 16px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    opacity: 0;
+}
+
+.comments-section.show {
+    max-height: 1000px;
+    /* Arbitrary large value */
+    opacity: 1;
+    transition: max-height 0.3s ease-in, opacity 0.3s ease-in;
 }
 
 .comments-list {

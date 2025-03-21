@@ -27,8 +27,7 @@
         </button>
     </div>
 
-    @if(post.showComments){
-    <div class="comments-section">
+    <div class="comments-section" [class.show]="post.showComments">
         <div class="comments-list">
             @for (comment of comments; track comment.id) {
             <app-single-comment [comment]="comment"></app-single-comment>
@@ -43,5 +42,4 @@
             <button (click)="addComment()" [disabled]="!newComment.trim()">Küldés</button>
         </div>
     </div>
-    }
 </div>
