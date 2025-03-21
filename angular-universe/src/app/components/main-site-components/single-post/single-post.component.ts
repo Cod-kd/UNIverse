@@ -18,6 +18,7 @@ export class SinglePostComponent implements OnInit {
   comments: Comment[] = [];
   newComment: string = '';
   imageUrl: string | null = null;
+  imageExists: boolean = false;
 
   constructor(
     private postService: PostService,
@@ -26,8 +27,23 @@ export class SinglePostComponent implements OnInit {
 
   ngOnInit() {
     this.post = { ...this.post, showComments: false };
-    this.imageUrl = this.postService.getPostImage(this.post.id);
+    this.checkAndSetImage();
     this.loadComments();
+  }
+
+  private checkAndSetImage() {
+    const url = this.postService.getPostImage(this.post.id);
+    // Create a test image to check if it loads
+    const img = new Image();
+    img.onload = () => {
+      this.imageUrl = url;
+      this.imageExists = true;
+    };
+    img.onerror = () => {
+      this.imageExists = false;
+      this.imageUrl = null;
+    };
+    img.src = url;
   }
 
   loadComments() {
