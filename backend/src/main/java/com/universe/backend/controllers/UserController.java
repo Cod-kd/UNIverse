@@ -1,5 +1,6 @@
 package com.universe.backend.controllers;
 
+import com.universe.backend.content.HTMLContent;
 import com.universe.backend.dto.UserRegistrationDTO;
 import com.universe.backend.modules.Category;
 import com.universe.backend.modules.ContactTypes;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/user")
@@ -66,10 +68,12 @@ public class UserController {
         return ResponseEntity.ok("A regisztráció folyamatban!<br>Kérjük erősítsd meg az emailcímed!");
     }
     
-    @GetMapping("/verify")
+    @GetMapping(value = "/verify", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<String> verifyUserEmail(@RequestParam("token") String token) {
         us.verifyUserEmail(token);
-        return ResponseEntity.ok("Sikeres regisztráció!");
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_HTML)
+                .body(HTMLContent.registrationSuccess);
     }
 
     @GetMapping("name/{username}")
