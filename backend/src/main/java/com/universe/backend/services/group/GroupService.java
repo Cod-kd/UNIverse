@@ -58,6 +58,11 @@ public class GroupService {
         return groupRepository.findByNameContainingIgnoreCase(name);
     }
     
+    public Groups getGroupById(Integer groupId) {
+        return groupRepository.findById(groupId)
+                .orElseThrow(() -> new GroupNotFoundException("A csoport nem található: " + groupId));
+    }
+    
     public void addGroupMember(Integer groupId, Authentication authentication) {
         Integer userId = getPrincipal(authentication).getUserId();
         groupRepository.addGroupMember(groupId, userId);
