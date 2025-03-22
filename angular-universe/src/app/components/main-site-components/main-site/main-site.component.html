@@ -99,7 +99,7 @@
                 <h3>UNIcard</h3>
                 <hr class="main-hr">
                 <div class="unicard">
-                    <app-unicard [isCompactMode]="true"></app-unicard>
+                    <app-unicard [isCompactMode]="true" #unicardComponent></app-unicard>
                 </div>
             </div>
 
@@ -189,6 +189,27 @@
             <app-button [btnLabel]="'Befejeztem'" [size]="'small'"
                 (click)="toggleNoteComplete(selectedNote.id); closeNoteDetailModal()">Befejeztem</app-button>
             }
+        </div>
+    </div>
+</div>
+}
+
+@if(showPasswordPopup) {
+<div class="modal">
+    <div class="modal-content">
+        <h3>UNIcard letöltés megerősítése</h3>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="password">Jelszó</label>
+                <input type="password" id="password" [(ngModel)]="password" placeholder="Add meg a jelszavad"
+                    (keyup.enter)="confirmUniCardDownload()">
+            </div>
+        </div>
+        <div class="modal-actions">
+            <app-button iconClass="fa-solid fa-x" [size]="'small'" [shape]="'rectangle'"
+                (click)="closePasswordPopup()"></app-button>
+            <app-button iconClass="fa-solid fa-check" [size]="'small'" [shape]="'rectangle'"
+                (click)="confirmUniCardDownload()" [isDisabled]="!password"></app-button>
         </div>
     </div>
 </div>

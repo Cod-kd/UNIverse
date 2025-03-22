@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
+import { Component, OnInit, Renderer2, ElementRef, ViewChild } from '@angular/core';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { AuthService } from '../../../services/auth/auth.service';
@@ -8,6 +8,8 @@ import { ButtonComponent } from "../../general-components/button/button.componen
 import { FormsModule } from '@angular/forms';
 import { WebsiteShortcut, UNInoteShortcut, Shortcut, ShortcutFormData } from '../../../models/shortcut/shortcut.model';
 import { UNIcardComponent } from '../../root-page-components/unicard/unicard.component';
+import { LoginService } from '../../../services/login/login.service';
+import { PopupService } from '../../../services/popup-message/popup-message.service';
 
 registerLocaleData(localeHu);
 
@@ -43,6 +45,11 @@ export class MainSiteComponent implements OnInit {
   showNoteDetailModal = false;
   selectedNote: UNInoteShortcut | null = null;
 
+  @ViewChild('unicardComponent') unicardComponent!: UNIcardComponent;
+  showPasswordPopup = false;
+  password = '';
+  originalSaveUniCard: Function | null = null;
+
   newShortcut: ShortcutFormData = {
     type: 'website',
     name: '',
@@ -54,7 +61,9 @@ export class MainSiteComponent implements OnInit {
     private authService: AuthService,
     private datePipe: DatePipe,
     private renderer: Renderer2,
-    private el: ElementRef
+    private el: ElementRef,
+    private loginService: LoginService,
+    private popupService: PopupService
   ) { }
 
   ngOnInit() {
@@ -90,6 +99,51 @@ export class MainSiteComponent implements OnInit {
     setInterval(() => this.updateTime(), 1000);
 
     this.loadShortcuts();
+  }
+
+  ngAfterViewInit() {
+    if (this.isExactMainSitePath() && this.unicardComponent) {
+      this.originalSaveUniCard = this.unicardComponent.saveUniCard;
+
+      this.unicardComponent.saveUniCard = async (): Promise<void> => {
+        this.showPasswordPopup = true;
+        return Promise.resolve();
+      };
+    }
+  }
+
+  async confirmUniCardDownload(): Promise<void> {
+    const username = localStorage.getItem('username');
+
+    if (!username || !this.password) {
+      this.popupService.showError('Hiányzó felhasználónév vagy jelszó!');
+      return;
+    }
+
+    this.loginService.fetchLogin(username, this.password, false).subscribe({
+      next: (token) => {
+        if (token) {
+          if (this.originalSaveUniCard && this.unicardComponent) {
+            this.unicardComponent.userData = {
+              ...this.unicardComponent.userData,
+              username: username,
+              password: this.password
+            };
+
+            this.originalSaveUniCard.call(this.unicardComponent);
+            this.closePasswordPopup();
+          }
+        }
+      },
+      error: () => {
+        this.popupService.showError('Hibás jelszó!');
+      }
+    });
+  }
+
+  closePasswordPopup(): void {
+    this.showPasswordPopup = false;
+    this.password = '';
   }
 
   formatDateToHungarian(date: Date): string {
