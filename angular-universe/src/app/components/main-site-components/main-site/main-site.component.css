@@ -114,8 +114,11 @@ hr {
 .unicard {
     margin-top: 2em;
     flex-grow: 1;
-    overflow-y: auto;
+    overflow-x: hidden;
     height: 380px;
+    place-self: center;
+    width: 16em;
+    padding-left: 5px;
 }
 
 .item {
