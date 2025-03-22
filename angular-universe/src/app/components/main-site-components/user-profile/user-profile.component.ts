@@ -150,6 +150,10 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       });
   }
 
+  generateUniqueId(item: any, index: number): string {
+    return `${item.id || ''}-${JSON.stringify(Object.values(item))}-${index}`;
+  }
+
   ngOnInit(): void {
     this.profile = null;
     this.matchedProfiles = [];
