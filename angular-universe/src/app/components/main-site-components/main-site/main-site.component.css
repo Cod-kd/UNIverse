@@ -92,7 +92,7 @@ hr {
 
 .quick-card:nth-child(4) {
     grid-area: content2;
-    height: fit-content;
+    min-height: fit-content;
 }
 
 .quick-card:hover {
