@@ -1,6 +1,6 @@
 # UNIverse social media platform
 
-Content:
+Content: https://github.com/Cod-kd/UNIverse/blob/main/README.md
 
 
 ## Web: https://universe-dpt.life/
