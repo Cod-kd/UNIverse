@@ -174,3 +174,9 @@ nav a {
     margin-left: 7rem;
   }
 }
+
+@media screen and (min-width: 481px) and (max-width: 1366px) {
+  .fa-user {
+    margin-right: 0.5rem;
+  }
+}

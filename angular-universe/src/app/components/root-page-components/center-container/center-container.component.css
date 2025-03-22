@@ -66,3 +66,9 @@ hr {
         margin-bottom: 9%;
     }
 }
+
+@media screen and (min-width: 481px) and (max-width: 1366px) {
+    #registerLoginBtnDiv{
+        gap: 2em;
+    }
+}

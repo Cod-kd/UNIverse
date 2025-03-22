@@ -1,7 +1,7 @@
 @if (profile) {
 <div class="profile-container">
     <div class="profile-grid">
-        <!-- Column 1: Profile, picture, followers -->
+        <!-- Column 1: Profile, picture, followers and action buttons -->
         <div class="column">
             <div class="column-title">Profile</div>
             <div class="profile-header">
@@ -19,6 +19,16 @@
                     <p><span>Követés:</span> {{ profile.usersData.followedCount }}</p>
                 </div>
             </div>
+
+            <!-- Action buttons moved here -->
+            <div class="button-container">
+                <app-button [btnLabel]="'Profil törlése'" [iconClass]="'fa-solid fa-user-slash'"
+                    (click)="confirmDeleteProfile()">
+                </app-button>
+                <app-button [btnLabel]="isSaving ? 'Mentve' : 'Mentés'"
+                    [iconClass]="isSaving ? 'fa-solid fa-check' : ''" [isDisabled]="isSaving" (click)="saveChanges()">
+                </app-button>
+            </div>
         </div>
 
         <!-- Column 2: Bio information -->
@@ -30,7 +40,7 @@
                 @if (editingDescription) {
                 <textarea class="edit-textarea" [(ngModel)]="tempDescription" (blur)="saveDescription()"
                     (keydown.enter)="$event.preventDefault(); saveDescription()">
-                            </textarea>
+                                </textarea>
                 } @else {
                 <div class="field-value" (click)="editDescription()">
                     {{ profile.description || 'Kattints a hozzáadáshoz!' }}
@@ -154,18 +164,6 @@
                     </div>
                     }
                 </div>
-            </div>
-        </div>
-
-        <div class="column">
-            <div class="column-title">Műveletek</div>
-            <div class="button-container">
-                <app-button [btnLabel]="'Profil törlése'" [iconClass]="'fa-solid fa-user-slash'"
-                    (click)="confirmDeleteProfile()">
-                </app-button>
-                <app-button [btnLabel]="isSaving ? 'Mentve' : 'Mentés'"
-                    [iconClass]="isSaving ? 'fa-solid fa-check' : ''" [isDisabled]="isSaving" (click)="saveChanges()">
-                </app-button>
             </div>
         </div>
     </div>

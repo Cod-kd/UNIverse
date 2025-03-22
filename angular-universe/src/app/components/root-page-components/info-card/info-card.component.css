@@ -48,12 +48,28 @@ i {
         padding: 1em 0.8em;
     }
 
-    i{
+    i {
         font-size: 25px;
     }
 
     .infoCard div:first-child {
         width: 3.5em;
         height: 3.5em;
+    }
+}
+
+@media screen and (min-width: 481px) and (max-width: 1366px) {
+    .infoCard {
+        width: 100%;
+        gap: 0.5em;
+        min-height: 50vh;
+    }
+
+    p {
+        font-size: 14px;
+    }
+
+    h3 {
+        font-size: 16px;
     }
 }

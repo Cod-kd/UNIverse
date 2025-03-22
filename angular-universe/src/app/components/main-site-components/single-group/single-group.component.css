@@ -136,3 +136,11 @@
         place-items: center;
     }
 }
+
+@media screen and (min-width: 481px) and (max-width: 1366px) {
+    .buttons-container {
+        display: grid;
+        gap: 1em;
+        place-items: center;
+    }
+}

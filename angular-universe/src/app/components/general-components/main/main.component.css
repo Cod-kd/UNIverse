@@ -42,7 +42,7 @@ main {
         grid-template-columns: 1fr;
         grid-template-areas:
             "main-content"
-            "left-cards" 
+            "left-cards"
             "right-cards";
         margin-left: -1.5%;
         place-items: center;
