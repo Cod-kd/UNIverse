@@ -1,6 +1,7 @@
 package com.universe.backend.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.universe.backend.exceptions.GroupNotFoundException;
 import com.universe.backend.modules.Comment;
 import com.universe.backend.modules.Event;
 import com.universe.backend.modules.Groups;
@@ -38,6 +39,16 @@ public class GroupController {
     @GetMapping("/search")
     public ResponseEntity<List<Groups>> searchGroupsByName(@RequestParam("name") String name) {
         return ResponseEntity.ok(gs.searchGroupsByName(name));
+    }
+    
+    @GetMapping("get")
+    public ResponseEntity<Groups> getGroupById(@RequestParam Integer id) {
+        try {
+            Groups group = gs.getGroupById(id);
+            return ResponseEntity.ok(group);
+        } catch (GroupNotFoundException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
     
     @PostMapping("/create")

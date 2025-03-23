@@ -44,6 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/user/get/**").permitAll()
                         .requestMatchers("/groups/search").permitAll()
                         .requestMatchers("/groups").permitAll()
+                        .requestMatchers("/groups/get").permitAll()
                         .requestMatchers("/groups/event/users_schedule").permitAll()
                         .requestMatchers("/groups/event/interested_users").permitAll()
                         .requestMatchers("/groups/name/*/events").permitAll()

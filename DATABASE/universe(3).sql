@@ -327,8 +327,8 @@ CREATE PROCEDURE createPost(
 BEGIN
     INSERT INTO posts (creatorId, groupId, creditCount, description)
     VALUES (creatorIdIn, groupIdIn, 0, descriptionIn);
-    
     SET newPostId = LAST_INSERT_ID();
+    CALL addGroupPostCount(groupIdIn);
 END$$
 
 CREATE PROCEDURE `addComment` (
