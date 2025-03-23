@@ -65,7 +65,7 @@ public class UserController {
     @PostMapping("/registration")
     public ResponseEntity<String> registration(@RequestBody @Valid UserRegistrationDTO urDTO) throws MessagingException {
         rs.registerUser(urDTO);
-        return ResponseEntity.ok("A regisztráció folyamatban!<br>Kérjük erősítsd meg az emailcímed!");
+        return ResponseEntity.ok("A regisztráció folyamatban! Kérjük erősítsd meg az emailcímed!");
     }
     
     @GetMapping(value = "/verify", produces = MediaType.TEXT_HTML_VALUE)
