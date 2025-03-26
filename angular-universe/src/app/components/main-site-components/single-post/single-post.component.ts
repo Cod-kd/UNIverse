@@ -7,11 +7,12 @@ import { CommentService } from '../../../services/comment/comment.service';
 import { SingleCommentComponent } from '../single-comment/single-comment.component';
 import { UserBasicService } from '../../../services/user-basic/user-basic.service';
 import { CommonModule } from '@angular/common';
+import { ButtonComponent } from '../../general-components/button/button.component';
 
 @Component({
   selector: 'app-single-post',
   standalone: true,
-  imports: [FormsModule, SingleCommentComponent, CommonModule],
+  imports: [FormsModule, SingleCommentComponent, CommonModule, ButtonComponent],
   templateUrl: './single-post.component.html',
   styleUrl: './single-post.component.css'
 })
@@ -22,6 +23,7 @@ export class SinglePostComponent implements OnInit {
   imageUrl: string | null = null;
   imageExists: boolean = false;
   creatorUsername: string = '';
+  isCreditsDisabled: boolean = false;
 
   constructor(
     private postService: PostService,
@@ -90,13 +92,16 @@ export class SinglePostComponent implements OnInit {
   }
 
   addCredit() {
+    if (this.isCreditsDisabled) return;
+
     this.postService.addCredit(this.post.id).subscribe({
       next: () => {
         this.post.creditCount++;
         this.postService.updatePostCredit(this.post.id);
+        this.isCreditsDisabled = true;
       },
       error: (err) => {
-        console.error('Failed to add credit', err);
+        console.error('Sikertelen kredit hozzáadás', err);
       }
     });
   }

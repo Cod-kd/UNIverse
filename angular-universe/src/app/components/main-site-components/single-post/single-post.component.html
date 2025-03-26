@@ -3,10 +3,9 @@
         <div class="post-info">
             <span class="post-creator">{{ creatorUsername || 'Felhasználó #' + post.creatorId }}</span>
         </div>
-        <button class="credit-button" (click)="addCredit()">
-            <i class="fa-solid fa-coins"></i>
+        <app-button (click)="addCredit()" [size]="'small'" [shape]="'circle'" [isDisabled]="isCreditsDisabled" [iconClass]="'fa-solid fa-coins'">
             <span>{{ post.creditCount }}</span>
-        </button>
+        </app-button>
     </div>
     <hr>
     <div class="post-content">
