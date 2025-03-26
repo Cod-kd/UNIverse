@@ -174,7 +174,8 @@ hr, .event-hr{
     }
 
     .group-stats {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: none;
+        grid-template-rows: repeat(3, 1fr);
     }
 }
 
