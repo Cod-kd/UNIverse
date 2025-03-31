@@ -1,6 +1,8 @@
 com\universe\backend\modules\Category.class
+com\universe\backend\modules\Posts.class
 com\universe\backend\modules\Groups.class
 com\universe\backend\repositories\UserProfilesRepository.class
+com\universe\backend\content\HTMLContent.class
 com\universe\backend\dto\UserLoginDTO.class
 com\universe\backend\modules\Role.class
 com\universe\backend\exceptions\UserNotVerifyedException.class
@@ -28,6 +30,7 @@ com\universe\backend\services\EmailService.class
 com\universe\backend\services\user\UserService.class
 com\universe\backend\exceptions\UserWrongPasswordException.class
 com\universe\backend\exceptions\GroupNotFoundException.class
+com\universe\backend\modules\Comment.class
 com\universe\backend\modules\UsersContact.class
 com\universe\backend\repositories\GroupsRepository.class
 com\universe\backend\controllers\GroupController.class

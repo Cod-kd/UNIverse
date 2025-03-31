@@ -2,6 +2,7 @@ C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\ba
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\config\FileUploadConfig.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\config\JwtFilter.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\config\SecurityConfig.java
+C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\content\HTMLContent.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\controllers\AuthController.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\controllers\GroupController.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\controllers\ImageController.java
@@ -17,9 +18,11 @@ C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\ba
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\exceptions\UserNotVerifyedException.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\exceptions\UserWrongPasswordException.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\modules\Category.java
+C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\modules\Comment.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\modules\ContactTypes.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\modules\Event.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\modules\Groups.java
+C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\modules\Posts.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\modules\Role.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\modules\UserInterest.java
 C:\Users\Dániel\Documents\GitHub\UNIverse\backend\src\main\java\com\universe\backend\modules\UserProfiles.java
