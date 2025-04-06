@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  database:
+    image: mysql:8.4
+    container_name: database
+    environment:
+      MYSQL_ROOT_PASSWORD: passin
+      MYSQL_DATABASE: universe
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./sql-scripts:/docker-entrypoint-initdb.d
+
+  backend:
+    image: kamikou/universe:v1.0
+    container_name: backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database

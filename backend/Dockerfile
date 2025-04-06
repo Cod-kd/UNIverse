@@ -1,6 +1,10 @@
-# docker pull kamikou/universe:v1.0
-# docker run --name database -e MYSQL_ROOT_PASSWORD=passin -p 3306:3306 -d mysql:8.4 # 5.7 on server 😅
-# docker run -t --name backend --link database:mysql -p 8080:8080 kamikou/universe:v1.0
+# To run it locally:
+# First you have to install Docker and enable virtualization (if you already done earlier it you can skip this step)
+# Run in cmd to pull databse container: docker run --name database -e MYSQL_ROOT_PASSWORD=passin -p 3306:3306 -d mysql:8.4
+# Start "database" container
+# Connect to mysql server with the given user
+# Upload in mysql server: database_file_path
+# Run in cmd to pull backend container: docker run -t --name backend --link database:mysql -p 8080:8080 kamikou/universe:v1.0
 
 # to build:
 # docker build -t kamikou/universe:v1.0 .
