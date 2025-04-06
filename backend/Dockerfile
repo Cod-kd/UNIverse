@@ -5,30 +5,15 @@
 # to build:
 # docker build -t kamikou/universe:v1.0 .
 
-# Step 1: Use an official Maven image to build the application
+# syntax=docker/dockerfile:1.5
 FROM maven:3.9.5-eclipse-temurin-17 AS builder
-
-# Set working directory
 WORKDIR /app
+RUN --mount=type=bind,source=pom.xml,target=/app/pom.xml,readonly \
+    --mount=type=bind,source=src,target=/app/src,readonly \
+    mvn clean package -DskipTests
 
-# Copy the project files
-COPY pom.xml .
-COPY src ./src
-
-# Build the application
-RUN mvn clean package -DskipTests
-
-# Step 2: Use a lightweight JDK image to run the application
-FROM eclipse-temurin:17-jre
-
-# Set working directory
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-
-# Copy the built JAR file from the builder stage
 COPY --from=builder /app/target/backend-0.0.1-SNAPSHOT.jar app.jar
-
-# Expose the application's port
 EXPOSE 8080
-
-# Define the entrypoint to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
