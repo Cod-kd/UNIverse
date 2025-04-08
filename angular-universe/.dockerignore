@@ -1,0 +1,67 @@
+# .dockerignore file
+
+# Node.js specific
+node_modules/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+out/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Version control
+.git/
+.gitignore
+.svn/
+.hg/
+
+# Environment and secrets
+.env*
+*.env
+*.pem
+*.key
+*.crt
+config.local.*
+*.local.yml
+
+# Documentation
+docs/
+*.md
+README*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+.local/
+local/
+
+# Docker files
+Dockerfile*
+docker-compose*
+
+# Exclude everything else
+**/*
+
+# Include source files
+!src/**
+!package.json
+!package-lock.json
+!angular.json
+!tsconfig.json
+!tsconfig.app.json
+!tsconfig.spec.json
+!index.html
+!main.ts
+!styles.css
+!typings/**
+!environments/**
