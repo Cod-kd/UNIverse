@@ -30,7 +30,7 @@ header {
   width: 40px;
   height: 40px;
   background-color: var(--main);
-  mask-image: url('/images/logo.png');
+  mask-image: url('https://holydrive.org/api/view/b05424b41c9df436238bc6c26d9d2d15');
   mask-size: contain;
   mask-repeat: no-repeat;
   mask-position: center;

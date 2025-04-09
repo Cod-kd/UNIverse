@@ -302,7 +302,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   }
 
   getProfileImageSrc(): string {
-    if (!this.profile?.usersData?.userId) return '/images/default-pfp.jpg';
+    if (!this.profile?.usersData?.userId) return 'https://holydrive.org/api/view/4eaef8d354bfbf649f7faf380a810376';
     return this.profileImageService.getProfileImageUrl(this.profile.usersData.userId);
   }
 

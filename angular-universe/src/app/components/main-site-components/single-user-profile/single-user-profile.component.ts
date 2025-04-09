@@ -14,7 +14,7 @@ export class SingleUserProfileComponent implements OnChanges {
   @Input() profile!: Profile;
   @Output() selectProfile = new EventEmitter<Profile>();
 
-  private defaultPfp = '/images/default-pfp.jpg';
+  private defaultPfp = 'https://holydrive.org/api/view/4eaef8d354bfbf649f7faf380a810376';
   profileImageUrl: string = this.defaultPfp;
 
   constructor(
