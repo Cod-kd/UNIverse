@@ -19,3 +19,12 @@ services:
       - "8080:8080"
     depends_on:
       - database
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: paco7828/frontend-universe
+    container_name: frontend
+    ports:
+      - "80:80"
