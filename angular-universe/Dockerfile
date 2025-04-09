@@ -20,7 +20,7 @@ RUN npm run build --prod
 FROM nginx:alpine
 
 # Copy the built application from the builder stage
-COPY --from=builder /app/dist/angular-universe /usr/share/nginx/html
+COPY --from=builder /app/dist/angular-universe/browser /usr/share/nginx/html
 
 # Expose port 80
 EXPOSE 80
@@ -29,4 +29,4 @@ EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 
 # To build:
-# docker build -t kamikou/frontend-universe . --progress=plain
+# docker build -t paco7828/frontend-universe . --progress=plain

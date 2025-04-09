@@ -30,7 +30,7 @@ header {
   width: 40px;
   height: 40px;
   background-color: var(--main);
-  mask-image: url('../../../../../public/images/logo.png');
+  mask-image: url('/images/logo.png');
   mask-size: contain;
   mask-repeat: no-repeat;
   mask-position: center;
