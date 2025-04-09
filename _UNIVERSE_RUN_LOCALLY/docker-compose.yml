@@ -21,9 +21,6 @@ services:
       - database
 
   frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
     image: paco7828/frontend-universe
     container_name: frontend
     ports:
