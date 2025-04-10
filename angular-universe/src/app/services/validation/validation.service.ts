@@ -18,73 +18,73 @@ export class ValidationService {
 
     constructor(private popupService: PopupService) { }
 
-    validateEmail(email: string): boolean {
+    validateEmail(email: string, silent: boolean = false): boolean {
         this.emailValid = true;
         if (!email || email.trim() === "") {
-            this.popupService.showError("Hiányzó e-mail cím");
+            if (!silent) this.popupService.showError("Hiányzó e-mail cím");
             this.emailValid = false;
         } else {
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailPattern.test(email)) {
-                this.popupService.showError("Helytelen e-mail formátum");
+                if (!silent) this.popupService.showError("Helytelen e-mail formátum");
                 this.emailValid = false;
             }
         }
         return this.emailValid;
     }
 
-    validateUsername(username: string): boolean {
+    validateUsername(username: string, silent: boolean = false): boolean {
         this.usernameValid = true;
         if (!username || username.trim() === "") {
-            this.popupService.showError("Hiányzó felhasználónév");
+            if (!silent) this.popupService.showError("Hiányzó felhasználónév");
             this.usernameValid = false;
         } else if (username.length < 6) {
-            this.popupService.showError("Legalább 6 karakter");
+            if (!silent) this.popupService.showError("Legalább 6 karakter");
             this.usernameValid = false;
         } else if (username.length > 12) {
-            this.popupService.showError("Legfeljebb 12 karakter");
+            if (!silent) this.popupService.showError("Legfeljebb 12 karakter");
             this.usernameValid = false;
         } else {
             const usernamePattern = /^[A-Za-z0-9_-]+$/;
             if (!usernamePattern.test(username)) {
-                this.popupService.showError("Tartalmazhat (szám, betű, -, _)");
+                if (!silent) this.popupService.showError("Tartalmazhat (szám, betű, -, _)");
                 this.usernameValid = false;
             }
         }
         return this.usernameValid;
     }
 
-    validateFullName(fullName: string): boolean {
+    validateFullName(fullName: string, silent: boolean = false): boolean {
         this.fullNameValid = true;
 
         if (!fullName || fullName.trim() === "") {
-            this.popupService.showError("Hiányzó teljes név");
+            if (!silent) this.popupService.showError("Hiányzó teljes név");
             this.fullNameValid = false;
         } else if (fullName.length < 1) {
-            this.popupService.showError("Legalább 1 karakter");
+            if (!silent) this.popupService.showError("Legalább 1 karakter");
             this.fullNameValid = false;
         } else if (fullName.length > 80) {
-            this.popupService.showError("Legfeljebb 80 karakter");
+            if (!silent) this.popupService.showError("Legfeljebb 80 karakter");
             this.fullNameValid = false;
         } else {
             const fullNamePattern = /^[A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű ]+$/;
             if (!fullNamePattern.test(fullName)) {
-                this.popupService.showError("Csak betűket tartalmazhat");
+                if (!silent) this.popupService.showError("Csak betűket tartalmazhat");
                 this.fullNameValid = false;
             }
         }
         return this.fullNameValid;
     }
 
-    validateBirthDate(birthDate: string): boolean {
+    validateBirthDate(birthDate: string, silent: boolean = false): boolean {
         this.birthDateValid = true;
         if (!birthDate || birthDate.trim() === "") {
-            this.popupService.showError("Hiányzó születési dátum");
+            if (!silent) this.popupService.showError("Hiányzó születési dátum");
             this.birthDateValid = false;
         } else {
             const cleanDate = birthDate.replace(/-/g, '');
             if (cleanDate.length !== 8) {
-                this.popupService.showError("Helytelen dátumformátum (ÉÉÉÉ-HH-NN)");
+                if (!silent) this.popupService.showError("Helytelen dátumformátum (ÉÉÉÉ-HH-NN)");
                 this.birthDateValid = false;
             } else {
                 const year = parseInt(cleanDate.slice(0, 4), 10);
@@ -96,7 +96,7 @@ export class ValidationService {
                     31, 30, 31, 30, 31, 31, 30, 31, 30, 31,
                 ];
                 if (month < 1 || month > 12 || day < 1 || day > daysInMonth[month - 1]) {
-                    this.popupService.showError("Hibás dátum az adott hónapban");
+                    if (!silent) this.popupService.showError("Hibás dátum az adott hónapban");
                     this.birthDateValid = false;
                 }
             }
@@ -104,42 +104,42 @@ export class ValidationService {
         return this.birthDateValid;
     }
 
-    validatePassword(password: string): boolean {
+    validatePassword(password: string, silent: boolean = false): boolean {
         this.passwordValid = true;
         if (!password || password.trim() === "") {
-            this.popupService.showError("Hiányzó jelszó");
+            if (!silent) this.popupService.showError("Hiányzó jelszó");
             this.passwordValid = false;
         } else if (password.length < 8) {
-            this.popupService.showError("Legalább 8 karakter");
+            if (!silent) this.popupService.showError("Legalább 8 karakter");
             this.passwordValid = false;
         } else {
             const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*(),.?":{}|<>]*$/;
             if (!passwordPattern.test(password)) {
-                this.popupService.showError("Minimum 1 nagybetű, 1 kisbetű, és 1 szám");
+                if (!silent) this.popupService.showError("Minimum 1 nagybetű, 1 kisbetű, és 1 szám");
                 this.passwordValid = false;
             }
         }
         return this.passwordValid;
     }
 
-    validateUniversity(university: string): boolean {
+    validateUniversity(university: string, silent: boolean = false): boolean {
         this.universityValid = true;
         if (!university || university.trim() === "") {
-            this.popupService.showError("Válassz egy egyetemet!");
+            if (!silent) this.popupService.showError("Válassz egy egyetemet!");
             this.universityValid = false;
             this.facultyValid = true;
         }
         return this.universityValid;
     }
 
-    validateFaculty(faculty: string): boolean {
+    validateFaculty(faculty: string, silent: boolean = false): boolean {
         if (!this.universityValid) {
             return true;
         }
 
         this.facultyValid = true;
         if (!faculty || faculty.trim() === "") {
-            this.popupService.showError("Válassz egy kart!");
+            if (!silent) this.popupService.showError("Válassz egy kart!");
             this.facultyValid = false;
         }
         return this.facultyValid;
@@ -170,14 +170,14 @@ export class ValidationService {
         return end <= start ? { endDateBeforeStartDate: true } : null;
     }
 
-    validateContact(contactInput: ContactInput, contactTypes: ContactType[]): boolean {
+    validateContact(contactInput: ContactInput, contactTypes: ContactType[], silent: boolean = false): boolean {
         if (!contactInput.value) {
-            this.popupService.showError('Kérjük, add meg az elérhetőség értékét!');
+            if (!silent) this.popupService.showError('Kérjük, add meg az elérhetőség értékét!');
             return false;
         }
 
         if (!contactInput.type) {
-            this.popupService.showError('Kérjük, válassz elérhetőség típust!');
+            if (!silent) this.popupService.showError('Kérjük, válassz elérhetőség típust!');
             return false;
         }
 
@@ -188,11 +188,11 @@ export class ValidationService {
             const linkPattern = new RegExp(`^${selectedContact.protocol}://${escapedDomain}/[\\w-_.~/?#[\\]@!$&'()*+,;=]*$`);
 
             if (!linkPattern.test(contactInput.value)) {
-                this.popupService.showError(`Hibás ${selectedContact.name} link formátum!`);
+                if (!silent) this.popupService.showError(`Hibás ${selectedContact.name} link formátum!`);
                 return false;
             }
         } else {
-            this.popupService.showError('Kérjük, válassz elérhetőség típust!');
+            if (!silent) this.popupService.showError('Kérjük, válassz elérhetőség típust!');
             return false;
         }
         return true;

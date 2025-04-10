@@ -20,6 +20,9 @@ export class LoginComponent {
   isLoginDisabled = true;
   loginForm;
 
+  // Add flags to track if fields have been touched
+  usernameFieldTouched = false;
+
   constructor(
     private router: Router,
     private popupService: PopupService,
@@ -32,6 +35,7 @@ export class LoginComponent {
       password: ['', Validators.required]
     });
 
+    // Listen to form value changes to update login button state in real-time
     this.loginForm.valueChanges.subscribe(() => {
       this.updateLoginButtonState();
     });
@@ -42,19 +46,45 @@ export class LoginComponent {
     this.checkStoredAuth();
   }
 
-  // Handle username input changes and validate the username
+  // Handle username input changes - silently validate for button state
   onUsernameChange() {
     const username = this.loginForm.get('username')?.value;
+
+    // Only validate without showing errors while typing
     if (typeof username === 'string') {
-      this.validationService.validateUsername(username);
+      // Pass true to silence error messages while typing
+      this.validationService.validateUsername(username, true);
       this.updateLoginButtonState();
     }
   }
 
-  // Enable or disable login button based on validation results
+  // Mark username as touched when user leaves the field
+  onUsernameBlur() {
+    this.usernameFieldTouched = true;
+    const username = this.loginForm.get('username')?.value;
+    if (typeof username === 'string' && username.trim()) {
+      // Show validation errors now that field has been touched
+      this.validationService.validateUsername(username, false);
+    }
+  }
+
+  // Enable or disable login button based on form validity
   updateLoginButtonState() {
-    this.isLoginDisabled = !(this.validationService.usernameValid &&
-      this.validationService.passwordValid);
+    const username = this.loginForm.get('username')?.value;
+    const password = this.loginForm.get('password')?.value;
+
+    // Check if both fields have values
+    const hasUsername = username && username.trim().length > 0;
+    const hasPassword = password && password.trim().length > 0;
+
+    if (hasUsername && hasPassword) {
+      // Silently validate for button state only
+      const isUsernameValid = this.validationService.validateUsername(username, true);
+      const isPasswordValid = this.validationService.validatePassword(password, true);
+      this.isLoginDisabled = !(isUsernameValid && isPasswordValid);
+    } else {
+      this.isLoginDisabled = true;
+    }
   }
 
   // Attempt to log in with provided credentials
@@ -68,9 +98,15 @@ export class LoginComponent {
       return;
     }
 
-    // Validate username and password before making login request
-    const isUsernameValid = this.validationService.validateUsername(username);
-    const isPasswordValid = this.validationService.validatePassword(password);
+    // Mark fields as touched
+    this.usernameFieldTouched = true;
+    if (this.passwordInput) {
+      this.passwordInput.fieldTouched = true;
+    }
+
+    // Validate with visible errors for submission
+    const isUsernameValid = this.validationService.validateUsername(username, false);
+    const isPasswordValid = this.validationService.validatePassword(password, false);
 
     if (isUsernameValid && isPasswordValid) {
       this.loginService.fetchLogin(username, password).subscribe({

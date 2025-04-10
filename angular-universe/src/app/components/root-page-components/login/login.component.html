@@ -2,9 +2,9 @@
 
   <form autocomplete="off" id="loginForm" [formGroup]="loginForm">
 
-    <!-- Username -->
-    <input (blur)="onUsernameChange()" id="usernameInput" type="text" placeholder="Felhasználónév..." class="input"
-      formControlName="username">
+    <!-- Username - using both input and blur events -->
+    <input (input)="onUsernameChange()" (blur)="onUsernameBlur()" id="usernameInput" type="text"
+      placeholder="Felhasználónév..." class="input" formControlName="username">
 
     <!-- Password -->
     <app-toggle-input formControlName="password"></app-toggle-input>

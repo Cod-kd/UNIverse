@@ -21,6 +21,7 @@ export class ToggleInputComponent implements ControlValueAccessor {
 
   showPassword = false;
   passwordControl = new FormControl('');
+  fieldTouched = false;
 
   onChange: (value: string) => void = () => { };
   onTouched: () => void = () => { };
@@ -30,13 +31,27 @@ export class ToggleInputComponent implements ControlValueAccessor {
     this.showPassword = !this.showPassword;
   }
 
-  // Validate password input and propagate changes
+  // Validate password on input (keydown) - silently
   onPasswordChange() {
     const password = this.passwordControl.value;
     if (typeof password === 'string') {
-      this.validationService.validatePassword(password);
+      // Always pass true for silent validation during typing
+      if (password.trim()) {
+        this.validationService.validatePassword(password, true);
+      }
       this.onChange(password);
     }
+  }
+
+  // On blur, mark as touched and validate with error messages
+  onPasswordBlur() {
+    this.fieldTouched = true;
+    const password = this.passwordControl.value;
+    if (typeof password === 'string' && password.trim()) {
+      // Now show validation errors since field has been touched
+      this.validationService.validatePassword(password, false);
+    }
+    this.onTouched();
   }
 
   // Implement ControlValueAccessor methods
