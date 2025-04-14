@@ -1,7 +1,7 @@
 # UNIverse social media platform
 ## About
 ### Project
-Our Applicatian is a unique social-media platform targeting university students.
+Our Application is a unique social-media platform targeting university students.
 ### Developer team
 - Kőszegi Patrik: Frontend
 - Murányi Dániel: Backend and Database
