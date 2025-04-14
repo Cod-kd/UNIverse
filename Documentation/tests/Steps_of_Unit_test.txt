@@ -1,0 +1,104 @@
+1. Regisztráció
+2. UNIcard letöltése
+3. Email verifikáció
+Működése: Adatok felvitele->Sikeres regisztráció->UNIcard 'kép' letöltése->Letöltéskor a kép metaadataihoz hozzáíródik a megadott felhasználónév és jelszó->Email-ben kiküldött link megnyitása->Verifikált fiók
+
+
+4. Szimpla adatokkal való bejelentkezés->kijelentkezés
+5. Bejelentkezés UNIcard-dal
+Működése: UNIcard kép feltöltése->Feltöltött kép metaadatainak kiolvasása->Bejelentkezés a kiolvasott adatokkal
+
+
+6. Gyors elérés magyarázata
+7. Gyors elérésnél 'weboldal létrehozása' megmutatása
+8. Gyors elérésnél 'uninote létehozása' megmutatása
+Működése: shortcut-ok tárolása / lekérése localstorage-ban
+
+9. Felhasználók megnyitása
+10. Rákeresés 'tuser1'-re
+Működése: keresőmező az URL alapján állapítja meg, milyen kérést kell küldenie->létező felhasználó esetén a felhasználó adatainak visszaadása
+
+
+11. Követés, utána kikövetés
+Működése: Kérés amely ellenőrzi, hogy a keresett felhasználót követed-e vagy sem, gomb úgy reagál
+
+
+12. Mentés gomb
+13. Lementett kép megmutatása
+Működése: HTML2CANVAS library képernyőképet készít a felhasználó profiljáról, majd a felhasználó teljes nevével lementi
+
+
+13. Elérhetőségek, érdeklődési körök, szerepkörökre 'hover effect' megmutatása
+14. Professzionális keresés bekapcsolása
+Működése: Összes felhasználó adatait lekéri majd filterezi a keresőmező értékével
+
+
+15. Keresőmezőből input kitörlése, LEGYEN ÜRES, majd keresés (ENTER)
+17. Követés, kikövetés
+18. Csoportok megnyitása
+Működése: Csoportok első megnyitásakor az összes létező csoport lekérése->Keresőmező filterezi az adatokat, nem indít újabb kérést
+
+
+19. CodeMasters csoport kinyitása
+20. CodeMasters csoport becsukása
+Működése: A megnyitott csoport ID-jének tárolása->ha megváltozik az ID (új csoport le lett nyitva)->előzőleg megnyitott csoport becsukása, újonnani csoport kinyitása
+
+
+21. Létrehozás gombra klikk
+22. 'Legjobb csoport' -> Létrehozom!
+Működése: csoport nevének megadása->csoport létrehozó api futtatása
+
+23. Codemasters csoport lenyitása
+24. Csoportba belépés
+25. Csoport megnyitása
+Működése: adott csoport adatainak továbbvitele a megnyitott csoport komponensébe->csoport adatainak megjelenítése: posztok, kommentek, események, általános információk
+
+
+26. Tagok, posztok, események 'hover effect' megmutatása
+27. Esemény létrehozása klikk
+28. Add meg az adatokat NORMÁLISAN + JÖVŐBELI IDŐVEL, majd Létrehozás
+Működése: Szükséges esemény adatok megadása->esemény létrehozó api futtatása
+
+
+29. 'Részt veszek'-re klikk
+30. Résztvevők számára klikk
+31. Klikk a másolás ikonra
+32. Résztvevők bezárása
+33. 'Érdeklődöm'-re klikk
+34. Érdeklődők számára klikk
+35. Klikk a másolás ikonra
+36. Érdeklődők bezárása
+Működése: esemény adatai visszaadják az érdeklődő és résztvevő felhasználók ID-jét, ez alapján felhasználónevek lekérése
+
+
+37. Események megnyitása
+Működése: lekérés amely visszaadja a bejelentkezett felhasználó eseményeinek ID-jét amelyek iránt érdeklődik vagy részt vesz
+
+38. Beállítások megnyitása
+39. Oldal fő színét változtasd meg valamilyen zöldre
+40. Bal felül logóra klikk a szín megmutatása miatt
+41. Beállítások megnyitása
+42. 'Alapértelmezett'-re klikk
+Működése: localstorage-ban tárolt adatok betöltése az oldal megnyitásakor->adatok hiányában alapértelmezett színek használata
+
+
+43. Jobb felül profil ikonra klikk
+Működése: bejelentkezett felhasználó adatainak betöltése felhasználónév alapján
+
+
+44. Profilkép módosítása
+Működése: Újonnan feltöltött kép cache-ben tárolása időbélyeggel->egybőli frissítés
+
+
+45. Leírás módosítása
+46. Elérhetőségeknél 'Facebook kiválasztása', majd 'https://www.facebook.com/johndoe' megadása, ENTER
+47. Szerepkör hozzáadása (HALLGATÓ)
+48. Érdeklődés hozzáadása (PROGRAMOZÁS)
+49. 'Mentés'-re klikk
+Működése: weboldal eltárolja az utolsó/eredeti adatait a mezőknek, és csak az megváltoztatott adatokat küldi el a szerver felé
+
+
+50. 'Profil törlése'-re klikk
+51. Jelszó megadása
+52. 'Törlés megerősítése'-re klikk
+Működése: bejelentkezett felhasználó jelszavának megadása->sikeres jelszó esetén felhasználói fiók törlése (soft-delete) és kijelentkeztetés
