@@ -1,3 +1,8 @@
+# Frontend
+## Structure
+Here you can see our Angular project as a responsive webpage for all device
+
+
 # Running the Project with Docker
 
 This project is configured to run using Docker. Below are the specific instructions and requirements:
