@@ -8,7 +8,7 @@
 
 2. ### Set up the Application
 Download the _UNIVERSE_RUN_LOCALLY folder and double-click on the _RUN.sh file.
-See more: https://github.com/Cod-kd/UNIverse/tree/05d335f6c693c8975a43e76e5ccd2ad1894ce6c8/_UNIVERSE_RUN_LOCALLY
+<br>See more: https://github.com/Cod-kd/UNIverse/tree/05d335f6c693c8975a43e76e5ccd2ad1894ce6c8/_UNIVERSE_RUN_LOCALLY
 
 #### Why Docker?
 Docker uses Linux Virtual Machines so it is works on **every device** smootly! Also it can be easily uploaded to nearly any webserver and it is easy to host with just a few commands. :)
