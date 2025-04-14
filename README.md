@@ -1,5 +1,11 @@
 # UNIverse social media platform
-
+## About
+### Project
+Our Applicatian is a unique social-media platform targeting university students.
+### Developer team
+- Kőszegi Patrik: Frontend
+- Murányi Dániel: Backend and Database
+- Temesi Tamás: Testing and Documentation 
 ## Application Installation Guide
 1. ### Install Docker
 - Docker is easy to install and it is a usefull tool for the most developer.
