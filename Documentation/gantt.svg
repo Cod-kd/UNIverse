@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440">
+  <!-- Title -->
+  <text x="400" y="40" font-family="Arial" font-size="22" font-weight="bold" text-anchor="middle" fill="#333">UNIverse GANTT</text>
+  
+  <!-- Timeline header -->
+  <line x1="200" y1="80" x2="750" y2="80" stroke="#333" stroke-width="2" />
+  
+  <!-- Timeline markers - 7 months -->
+  <line x1="200" y1="85" x2="200" y2="95" stroke="#333" stroke-width="1" />
+  <line x1="290" y1="85" x2="290" y2="95" stroke="#777" stroke-width="1" />
+  <line x1="380" y1="85" x2="380" y2="95" stroke="#777" stroke-width="1" />
+  <line x1="470" y1="85" x2="470" y2="95" stroke="#777" stroke-width="1" />
+  <line x1="560" y1="85" x2="560" y2="95" stroke="#777" stroke-width="1" />
+  <line x1="650" y1="85" x2="650" y2="95" stroke="#777" stroke-width="1" />
+  <line x1="740" y1="85" x2="740" y2="95" stroke="#333" stroke-width="1" />
+  
+  <!-- Month labels -->
+  <text x="200" y="105" font-family="Arial" font-size="10" text-anchor="middle" fill="#333">Sep 4</text> 
+  <text x="290" y="105" font-family="Arial" font-size="10" text-anchor="middle" fill="#777">Oct</text>
+  <text x="380" y="105" font-family="Arial" font-size="10" text-anchor="middle" fill="#777">Nov</text>
+  <text x="470" y="105" font-family="Arial" font-size="10" text-anchor="middle" fill="#777">Dec</text>
+  <text x="560" y="105" font-family="Arial" font-size="10" text-anchor="middle" fill="#777">Jan</text>
+  <text x="650" y="105" font-family="Arial" font-size="10" text-anchor="middle" fill="#777">Feb</text>
+  <text x="740" y="105" font-family="Arial" font-size="10" text-anchor="middle" fill="#333">Mar 21</text> 
+  
+  <!-- Grid lines -->
+  <line x1="200" y1="115" x2="200" y2="430" stroke="#ddd" stroke-width="1" stroke-dasharray="3,3" />
+  <line x1="290" y1="115" x2="290" y2="430" stroke="#ddd" stroke-width="1" stroke-dasharray="3,3" />
+  <line x1="380" y1="115" x2="380" y2="430" stroke="#ddd" stroke-width="1" stroke-dasharray="3,3" />
+  <line x1="470" y1="115" x2="470" y2="430" stroke="#ddd" stroke-width="1" stroke-dasharray="3,3" />
+  <line x1="560" y1="115" x2="560" y2="430" stroke="#ddd" stroke-width="1" stroke-dasharray="3,3" />
+  <line x1="650" y1="115" x2="650" y2="430" stroke="#ddd" stroke-width="1" stroke-dasharray="3,3" />
+  <line x1="740" y1="115" x2="740" y2="430" stroke="#ddd" stroke-width="1" stroke-dasharray="3,3" />
+  
+  <line x1="200" y1="152.5" x2="750" y2="152.5" stroke="#eee" stroke-width="1" />
+  <line x1="200" y1="187.5" x2="750" y2="187.5" stroke="#eee" stroke-width="1" />
+  <line x1="200" y1="222.5" x2="750" y2="222.5" stroke="#eee" stroke-width="1" />
+  <line x1="200" y1="257.5" x2="750" y2="257.5" stroke="#eee" stroke-width="1" />
+  <line x1="200" y1="292.5" x2="750" y2="292.5" stroke="#eee" stroke-width="1" />
+  <line x1="200" y1="327.5" x2="750" y2="327.5" stroke="#eee" stroke-width="1" />
+  <line x1="200" y1="362.5" x2="750" y2="362.5" stroke="#eee" stroke-width="1" />
+  <line x1="200" y1="397.5" x2="750" y2="397.5" stroke="#eee" stroke-width="1" />
+  
+  <!-- Task labels -->
+  <text x="180" y="140" font-family="Arial" font-size="14" font-weight="bold" text-anchor="end" fill="#333">Forming</text>
+  <text x="180" y="175" font-family="Arial" font-size="14" font-weight="bold" text-anchor="end" fill="#333">Project planning</text>
+  <text x="180" y="210" font-family="Arial" font-size="14" font-weight="bold" text-anchor="end" fill="#333">Documentation</text>
+  <text x="180" y="245" font-family="Arial" font-size="14" font-weight="bold" text-anchor="end" fill="#333">Set up environment</text>
+  <text x="180" y="280" font-family="Arial" font-size="14" font-weight="bold" text-anchor="end" fill="#333">Database</text>
+  <text x="180" y="315" font-family="Arial" font-size="14" font-weight="bold" text-anchor="end" fill="#333">Frontend</text>
+  <text x="180" y="350" font-family="Arial" font-size="14" font-weight="bold" text-anchor="end" fill="#333">Backend</text>
+  <text x="180" y="385" font-family="Arial" font-size="14" font-weight="bold" text-anchor="end" fill="#333">Testing</text>
+  <text x="180" y="420" font-family="Arial" font-size="14" font-weight="bold" text-anchor="end" fill="#333">Finalization</text>
+  
+  <!-- Task bars with updated colors based on assignments -->
+  <!-- M Forming - #ff5a1f -->
+  <rect x="200" y="125" width="0" height="20" rx="3" ry="3" fill="#ff5a1f" opacity="0.8">
+    <animate attributeName="width" from="0" to="68.25" dur="0.5s" fill="freeze" begin="0.2s" />
+  </rect>
+  <text x="234.125" y="139" font-family="Arial" font-size="12" text-anchor="middle" fill="white" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.2s" />
+    25 days
+  </text>
+  
+  <!-- M Project Planning - #ff5a1f -->
+  <rect x="240.95" y="160" width="0" height="20" rx="3" ry="3" fill="#ff5a1f" opacity="0.8">
+    <animate attributeName="width" from="0" to="95.55" dur="0.5s" fill="freeze" begin="0.4s" />
+  </rect>
+  <text x="288.725" y="174" font-family="Arial" font-size="12" text-anchor="middle" fill="white" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.4s" />
+    35 days
+  </text>
+  
+  <!-- T Documentation - #004de6 -->
+  <rect x="268" y="195" width="0" height="20" rx="3" ry="3" fill="#004de6" opacity="0.8">
+    <animate attributeName="width" from="0" to="409.5" dur="0.5s" fill="freeze" begin="0.6s" />
+  </rect>
+  <text x="472.75" y="209" font-family="Arial" font-size="12" text-anchor="middle" fill="white" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.6s" />
+    150 days
+  </text>
+  
+  <!-- P Set up environment - #000000 -->
+  <rect x="308.4" y="230" width="0" height="20" rx="3" ry="3" fill="#000000" opacity="0.8">
+    <animate attributeName="width" from="0" to="54.6" dur="0.5s" fill="freeze" begin="0.8s" />
+  </rect>
+  <text x="335.7" y="244" font-family="Arial" font-size="12" text-anchor="middle" fill="white" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.8s" />
+    20 days
+  </text>
+  
+  <!-- D Database - #008040 -->
+  <rect x="322" y="265" width="0" height="20" rx="3" ry="3" fill="#008040" opacity="0.8">
+    <animate attributeName="width" from="0" to="177.45" dur="0.5s" fill="freeze" begin="1.0s" />
+  </rect>
+  <text x="410.725" y="279" font-family="Arial" font-size="12" text-anchor="middle" fill="white" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1.0s" />
+    65 days
+  </text>
+  
+  <!-- P Frontend - #000000 -->
+  <rect x="362.7" y="300" width="0" height="20" rx="3" ry="3" fill="#000000" opacity="0.8">
+    <animate attributeName="width" from="0" to="273" dur="0.5s" fill="freeze" begin="1.2s" />
+  </rect>
+  <text x="499.2" y="314" font-family="Arial" font-size="12" text-anchor="middle" fill="white" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1.2s" />
+    100 days
+  </text>
+  
+  <!-- D Backend - #008040 -->
+  <rect x="349" y="335" width="0" height="20" rx="3" ry="3" fill="#008040" opacity="0.8">
+    <animate attributeName="width" from="0" to="259.35" dur="0.5s" fill="freeze" begin="1.4s" />
+  </rect>
+  <text x="478.675" y="349" font-family="Arial" font-size="12" text-anchor="middle" fill="white" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1.4s" />
+    95 days
+  </text>
+  
+  <!-- T Testing - #004de6 -->
+  <rect x="540" y="370" width="0" height="20" rx="3" ry="3" fill="#004de6" opacity="0.8">
+    <animate attributeName="width" from="0" to="163.8" dur="0.5s" fill="freeze" begin="1.6s" />
+  </rect>
+  <text x="621.9" y="384" font-family="Arial" font-size="12" text-anchor="middle" fill="white" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1.6s" />
+    60 days
+  </text>
+  
+  <!-- M Finalization - #ff5a1f -->
+  <rect x="677" y="405" width="0" height="20" rx="3" ry="3" fill="#ff5a1f" opacity="0.8">
+    <animate attributeName="width" from="0" to="63" dur="0.5s" fill="freeze" begin="1.8s" />
+  </rect>
+  <text x="708.5" y="419" font-family="Arial" font-size="12" text-anchor="middle" fill="white" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1.8s" />
+    35 days
+  </text>
+  
+  <!-- Legend -->
+  <rect x="50" y="40" width="15" height="15" rx="2" ry="2" fill="#000000" opacity="0.8" />
+  <text x="75" y="52" font-family="Arial" font-size="12" text-anchor="start" fill="#333">Patrik</text>
+  
+  <rect x="50" y="60" width="15" height="15" rx="2" ry="2" fill="#008040" opacity="0.8" />
+  <text x="75" y="72" font-family="Arial" font-size="12" text-anchor="start" fill="#333">Dani</text>
+  
+  <rect x="50" y="80" width="15" height="15" rx="2" ry="2" fill="#004de6" opacity="0.8" />
+  <text x="75" y="92" font-family="Arial" font-size="12" text-anchor="start" fill="#333">Tamás</text>
+  
+  <rect x="50" y="100" width="15" height="15" rx="2" ry="2" fill="#ff5a1f" opacity="0.8" />
+  <text x="75" y="112" font-family="Arial" font-size="12" text-anchor="start" fill="#333">Everyone</text>
+</svg>
