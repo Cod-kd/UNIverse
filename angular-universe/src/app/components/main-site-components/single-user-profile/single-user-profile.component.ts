@@ -30,7 +30,6 @@ export class SingleUserProfileComponent implements OnChanges {
   }
 
   getProfileImageSrc(): string {
-    if (!this.profile?.usersData?.userId) return this.defaultPfp;
     return this.profileImageService.getProfileImageUrl(this.profile.usersData.userId);
   }
 }
