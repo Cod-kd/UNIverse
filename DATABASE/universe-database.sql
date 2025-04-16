@@ -1058,77 +1058,129 @@ CALL addGroupCategory(3, 3);
 CALL addGroupCategory(4, 4);  
 CALL addGroupCategory(5, 5);  
 
--- events
--- Esemény a Computer Science csoporthoz
-CALL createEvent(
-    'Hackathon 2024', 
-    1, 
-    '2024-11-15 09:00:00', 
-    '2024-11-15 18:00:00', 
-    'Tech Park Hall A', 
-    'An intense coding competition for students and professionals.', 
-    1
-);
+-- ESEMÉNYEK – Computer Science (groupId = 1)
+CALL createEvent('Programozási Est', 1, '2024-10-10 17:00:00', '2024-10-10 20:00:00', 'B épület 101', 'Kötetlen programozás baráti hangulatban.', 1);
+CALL createEvent('Hackathon 2025', 1, '2025-05-10 09:00:00', '2025-05-10 18:00:00', 'Tech Park Hall A', 'Intenzív kódolási verseny csapatoknak.', 1);
+CALL createEvent('Adatbázis Workshop', 1, '2025-04-20 14:00:00', '2025-04-20 17:00:00', 'Labor 2', 'Gyakorlati adatbázis-kezelési feladatok.', 1);
+CALL createEvent('Szoftverfejlesztési MeetUp', 1, '2024-12-01 10:00:00', '2024-12-01 13:00:00', 'Informatikai Kar Aula', 'Beszélgetés modern fejlesztési eszközökről.', 1);
+CALL createEvent('AI és Jövő', 1, '2025-06-15 11:00:00', '2025-06-15 15:00:00', 'Konferenciaterem 3', 'Mesterséges intelligencia alkalmazások bemutatása.', 1);
+CALL createEvent('Verziókezelés Git-tel', 1, '2025-05-02 14:00:00', '2025-05-02 16:00:00', 'Informatika Lab 4', 'Gyakorlati workshop a Git és GitHub használatáról.', 1);
+-- Hosszú időtartamú
+CALL createEvent('Webfejlesztői Bootcamp', 1, '2025-04-05 09:00:00', '2025-06-10 17:00:00', 'Online + B épület 204', 'Intenzív 2 hónapos tanfolyam modern webfejlesztés témakörében.', 1);
 
--- Esemény a Mathematics csoporthoz
-CALL createEvent(
-    'Pi Day Celebration', 
-    2, 
-    '2024-03-14 10:00:00', 
-    '2024-03-14 14:00:00', 
-    'Math Department, Room 101', 
-    'Join us for Pi-themed activities and a pie-eating contest!', 
-    2
-);
 
--- Esemény a Biology csoporthoz
-CALL createEvent(
-    'Eco-Exploration Workshop', 
-    3, 
-    '2024-04-22 08:30:00', 
-    '2024-04-22 17:00:00', 
-    'University C Botanical Garden', 
-    'Explore the local ecosystem with guided tours and hands-on activities.', 
-    3
-);
+-- ESEMÉNYEK – Mathematics (groupId = 2)
+CALL createEvent('Pi Nap Ünnepség', 2, '2024-03-14 10:00:00', '2024-03-14 14:00:00', '101-es terem', 'Piteevő verseny és játékos matekfeladatok.', 2);
+CALL createEvent('Matematika Vetélkedő', 2, '2025-04-08 09:00:00', '2025-04-08 12:00:00', 'Aula', 'Csapatverseny középiskolásoknak.', 2);
+CALL createEvent('Valószínűségszámítás Alapjai', 2, '2025-03-18 13:00:00', '2025-03-18 15:00:00', 'Matek Tanszék', 'Interaktív előadás valószínűségekről.', 2);
+CALL createEvent('Matek és Művészet', 2, '2025-05-22 15:00:00', '2025-05-22 17:00:00', 'Rajzterem 1', 'Művészeti szimmetriák matematikai háttere.', 2);
+CALL createEvent('Számelmélet Délután', 2, '2024-09-12 14:00:00', '2024-09-12 16:00:00', '105-ös terem', 'Bevezetés a számelméletbe érdeklődőknek.', 2);
+CALL createEvent('Matematikai Logika Klub', 2, '2025-05-10 10:00:00', '2025-05-10 12:00:00', '105-ös terem', 'Logikai feladványok és bizonyítási technikák interaktívan.', 2);
+-- Hosszú
+CALL createEvent('Tavaszi Matematikai Műhely', 2, '2025-04-15 10:00:00', '2025-08-01 14:00:00', 'Matematika Intézet, Különterem', 'Féléves kutatási és projektmunka mentorálással matematikai témákban.', 2);
 
--- Esemény a Physics csoporthoz
-CALL createEvent(
-    'Quantum Mechanics Lecture', 
-    4, 
-    '2024-05-10 13:00:00', 
-    '2024-05-10 15:00:00', 
-    'Physics Building, Room 302', 
-    'A special guest lecture on the mysteries of quantum mechanics.', 
-    4
-);
 
--- Esemény az Engineering csoporthoz
-CALL createEvent(
-    'Robotics Showcase', 
-    5, 
-    '2024-06-05 10:00:00', 
-    '2024-06-05 16:00:00', 
-    'Engineering Lab, Main Hall', 
-    'See the latest in student-designed robots and engineering projects.', 
-    5
-);
+-- ESEMÉNYEK – Biology (groupId = 3)
+CALL createEvent('Öko-Felfedező Műhely', 3, '2024-04-22 08:30:00', '2024-04-22 17:00:00', 'Botanikus kert', 'Vezetett túrák a természetben.', 3);
+CALL createEvent('Mikroszkóp Alatt', 3, '2025-05-05 10:00:00', '2025-05-05 13:00:00', 'Lab 3', 'Sejtek és szövetek vizsgálata.', 3);
+CALL createEvent('Állatvilág Előadás', 3, '2025-03-11 11:00:00', '2025-03-11 13:00:00', 'Biológia épület 2', 'Ritka fajok ismertetése.', 3);
+CALL createEvent('Fenntartható Jövő', 3, '2024-12-18 09:00:00', '2024-12-18 12:00:00', 'Öko terem', 'Hogyan óvjuk a bolygót?', 3);
+CALL createEvent('Biokémiai Labor', 3, '2025-04-10 14:00:00', '2025-04-10 17:00:00', 'Laboratórium 5', 'Kísérletek és mérések a gyakorlatban.', 3);
+CALL createEvent('Biológiai Rajzverseny', 3, '2025-06-05 13:00:00', '2025-06-05 15:00:00', 'Aula', 'Természeti témájú illusztrációk készítése és kiállítása.', 3);
+-- Hosszú
+CALL createEvent('Botanikai Megfigyelések', 3, '2025-04-10 08:00:00', '2025-06-30 12:00:00', 'Egyetemi Arborétum', 'Rendszeres növénymegfigyelések és dokumentációs program.', 3);
 
--- Create posts
+
+-- ESEMÉNYEK – Physics (groupId = 4)
+CALL createEvent('Kvantummechanika Előadás', 4, '2024-05-10 13:00:00', '2024-05-10 15:00:00', '302-es terem', 'Vendégelőadó a kvantumvilágról.', 4);
+CALL createEvent('Kísérleti Fizika Délután', 4, '2025-04-14 10:00:00', '2025-04-14 13:00:00', 'Fizika Labor', 'Látványos fizikai kísérletek.', 4);
+CALL createEvent('Relativitáselmélet', 4, '2025-05-28 15:00:00', '2025-05-28 17:00:00', 'Fizika épület 101', 'Az idő és tér viszonylagossága.', 4);
+CALL createEvent('Űrfizika Bevezetés', 4, '2025-03-30 12:00:00', '2025-03-30 14:00:00', 'Kiselőadó', 'Űrkutatás fizikája érthetően.', 4);
+CALL createEvent('Optika és Lézerek', 4, '2024-11-08 09:00:00', '2024-11-08 12:00:00', 'Optikai Lab', 'Lézerek és fénytörés kísérletekkel.', 4);
+CALL createEvent('Mechanika a Gyakorlatban', 4, '2025-04-25 10:00:00', '2025-04-25 13:00:00', 'Fizika Labor 2', 'Gyakorlati mérések és mechanikai kísérletek.', 4);
+-- Hosszú
+CALL createEvent('Tavaszi Fizikai Kutatóprogram', 4, '2025-04-18 09:00:00', '2025-07-25 15:00:00', 'Kísérleti Fizika Labor', 'Hosszabb távú projekt lehetőség részecskefizikában és méréstechnikában.', 4);
+
+
+-- ESEMÉNYEK – Engineering (groupId = 5)
+CALL createEvent('Robotika Bemutató', 5, '2024-06-05 10:00:00', '2024-06-05 16:00:00', 'Főcsarnok', 'Hallgatói robotprojektek kiállítása.', 5);
+CALL createEvent('CAD Alapok', 5, '2025-04-25 10:00:00', '2025-04-25 13:00:00', 'Mérnökterem 2', 'CAD szoftverek használata kezdőknek.', 5);
+CALL createEvent('Innováció és Tervezés', 5, '2025-05-12 11:00:00', '2025-05-12 14:00:00', 'Prototípus Műhely', 'Új ötletek műszaki kivitelezése.', 5);
+CALL createEvent('Zöld Energiák', 5, '2025-03-25 13:00:00', '2025-03-25 16:00:00', 'Auditorium', 'Fenntartható technológiák a mérnökségben.', 5);
+CALL createEvent('Szenzorok Világa', 5, '2024-09-30 14:00:00', '2024-09-30 16:00:00', 'Lab 8', 'Szenzortechnológiák bemutatása gyakorlattal.', 5);
+CALL createEvent('Arduino Mini-Projekt Nap', 5, '2025-05-20 09:00:00', '2025-05-20 12:00:00', 'Elektronikai Műhely', 'Építs egyszerű áramköröket és programozz szenzorokat!', 5);
+-- Hosszú
+CALL createEvent('Nyári Mérnöki Projektmunka', 5, '2025-04-22 10:00:00', '2025-08-15 16:00:00', 'Gépészmérnöki Műhely', 'Hallgatói csapatok hosszú távú mérnöki fejlesztéseken dolgoznak, mentorálással.', 5);
+
+-- ---------------------------------------------------------------------------------------------
+
+-- Posztok és kommentek generálása minden csoporthoz
 SET @postId = 0;
-CALL createPost(1, 1, 'Ez egy új bejegyzés.', @postId);
-CALL createPost(1, 1, 'Nagyon jó napom volt ma!', @postId);
-CALL createPost(2, 2, 'Szeretem ezt a csoportot.', @postId);
-CALL createPost(3, 3, 'Mit gondoltok erről a témáról?', @postId);
-CALL createPost(4, 4, 'Csak egy gyors frissítés.', @postId);
 
--- Add comments
-CALL addComment(1, 2, 'Nagyon jó bejegyzés!');
-CALL addComment(1, 3, 'Egyetértek, ez tényleg érdekes.');
-CALL addComment(2, 4, 'Köszönöm, hogy megosztottad!');
-CALL addComment(3, 1, 'Mit gondoltok erről a témáról?');
-CALL addComment(4, 5, 'Nagyon inspiráló gondolatok.');
+-- Computer Science (groupId = 1)
+CALL createPost(1, 1, 'Ma kezdtem el egy új Python projektet!', @postId);
+CALL createPost(2, 1, 'Valaki használta már a VS Code AI bővítményt?', @postId);
+CALL createPost(3, 1, 'Nagyon hasznos volt a tegnapi Git workshop!', @postId);
+CALL createPost(4, 1, 'Kérdés: szerintetek megéri C#-ban elkezdeni fejleszteni?', @postId);
+CALL createPost(5, 1, 'Készítettem egy saját chatbotot. Kipróbáljátok?', @postId);
 
+CALL addComment(1, 2, 'Nagyon menő, mutasd meg!');
+CALL addComment(2, 3, 'Igen, szerintem megéri, főleg .NET-re.');
+CALL addComment(3, 1, 'A workshop tényleg szuper volt!');
+CALL addComment(4, 4, 'Nekem nagyon bejött a C#.');
+CALL addComment(5, 1, 'Küldd át a linket, kipróbálom!');
+
+-- Mathematics (groupId = 2)
+CALL createPost(2, 2, 'Ma végre megértettem a deriválás lényegét!', @postId);
+CALL createPost(3, 2, 'Van valaki, aki tud segíteni integrálásban?', @postId);
+CALL createPost(4, 2, 'Ez a csoport mindig motivál!', @postId);
+CALL createPost(5, 2, 'Kedvenc számom a 7. Nektek?', @postId);
+CALL createPost(1, 2, 'Feltöltöttem pár matek feladatot, nézzétek meg!', @postId);
+
+CALL addComment(6, 3, 'Én szívesen segítek, írj privátban.');
+CALL addComment(7, 1, 'A 7 tényleg különleges szám!');
+CALL addComment(8, 4, 'Köszi a feltöltést, hasznosak!');
+CALL addComment(9, 2, 'Nagyon jó kis közösség vagyunk.');
+CALL addComment(10, 5, 'Gratula a deriváláshoz!');
+
+-- Biology (groupId = 3)
+CALL createPost(3, 3, 'Ma mikroszkóp alatt vizsgáltunk sejteket. Nagyon érdekes!', @postId);
+CALL createPost(4, 3, 'Tudtok jó dokumentumfilmet az állatvilágról?', @postId);
+CALL createPost(5, 3, 'A fotoszintézis még mindig lenyűgöz!', @postId);
+CALL createPost(1, 3, 'Séta a botanikus kertben = feltöltődés!', @postId);
+CALL createPost(2, 3, 'Kedvenc növényem a páfrány. Nektek?', @postId);
+
+CALL addComment(11, 1, 'A National Geographicnak van jó sorozata.');
+CALL addComment(12, 4, 'Én is imádom a botanikus kertet!');
+CALL addComment(13, 3, 'A páfrány tényleg szép és ősi növény.');
+CALL addComment(14, 2, 'A fotoszintézis alapja mindennek.');
+CALL addComment(15, 5, 'Köszi, hogy megosztottad!');
+
+-- Physics (groupId = 4)
+CALL createPost(4, 4, 'Ma sikerült egy lézertörést tökéletesen modellezni!', @postId);
+CALL createPost(5, 4, 'Mi a véleményetek a kvantumgravitációról?', @postId);
+CALL createPost(1, 4, 'A relativitáselméletben mindig találok valami újat.', @postId);
+CALL createPost(2, 4, 'Van jó forrás az optikáról?', @postId);
+CALL createPost(3, 4, 'A kedvenc kísérletem a kettős rés!', @postId);
+
+CALL addComment(16, 5, 'Einstein is büszke lenne!');
+CALL addComment(17, 1, 'Kettős rés? Az a kvantumfizika klasszikusa!');
+CALL addComment(18, 2, 'Fizika = varázslat, csak tudományosabban.');
+CALL addComment(19, 4, 'Tudok pár jó YouTube csatornát.');
+CALL addComment(20, 3, 'Nagyon jól hangzik ez a modell!');
+
+-- Engineering (groupId = 5)
+CALL createPost(5, 5, 'Ma összeállt az első működő robotkarunk!', @postId);
+CALL createPost(1, 5, 'Autonóm drón teszt sikeres!', @postId);
+CALL createPost(2, 5, 'Készítettem egy saját nyomtatott áramkört.', @postId);
+CALL createPost(3, 5, 'Kedvenc szerszámom a 3D nyomtató. Nektek?', @postId);
+CALL createPost(4, 5, 'Zöldenergia = jövő. Most épp egy napelemes rendszeren dolgozom.', @postId);
+
+CALL addComment(21, 2, 'Nagyon durva, gratula!');
+CALL addComment(22, 1, 'Én is dolgozom most hasonlón.');
+CALL addComment(23, 5, 'A 3D nyomtató zseniális találmány!');
+CALL addComment(24, 3, 'Mutass képet a nyákodról!');
+CALL addComment(25, 4, 'Zöldenergia FTW!');
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
