@@ -6,7 +6,7 @@ import { FetchService, AuthType } from '../fetch/fetch.service';
   providedIn: 'root'
 })
 export class ProfileImageService {
-  private defaultPfp = 'https://holydrive.org/api/view/4eaef8d354bfbf649f7faf380a810376';
+  private defaultPfp = 'https://holydrive.org/api/view/f29ebc5fbc4f7e4f655ae6a3851549dd';
   private imageCache = new Map<string, string>();
   private imageRefreshTime = new BehaviorSubject<number>(Date.now());
 

@@ -100,7 +100,7 @@ export class SelfProfileComponent implements OnInit, OnDestroy {
 
     const img = new Image();
     img.onerror = () => {
-      this.profileImageSrc = 'https://holydrive.org/api/view/4eaef8d354bfbf649f7faf380a810376';
+      this.profileImageSrc = 'https://holydrive.org/api/view/f29ebc5fbc4f7e4f655ae6a3851549dd';
     };
     img.src = this.profileImageSrc;
   }
